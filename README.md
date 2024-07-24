@@ -5,12 +5,17 @@
 
 # 팀원
 팀장 : 노시온
+
 Git 관리자 : 조진혁
+
 DB 관리자 : 박새미
+
 풀스택 개발자 : 정경호
+
 풀스택 개발자 : 정하윤
 
 # 프로젝트 기술스택
+
 프론트엔드 
 
 ![프론트엔드](https://github.com/user-attachments/assets/6acbc840-aa94-4bc5-875b-beaffdd53763)
