@@ -142,6 +142,58 @@ nomaxvalue;
 
 
 
+// 하윤
+
+CREATE TABLE pop_board (
+    pop_seq NUMBER PRIMARY KEY, 
+    pop_title VARCHAR(100) NOT NULL, 
+    emp_seq NUMBER NOT NULL, 
+    pop_content long NOT NULL, 
+    pop_start_date TIMESTAMP NOT NULL, 
+    pop_end_date TIMESTAMP NOT NULL, 
+    pop_is_active CHAR(1) DEFAULT 'n' CHECK (pop_is_active IN ('y', 'n')) NOT NULL,
+    pop_write_date TIMESTAMP DEFAULT SYSDATE NOT NULL, 
+    pop_updated_date TIMESTAMP NULL,
+    pop_is_repeated NUMBER DEFAULT 0 CHECK (pop_is_repeated IN (0, 1))
+);
+CREATE SEQUENCE pop_board_sequence    
+START WITH 1
+INCREMENT BY 1
+nocache
+nomaxvalue;
+
+CREATE TABLE pop_repeated (
+    pop_repeated_seq NUMBER PRIMARY KEY, 
+    pop_seq NUMBER NOT NULL,
+    month NUMBER NULL, 
+    day NUMBER NULL, 
+    week NUMBER NULL, 
+    weekday NUMBER NULL
+);
+
+CREATE SEQUENCE pop_repeated 
+START WITH 1
+INCREMENT BY 1
+nocache
+nomaxvalue;
+
+CREATE TABLE log (
+    log_seq number primary key, 
+    log_date Timestamp not null, 
+    emp_seq number not null, 
+    emp_state_seq number not null,
+    log_ip varchar(20) not null, 
+    log_state number not null
+    );
+
+CREATE SEQUENCE log_sequence    
+START WITH 1
+INCREMENT BY 1
+nocache
+nomaxvalue;
+
+
+
 
 
 
