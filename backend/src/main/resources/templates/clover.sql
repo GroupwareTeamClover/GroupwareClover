@@ -1,3 +1,4 @@
+--노시온
 CREATE TABLE employee(
     emp_seq NUMBER PRIMARY KEY,
     emp_state_seq NUMBER NOT NULL,
