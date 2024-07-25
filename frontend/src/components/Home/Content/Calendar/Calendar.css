@@ -1,0 +1,9 @@
+/* 일요일 Red */
+.fc-day-sun a {
+    color: red;
+}
+
+/* 토요일 blue */
+.fc-day-sat a {
+    color: blue;
+}
