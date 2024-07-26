@@ -17,7 +17,7 @@ export const Content = () => {
           <Route path="/address/*" element={ <Address /> } />
           <Route path="/community/*" element={<Board/> }></Route>
           <Route path="/chat/*" element={ <ChatMain /> } />
-          <Route path="approval" element={<Approval/>}/>
+          <Route path="/approval/*" element={<Approval/>}/>
         </Routes>
     </div>
   );

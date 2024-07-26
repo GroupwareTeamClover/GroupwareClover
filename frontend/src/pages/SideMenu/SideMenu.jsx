@@ -27,9 +27,9 @@ export const SideMenu = () => {
         <FaAddressBook /> 
         <span>Address</span>
       </button>
-      <button onClick={()=>{navi("mail")}}>
+      <button onClick={()=>{navi("approval")}}>
         <LiaClipboardListSolid /> 
-        <span>Documentation</span>
+        <span>Approval</span>
       </button>
       <button onClick={()=>{navi("community")}}>
         <FaListAlt /> 
