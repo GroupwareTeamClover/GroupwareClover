@@ -6,7 +6,7 @@
     align-items: center;
 }
 .title {
-    height: 150px;
+    height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,6 +22,7 @@
 }
 
 .row {
+    width: 300px;
     font-size: 18px;
     font-weight: 800;
     margin: 5px;
@@ -42,4 +43,7 @@
     height: 40px;
     padding: 5px;
     border-radius: 5px;
+}
+.row > input:focus {
+    background-color: floralwhite;
 }

@@ -1,7 +1,7 @@
 import './App.css';
-import { Login } from './components/Login/Login';
-import {SideMenu} from "./components/SideMenu/SideMenu";
-import {Home} from "./components/Home/Home";
+import { Login } from './pages/Login/Login';
+import {SideMenu} from "./pages/SideMenu/SideMenu";
+import {Home} from "./pages/Home/Home";
 import {BrowserRouter as Router} from "react-router-dom";
 import {useMemberStore} from "./store/store";
 import {useEffect} from "react";

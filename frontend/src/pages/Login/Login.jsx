@@ -1,12 +1,14 @@
 import styles from './Login.module.css';
 import logo from '../../test_logo.png';
-import {Modal} from "../Modal/Modal";
-import {useEffect, useState} from "react";
+import {Modal} from "../../components/Modal/Modal";
+import React, {useEffect, useState} from "react";
 import {useMemberStore} from "../../store/store";
 import axios from "axios";
 import {SignUp} from "./SignUp/SignUp";
+import {SignUp2} from "./SignUp/SignUp2";
 import {FindPw} from "./FindPw/FindPw";
 import {FindId} from "./FindId/FindId";
+import {SignUp3} from "./SignUp/SignUp3";
 
 export const Login = ({ setSign }) => {
 
@@ -36,8 +38,23 @@ export const Login = ({ setSign }) => {
     // } else {
     //   alert("로그인 실패")
     // }
+
   }
 
+  const [signUpPage, setSignUpPage] = useState(1);
+
+  const handlePageDown = () => {
+    setSignUpPage(prev => {
+      if(prev === 1) return false;
+      else return prev - 1;
+    });
+  }
+  const handlePageUp = () => {
+    setSignUpPage(prev => {
+      if(prev === 3) return false;
+      else return prev + 1;
+    });
+  }
   const handleSignUp =  () => {
     setModalState("SignUp");
     openModal();
@@ -74,12 +91,14 @@ export const Login = ({ setSign }) => {
       {modalState === "SignUp" &&
         <Modal isOpen={ isModalOpen } onClose={ closeModal }>
           <div className={styles.modalForm}>
-            <SignUp/>
-            <div className={styles.btnBox}>
-              <button onClick={closeModal}>이전</button>
-              <button onClick={closeModal}>다음</button>
-            </div>
+            { signUpPage === 1 && <SignUp/> }
+            { signUpPage === 2 && <SignUp2/> }
+            { signUpPage === 3 && <SignUp3/> }
 
+            <div className={styles.btnBox}>
+              <button onClick={handlePageDown}>이전</button>
+              <button onClick={handlePageUp}>다음</button>
+            </div>
           </div>
         </Modal>
       }
