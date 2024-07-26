@@ -25,12 +25,12 @@ function App() {
   return (
     <div className="container">
       <Router>
-        { !sign && <Login setSign={ setSign }/> }
-        { sign && <SideMenu />  }
-        { sign && <Home /> }
         {/* { !sign && <Login setSign={ setSign }/> }
+        { sign && <SideMenu />  }
+        { sign && <Home /> } */}
+        { !sign && <Login setSign={ setSign }/> }
         { sign && <AdminSideMenu />  }
-        {  sign && <Admin /> } */}
+        {  sign && <Admin /> }
       </Router>
     </div>
   );

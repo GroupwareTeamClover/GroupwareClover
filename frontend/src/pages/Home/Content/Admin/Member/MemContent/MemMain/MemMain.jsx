@@ -25,6 +25,7 @@ export const MemMain = () => {
         <div className={styles.header}>
             조직관리
         </div>
+ 
         <div>
             <div className={styles.member_info}>
                 <div className={styles.member_total}>
