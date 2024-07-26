@@ -1,0 +1,52 @@
+.bar{
+    flex:1;
+}
+
+.buttonBox {
+    display: flex;
+    justify-content: center;
+}
+
+.buttonBox .writeButton{
+    width : 200px;
+    height : 50px;
+    font-weight: 500;
+    font-size: 24px;
+    background-color: skyblue;
+    margin: 50px 0 20px 0;
+    transition-duration: 0.3s;
+}
+
+.writeButton:hover{
+    cursor: pointer;
+    color:white;
+    background-color: rgb(16, 127, 224);
+}
+
+.board{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    text-indent : 10px;
+    padding-left: 20px;
+    height : 50px;
+}
+
+.board:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.eachBoard{
+    font-size: 20px;
+    padding-left: 50px;
+    margin : 4px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.eachBoard:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
