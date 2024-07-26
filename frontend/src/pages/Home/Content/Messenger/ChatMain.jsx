@@ -5,7 +5,7 @@ export const ChatMain = () => {
     return (
         <div className={styles.container}>
             <div>
-                확인
+                <p> 확인 </p>
             </div>
             
         </div>
