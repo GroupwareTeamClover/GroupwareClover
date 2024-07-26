@@ -3,6 +3,7 @@ import {Main} from "./Main/Main";
 import {Route, Routes} from "react-router-dom";
 import {Calendar} from "./Calendar/Calendar";
 import {Address} from "./Address/Address";
+import Board from './Board/Board';
 
 export const Content = () => {
 
@@ -12,6 +13,7 @@ export const Content = () => {
           <Route path="/" element={ <Main /> } />
           <Route path="/calendar/*" element={ <Calendar /> } />
           <Route path="/address/*" element={ <Address /> } />
+          <Route path="/community/*" element={<Board/> }></Route>
         </Routes>
     </div>
   );
