@@ -8,7 +8,7 @@ export const Admin = ()=>{
 
     return (
         <div className={styles.container}>
-            <Header /> 하이
+            <Header /> 
             <Content />
         </div>
     )

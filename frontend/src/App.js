@@ -5,8 +5,9 @@ import {Home} from "./pages/Home/Home";
 import {BrowserRouter as Router} from "react-router-dom";
 import {useMemberStore} from "./store/store";
 import {useEffect, useState} from "react";
-import { Admin } from './pages/Admin/Admin';
 import { AdminSideMenu } from './pages/SideMenu/AdminSideMenu';
+import { Admin } from './pages/Admin/Admin';
+
 
 function App() {
 
