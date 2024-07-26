@@ -4,6 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--bg-color);
 }
 
 .signInBox {
@@ -13,13 +14,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid darkgray;
+    border: 1px solid burlywood;
     border-radius: 10px;
+    background-color: white;
 }
 
 .signInBox > img {
-    width: 40%;
-    height: 40%;
+    width: 30%;
+    height: 30%;
     margin: 8px;
     padding: 4px;
 }
@@ -41,7 +43,7 @@
     width: 250px;
     height: 40px;
     padding: 4px;
-    margin: 4px;
+    margin: 6px;
     border: none;
     background-color: antiquewhite;
     color: darkolivegreen;
@@ -56,8 +58,21 @@
 }
 
 .checkBox {
+    width: 300px;
     margin: 4px;
     padding: 4px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.checkBox > div {
+    display: flex;
+    justify-content: center;
+}
+
+.checkBox > div > label {
+    font-size: 14px;
+    margin-left: 3px;
 }
 
 .signHref {
@@ -86,6 +101,7 @@
 
 .btnBox {
     width: 250px;
+    margin-bottom: 15px;
     display: flex;
     justify-content: space-around;
 }
