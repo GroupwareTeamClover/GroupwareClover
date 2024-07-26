@@ -2,7 +2,6 @@ import {useEffect, useState} from "react";
 import styles from './SignUpSub.module.css'
 import axios from "axios";
 import {validatePhone} from '../../../../commons/common';
-import baseUrl from '../../../../api/members';
 
 export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) => {
 
