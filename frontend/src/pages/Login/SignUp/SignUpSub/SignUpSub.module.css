@@ -63,17 +63,30 @@
     font-weight: 900;
 }
 
-.row > div > input {
-    width: 100px;
+.row > div {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.row > div > input:nth-child(1) {
+    width: 120px;
     height: 40px;
     padding: 5px;
     border-radius: 5px;
     margin: 2px 0;
-    margin-right: 20px;
 }
 
 .row > div > input:focus {
     background-color: floralwhite;
+}
+
+.row > div > input:nth-child(2) {
+    width: 30px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 2px 0;
 }
 
 .row > div > button {
@@ -87,4 +100,5 @@
     color: white;
     font-size: 14px;
     font-weight: 900;
+    margin-left: 20px;
 }

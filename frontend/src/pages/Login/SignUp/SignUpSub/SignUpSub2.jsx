@@ -8,6 +8,7 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
 
+
     if(name === "emp_name") {
       setSendData( prev => {
         const data = { ...prev, [name]: value};
@@ -17,7 +18,22 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
       });
     }
 
-    if(name === "emp_birth" || name === "emp_gender") {
+    if(name === "emp_birth") {
+      console.log("emp_birth === ", value.slice(2,4));
+      if(parseInt(value.slice(2,4)) > 12) return false;
+      setSendData( prev => {
+        const data = { ...prev, [name]: value };
+        if(validateUserNo(sendData.emp_birth, sendData.emp_gender)) setCheckData(prev => ({ ...prev, [name]: true}));
+        else setCheckData(prev => ({ ...prev, [name]: false}));
+        return data;
+      });
+      console.log("checkData.emp_birth ==== ", checkData.emp_birth);
+
+    }
+
+    if(name === "emp_gender") {
+      if(value > 4) return false;
+      else value = parseInt(value)%2 === 1 ? "M" : "Y";
       setSendData( prev => {
         const data = { ...prev, [name]: value };
         if(validateUserNo(sendData.emp_birth, sendData.emp_gender)) setCheckData(prev => ({ ...prev, [name]: true}));
@@ -25,6 +41,8 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
         return data;
       });
     }
+
+
 
     if(name === "emp_email") {
       setSendData( prev => {
@@ -63,7 +81,11 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
         <div className={styles.row}>
           <span>생년월일</span>
-          <input type="text" name="birth" onChange={handleDataCheck}  placeholder="생년월일을 입력하세요."/>
+          <div>
+            <input type="text" name="emp_birth" onChange={handleDataCheck} maxLength="6" placeholder="생년월일을 입력하세요."/>　-
+            <input type="text" name="emp_gender" maxLength="1" onChange={handleDataCheck} />******
+          </div>
+
         </div>
 
         { /* Birth empty check */

@@ -10,6 +10,7 @@ CREATE TABLE employee(
     emp_gender char(1) NOT NULL,
     emp_tel varchar2(11) NOT NULL,
     emp_address varchar2(100) NOT NULL,
+    emp_avatar varchar2(1000) Default NULL,
     role_code NUMBER NOT NULL,
     dept_code NUMBER NOT NULL,
     join_date TIMESTAMP DEFAULT sysdate NOT NULL,
