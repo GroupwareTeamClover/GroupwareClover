@@ -63,7 +63,11 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
         <div className={styles.row}>
           <span>생년월일</span>
-          <input type="text" name="birth" onChange={handleDataCheck}  placeholder="생년월일을 입력하세요."/>
+          <div>
+            <input type="text" name="birth" onChange={handleDataCheck} max="6" placeholder="생년월일을 입력하세요."/>　-　
+            <input type="text" name="gender" max="1" onChange={handleDataCheck} />******
+          </div>
+
         </div>
 
         { /* Birth empty check */
