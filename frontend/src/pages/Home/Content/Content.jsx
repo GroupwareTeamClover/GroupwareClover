@@ -8,14 +8,11 @@ export const Content = () => {
 
   return(
     <div className={styles.container}>
-      <div className={styles.form}>
         <Routes>
           <Route path="/" element={ <Main /> } />
           <Route path="/calendar/*" element={ <Calendar /> } />
           <Route path="/address/*" element={ <Address /> } />
         </Routes>
-
-      </div>
     </div>
   );
 }
