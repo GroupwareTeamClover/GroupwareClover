@@ -277,4 +277,8 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+# Member URL setting2
+members.js
+
 # End of https://www.toptal.com/developers/gitignore/api/react,nextjs,windows,visualstudiocode,eclipse,intellij
