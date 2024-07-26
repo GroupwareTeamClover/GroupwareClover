@@ -28,7 +28,6 @@ export const Login = ({ setSign }) => {
 
   const handleSignIn = async() => {
     setSign(true);
-    alert("로그인 성공");
     // const response = await axios.post("http://192.168.1.7/members", signInData);
     // if(response.status === 200 && response.data !== null) {
     //

@@ -20,11 +20,21 @@ export const validateEmail = (email) => {
   return regex.test(email);
 }
 
-export const validateUserNo = (userNoFront, userNoBack) => {
-  let regexFront = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])$/;
-  let regexBack = /^[1-4]$/;
-  return regexFront.test(userNoFront) && regexBack.test(userNoBack);
+export const validateBirth = (birth) => {
+  let regex = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])$/;
+  return regex.test(birth);
 }
+
+export const validateGender = (gender) => {
+  let regex = /^[1-4]$/;
+  return regex.test(gender);
+}
+
+// export const validateUserNo = (userNoFront, userNoBack) => {
+//   let regexFront = /\d{2}([0]\d|[1][0-2])([0][1-9]|[1-2]\d|[3][0-1])$/;
+//   let regexBack = /^[1-4]$/;
+//   return regexFront.test(userNoFront) && regexBack.test(userNoBack);
+// }
 
 export const validatePhone = (phone) => {
   let regex = /^01([0|1|6|7|8|9])([0-9]{8})$/;
