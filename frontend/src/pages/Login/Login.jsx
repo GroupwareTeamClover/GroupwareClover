@@ -5,18 +5,19 @@ import React, {useEffect, useState} from "react";
 import {useMemberStore} from "../../store/store";
 import axios from "axios";
 import {SignUp} from "./SignUp/SignUp";
-import {SignUp2} from "./SignUp/SignUp2";
 import {FindPw} from "./FindPw/FindPw";
 import {FindId} from "./FindId/FindId";
-import {SignUp3} from "./SignUp/SignUp3";
 
 export const Login = ({ setSign }) => {
 
-  const [ modalState, setModalState ] = useState("");
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSignUpPage(1);
+  }
+
 
   const [ signInData, setSignInData ] = useState({id: "", pw: ""});
 
@@ -41,33 +42,24 @@ export const Login = ({ setSign }) => {
 
   }
 
+  const [ modalState, setModalState ] = useState("");
+  const handleModalChange = (e) => {
+    setModalState(e.target.name);
+    openModal();
+  }
+
   const [signUpPage, setSignUpPage] = useState(1);
 
-  const handlePageDown = () => {
-    setSignUpPage(prev => {
-      if(prev === 1) return false;
-      else return prev - 1;
-    });
-  }
-  const handlePageUp = () => {
-    setSignUpPage(prev => {
-      if(prev === 3) return false;
-      else return prev + 1;
-    });
-  }
-  const handleSignUp =  () => {
-    setModalState("SignUp");
-    openModal();
-  }
-
-  const handleFindId = () => {
-    setModalState("FindId");
-    openModal();
-  }
-
-  const handleFindPw = () => {
-    setModalState("FindPw");
-    openModal();
+  const handlePageChange = (e) =>{
+      setSignUpPage(prev => {
+        if(e.target.name === "prev") {
+          if(prev === 1) return 1;
+          else return prev - 1;
+        } else {
+          if(prev === 3) return 3;
+          else return prev + 1;
+        }
+      });
   }
 
   return (
@@ -76,50 +68,41 @@ export const Login = ({ setSign }) => {
         <img src={ logo } alt="logo"/>
         <input type="text" name="id" onChange={handleData} placeholder='ID' />
         <input type="password" name="pw" onChange={handleData} placeholder='Password' />
-        <div className={ styles.checkBox }>
-          <input type="checkbox" id="id_svae"/>
-          <label for="id_save"> 아이디 저장 </label>
+        <div className={styles.checkBox}>
+          <div>
+            <input type="checkbox" id="id_save"/>
+            <label htmlFor="id_save"> 아이디 저장 </label>
+          </div>
+          <div>
+            <input type="checkbox" id="login_svae"/>
+            <label htmlFor="login_svae"> 로그인 유지 </label>
+          </div>
         </div>
         <button onClick={handleSignIn}>로그인</button>
         <div className={styles.signHref}>
-          <button onClick={handleSignUp}>회원가입</button>
-          <button onClick={handleFindId}>아이디 찾기</button>
-          <button onClick={handleFindPw}>비밀번호 찾기</button>
+          <button name="SignUp" onClick={handleModalChange}>회원가입</button>
+          <button name="FindId" onClick={handleModalChange}>아이디 찾기</button>
+          <button name="FindPw" onClick={handleModalChange}>비밀번호 찾기</button>
         </div>
       </div>
 
-      {modalState === "SignUp" &&
-        <Modal isOpen={ isModalOpen } onClose={ closeModal }>
-          <div className={styles.modalForm}>
-            { signUpPage === 1 && <SignUp/> }
-            { signUpPage === 2 && <SignUp2/> }
-            { signUpPage === 3 && <SignUp3/> }
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className={styles.modalForm}>
 
-            <div className={styles.btnBox}>
-              <button onClick={handlePageDown}>이전</button>
-              <button onClick={handlePageUp}>다음</button>
-            </div>
-          </div>
-        </Modal>
-      }
+          { modalState === "SignUp" &&
+            <>
+              <SignUp signUpPage={ signUpPage }/>
+              <div className={ styles.btnBox }>
+                <button name="prev" onClick={handlePageChange}> 이전</button>
+                <button name="next" onClick={handlePageChange}> 다음</button>
+              </div>
+            </> }
 
-      {modalState === "FindId" &&
-        <Modal isOpen={ isModalOpen } onClose={ closeModal }>
-          <div className={styles.modalForm}>
-           <FindId />
-            <button onClick={ closeModal }>Close</button>
-          </div>
-        </Modal>
-      }
+          {modalState === "FindId" && <FindId/>}
 
-      { modalState === "FindPw" &&
-        <Modal isOpen={ isModalOpen } onClose={ closeModal }>
-          <div className={styles.modalForm}>
-            <FindPw />
-            <button onClick={ closeModal }>Close</button>
-          </div>
-        </Modal>
-      }
+          {modalState === "FindPw" && <FindPw/>}
+        </div>
+      </Modal>
 
     </div>
   );
