@@ -27,7 +27,7 @@ export const ChatMain = () => {
                 <br></br><br></br><br></br>
                 <div> 대화방 목록 출력</div>
                 <br></br><br></br><br></br>
-                <div> 대화방 생성 버튼 +</div>
+                <div> 대화방 생성 버튼 +-</div>
             </div>
            
             <div className={styles.chatWindow}>
