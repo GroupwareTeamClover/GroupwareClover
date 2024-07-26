@@ -19,19 +19,19 @@ export const AdminSideMenu = () => {
         <IoHome />
         <span>Home</span>
       </button>
-      <button onClick={()=>{navi("calendar")}}>
+      <button onClick={()=>{navi("member")}}>
         <FaCalendarDays /> 
         <span>조직관리</span>
       </button>
-      <button onClick={()=>{navi("address")}}>
+      <button onClick={()=>{navi("popup")}}>
         <FaAddressBook /> 
         <span>팝업공지관리</span>
       </button>
-      <button onClick={()=>{navi("mail")}}>
+      <button onClick={()=>{navi("/community")}}>
         <LiaClipboardListSolid /> 
         <span>게시글관리</span>
       </button>
-      <button onClick={()=>{navi("community")}}>
+      <button onClick={()=>{navi("log")}}>
         <FaListAlt /> 
         <span>보안관리</span>
       </button>
