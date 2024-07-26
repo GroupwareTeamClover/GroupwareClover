@@ -4,7 +4,7 @@
 
 .sideBox{
     width: 80%;
-    min-height: 450px;
+    min-height: 430px;
     display: flex;
     flex-direction: column;
 }
@@ -50,14 +50,20 @@
     padding-bottom: 3px;
 }
 
+
+.menu{
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
 .menutext{
     font-size: 13.5px;
     padding-left: 10px;
 }
 
-.menu{
-    padding-top: 3px;
-    padding-bottom: 3px;
+.menu:hover{
+    background-color: lightgray;
+    cursor: pointer;
 }
 
 

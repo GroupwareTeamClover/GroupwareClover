@@ -1,4 +1,64 @@
-.container{
+.stateBox, .titleBox, .approvalBox{
+    flex: 1.8;
+    display: flex;
+    align-items: center;
+}
+
+.drafterBox, .drafterDateBox{
+    flex: 1.2;
+    display: flex;
+    align-items: center;
+}
+
+.state{
+    margin-left: 10px;
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.title{
+    margin-left: 10px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+.text{
+    margin-left: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    color: gray;
+    letter-spacing: -1px;
+}  
+
+
+.approvalDiv{
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid gray;
+    letter-spacing: -2px;
+}
+.card{
+    border: 1px solid black;
+    width: 170px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 20px 30px -20px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+.card:hover .approvalDiv {
+    background-color: var(--bg-color);
 }
