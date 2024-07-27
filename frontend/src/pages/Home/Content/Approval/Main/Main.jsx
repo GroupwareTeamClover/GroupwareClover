@@ -14,7 +14,7 @@ export const Main = () => {
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}><h3>{headerText}</h3></div>
+            <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
             <div className={styles.detail}>
                 <Routes>
                     <Route path="/" element={<DetailMain/>} />
