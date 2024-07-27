@@ -1,35 +1,35 @@
-import styles from './Main.module.css'
+import { Route, Routes, useLocation } from "react-router-dom";
+import styles from './Main.module.css';
+import {Proceeding} from '../Proceeding/Proceeding'
+import {DetailMain} from '../DetailMain/DetailMain'
 
-export const Main= () =>{
-    return(
+
+
+export const Main = () => {
+    const location = useLocation();
+    const state = location.state;
+
+    // 상태에 따라 header 내용 설정
+    const headerText = state?.type || '전자결재';
+
+    return (
         <div className={styles.container}>
-            <div className={styles.header}></div>
-            <div className={styles.cardBox}>
-                <div className={styles.card}> 
-                    <div className={styles.stateBox}>
-                        <span className={styles.state}>진행중</span>
-                    </div>
-
-                    <div className={styles.titleBox}>
-                        <span className={styles.title}>제목이당</span>
-                    </div>
-
-                    <div className={styles.drafterBox}>
-                        <span className={styles.text}>기안자: 박새미</span>
-                    </div>
-
-                    <div className={styles.drafterDateBox}>
-                        <span className={styles.text}>기안일: 2024-07-26</span>
-                    </div>
-
-                    <div className={styles.approvalBox}>
-                        <div className={styles.approvalDiv}>결재하기</div>
-                    </div>
-                </div>
+            <div className={styles.header}><h3>{headerText}</h3></div>
+            <div className={styles.detail}>
+                <Routes>
+                    <Route path="/" element={<DetailMain/>} />
+                    <Route path="/approval/proceeding" element={<Proceeding />} />
+                    <Route path="/approval/waiting"/>
+                    <Route path="/approval/planning" />
+                    <Route path="/approval/receiving" />
+                    <Route path="/approval/participating" />
+                    <Route path="/approval/drafting" />
+                    <Route path="/approval/temp" />
+                    <Route path="/approval/complete" />
+                    <Route path="/approval/received" />
+                    <Route path="/approval/participated" />
+                </Routes>
             </div>
-            <div className={styles.ingBox}></div>
-            <div className={styles.completeBox}></div>
         </div>
-    )
-
-}
+    );
+};

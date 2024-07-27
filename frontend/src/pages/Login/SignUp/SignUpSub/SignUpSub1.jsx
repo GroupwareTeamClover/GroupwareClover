@@ -11,7 +11,7 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
     if(name === "emp_id") {
       setSendData( prev => {
         const data = { ...prev, [name]: value}
-        if(validateUserId(sendData.id)) setCheckData(prev => ({ ...prev, [name]: true}));
+        if(validateUserId(value)) setCheckData(prev => ({ ...prev, [name]: true}));
         else setCheckData(prev => ({ ...prev, [name]: false}));
         return data;
       });
@@ -21,8 +21,7 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
       setSendData(prev => {
         const data = {...prev, [name]: value};
         if(data.emp_pw === data.pw_check) {
-          name = "emp_pw";
-          if(validatePassword(data.emp_pw)) setCheckData(prev => ({ ...prev, [name]: true}));
+          if(validatePassword(value)) setCheckData(prev => ({ ...prev, [name]: true}));
           else setCheckData(prev => ({ ...prev, [name]: false}));
         } else setCheckData(prev => ({ ...prev, [name]: false}));
         return data;
@@ -46,7 +45,7 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
       <div className={styles.joinForm}>
         <div className={styles.row}>
           <span>아이디</span>
-          <input type="text" name="emp_id" onChange={handleDataCheck} value={sendData.emp_id}
+          <input type="text" name="emp_id" maxLength="12" onChange={handleDataCheck} value={sendData.emp_id}
                  placeholder="6~12자리로 작성해주세요!"/>
         </div>
 
@@ -65,11 +64,11 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
 
         <div className={styles.row}>
           <span>비밀번호</span>
-          <input type="text" name="emp_pw" onChange={handleDataCheck} value={sendData.emp_pw}
+          <input type="text" name="emp_pw" maxLength="20" onChange={handleDataCheck} value={sendData.emp_pw}
                  placeholder="8~20자리로 입력하세요"/>
         </div>
         <div className={styles.row}>
-          <input type="text" name="pw_check" onChange={handleDataCheck} value={ sendData.pw_check } placeholder="8~20자리로 한번더 입력하세요"/>
+          <input type="text" name="pw_check" maxLength="20" onChange={handleDataCheck} value={ sendData.pw_check } placeholder="8~20자리로 한번더 입력하세요"/>
         </div>
 
         { /* Password empty check */

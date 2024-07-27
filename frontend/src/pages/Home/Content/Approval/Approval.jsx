@@ -2,6 +2,8 @@ import styles from './Approval.module.css'
 import {Side} from './Side/Side'
 import {Main} from './Main/Main'
 
+
+
 export const Approval = () =>{
     return(
         <div className={styles.container}>
@@ -9,7 +11,7 @@ export const Approval = () =>{
                 <Side/>
               </div>
             <div className={styles.main}>
-                <Main></Main>
+                <Main/>
             </div>
         </div>
     );
