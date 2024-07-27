@@ -1,48 +1,41 @@
-import { useState } from "react";
 import styles from './SignUpSub.module.css'
-import axios from "axios";
-import {validateName, validateUserNo, validateEmail} from '../../../../commons/common'
+import {validateName, validateBirth, validateGender, validateEmail} from '../../../../commons/common'
 
 export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) => {
 
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
 
-
     if(name === "emp_name") {
       setSendData( prev => {
         const data = { ...prev, [name]: value};
-        if(validateName(sendData.emp_name)) setCheckData(prev => ({ ...prev, [name]: true}));
+        if(validateName(value)) setCheckData(prev => ({ ...prev, [name]: true}));
         else setCheckData(prev => ({ ...prev, [name]: false}));
         return data;
       });
     }
 
     if(name === "emp_birth") {
-      console.log("emp_birth === ", value.slice(2,4));
       if(parseInt(value.slice(2,4)) > 12) return false;
+      if(parseInt(value.slice(4,6)) > 31) return false;
       setSendData( prev => {
         const data = { ...prev, [name]: value };
-        if(validateUserNo(sendData.emp_birth, sendData.emp_gender)) setCheckData(prev => ({ ...prev, [name]: true}));
+        if(validateBirth(value)) setCheckData(prev => ({ ...prev, [name]: true}));
         else setCheckData(prev => ({ ...prev, [name]: false}));
         return data;
       });
-      console.log("checkData.emp_birth ==== ", checkData.emp_birth);
 
     }
 
     if(name === "emp_gender") {
       if(value > 4) return false;
-      else value = parseInt(value)%2 === 1 ? "M" : "Y";
       setSendData( prev => {
         const data = { ...prev, [name]: value };
-        if(validateUserNo(sendData.emp_birth, sendData.emp_gender)) setCheckData(prev => ({ ...prev, [name]: true}));
+        if(validateGender(value)) setCheckData(prev => ({ ...prev, [name]: true}));
         else setCheckData(prev => ({ ...prev, [name]: false}));
         return data;
       });
     }
-
-
 
     if(name === "emp_email") {
       setSendData( prev => {
@@ -51,7 +44,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
         else setCheckData(prev => ({ ...prev, [name]: false}));
         return data;
       });
-
     }
   }
 
@@ -69,9 +61,9 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
         { /* Name empty check */
           sendData.emp_name !== "" ?
             <div className={styles.row}>
-              { /* ID Check */
+              { /* Name Check */
                 checkData.emp_name ?
-                  <p/>
+                  <></>
                   :
                   <p style={{color: "red"}}>유효하지 않은 이름 유형입니다.</p>
               }
@@ -82,17 +74,18 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
         <div className={styles.row}>
           <span>생년월일</span>
           <div>
-            <input type="text" name="emp_birth" onChange={handleDataCheck} maxLength="6" placeholder="생년월일을 입력하세요."/>　-
-            <input type="text" name="emp_gender" maxLength="1" onChange={handleDataCheck} />******
+            <input type="text" name="emp_birth" maxLength="6" value={ sendData.emp_birth || "" } onChange={handleDataCheck} placeholder=""/>　-　
+            <input type="text" name="emp_gender" maxLength="1" value={ sendData.emp_gender || "" } onChange={handleDataCheck} />******
           </div>
 
         </div>
 
-        { /* Birth empty check */
+        { /* Birth & Gender empty check */
           sendData.emp_birth !== "" && sendData.emp_gender !== "" ?
             <div className={styles.row}>
-              {checkData.emp_birth && checkData.emp_gender ?
-                <p/>
+              { /* Birth & Gender check */
+                checkData.emp_birth && checkData.emp_gender ?
+                <></>
                 :
                 <p style={{color: "red"}}>유효하지 않은 생년월일</p>
               }
@@ -103,14 +96,15 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
         <div className={styles.row}>
           <span>이메일</span>
-          <input type="text" name="email" onChange={handleDataCheck} value={sendData.emp_email || ""} placeholder="E-Mail을 입력하세요."/>
+          <input type="text" name="emp_email" value={sendData.emp_email} onChange={handleDataCheck} placeholder="E-Mail을 입력하세요."/>
         </div>
 
-        { /* Birth empty check */
+        { /* E-Mail empty check */
           sendData.emp_email !== "" ?
             <div className={styles.row}>
-              {checkData.emp_email ?
-                <p/>
+              { /* E-Mail check */
+                checkData.emp_email ?
+                <></>
                 :
                 <p style={{color: "red"}}>유효하지 않은 이메일</p>
               }

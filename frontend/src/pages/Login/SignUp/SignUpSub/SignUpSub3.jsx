@@ -1,7 +1,9 @@
-import {useEffect, useState} from "react";
 import styles from './SignUpSub.module.css'
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {validatePhone} from '../../../../commons/common';
+import DaumPostcode from "react-daum-postcode";
+
 
 export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) => {
 
@@ -17,6 +19,11 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
       });
     }
   }
+
+  const handlePostcode = () => {
+
+  }
+
 
   const handleSubmit = async() => {
     console.log("sendData ==== ", sendData);
@@ -50,7 +57,7 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <div className={styles.row}>
               { /* ID Check */
                 checkData.emp_tel ?
-                  <p/>
+                  <></>
                   :
                   <p style={{color: "red"}}>유효하지 않은 전화번호 유형입니다.</p>
               }
@@ -62,7 +69,7 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
           <span>주소</span>
           <div>
             <input type="text" name="post" placeholder="우편번호" readOnly/>
-            <button>주소 검색</button>
+            <button onClick={handlePostcode}>주소 검색</button>
           </div>
           <input type="text" name="address1" placeholder="기본주소" readOnly/>
           <input type="text" name="address2" placeholder="상세주소"/>
@@ -73,7 +80,7 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <div className={styles.row}>
               { /* Address Check */
                 checkData.address ?
-                <p />
+                <></>
                 :
                 <p style={{color: "red"}}>주소를 입력해주세요</p>
               }

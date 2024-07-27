@@ -1,7 +1,6 @@
 import { useState } from "react";
 import styles from "./SignUp.module.css";
 import axios from "axios";
-import { validateUserId, validatePassword } from '../../../commons/common';
 import {SignUpSub1} from "./SignUpSub/SignUpSub1";
 import {SignUpSub2} from "./SignUpSub/SignUpSub2";
 import {SignUpSub3} from "./SignUpSub/SignUpSub3";
