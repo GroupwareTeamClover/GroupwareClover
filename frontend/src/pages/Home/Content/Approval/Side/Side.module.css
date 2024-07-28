@@ -4,6 +4,7 @@
 
 .sideBox{
     width: 80%;
+    min-width: 150px;
     min-height: 430px;
     display: flex;
     flex-direction: column;
@@ -64,6 +65,37 @@
 .menu:hover{
     background-color: lightgray;
     cursor: pointer;
+}
+
+.modalForm {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.modalbtnBox {
+    width: 250px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.modalbtnBox > .btn {
+    width: 90px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: 900;
+    color: darkgray;
+}
+
+.modalbtnBox > .btn:hover {
+    cursor: pointer;
+    color: orange;
 }
 
 

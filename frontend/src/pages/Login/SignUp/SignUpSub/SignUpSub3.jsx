@@ -1,6 +1,4 @@
 import styles from './SignUpSub.module.css'
-import {useEffect, useState} from "react";
-import axios from "axios";
 import {validatePhone} from '../../../../commons/common';
 import DaumPostcode from "react-daum-postcode";
 
@@ -31,8 +29,15 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
     const keys = ["emp_id", "emp_pw", "emp_name", "emp_email", "emp_birth", "emp_gender", "emp_tel", "emp_address"];
     let validation = true;
     keys.forEach(item => {
-      if(!sendData[item]) validation = false;
-    })
+      if(!checkData[item]) validation = false;
+    });
+
+    let data = sendData;
+    delete data.pw_check;
+    data.emp_gender = data.emp_gender%2 === 1 ? "M" : "F";
+
+    console.log(data);
+
     // if(validation) {
     //   const res = await axios.post(`${baseUrl}/member`, sendData);
     //   console.log("res.data === ", res.data);
