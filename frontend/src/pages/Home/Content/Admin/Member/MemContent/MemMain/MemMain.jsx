@@ -52,70 +52,55 @@ export const MemMain = () => {
             </div>
         </div>
         <div className={styles.body}>
-            <div className={styles.row_header}>
-                <div className={styles.checkbox}><input type="checkbox"></input></div>
-                <div className={styles.name}>이름</div>
-                <div className={styles.department}>
-                    <select>
-                        <option value="none">부서</option>
-                        <option>인사팀</option> 
-                        <option>회계팀</option> 
-                        <option>영업팀</option> 
-                    </select>
-                </div>
-                    <div className={styles.position}> 
-                        <select>
-                            <option value="none">직위</option>
-                            <option>사장</option> 
-                            <option>대리</option> 
-                            <option>사원</option> 
-                        </select>
-                    </div>
-                    <div className={styles.userGroup}>
-                        <select>
-                            <option value="none">사용자그룹</option>
-                            <option>정규직</option> 
-                            <option>계약직</option> 
-                            <option>관리자</option> 
-                        </select>
-                    </div> 
-                    <div className={styles.email}>
-                        이메일
-                    </div>  
-                    <div className={styles.accountStatus}>
-                        <select>
-                            <option value="none">계정상태</option>
-                            <option>정상</option>
-                            <option>휴면</option>
-                            <option>중지</option>
-                        </select>
-                    </div>
-            </div>
-            <div className={styles.row_body}>
-            
-            <div className={styles.rowMember}>
+            {/* ---------------------------------------------------------- */}
+            <div className={styles.tableWrapper}>
+                    <table className={styles.table}>
+                        <thead className={styles.thead}>
+                            <tr>
+                                <td className={styles.theadtd}><input type="checkbox"></input></td>
+                                <td className={styles.theadtd}>이름</td>
+                                <td className={styles.theadtd}>
+                                    <select>
+                                        <option value="none">부서</option>
+                                        <option>인사팀</option> 
+                                        <option>회계팀</option> 
+                                        <option>영업팀</option> 
+                                    </select>
+                                </td>
+                                <td className={styles.theadtd}>
+                                    <select>
+                                        <option value="none">직위</option>
+                                        <option>사장</option> 
+                                        <option>대리</option> 
+                                        <option>사원</option> 
+                                    </select>   
+                                </td>
+                                <td className={styles.theadtd}>
+                                    <select>
+                                        <option value="none">사용자그룹</option>
+                                        <option>정규직</option> 
+                                        <option>계약직</option> 
+                                        <option>관리자</option> 
+                                    </select>
+                                </td>
+                                <td className={styles.theadtd}>이메일</td>
+                                <td className={styles.theadtd}>
+                                    <select>
+                                        <option value="none">계정상태</option>
+                                        <option>정상</option>
+                                        <option>휴면</option>
+                                        <option>중지</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody className={styles.tbody}>
+                            {/* 데이터영역 */}
+                        </tbody>
+                    </table>
+                </div>              
+            {/* ---------------------------------------------------------- */}
            
-                <div className={styles.checkbox}><input type="checkbox"></input></div>
-                <div className={styles.name}>이름</div>
-                <div className={styles.department}>
-                   
-                </div>
-                    <div className={styles.position}> 
-                        
-                    </div>
-                    <div className={styles.userGroup}>
-                        
-                    </div> 
-                    <div className={styles.email}>
-                        이메일
-                    </div>  
-                    <div className={styles.accountStatus}>
-                        
-                </div>
-                 
-                </div>
-
-            </div>
             <div className={styles.pagination}>
 
             </div>

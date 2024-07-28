@@ -4,7 +4,7 @@ import styles from './Member.module.css';
 import { MemMain } from './MemContent/MemMain/MemMain';
 import {Route, Routes} from "react-router-dom";
 import { AddMember } from './MemContent/AddMem/AddMember';
-import { Side } from './Side/Side';
+
 
 
 
