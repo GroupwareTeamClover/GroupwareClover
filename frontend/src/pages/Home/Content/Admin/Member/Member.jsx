@@ -14,7 +14,7 @@ export const Member = () => {
 
     return (
       <div className={styles.container}>
-        <Side/>
+       
         
          <Routes>
           <Route path="/" element={ <MemMain /> } />
