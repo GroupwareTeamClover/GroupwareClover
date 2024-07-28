@@ -15,6 +15,22 @@
     border-bottom: 1px solid darkgray;
 }
 
+.companyLogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.companyLogo > img {
+    width: 60px;
+    height: 60px;
+}
+
+.companyLogo > span {
+    font-size: 24px;
+    font-weight: 800;
+}
+
 .userInfo {
     display: flex;
     align-items: center;
