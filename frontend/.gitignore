@@ -279,6 +279,6 @@ $RECYCLE.BIN/
 
 
 # Member URL setting2
-members.js
+../../../../api/members/members.js
 
 # End of https://www.toptal.com/developers/gitignore/api/react,nextjs,windows,visualstudiocode,eclipse,intellij
