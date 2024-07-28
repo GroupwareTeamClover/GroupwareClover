@@ -21,23 +21,30 @@
 .content{
     flex: 8.5;
     display: flex;
+    border: 2px solid #ddd;
 }
 
 .searchBox{
-    flex: 5;
+    padding: 15px;
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
+    
 }
 
 .searchLine{
     flex:1;
     padding: 3px;
     display: flex;
+    border: 2px solid #ddd;
+    border-radius: 4px;
 }
 
 .searchContent{
-    flex:9;
-    padding:3px;
+    flex:8;
+    padding-top: 10px;
+    padding-left: 10px;
 }
 
 .inputBox{
@@ -47,6 +54,13 @@
 .input{
     width: 99%;
     height: 99%;
+    padding-left: 5px;
+    border: none;
+}
+
+.input:focus{
+    border: none;
+    outline: none;
 }
 
 .iconBox{
@@ -56,8 +70,31 @@
     align-items: center;
 }
 
-
-.infoBox{
-    flex: 5;
-    padding: 3px;
+.footer{
+    flex:1
 }
+
+.btnBox {
+    width: 250px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.btnBox > button {
+    width: 90px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    font-size: 18px;
+    font-weight: 900;
+    color: darkgray;
+}
+
+.btnBox > button:hover {
+    cursor: pointer;
+    color: orange;
+}
+
+
+

@@ -2,30 +2,40 @@ import { useState, useEffect } from 'react';
 import styles from './ChoiceForm.module.css'
 import { FaSearch} from "react-icons/fa";
 import { Folder } from '../../../../../components/Folder/Folder';
-
+import { BaseIP } from '../../../../../commons/members';
+import axios from 'axios';
+import { Modal } from '../../../../../components/Modal/Modal';
 
 export const ChoiceForm= () =>{
+    //데이터 모습
+    // const folderData=[
+    //     {
+    //         name: "일반",
+    //         children: [{name :"업무기안"}]
+    //     },
+    // ]
 
+    //데이터 가져오기
+    const [folderData, setFolderData]=useState([]);
 
-    const folderData=[
-        {
-            name: "일반",
-            children: [{name :"업무기안"}]
-        },
-        {
-            name: "인사",
-            children: [{name: "휴가신청서"},{name:"연차신청서"}]
-        }
-    ]
+    useEffect(()=>{
+        axios.get(`${BaseIP()}/docCode`).then((resp)=>{
+            const newFolderData=resp.data.map((line)=>({
+                name: line.CODE,
+                children: [{name: line.NAME}]
+            }))
+            setFolderData(newFolderData);
+        })
+    },[])
 
-    
+    //검색내용가져오기
     const [searchInput, setSearchInput]=useState('');
-    const [filteredData, setFilteredData] = useState(folderData);
-
     const handleSearchData=(e)=>{
         setSearchInput(e.target.value);
     }
 
+    //검색필터설정
+    const [filteredData, setFilteredData] = useState(folderData);
     useEffect(() => {
         const filterFolders = (data, query) => {
             if (!query) {
@@ -46,7 +56,45 @@ export const ChoiceForm= () =>{
         };
 
         setFilteredData(filterFolders(folderData, searchInput));
-    }, [searchInput]);
+    }, [searchInput, folderData]);
+
+    //양식선택
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const handleNextClick = () => {
+        console(selectedItem);
+        if (selectedItem) {
+            setIsModalOpen(true);
+        } else {
+            alert("항목을 선택하세요.");
+        }
+    };
+
+
+    //다음모달창
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [Page, setPage] = useState(1);
+
+    const handlePageChange = (e) =>{
+        setPage(prev => {
+          if(e.target.name === "prev") {
+            if(prev === 1) return 1;
+            else return prev - 1;
+          } else {
+            if(prev === 2) return 2;
+            else return prev + 1;
+          }
+        });
+    }
+
+
+    //콜백함수로 전달받은 선택한 양식 이름
+    const handleItemClick = (item) => {
+        setSelectedItem(item);
+        console.log(item)
+    };
+
 
 
     return(
@@ -64,13 +112,18 @@ export const ChoiceForm= () =>{
                     </div>
                     <div className={styles.searchContent}>
                         {filteredData.map((folder, index) => (
-                            <Folder key={index} folder={folder} />
+                            <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedItem} />
                         ))}
                     </div>
-                
                 </div>
-                <div className={styles.infoBox}></div>
             </div>
+           
+            {isModalOpen && (
+                <Modal 
+                    item={selectedItem} 
+                    onClose={() => setIsModalOpen(false)} 
+                />
+            )}
         </div>
     )
 }

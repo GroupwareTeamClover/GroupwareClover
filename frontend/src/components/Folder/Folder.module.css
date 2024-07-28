@@ -16,12 +16,25 @@
   .folderHeader span {
     margin-left: 5px;
   }
+
+  .headerText{
+    font-size: 14.5px;
+  }
   
   .folderContent {
     margin-left: 20px;
     padding-left: 10px;
     position: relative;
   }  
+
+  .contentText{
+    font-size: 14.5px;
+  }
+
+  .contentText:hover{
+    cursor: pointer;
+    background-color: lightgray;
+  }
  
 
   /* 추가: 파일 아이콘 옆에 꺾인 선 */
