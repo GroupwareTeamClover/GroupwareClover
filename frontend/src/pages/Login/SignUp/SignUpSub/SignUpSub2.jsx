@@ -77,7 +77,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <input type="text" name="emp_birth" maxLength="6" value={ sendData.emp_birth || "" } onChange={handleDataCheck} placeholder=""/>　-　
             <input type="text" name="emp_gender" maxLength="1" value={ sendData.emp_gender || "" } onChange={handleDataCheck} />******
           </div>
-
         </div>
 
         { /* Birth & Gender empty check */
@@ -112,7 +111,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
             :
             <></>
         }
-
       </div>
     </div>
   );

@@ -1,9 +1,7 @@
 import styles from './SignUpSub.module.css'
 import { validateUserId, validatePassword } from '../../../../commons/common'
-import {useEffect, useRef, useState} from "react";
+import {useEffect} from "react";
 export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) => {
-
-  const pwChecker = useRef("");
 
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
@@ -18,23 +16,17 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
     }
 
     if(name === "emp_pw" || name === "pw_check") {
-      setSendData(prev => {
-        const data = {...prev, [name]: value};
-        if(data.emp_pw === data.pw_check) {
-          if(validatePassword(value)) setCheckData(prev => ({ ...prev, [name]: true}));
-          else setCheckData(prev => ({ ...prev, [name]: false}));
-        } else setCheckData(prev => ({ ...prev, [name]: false}));
-        return data;
-      });
+      setSendData(prev =>  ({...prev, [name]: value}));
     }
+
   }
-    // const response = await axios.post("http://192.168.1.7/member", e.target.value);
-    // if(response.status === 200 && response.data === "OK"){
-    //   if(validateUserId(idSave)) setIdCheck(true);
-    //   else setIdCheck(false);
-    // } else {
-    //   setIdCheck(false);
-    // }
+
+  useEffect(() => {
+    if(sendData.emp_pw === sendData.pw_check) {
+      if(validatePassword(sendData.emp_pw)) setCheckData(prev => ({ ...prev, emp_pw: true}));
+      else setCheckData(prev => ({ ...prev, emp_pw: false}));
+    } else setCheckData(prev => ({ ...prev, emp_pw: false}));
+  }, [sendData.emp_pw, sendData.pw_check]);
 
 
   return (
@@ -74,10 +66,11 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
         { /* Password empty check */
           sendData.emp_pw !== "" ?
             <div className={styles.row}>
-              {checkData.emp_pw ?
-                <p style={{color: "green"}}>비밀번호 일치</p>
-                :
-                <p style={{color: "red"}}>비밀번호 불일치</p>
+              { /* Password check */
+                checkData.emp_pw ?
+                  <p style={{color: "green"}}>비밀번호 일치</p>
+                  :
+                  <p style={{color: "red"}}>비밀번호 불일치</p>
               }
             </div>
             :
