@@ -98,7 +98,7 @@ CREATE TABLE pop_board (
     pop_is_active CHAR(1) DEFAULT 'n' CHECK (pop_is_active IN ('y', 'n')) NOT NULL,
     pop_write_date TIMESTAMP DEFAULT SYSDATE NOT NULL, 
     pop_updated_date TIMESTAMP NULL,
-    pop_is_repeated CHAR(1) DEFAULT 'n' CHECK (pop_is_active IN ('y', 'n')) NOT NULL
+    pop_is_repeated CHAR(1) DEFAULT 'n' CHECK (pop_is_repeated IN ('y', 'n')) NOT NULL
 );
 
 CREATE SEQUENCE pop_board_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
@@ -112,7 +112,7 @@ CREATE TABLE pop_repeated (
     weekday NUMBER NULL
 );
 
-CREATE SEQUENCE pop_repeated START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
+CREATE SEQUENCE pop_repeated_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
 
 CREATE TABLE log (
     log_seq number primary key, 
@@ -270,6 +270,8 @@ CREATE TABLE document (
 	doc_com_seq	varchar(30)		NULL
 );
 
+CREATE sequence document_sequence start with 0001 INCREMENT by 1 nocache nomaxvalue;
+
 
 CREATE TABLE apv_line (
 	line_seq	number		NOT NULL,
@@ -281,7 +283,7 @@ CREATE TABLE apv_line (
 	doc_seq	number		NOT NULL
 );
 
-
+CREATE sequence apv_line_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 CREATE TABLE dayoff (
 	dayoff_seq	number		NOT NULL,
@@ -294,7 +296,7 @@ CREATE TABLE dayoff (
 	Field	VARCHAR(255)		NULL
 );
 
-
+CREATE sequence dayoff_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 CREATE TABLE business (
 	bs_seq	number		NOT NULL,
@@ -305,16 +307,18 @@ CREATE TABLE business (
 );
 
 
-
+CREATE sequence business_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 CREATE TABLE participants_line (
-	line_seq	number		NOT NULL,
-	doc_seq	number		NOT NULL,
-	emp_seq	number		NOT NULL,
-	pcp_ division	char(1)		NOT NULL,
-	read_yn	CHAR(1) DEFAULT 'n' CHECK (egc_yn IN ('y', 'n')) NOT NULL,
-	read_date	timestamp		NULL
+    line_seq     number        NOT NULL,
+    doc_seq      number        NOT NULL,
+    emp_seq      number        NOT NULL,
+    pcp_division char(1)       NOT NULL,
+    read_yn      CHAR(1)       DEFAULT 'n' CHECK (read_yn IN ('y', 'n')) NOT NULL,
+    read_date    timestamp     NULL
 );
+
+CREATE sequence participants_line_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 
 CREATE TABLE apv_state_code (
@@ -324,13 +328,14 @@ CREATE TABLE apv_state_code (
 
 CREATE TABLE doc_state_code (
 	doc_state_code	number		NOT NULL,
-	doc_state_name	varchaar(30)		NOT NULL
+	doc_state_name	varchar(30)		NOT NULL
 );
 
 CREATE TABLE doc_detail_code (
-	doc_detail_code	number		NOT NULL,
-	doc_detail_name	varchar(30)		NOT NULL,
-	doc_code	number		NOT NULL
+    doc_detail_code number        NOT NULL,
+    doc_detail_name varchar(30)   NOT NULL,
+    retention_period number       NOT NULL,
+    doc_code        number        NOT NULL
 );
 
 CREATE TABLE doc_code (
@@ -339,5 +344,12 @@ CREATE TABLE doc_code (
 );
 
 
+--**************insert 데이트 문***************
+--박새미
+insert into doc_code values(1,'일반');
+insert into doc_code values(2, '근태');
+insert into doc_detail_code values(1, '업무기안' ,1);
+insert into doc_detail_code values(2, '휴가신청서', 2);
 
+--**************트리거 or 함수***************
 

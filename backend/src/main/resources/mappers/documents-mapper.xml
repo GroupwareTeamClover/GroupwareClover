@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Documents">
+	<select id="selectDocCodeInfo" resultType="java.util.Map">
+		select  c.doc_code_name as code, d.doc_detail_name as name, d.retention_period as period
+		from doc_detail_code d
+		join doc_code c on d.doc_code=c.doc_code
+	</select>
+</mapper>

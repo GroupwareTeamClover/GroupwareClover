@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {useEffect, useState} from "react";
 import { Modal } from '../../../../../components/Modal/Modal';
 import { ChoiceForm } from '../ChoiceForm/ChoiceForm';
+import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
 
 export const Side = () => {
     const navi = useNavigate();
@@ -12,22 +13,23 @@ export const Side = () => {
         navi(path, { state: { type } });
     };
 
-    //새 결재 진행시 모달창 띄우기
+    //새 결재 클릭시 모달창 띄우기
+    const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-   
-    const [ modalState, setModalState ] = useState("");
+
     const handleModalChange = (e) => {
       setModalState(e.target.name);
+      setPage(1);
       openModal();
     }
 
-    //페이지 변환
-    const [signUpPage, setSignUpPage] = useState(1);
+    //모달 페이지 변환
+    const [Page, setPage] = useState(1);
 
     const handlePageChange = (e) =>{
-        setSignUpPage(prev => {
+        setPage(prev => {
           if(e.target.name === "prev") {
             if(prev === 1) return 1;
             else return prev - 1;
@@ -37,14 +39,13 @@ export const Side = () => {
           }
         });
     }
-
     
 
     return (
         <div className={styles.sideBox}>
             <div className={styles.textBox}>전자결재</div>
             <div className={styles.btnBox}>
-                <button className={styles.addBtn} onClick={handleModalChange} name="ChoiceForm">새 결재 진행하기</button>
+                <button className={styles.addBtn} onClick={handleModalChange} name="ModalForm">새 결재 진행하기</button>
             </div>
             <div className={styles.proceedingBox}>
                 <div className={styles.boxtext}>진행중 문서</div>
@@ -89,21 +90,18 @@ export const Side = () => {
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
-                    {   modalState === "ChoiceForm" &&
+                    {modalState === "ModalForm" && (
                         <>
-                        <ChoiceForm signUpPage={signUpPage}/>
-                        <div className={ styles.modalbtnBox }>
-                            <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
-                            <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
-                        </div>
+                            {Page === 1 && <ChoiceForm Page={Page} />}
+                            {Page === 2 && <ChoiceLine Page={Page} />}
+                            <div className={styles.modalbtnBox}>
+                                <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
+                                <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
+                            </div>
                         </>
-                    }
+                    )}
                 </div>
             </Modal>
-
-
         </div>
-
-       
     );
 };
