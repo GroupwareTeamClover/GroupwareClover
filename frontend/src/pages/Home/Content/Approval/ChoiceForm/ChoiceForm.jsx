@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styles from './ChoiceForm.module.css'
 import { FaSearch} from "react-icons/fa";
 import { Folder } from '../../../../../components/Folder/Folder';
-import { BaseIP } from '../../../../../commons/members';
+import { baseUrl } from '../../../../../api/members';
 import axios from 'axios';
 import { Modal } from '../../../../../components/Modal/Modal';
 
@@ -19,7 +19,7 @@ export const ChoiceForm= () =>{
     const [folderData, setFolderData]=useState([]);
 
     useEffect(()=>{
-        axios.get(`${BaseIP()}/docCode`).then((resp)=>{
+        axios.get(`${baseUrl()}/docCode`).then((resp)=>{
             const newFolderData=resp.data.map((line)=>({
                 name: line.CODE,
                 children: [{name: line.NAME}]

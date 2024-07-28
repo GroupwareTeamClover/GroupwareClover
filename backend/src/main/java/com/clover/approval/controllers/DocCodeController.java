@@ -20,7 +20,6 @@ public class DocCodeController {
 	
 	@GetMapping
 	public ResponseEntity<List<Map<String,?>>> get(){
-		List<Map<String,?>> list=documentService.getDocCodeInfo();
-		return ResponseEntity.ok(list);
+		return ResponseEntity.ok(documentService.getDocCodeInfo());
 	}
 }

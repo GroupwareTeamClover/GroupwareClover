@@ -15,8 +15,7 @@ public class DocumentService {
 	private DocumentDAO documentdao;
 	
 	public List<Map<String,?>> getDocCodeInfo(){
-		List<Map<String,?>> list = documentdao.selectDocCodeInfo();
-		return list;
+		return documentdao.selectDocCodeInfo();
 	}
 
 }

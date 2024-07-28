@@ -13,10 +13,6 @@ public class DocumentDAO {
 	private SqlSession mybatis;
 	
 	public List<Map<String, ?>> selectDocCodeInfo(){
-		List<Map<String, ?>> list= mybatis.selectList("Documents.selectDocCodeInfo");
-		for(Map<String,?> map:list) {
-			System.out.println(map);
-		}
-		return list;
+		return mybatis.selectList("Documents.selectDocCodeInfo");
 	}
 }
