@@ -1,7 +1,10 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './MemMain.module.css';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import axios from 'axios';
+import { Modal } from '../../../../../../../components/Modal/Modal';
+import { ModalPosition } from '../ModalPosition/ModalPosition';
+import { ModalGroup } from '../ModalGroup/ModalGroup';
 
 
 
@@ -11,16 +14,51 @@ export const MemMain = () => {
 
     const navi = useNavigate();
 
-    const [status, setStatus] = useState('');
+    const [status, setStatus] = useState({status:''});
     const [member, setMember] = useState();
-    const [members, setMembers] = useState([]);
+    const [members, setMembers] = useState([
+        {seq:1, name:'김일일', dept:'인사팀',position:'대리', group:'정규직',email:'jeesu@naver.com',status:'정상'},
+        {seq:2, name:'정일일', dept:'영업팀',position:'과장', group:'정규직',email:'abc@naver.com',status:'정상'},
+        {seq:3, name:'최일일', dept:'영업팀',position:'대리', group:'계약직',email:'abc1@naver.com',status:'중지'}
+    ]);
     // useEffect(()=>{
     //     axios.get(`{baseUrl}/`)
     // })
-    
-    const handleModal=()=>{
 
+
+
+    // ----전체 체크박스 클릭
+    const checkboxRef = useRef([]);
+    const handleCheckAll = (e)=>{
+        const checked = e.target.checked;
+        checkboxRef.current.forEach(checkbox => {
+            if(checkbox){
+                checkbox.checked = checked;
+            }
+        })
     }
+
+
+    // ------------- 모달----------------------------------------
+    const [ modalState, setModalState ] = useState("");
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+
+
+    // 모달) select 설정시---------------------------------
+    const handleSelectChange=(e)=>{
+        const {name,value} = e.target;
+        setStatus(prev =>({...prev, [name]:value}))
+    }
+    // 모달) 변경 버튼 클릭시 
+    const handleModalChange = (e) => {
+        const modalName = e.target.value;
+        setModalState(modalName);
+        openModal();
+    }
+
+  
    
     // axios로 출력받기 emp table - state가 0인 상태인 것. 
     const handleGetNew = ()=>{
@@ -41,14 +79,14 @@ export const MemMain = () => {
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
-                    <button onClick={()=>{navi("/member/addmem")}}>사원추가</button>
                     <button>사원삭제</button>
-                    <select name='ch_status' onClick={handleModal}>
+                    <select name='status' onChange={handleSelectChange}>
                         <option value="none">상태변경</option>
-                        <option value="role">직위변경</option>
-                        <option value="worker_state">사용자그룹변경</option>
-                        <option value="state">계정상태변경</option>
+                        <option value="position">직위변경</option>
+                        <option value="group">사용자그룹변경</option>
+                        <option value="status">계정상태변경</option>
                     </select>
+                    <button onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
                 </div>
                 <div className={styles.col_search}>
 
@@ -60,7 +98,7 @@ export const MemMain = () => {
                     <table className={styles.table}>
                         <thead className={styles.thead}>
                             <tr>
-                                <td className={styles.theadtd}><input type="checkbox"></input></td>
+                                <td className={styles.theadtd}><input type="checkbox" onClick={handleCheckAll}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
                                     <select>
@@ -99,37 +137,31 @@ export const MemMain = () => {
                         </thead>
                         <tbody className={styles.tbody}>
                             {/* 데이터영역 */}
-                            <tr>
-                                <td className={styles.theadtd}><input type="checkbox"></input></td>
-                                <td className={styles.theadtd}>정뚜리</td>
-                                <td className={styles.theadtd}>
-                                    인사팀
-                                </td>
-                                <td className={styles.theadtd}>
-                                    대리
-                                </td>
-                                <td className={styles.theadtd}>
-                                    관리자
-                                </td>
-                                <td className={styles.theadtd}>jeesu31@naver.com</td>
-                                <td className={styles.theadtd}>
-                                    정상
-                                </td>
-                            </tr>
-                            {/* {
-                                newMem.map((mem, i)=>{
+                            {
+                                members.map((mem, i)=>{
                                     return(
-                                        <tr key={i}>
-                                            <td>{mem.name} </td>
-                                            <td>{mem.dept} </td>
-                                            <td>{mem.position} </td>
-                                            <td>{mem.group} </td>
-                                            <td>{mem.joindate} </td>
-                                            <td>{mem.status} </td>
+                                        <tr key={mem.seq}>
+                                            <td className={styles.theadtd}><input type="checkbox" ref={data=> checkboxRef.current[i]=data}></input></td>
+                                            <td className={styles.theadtd}>{mem.name}</td>
+                                            <td className={styles.theadtd}>
+                                                {mem.dept}
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.position}
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.group}
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.email}
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.status}
+                                            </td>
                                         </tr>
                                     )
                                 })
-                            } */}
+                            }
                         </tbody>
                     </table>
                 </div>              
@@ -139,6 +171,23 @@ export const MemMain = () => {
                 1 2 3 4 5
             </div>
         </div>
+
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <div className={styles.modalForm}>
+                    {modalState === 'position' &&
+                        <>
+                        <ModalPosition/>
+                        </>
+                    }
+                    {modalState === 'group' &&
+                        <>
+                        <ModalGroup/>
+                        </>
+                    }
+                    
+                </div>
+        </Modal>
+        
       </div>
     );
   }
