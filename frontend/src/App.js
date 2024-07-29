@@ -34,11 +34,17 @@ function App() {
   return (
     <div className="container">
       <Router>
+
+
         { !sign && <Login setSign={ setSign }/> }
         { sign && <SideMenu open={open} setOpen={setOpen}/>  }
         { sign && <Home /> }
+
+
+
+        {/* 관리자페이지 */}
         {/* { !sign && <Login setSign={ setSign }/> }
-        { sign && <AdminSideMenu />  }
+        { sign && <AdminSideMenu open={open} setOpen={setOpen} />  }
         {  sign && <Admin /> } */}
       </Router>
     </div>

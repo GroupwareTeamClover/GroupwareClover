@@ -1,86 +1,63 @@
-.container {
+/* div{
+    border: 1px solid black;
+} */
+
+/* table, tbody, thead, tr, th, td{
+    border:1px solid black;
+} */
+
+.container{
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.member_info{
+    border: 1px solid black;
+    /* height: 15%; */
+    flex:1;
+     padding-left: 24px;
+    display: flex;
+    align-items: center;
+}
+.member_total{
+    flex:0.3;
+}
+.member_detail{
+    flex:1;
+}
+
+.body{
+    border: 1px solid black;
+    /* height: 75%; */
+    flex:7;
+}
+
+
+.tableWrapper{
+    flex:8.5;
+}
+
+.table{
+    width: 100%;
+    height: 100%;
+}
+
+
+.theadtd{
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.modalForm {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
-.header{
-    width: 100%;
-    
-    background-color: green;
-    padding: 10px;
-    padding-bottom: 80px;
-}
-    .member_info{
-        display: flex;
-        padding: 20px;
-        /* height: ; */
-    }
-    .member_total{
-        flex:1;
-    }
-    .member_detail{
-        flex:2;
-    }
-.body{
-    width: 100%;
-    height: 70%;
-   
-}
-.row_header{
-    width: 100%;
-    height: 10%;
-    display: flex;
-    background-color: lightyellow;
-}
-    .checkbox{
-        flex:1;
-    }
-    .name{
-        flex:2;
-    }
-    .department{
-        flex:2;
-    }
-    .position{
-        flex:2;
-    }
-    .userGroup{
-        flex:2;
-    }
-    .email{
-        flex:3;
-    }
-    .accountStatus{
-        flex:2;
-    }
-
-
-
-
-
-    .col_button{
-        flex:1;
-        display: flex;
-    }
-    .col_button button{
-       width: 90px;
-    }
-    .col_search{
-        flex:1;
-    }
-.row_body{
-    width: 100%;
-    height: 80%;
-    background-color: pink;
-   
-}
-.rowMember{
-    display: flex;
-}
-.pagination{
-    width: 100%;
-    height: 10%;
-    background-color: lightblue;
-}
