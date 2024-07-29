@@ -1,4 +1,4 @@
---조진혁
+
 -- 변경사항
 -- ReadStatus 테이블 -> LastReadMessage 테이블로 변경 
 -- 사유 : 데이터가 너무 커지기 때문
@@ -11,12 +11,13 @@
 -- 변경사항 2
 -- chatMembers에 role 추가.
 
+--조진혁
 -- room_seq, emp_seq, message_seq 모두 외래키, emp_seq, room_seq는 기본키
 CREATE TABLE LastReadMessage (
     emp_seq NUMBER primary key,
     room_seq NUMBER,
     last_read_message_seq NUMBER,
-    last_read_time TIMESTAMP DEFAULT SYSDATE NOT NULL,
+    last_read_time TIMESTAMP DEFAULT SYSDATE NOT NULL
 );
 
 

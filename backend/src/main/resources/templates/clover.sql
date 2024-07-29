@@ -167,75 +167,19 @@ create sequence boardlist_sequence start with 1 increment by 1 nomaxvalue nocach
 
 
 --조진혁
--- 채팅방 입장 로그
-Create table chatRoomLog (
-    room_time_seq number primary key,
-    emp_seq number not null,
-    singer number not null,
-    join_time timestamp, 
-    left_time timestamp
+-- room_seq, emp_seq, message_seq 모두 외래키, emp_seq, room_seq는 기본키
+CREATE TABLE LastReadMessage (
+    emp_seq NUMBER primary key,
+    room_seq NUMBER,
+    last_read_message_seq NUMBER,
+    last_read_time TIMESTAMP DEFAULT SYSDATE NOT NULL
 );
 
-Create sequence room_time_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
--- 채팅방
-Create table chatRoom (
-    room_seq number primary key,
-    room_name varchar(100) not null,
-    room_state char(1) default 'T' not null,
-    room_create_time timestamp default sysdate not null,
-    room_type varchar(20) not null
-);
-
-Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
--- 멤버채팅방 연결엔티티
-Create table chatMembers (
-    emp_seq number primary key,
-    room_seq number not null
-);
-
--- 1:1 채팅방
-Create table privateMessage (
-    private_room_seq number primary key,
-    send_time timestamp default sysdate not null,
-    room_seq number not null,
-    sender_seq number not null,
-    reciver_seq number not null
-);
-
-Create sequence private_room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
--- 그룹 채팅방
-Create table GroupChatRoom (
-    group_room_seq number primary key,
-    description varchar(255) null,
-    create_emp_seq number not null,
-    create_time timestamp default sysdate not null,
-    room_seq number not null
-);
-
-Create sequence group_room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
--- 채팅방 메시지
-Create table ChatMessage (
-    message_seq number primary key,
-    message_content clob not null,
-    message_type varchar(20) not null,
-    user_confirm char(1) default 'F' not null,
-    send_time timestamp not null,
-    room_seq number not null,
-    sender_seq number not null
-);
-
-Create sequence message_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 -- 알림정보
 Create table Notifications (
     notification_seq number primary key,
+    notification_type varchar2(20) not null,
     is_read char(1) default 'F' not null,
     create_date timestamp default sysdate not null,
     message_seq number not null,
@@ -244,15 +188,53 @@ Create table Notifications (
 
 Create sequence notification_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
--- 읽은 상태
-Create table ReadStatus (
-    read_seq number primary key,
-    read_time timestamp not null,
-    message_seq number not null,
+-- 채팅방 입장 로그
+Create table chatRoomLog (
+    room_time_seq number primary key,
+    emp_seq number not null,
+    room_seq number not null,
+    join_time timestamp, 
+    left_time timestamp
+);
+
+Create sequence room_time_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
+
+-- 채팅방 메시지
+-- room_seq와 sender_seq가 외래키, user_confirm이 꼭 필요한가.
+
+Create table ChatMessage (
+    message_seq number primary key,
+    message_content clob not null,
+    message_type varchar(20) not null,
+    send_time timestamp not null,
+    room_seq number not null,
+    sender_seq number not null
+);
+
+Create sequence message_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
+-- 채팅방
+Create table chatRoom (
+    room_seq number primary key,
+    room_name varchar(100) not null,
+    room_state char(1) default 'T' not null check (room_state in ('T', 'F')),
+    room_create_time timestamp default sysdate not null,
+    room_type varchar(20) not null check (room_type in ('private', 'group', 'public')),
+    room_description varchar2(255),
     emp_seq number not null
 );
 
-Create sequence read_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
+-- 멤버채팅방 연결엔티티
+Create table chatMembers (
+    emp_seq number primary key,
+    room_seq number not null,
+    member_role VARCHAR2(20) DEFAULT 'MEMBER' 
+        CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),
+    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    
+);
 
 
 

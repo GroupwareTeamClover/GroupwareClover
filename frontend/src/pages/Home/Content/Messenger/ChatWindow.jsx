@@ -45,9 +45,12 @@ const ChatWindow = () => {
   const createRoom = async () => {
     try {
       const response = await axios.post(`${BaseUrl()}/chat/rooms`, {
-        roomName: 'New Room',
-        roomType: 'private',
-        empSeq: 1
+        room_name: 'New Room',
+        room_state : 'T',
+        room_create_time : '2017-07-01',
+        room_type: 'private',
+        room_description : 'test',
+        emp_seq: 1
       });
       // 생성된 채팅방의 ID를 현재 채팅방으로 설정
       setCurrentRoom(response.data.roomSeq);

@@ -28,7 +28,10 @@ public class ChatController {
      */
     @PostMapping("/rooms")
     public ResponseEntity<ChatRoomDTO> createRoom(@RequestBody ChatRoomDTO room) {
+        System.out.println(room.getRoom_seq() + " -> " + room.getRoom_name() + " -> " + room.getRoom_state() + " -> " + room.getRoom_create_time() + room.getRoom_type() + " -> " + room.getEmp_seq());
         ChatRoomDTO createdRoom = chatService.createRoom(room);
+        System.out.println(createdRoom.getRoom_seq() + " : " + createdRoom.getRoom_name() + " -> " + createdRoom.getRoom_state() + " -> " + room.getRoom_create_time() + room.getRoom_type() + " -> " + room.getEmp_seq());
+
         return ResponseEntity.ok(createdRoom);
     }
 

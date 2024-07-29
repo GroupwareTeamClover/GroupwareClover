@@ -4,8 +4,11 @@ import java.util.Map;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
+
+import jakarta.servlet.http.HttpSession;
 
 public class HttpSessionInterceptor implements HandshakeInterceptor {
 
@@ -31,6 +34,11 @@ public class HttpSessionInterceptor implements HandshakeInterceptor {
         //         return false; // 로그인되지 않은 경우 연결 거부
         //     }
         // }
+        if (request instanceof ServletServerHttpRequest) {
+            ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+            HttpSession session = servletRequest.getServletRequest().getSession();
+            attributes.put("hSession", session);
+        }                        
         return true;
     }
 
