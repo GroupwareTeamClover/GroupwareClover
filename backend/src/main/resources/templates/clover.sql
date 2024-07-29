@@ -262,11 +262,11 @@ CREATE TABLE document (
 	doc_detail_code	number		NOT NULL,
 	doc_state_code	number		NOT NULL,
 	drafter_seq	number		NOT NULL,
-	egc_yn	CHAR(1) DEFAULT 'n' CHECK (egc_yn IN ('y', 'n')) NOT NULL,
-	write_date	timestamp	DEFAULT sysdate	NOT NULL,
+	egc_yn	CHAR(1) DEFAULT 'n' CHECK (egc_yn IN ('y', 'n')) NULL,
+	write_date	timestamp	DEFAULT sysdate NULL,
 	finish_date	timestamp		NULL,
-	current_apver_seq	number		NOT NULL,
-	final_apver_seq	number		NOT NULL,
+	current_apver_seq	number  NULL,
+	final_apver_seq	number	    NULL,
 	doc_com_seq	varchar(30)		NULL
 );
 
