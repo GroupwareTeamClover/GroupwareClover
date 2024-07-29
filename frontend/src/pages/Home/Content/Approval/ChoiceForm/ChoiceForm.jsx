@@ -2,31 +2,43 @@ import { useState, useEffect } from 'react';
 import styles from './ChoiceForm.module.css'
 import { FaSearch} from "react-icons/fa";
 import { Folder } from '../../../../../components/Folder/Folder';
-import { baseUrl } from '../../../../../api/members';
+import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
-import { Modal } from '../../../../../components/Modal/Modal';
 
-export const ChoiceForm= () =>{
+
+export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
     //데이터 모습
     // const folderData=[
     //     {
     //         name: "일반",
-    //         children: [{name :"업무기안"}]
+    //         children: [{name :"업무기안", period:"5"}.
+    //                    {name: "휴가신청서", period:"5"}]
     //     },
     // ]
 
     //데이터 가져오기
     const [folderData, setFolderData]=useState([]);
 
-    useEffect(()=>{
-        axios.get(`${baseUrl()}/docCode`).then((resp)=>{
-            const newFolderData=resp.data.map((line)=>({
-                name: line.CODE,
-                children: [{name: line.NAME}]
-            }))
+
+    useEffect(() => {
+        axios.get(`${BaseUrl()}/docCode`).then((resp) => {
+            const data = resp.data;
+            console.log(data)
+            // 부서별로 데이터를 그룹화
+            const departmentMap = data.reduce((acc, current) => {
+                const { CODE, NAME, PERIOD } = current;
+                if (!acc[CODE]) {
+                    acc[CODE] = { name: CODE, children: [] };
+                }
+                acc[CODE].children.push({ name: NAME, period: PERIOD });
+                return acc;
+            }, {});
+
+            // 객체를 배열로 변환
+            const newFolderData = Object.values(departmentMap);
             setFolderData(newFolderData);
-        })
-    },[])
+        });
+    }, []);
 
     //검색내용가져오기
     const [searchInput, setSearchInput]=useState('');
@@ -58,17 +70,19 @@ export const ChoiceForm= () =>{
         setFilteredData(filterFolders(folderData, searchInput));
     }, [searchInput, folderData]);
 
-    //양식선택
-    const [selectedItem, setSelectedItem] = useState(null);
-
-    const handleNextClick = () => {
-        console(selectedItem);
-        if (selectedItem) {
-            setIsModalOpen(true);
-        } else {
-            alert("항목을 선택하세요.");
-        }
+    //콜백함수로 전달받은 선택한 양식 이름을 폴더데이터에서 가져와서 비교해 정보저장
+     const handleItemClick = (item) => {
+        //찾기
+        folderData.map((data,index)=>{
+            data.children.map((children,index)=>{
+                if(children.name===item.name){
+                    setSelectedDocCode({name: data.name, children: item})
+                }
+            })
+        })
     };
+
+    
 
 
     //다음모달창
@@ -88,13 +102,13 @@ export const ChoiceForm= () =>{
         });
     }
 
-
-    //콜백함수로 전달받은 선택한 양식 이름
-    const handleItemClick = (item) => {
-        setSelectedItem(item);
-        console.log(item)
+    const handleNextClick = () => {
+        if (selectedDocCode) {
+            setIsModalOpen(true);
+        } else {
+            alert("항목을 선택하세요.");
+        }
     };
-
 
 
     return(
@@ -103,29 +117,52 @@ export const ChoiceForm= () =>{
                 <h4 className={styles.headerText}>결재양식 선택</h4>
             </div>
             <div className={styles.contentWrapper}>
-            <div className={styles.content}>
-                <div className={styles.searchBox}>
-                    <div className={styles.searchLine}>
-                        <div className={styles.inputBox}> 
-                            <input type='text' className={styles.input} placeholder='양식선택' onChange={handleSearchData}></input>
-                            </div>
-                        <div className={styles.iconBox}><FaSearch/></div>
+                {/* 왼쪽 */}
+                <div className={styles.content}>
+                    <div className={styles.searchBox}>
+                        <div className={styles.searchLine}>
+                            <div className={styles.inputBox}> 
+                                <input type='text' className={styles.input} placeholder='양식선택' onChange={handleSearchData}></input>
+                                </div>
+                            <div className={styles.iconBox}><FaSearch/></div>
+                        </div>
+                        <div className={styles.searchContent}>
+                            {filteredData.map((folder, index) => (
+                                <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedDocCode} setSelectedItem={setSelectedDocCode}/>
+                            ))}
+                        </div>
                     </div>
-                    <div className={styles.searchContent}>
-                        {filteredData.map((folder, index) => (
-                            <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedItem} />
-                        ))}
+                </div>
+                {/* 오른쪽 */}
+                <div className={styles.choice}>
+                    <div className={styles.choiceBox}>
+                        <div className={styles.choiceHeader}><span className={styles.choiceHeaderText}>상세정보</span></div>
+                        <div className={styles.choiceContent}>
+                            <div className={styles.choiceInfoLine}>
+                                <span className={styles.choiceContentText}>양식명:</span>
+                                &nbsp;  
+                                <span  className={styles.choiceText}>{selectedDocCode.children.name}</span>
+                            </div>
+                            <div className={styles.choiceInfoLine}>
+                                <span className={styles.choiceContentText}>양식구분:</span>
+                                &nbsp; 
+                                <span className={styles.choiceText}>{selectedDocCode.name}</span>
+                            </div>
+                            <div className={styles.choiceInfoLine}>
+                                <span className={styles.choiceContentText}>보존년한:</span> 
+                                &nbsp; 
+                                <span  className={styles.choiceText}>{selectedDocCode.children.period}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            </div>
-           
-            {isModalOpen && (
+        {/* {isModalOpen && (
                 <Modal 
                     item={selectedItem} 
                     onClose={() => setIsModalOpen(false)} 
                 />
-            )}
+            )} */}
         </div>
     )
 }

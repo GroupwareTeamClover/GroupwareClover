@@ -24,14 +24,14 @@ const Sidebar = () => {
 
     const [isAdmin, setIsAdmin] = useState(true);
 
-    const testDTO = {seq : 999, name: "구구구"}
+    const testDTO = { seq: 999, name: "구구구" }
 
     return (
         <div className={styles.bar}>
             <div className={styles.buttonBox}>
                 <button className={styles.writeButton}>글쓰기</button>
             </div>
-            <div className={styles.board} onClick={() => { navi("board", {state : testDTO}) }}><FaStar />중요 게시물</div>
+            <div className={styles.board} onClick={() => { navi("board", { state: testDTO }) }}><FaStar />중요 게시물</div>
             {
                 isAllBoardOpen ?
                     <div className={styles.board} onClick={togleIsAllBoard}><FaChevronUp />전사 게시판</div>
@@ -39,9 +39,9 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsAllBoard}><FaChevronDown />전사 게시판</div>
             }
             <div className={styles.allBoard} >
-                {isAllBoardOpen && [{ seq: 1, name: "사내공지"  }, { seq: 4, name: "자유 게시판" }].map((item, i) => {
+                {isAllBoardOpen && [{ seq: 1, name: "사내공지" }, { seq: 4, name: "자유 게시판" }].map((item, i) => {
                     return (
-                        <div key={i} className={styles.eachBoard} onClick={() => { navi("board", {state : item}) }}>{item.name}</div>
+                        <div key={i} className={styles.eachBoard} onClick={() => { navi("board", { state: item }) }}>{item.name}</div>
                     );
                 })
                 }
@@ -53,15 +53,15 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronDown />그룹 게시판</div>
             }
             <div className={styles.groupBoard}>
-                {isGroupBoardOpen && [{ seq: 5, name: "인사부 게시판" }, { seq: 6, name: "영업부 게시판"  }].map((item, i) => {
+                {isGroupBoardOpen && [{ seq: 5, name: "인사부 게시판" }, { seq: 6, name: "영업부 게시판" }].map((item, i) => {
                     return (
-                        <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", {state : item}) : alert("접근이 제한된 게시판입니다!") }}>{item.name}</div>
+                        <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", { state: item }) : alert("접근이 제한된 게시판입니다!") }}>{item.name}</div>
                     );
                 })
                 }
             </div>
-            {isAdmin && <div className={styles.board} onClick={() => { navi("createBoard")}}><FaPlusCircle />게시판 만들기</div>}
-            {isAdmin && <div className={styles.board} onClick={() => { navi("manageBoard")}}><FaHammer />게시판 관리</div>}
+            {isAdmin && <div className={styles.board} onClick={() => { navi("createBoard") }}><FaPlusCircle />게시판 만들기</div>}
+            {isAdmin && <div className={styles.board} onClick={() => { navi("manageBoard") }}><FaHammer />게시판 관리</div>}
         </div>
     );
 }

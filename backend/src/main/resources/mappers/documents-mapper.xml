@@ -8,4 +8,13 @@
 		from doc_detail_code d
 		join doc_code c on d.doc_code=c.doc_code
 	</select>
+	
+	
+	<select id="selectMemberInfo" resultType="java.util.Map">
+		select d.dept_name as dept, e.emp_name as name, r.role_name as role 
+		from employee e
+		left outer join department d on e.dept_code=d.dept_code
+		left outer join role r on e.role_code=r.role_code
+	</select>
+	
 </mapper>

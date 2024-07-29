@@ -27,14 +27,20 @@
     position: relative;
   }  
 
-  .contentText{
+  .contentText {
     font-size: 14.5px;
-  }
+    padding: 2px 5px; /* 선택된 항목의 배경이 잘 보이도록 패딩을 추가 */
+}
 
-  .contentText:hover{
+.contentText:hover {
     cursor: pointer;
-    background-color: lightgray;
-  }
+}
+
+.selected {
+    background-color: #dceffcf1; /* 선택된 항목의 배경색 */
+    font-weight: bold;
+    border-radius: 4px;
+}
  
 
   /* 추가: 파일 아이콘 옆에 꺾인 선 */

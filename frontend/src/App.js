@@ -36,16 +36,16 @@ function App() {
       <Router>
 
 
-        {/* { !sign && <Login setSign={ setSign }/> }
+        { !sign && <Login setSign={ setSign }/> }
         { sign && <SideMenu open={open} setOpen={setOpen}/>  }
-        { sign && <Home /> } */}
+        { sign && <Home /> }
 
 
 
         {/* 관리자페이지 */}
-        { !sign && <Login setSign={ setSign }/> }
+        {/* { !sign && <Login setSign={ setSign }/> }
         { sign && <AdminSideMenu open={open} setOpen={setOpen} />  }
-        {  sign && <Admin /> }
+        {  sign && <Admin /> } */}
       </Router>
     </div>
   );

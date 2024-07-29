@@ -1,6 +1,7 @@
 export const BaseUrl = () => {
     return process.env.REACT_APP_API_URL;   
 }
+
 if(!BaseUrl) throw new Error('REACT_APP_API_URL가 없음');
 
 // export const baseUrl = () => {
