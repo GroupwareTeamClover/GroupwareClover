@@ -1,0 +1,284 @@
+/* 폰트 정의 */
+@font-face {
+    font-family: 'DalseoHealingMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/DalseoHealingMedium.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+/* 전체 컨테이너 */
+.container {
+    display: flex;
+    height: 95vh;
+    background-color: #f5f6f7;
+    font-family: 'DalseoHealingMedium', sans-serif;
+    overflow: hidden;
+  }
+  
+  /* 왼쪽 패널 (채팅 목록) */
+  .leftPanel {
+    flex: 0 0 350px; /* 고정 너비 350px */
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    overflow: hidden;
+  }
+  
+  /* 오른쪽 패널 (채팅 창) */
+  .rightPanel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    max-width: 800px; /* 최대 너비 설정 */
+    overflow: hidden;
+  }
+  
+  /* 검색 바 */
+  .searchBar {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .searchBar input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  /* 온라인 사용자 목록 */
+  .onlineUsers {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+  }
+  
+  .userList {
+    display: flex;
+    overflow-x: auto;
+    margin-right: 50px; /* 버튼 공간 확보 */
+  }
+
+  .userIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin-right: 10px;
+  }
+  
+  .addUserButton {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+  }
+
+  .userSelectModal {
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .selectedUsers {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  
+  .selectedUser {
+    background-color: #e0e0e0;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 15px;
+    font-size: 14px;
+  }
+  
+  .confirmButton {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+
+  
+  /* 채팅 목록 */
+  .chatList {
+    flex: 1;
+    overflow-y: auto;
+  }
+  
+  .chatItem {
+    display: flex;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    align-items: center;
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin-right: 15px;
+  }
+  
+  .chatInfo {
+    flex: 1;
+  }
+  
+  .chatInfo h4 {
+    margin: 0;
+    font-size: 16px;
+  }
+  
+  .chatInfo p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #777;
+  }
+  
+  .time {
+    font-size: 12px;
+    color: #999;
+  }
+  
+  /* 채팅 창 */
+  .chatWindow {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  /* 채팅 헤더 */
+  .chatHeader {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+  }
+  
+  .chatHeader h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+  
+  .status {
+    font-size: 14px;
+    color: #4CAF50;
+    margin-left: 10px;
+  }
+  
+  /* =========ChatWindow======== 구역 */
+  /* 메시지 목록 */
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 개별 메시지 */
+  .message {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    max-width: fit-content;
+  }
+  
+  .message:not(.sent) {
+    max-width: 50%; /* 상대방 메시지의 최대 너비를 50%로 제한 */
+  }
+  
+  .message.sent {
+    align-self: flex-end;
+  }
+  
+  .messageWrapper {
+    display: inline-block;
+    max-width: 100%;
+  }
+  
+  .messageContent {
+    background-color: #f1f0f0;
+    padding: 10px 15px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    display: inline-block;
+    max-width: 100%;
+  }
+  
+  .message.sent .messageContent {
+    background-color: #dcf8c6;
+  }
+  
+  .messageTime {
+    font-size: 10px;
+    color: #999;
+    margin-top: 2px;
+    display: block;
+  }
+  
+  .message:not(.sent) .messageTime {
+    text-align: left;
+  }
+  
+  .message.sent .messageTime {
+    text-align: right;
+  }
+  
+  /* 메시지 입력 영역 */
+  .chatInput {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #eee;
+  }
+  
+  .chatInput input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  .chatInput button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+
+  

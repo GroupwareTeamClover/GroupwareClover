@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="Chat">
+    <insert id="createRoom" parameterType="com.clover.messenger.dto.ChatRoomDTO" useGeneratedKeys="true" keyProperty="roomSeq">
+        INSERT INTO chatRoom (room_name, room_state, room_create_time, room_type, description, emp_seq)
+        VALUES (#{roomName}, #{roomState}, #{roomCreateTime}, #{roomType}, #{description}, #{empSeq})
+    </insert>
+
+    <insert id="saveMessage" parameterType="com.clover.messenger.dto.ChatMessageDTO">
+        INSERT INTO ChatMessage (message_content, message_type, user_confirm, send_time, room_seq, sender_seq)
+        VALUES (#{messageContent}, #{messageType}, #{userConfirm}, #{sendTime}, #{roomSeq}, #{senderSeq})
+    </insert>
+
+    <select id="getRoomMessages" resultType="com.clover.messenger.dto.ChatMessageDTO">
+        SELECT * FROM ChatMessage WHERE room_seq = #{roomSeq} ORDER BY send_time ASC
+    </select>
+
+    <insert id="addUserToRoom">
+        INSERT INTO chatMembers (emp_seq, room_seq, member_role, joined_at)
+        VALUES (#{empSeq}, #{roomSeq}, 'MEMBER', CURRENT_TIMESTAMP)
+    </insert>
+
+    <select id="getRoomById" resultType="com.clover.messenger.dto.ChatRoomDTO">
+        SELECT * FROM chatRoom WHERE room_seq = #{roomSeq}
+    </select>
+
+    <select id="isUserInRoom" resultType="int">
+        SELECT COUNT(*) 
+        FROM chatMembers 
+        WHERE emp_seq = #{empSeq} AND room_seq = #{roomSeq}
+    </select>    
+</mapper>
