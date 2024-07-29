@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import styles from './ChoiceForm.module.css'
 import { FaSearch} from "react-icons/fa";
 import { Folder } from '../../../../../components/Folder/Folder';
-import { baseUrl } from '../../../../../api/members';
+import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
-import { Modal } from '../../../../../components/Modal/Modal';
+
 
 export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
     //데이터 모습
@@ -21,7 +21,7 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
 
 
     useEffect(() => {
-        axios.get(`${baseUrl()}/docCode`).then((resp) => {
+        axios.get(`${BaseUrl()}/docCode`).then((resp) => {
             const data = resp.data;
             console.log(data)
             // 부서별로 데이터를 그룹화

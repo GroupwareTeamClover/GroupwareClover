@@ -17,6 +17,9 @@
     border: 1px solid black;
     /* height: 15%; */
     flex:1;
+    padding-left: 24px;
+    display: flex;
+    align-items: center;
 }
 .body{
     border: 1px solid black;
@@ -43,3 +46,23 @@
     padding-bottom: 5px;
 }
 
+.statusBtn{
+    margin-left: 10px;
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+.statusBtn2{
+    margin-left: 10px;
+    background-color: #12ac57;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}

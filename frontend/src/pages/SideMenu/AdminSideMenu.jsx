@@ -78,15 +78,13 @@ export const AdminSideMenu = () => {
         <div className={styles.dropdown}>
           <button onClick={() => handleMenuClick('popuplist', 'popup')}
             style={{ color: selectedMenu == 'popuplist' ? 'orange' : 'black'}}>
-            조직 사원 목록
+            공지글 목록
           </button>
           <button onClick={() => handleMenuClick('addMember','popup/write')}
-            style={{ color: selectedMenu == 'addMember' ? 'orange' : 'black'}}>
-            가입 승인 목록
+            style={{ color: selectedMenu == 'popupwrite' ? 'orange' : 'black'}}>
+            공지 작성하기
           </button>
-          <button onClick={() => handleMenuClick('delMember','popup/edit')}
-            style={{ color: selectedMenu == 'delMember' ? 'orange' : 'black'}}>
-            삭제 사원 목록</button>
+          
         </div>
       )}
 
@@ -100,11 +98,11 @@ export const AdminSideMenu = () => {
       <button onClick={()=>{navi("member")}}>
         <FaCalendarDays /> 
         <span>조직관리</span>
-      </button> */}
+      </button> 
       <button onClick={()=>{navi("popup")}}>
         <FaAddressBook /> 
         <span>팝업공지관리</span>
-      </button>
+      </button>*/}
       <button onClick={()=>{navi("/community")}}>
         <LiaClipboardListSolid /> 
         <span>게시글관리</span>

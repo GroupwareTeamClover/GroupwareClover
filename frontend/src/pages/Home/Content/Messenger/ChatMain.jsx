@@ -5,7 +5,7 @@ import ChatList from './ChatList';
 import ChatWindow from './ChatWindow';
 import OnlineUsers from './OnlineUsers';
 import SearchBar from './SearchBar';
-import { baseUrl } from '../../../../api/members';
+
 
 export const ChatMain = () => {
     return (

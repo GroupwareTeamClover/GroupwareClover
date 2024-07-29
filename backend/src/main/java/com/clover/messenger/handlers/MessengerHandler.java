@@ -33,6 +33,9 @@ public class MessengerHandler extends TextWebSocketHandler {
         clients.add(session);
         
         // HttpSession에서 사용자 ID 추출
+        if(session.getAttributes().get("hSession") == null){
+            
+        }
         HttpSession httpSession = (HttpSession) session.getAttributes().get("hSession");
         String loginID = (String) httpSession.getAttribute("loginID");
         
@@ -51,12 +54,12 @@ public class MessengerHandler extends TextWebSocketHandler {
         String loginID = (String) session.getAttributes().get("loginID");
         
         // 메시지에 발신자 ID 설정
-        chatMessage.setSenderSeq(Integer.parseInt(loginID));
+        chatMessage.setSender_seq(Integer.parseInt(loginID));
         
         chatService.saveMessage(chatMessage);
 
         for (WebSocketSession client : clients) {
-            if (client.isOpen() && chatService.isUserInRoom(client, chatMessage.getRoomSeq())) {
+            if (client.isOpen() && chatService.isUserInRoom(client, chatMessage.getRoom_seq())) {
                 client.sendMessage(new TextMessage(gson.toJson(chatMessage)));
             }
         }

@@ -1,0 +1,7 @@
+.eachMember{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}

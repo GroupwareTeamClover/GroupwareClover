@@ -2,7 +2,7 @@ import styles from './ChoiceLine.module.css'
 import { FaSearch} from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { baseUrl } from '../../../../../api/members';
+import { BaseUrl } from '../../../../../commons/config';
 import { Folder } from '../../../../../components/Folder/Folder';
 
 export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}) =>{
@@ -12,9 +12,8 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
     const [folderData, setFolderData] = useState([]);
 
     useEffect(() => {
-        axios.get(`${baseUrl()}/apvLine`).then((resp) => {
+        axios.get(`${BaseUrl()}/apvLine`).then((resp) => {
             const data = resp.data;
-
             // 부서별로 데이터를 그룹화
             const departmentMap = data.reduce((acc, current) => {
                 const { DEPT, NAME, ROLE } = current;
