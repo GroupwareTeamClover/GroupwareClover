@@ -7,12 +7,26 @@
 }
 
 .form {
-    width: 90%;
-    max-width: 1280px;
+    width: 95%;
     height: 70px;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid darkgray;
+}
+
+.companyLogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.companyLogo > img {
+    width: 50px;
+    height: 50px;
+}
+
+.companyLogo > span {
+    font-size: 24px;
+    font-weight: 800;
 }
 
 .userInfo {

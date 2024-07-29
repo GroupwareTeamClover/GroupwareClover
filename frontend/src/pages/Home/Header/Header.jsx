@@ -1,4 +1,5 @@
 import styles from './Header.module.css'
+import logo from '../../../test_logo.png';
 import {useMemberStore} from "../../../store/store";
 
 export const Header = () => {
@@ -13,7 +14,10 @@ export const Header = () => {
   return (
     <div className={styles.container}>
       <div className={styles.form}>
-        <div></div>
+        <div className={styles.companyLogo}>
+          <img src={logo} alt=""/>
+          <span>Clover Company</span>
+        </div>
         <div className={styles.userInfo}>
           <button onClick={handleSignOut}>Sign-Out</button>
           <p className={styles.userName}>노시온</p>

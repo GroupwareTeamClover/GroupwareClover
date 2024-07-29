@@ -1,43 +1,65 @@
-.navgation {
-    width: 220px;
-    height: 100%;
+.container {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.sideFull {
+    background-color: #0e0e0e;
     min-height: 100vh;
-    max-height: 1200px;
+    width: 14rem;
+    transition-duration: 500ms;
+}
+
+.sideShort {
+    background-color: #0e0e0e;
+    min-height: 100vh;
+    width: 3rem;
+    transition-duration: 500ms;
+}
+
+.toggle {
+    padding: 16px 12px;
+    display: flex;
+    justify-content: end;
+    color: floralwhite;
+}
+
+.menus {
+    margin-top: 12px;
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    gap: 1rem;
+    position: relative;
+}
+
+.menuLink {
+    display: flex;
     align-items: center;
-    background-color: var(--bg-color);
-    border-right: 1px solid darkgray;
-    color : floralwhite;
+    font-size: medium;
+    gap: 14px;
+    padding: 8px;
+    border-radius: 6px;
+    text-decoration: none;
 }
 
-.navgation > img {
-    width: 150px;
-    height: 150px;
-    margin: 20px;
-    padding: 4px;
+.menuLink:hover {
+    background-color: darkgray;
 }
 
-.navgation > button {
-    width: 90%;
-    height: 50px;
-    border: none;
-    border-bottom: 1px solid darkgray;
-    background-color: transparent;
-    color: black;
-    margin: 4px;
-    padding: 4px;
+.menuTitle {
+    color: white;
+    white-space: pre;
+    transition-duration: 500ms;
+}
+
+.menuTitleAction {
+    white-space: pre;
+    transition-duration: 500ms;
+    opacity: 0;
+    transform: translate(7rem);
+    overflow: hidden;
+}
+
+.icons {
     cursor: pointer;
-    text-align: left;
-    font-size: 16px;
-}
-
-.navgation > button > span {
-    margin-left: 10px;
-}
-
-.navgation > button > span:hover {
-    color: orange;
-    font-weight: 800;
 }
