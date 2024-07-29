@@ -12,6 +12,10 @@ import { useState } from 'react';
 export const AdminSideMenu = () => {
 
   const navi = useNavigate();
+   //화면 url, 상태 navi에 넣기
+   const handleNavigation = (path, type) => {
+    navi(path, { state: { type } });
+  };
 
   const [dropdown, setDropdown] = useState({
     home: false,
@@ -22,9 +26,10 @@ export const AdminSideMenu = () => {
   });
 
   const [selectedMenu, setSelectedMenu] = useState('');
-  const handleMenuClick = (menu, path) => {
+  const handleMenuClick = (menu, path, type) => {
     setSelectedMenu(menu);
-    navi(path);
+    // navi(path);
+    navi(path, { state: { type } });
   };
 
   const toggleDropdown = (menu) => {
@@ -36,7 +41,7 @@ export const AdminSideMenu = () => {
   return (
     <div className={ styles.navgation }>
       <img src={logo} alt="logo" />
-      <button onClick={() => handleMenuClick('home', '/')}
+      <button onClick={() => handleMenuClick('home', '/', 'Home')}
         style={{ color: selectedMenu == 'home' ? 'orange' : 'black' }}
       >
         <IoHome />
@@ -50,15 +55,15 @@ export const AdminSideMenu = () => {
       </button>
       {dropdown.member && (
         <div className={styles.dropdown}>
-          <button onClick={() => handleMenuClick('member', 'member')}
+          <button onClick={() => handleMenuClick('member', 'member','통합사원목록')}
             style={{ color: selectedMenu == 'member' ? 'orange' : 'black'}}>
             통합 사원 목록
           </button>
-          <button onClick={() => handleMenuClick('addMember','member/addmem')}
+          <button onClick={() => handleMenuClick('addMember','member/addmem','가입승인목록')}
             style={{ color: selectedMenu == 'addMember' ? 'orange' : 'black'}}>
             가입 승인 목록
           </button>
-          <button onClick={() => handleMenuClick('delMember','member/delmem')}
+          <button onClick={() => handleMenuClick('delMember','member/delmem','삭제사원목록')}
             style={{ color: selectedMenu == 'delMember' ? 'orange' : 'black'}}>
             삭제 사원 목록</button>
         </div>
@@ -73,16 +78,15 @@ export const AdminSideMenu = () => {
         <div className={styles.dropdown}>
           <button onClick={() => handleMenuClick('popuplist', 'popup')}
             style={{ color: selectedMenu == 'popuplist' ? 'orange' : 'black'}}>
-            팝업 공지 목록
+            조직 사원 목록
           </button>
-          <button onClick={() => handleMenuClick('addPop','popup/write')}
-            style={{ color: selectedMenu == 'addPop' ? 'orange' : 'black'}}>
-            공지 작성하기
+          <button onClick={() => handleMenuClick('addMember','popup/write')}
+            style={{ color: selectedMenu == 'addMember' ? 'orange' : 'black'}}>
+            가입 승인 목록
           </button>
-          <button onClick={() => handleMenuClick('editPop','popup/edit')}
-            style={{ color: selectedMenu == 'editPop' ? 'orange' : 'black'}}>
-            공지 수정하기
-          </button>
+          <button onClick={() => handleMenuClick('delMember','popup/edit')}
+            style={{ color: selectedMenu == 'delMember' ? 'orange' : 'black'}}>
+            삭제 사원 목록</button>
         </div>
       )}
 
@@ -96,11 +100,11 @@ export const AdminSideMenu = () => {
       <button onClick={()=>{navi("member")}}>
         <FaCalendarDays /> 
         <span>조직관리</span>
-      </button>
+      </button> */}
       <button onClick={()=>{navi("popup")}}>
         <FaAddressBook /> 
         <span>팝업공지관리</span>
-      </button> */}
+      </button>
       <button onClick={()=>{navi("/community")}}>
         <LiaClipboardListSolid /> 
         <span>게시글관리</span>

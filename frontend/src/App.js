@@ -13,7 +13,16 @@ function App() {
 
   const userData = sessionStorage.getItem("sessionData");
   const { sign, setSign, setUserSession } = useMemberStore();
-  
+
+  // Sidebar toggle
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    /* Side-Bar toggle */
+    if(localStorage.getItem("sidebar") === "true") setOpen(true);
+    else setOpen(!open);
+  }, [])
+
   useEffect(() => {
     const data = JSON.parse(userData);
     if(data !== null) {
@@ -25,12 +34,18 @@ function App() {
   return (
     <div className="container">
       <Router>
-        {/* { !sign && <Login setSign={ setSign }/> }
-        { sign && <SideMenu />  }
-        { sign && <Home /> } */}
+
+
         { !sign && <Login setSign={ setSign }/> }
-        { sign && <AdminSideMenu />  }
-        {  sign && <Admin /> }
+        { sign && <SideMenu open={open} setOpen={setOpen}/>  }
+        { sign && <Home /> }
+
+
+
+        {/* 관리자페이지 */}
+        {/* { !sign && <Login setSign={ setSign }/> }
+        { sign && <AdminSideMenu open={open} setOpen={setOpen} />  }
+        {  sign && <Admin /> } */}
       </Router>
     </div>
   );

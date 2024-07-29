@@ -1,6 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './MemMain.module.css';
 import { useState } from 'react';
+import axios from 'axios';
 
 
 
@@ -12,6 +13,7 @@ export const MemMain = () => {
 
     const [status, setStatus] = useState('');
     const [member, setMember] = useState();
+    const [members, setMembers] = useState([]);
     // useEffect(()=>{
     //     axios.get(`{baseUrl}/`)
     // })
@@ -19,22 +21,23 @@ export const MemMain = () => {
     const handleModal=()=>{
 
     }
-
+   
+    // axios로 출력받기 emp table - state가 0인 상태인 것. 
+    const handleGetNew = ()=>{
+        axios.get(`{baseUrl}/member`).them((resp)=>{
+            setMembers(resp.data);
+        })
+    }
     return (
       <div className={styles.container}>
-        <div className={styles.header}>
-            조직관리
-        </div>
- 
-        <div>
-            <div className={styles.member_info}>
+         
+        <div className={styles.member_info}>
                 <div className={styles.member_total}>
                     사원 수 : "멤버 N" 명
                 </div>
                 <div className={styles.member_detail}>
                     정상("멤버 M"명 / 휴면 "M-m"명) 중지 "N-M"명
                 </div>
-            </div>
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
@@ -96,13 +99,44 @@ export const MemMain = () => {
                         </thead>
                         <tbody className={styles.tbody}>
                             {/* 데이터영역 */}
+                            <tr>
+                                <td className={styles.theadtd}><input type="checkbox"></input></td>
+                                <td className={styles.theadtd}>정뚜리</td>
+                                <td className={styles.theadtd}>
+                                    인사팀
+                                </td>
+                                <td className={styles.theadtd}>
+                                    대리
+                                </td>
+                                <td className={styles.theadtd}>
+                                    관리자
+                                </td>
+                                <td className={styles.theadtd}>jeesu31@naver.com</td>
+                                <td className={styles.theadtd}>
+                                    정상
+                                </td>
+                            </tr>
+                            {/* {
+                                newMem.map((mem, i)=>{
+                                    return(
+                                        <tr key={i}>
+                                            <td>{mem.name} </td>
+                                            <td>{mem.dept} </td>
+                                            <td>{mem.position} </td>
+                                            <td>{mem.group} </td>
+                                            <td>{mem.joindate} </td>
+                                            <td>{mem.status} </td>
+                                        </tr>
+                                    )
+                                })
+                            } */}
                         </tbody>
                     </table>
                 </div>              
             {/* ---------------------------------------------------------- */}
            
             <div className={styles.pagination}>
-
+                1 2 3 4 5
             </div>
         </div>
       </div>
