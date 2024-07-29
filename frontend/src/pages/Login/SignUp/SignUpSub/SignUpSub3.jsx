@@ -1,10 +1,14 @@
 import styles from './SignUpSub.module.css'
 import {validatePhone} from '../../../../commons/common';
 import Postcode from "react-daum-postcode";
-import {Modal} from "react-bootstrap";
+import React, {useState} from "react";
+import {Modal} from "../../../../components/Modal/Modal";
 
 
 export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) => {
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const handleDataCheck = (e) => {
     let {name, value} = e.target;
@@ -19,9 +23,21 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
     }
   }
 
-  const handlePostcode = () => {
-
+  const completeHandler = (data) => {
+    setSendData(prev => ({ ...prev, postcode: data.zonecode, roadAddress: data.roadAddress }))
+    closeModal();
   }
+
+  const handleDetailAddress = (e) => {
+    let { name, value } = e.target;
+    setSendData(prev => ({ ...prev, [name]: value}));
+    if(sendData.postcode === "" || sendData.roadAddress === "") {
+      setCheckData( prev => ({...prev, emp_address: false}));
+    } else {
+      setCheckData( prev => ({...prev, emp_address: true}));
+    }
+  }
+
 
 
   const handleSubmit = async() => {
@@ -33,11 +49,16 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
       if(!checkData[item]) validation = false;
     });
 
-    let data = sendData;
-    delete data.pw_check;
-    data.emp_gender = data.emp_gender%2 === 1 ? "M" : "F";
-
-    console.log(data);
+    if(validation) {
+      let data = sendData;
+      data.emp_gender = data.emp_gender%2 === 1 ? "M" : "F";
+      data.emp_address = data.roadAddress + " " + data.detailAddress;
+      delete data.pw_check;
+      delete data.postcode;
+      delete data.roadAddress;
+      delete data.detailAddress
+      console.log(data);
+    }
 
     // if(validation) {
     //   const res = await axios.post(`${baseUrl}/member`, sendData);
@@ -74,18 +95,18 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
         <div className={styles.row}>
           <span>주소</span>
           <div>
-            <input type="text" name="post" placeholder="우편번호" readOnly/>
-            <button onClick={handlePostcode}>주소 검색</button>
+            <input type="text" value={sendData.postcode} placeholder="우편번호" readOnly/>
+            <button onClick={() =>  openModal()}>주소 검색</button>
           </div>
-          <input type="text" name="address1" placeholder="기본주소" readOnly/>
-          <input type="text" name="address2" placeholder="상세주소"/>
+          <input type="text" value={sendData.roadAddress} placeholder="기본주소" readOnly/>
+          <input type="text" value={sendData.detailAddress||""} onChange={handleDetailAddress} name="detailAddress" placeholder="상세주소"/>
         </div>
 
         { /* Address empty check */
-          sendData.address === "" ?
+          sendData.detailAddress !== "" ?
             <div className={styles.row}>
               { /* Address Check */
-                checkData.address ?
+                checkData.emp_address ?
                     <p style={{color: "green"}}>확인되었습니다.</p>
                     :
                     <p style={{color: "red"}}>주소를 입력해주세요</p>
@@ -99,8 +120,8 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
           <button onClick={handleSubmit}>완료</button>
         </div>
 
-        <Modal >
-
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <Postcode onComplete={ completeHandler } />
         </Modal>
 
       </div>

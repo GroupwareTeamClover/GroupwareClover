@@ -12,9 +12,7 @@ export const Login = ({ setSign }) => {
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-  }
+  const closeModal = () => setIsModalOpen(false);
 
 
   const [ signInData, setSignInData ] = useState({id: "", pw: ""});

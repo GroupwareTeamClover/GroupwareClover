@@ -17,7 +17,10 @@ export const SignUp = ({setSignUpState}) => {
     emp_gender: "",
     emp_tel: "",
     emp_address: "",
-    pw_check: ""
+    pw_check: "",
+    postcode: "",
+    roadAddress: "",
+    detailAddress: "",
   }
   const [sendData, setSendData] = useState(defaultData);
 
