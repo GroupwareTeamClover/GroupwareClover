@@ -1,7 +1,7 @@
 import styles from './Side.module.css';
 import { useNavigate } from 'react-router-dom';
 import {useEffect, useState} from "react";
-import { Modal } from '../../../../../components/Modal/Modal';
+import { BigModal } from '../BigModal/BigModal'
 import { ChoiceForm } from '../ChoiceForm/ChoiceForm';
 import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
 
@@ -88,20 +88,34 @@ export const Side = () => {
                 </div>
             </div>
 
-            <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <BigModal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                     {modalState === "ModalForm" && (
                         <>
-                            {Page === 1 && <ChoiceForm Page={Page} />}
-                            {Page === 2 && <ChoiceLine Page={Page} />}
-                            <div className={styles.modalbtnBox}>
-                                <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
-                                <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
-                            </div>
+                            {Page === 1 && (
+                                <>
+                                <ChoiceForm Page={Page} /> 
+                                <div className={styles.modalbtnBox}>
+                                    <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
+                                    <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
+                                </div>
+                                </>
+                            )}
+                            {Page === 2 && (
+                                <>
+                                <ChoiceLine Page={Page} />
+                                <div className={styles.modalbtnBox}>
+                                    <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
+                                    <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
+                                    <button name="comp" className={styles.btn}>확인</button>
+                                </div>
+                                </>
+                            )}
+                         
                         </>
                     )}
                 </div>
-            </Modal>
+            </BigModal>
         </div>
     );
 };
