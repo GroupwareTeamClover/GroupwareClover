@@ -1,5 +1,5 @@
 export const baseUrl = () => {
-    return 'http://192.168.1.5'; // replace with your backend server URL
+    return 'http://192.168.1.14'; // replace with your backend server URL
 }
 
 // export const baseUrl = () => {

@@ -1,7 +1,7 @@
 // root 폴더에 있는 env 파일 안 REACT_APP_BASE_URL 설정을 불러오는 명령어.
 // env_example 파일 작성 예정
 export const BaseUrl = () => {
-    return 'http://192.168.1.5';   
+    return 'http://192.168.1.14';   
 }
 
 // export const BaseUrl = process.env.REACT_APP_API_URL;

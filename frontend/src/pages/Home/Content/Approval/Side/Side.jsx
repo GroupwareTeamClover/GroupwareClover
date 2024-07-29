@@ -1,6 +1,7 @@
 import styles from './Side.module.css';
 import { useNavigate } from 'react-router-dom';
 import {useEffect, useState} from "react";
+import { Modal } from '../../../../../components/Modal/Modal';
 import { BigModal } from '../BigModal/BigModal'
 import { ChoiceForm } from '../ChoiceForm/ChoiceForm';
 import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
@@ -39,11 +40,14 @@ export const Side = () => {
           }
         });
     }
-    
+
+    //모달사이 전달할 정보저장
+    const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0 } });
+    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ name: '', children: { name: '', role: '' } });
 
     return (
         <div className={styles.sideBox}>
-            <div className={styles.textBox}>전자결재</div>
+            <div className={styles.textBox} onClick={() => handleNavigation('/', '전자결재')}>전자결재</div>
             <div className={styles.btnBox}>
                 <button className={styles.addBtn} onClick={handleModalChange} name="ModalForm">새 결재 진행하기</button>
             </div>
@@ -87,14 +91,15 @@ export const Side = () => {
                     </div>
                 </div>
             </div>
-
+            
+            {/* 모달창 */}
             <BigModal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                     {modalState === "ModalForm" && (
                         <>
                             {Page === 1 && (
                                 <>
-                                <ChoiceForm Page={Page} /> 
+                                <ChoiceForm Page={Page} selectedDocCode={selectedDocCode} setSelectedDocCode={setSelectedDocCode} /> 
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
                                     <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
@@ -103,7 +108,7 @@ export const Side = () => {
                             )}
                             {Page === 2 && (
                                 <>
-                                <ChoiceLine Page={Page} />
+                                <ChoiceLine Page={Page} selectedDocCode={selectedDocCode}  selectedEmpInfo={selectedEmpInfo} setSelectedEmpInfo={setSelectedEmpInfo} />
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
                                     <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>

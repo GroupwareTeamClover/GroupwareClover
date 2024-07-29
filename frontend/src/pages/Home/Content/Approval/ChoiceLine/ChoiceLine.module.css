@@ -26,7 +26,7 @@
 
 /* 왼쪽 */
 .lineData{
-    flex: 4;  
+    flex: 5;  
     border-right: 2px solid #ddd;
 }
 
@@ -50,6 +50,9 @@
     flex:8;
     padding-top: 10px;
     padding-left: 10px;
+    overflow-y: auto;
+    min-height: 280px; 
+    max-height: 280px;
 }
 
 .inputBox{
@@ -78,7 +81,7 @@
 
 /* 오른쪽 */
 .lineChoice{
-    flex: 6;
+    flex: 5;
 }
 
 .lineBox{
@@ -89,18 +92,16 @@
     flex-direction: column;   
 }
 
-.apvline{
-    border-top: 1px solid gray;
-}
 
-.recline, .apvline, .refline{
-    border-bottom: 1px solid gray;
+
+.apvheader, .recheader, .refheader{
+    padding-left: 15px;
+    font-size: 14.5px;
     padding-top: 5px;
     padding-bottom: 5px;
     background-color: #f4f4f4;
 }
 
-.apvheader, .recheader, .refheader{
-    padding-left: 15px;
-    font-size: 14.5px;
+.apvchoice, .recchoice, .refchoice{
+    min-height: 20px;
 }

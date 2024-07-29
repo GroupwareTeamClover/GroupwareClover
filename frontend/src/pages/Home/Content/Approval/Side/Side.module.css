@@ -16,6 +16,10 @@
     font-weight: bold;
 }
 
+.textBox:hover{
+    cursor: pointer;
+}
+
 .btnBox{
     flex: 1;
     margin-bottom: 20px;
