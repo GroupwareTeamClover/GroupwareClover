@@ -25,8 +25,6 @@ export const MemMain = () => {
     //     axios.get(`{baseUrl}/`)
     // })
 
-
-
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
     const handleCheckAll = (e)=>{
@@ -37,7 +35,6 @@ export const MemMain = () => {
             }
         })
     }
-
 
     // ------------- 모달----------------------------------------
     const [ modalState, setModalState ] = useState("");
@@ -58,8 +55,6 @@ export const MemMain = () => {
         openModal();
     }
 
-  
-   
     // axios로 출력받기 emp table - state가 0인 상태인 것. 
     const handleGetNew = ()=>{
         axios.get(`{baseUrl}/member`).them((resp)=>{

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styles from './AddMember.module.css';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from 'axios';
 
 
@@ -32,6 +32,16 @@ export const AddMember = ()=>{
     const handleAddMem =(e)=>{
         // 모달창 뜨게...
     }
+    // ----전체 체크박스 클릭
+    const checkboxRef = useRef([]);
+    const handleCheckAll = (e)=>{
+        const checked = e.target.checked;
+        checkboxRef.current.forEach(checkbox => {
+            if(checkbox){
+                checkbox.checked = checked;
+            }
+        })
+    }
     
     return(
         <div className={styles.container}>
@@ -45,7 +55,7 @@ export const AddMember = ()=>{
                     <table className={styles.table}>
                         <thead className={styles.thead}>
                             <tr>
-                                <td className={styles.theadtd}><input type="checkbox"></input></td>
+                                <td className={styles.theadtd}><input type="checkbox" onClick={handleCheckAll}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
                                     <select>
@@ -80,10 +90,10 @@ export const AddMember = ()=>{
                             {
                                 newMem.map((mem, i)=>{
                                     return(
-                                        <tr key={i}>
+                                        <tr key={mem.seq}>
                                             <td className={styles.theadtd}>
                                                 {mem.status ==='대기중' ? (
-                                                    <input type="checkbox"></input>
+                                                    <input type="checkbox" ref={data=> checkboxRef.current[i]=data}></input>
                                                 ) : (
                                                     <input type="checkbox" disabled checked ></input>
                                                     )

@@ -16,7 +16,17 @@
     border: 1px solid black;
     /* height: 15%; */
     flex:1;
+     padding-left: 24px;
+    display: flex;
+    align-items: center;
 }
+.member_total{
+    flex:0.3;
+}
+.member_detail{
+    flex:1;
+}
+
 .body{
     border: 1px solid black;
     /* height: 75%; */
