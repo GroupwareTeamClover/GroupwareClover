@@ -18,11 +18,21 @@
     letter-spacing: -1px;
 }
 
-.content{
+.contentWrapper{
     flex: 8.5;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
     display: flex;
+    
+}
+
+.content{
+    width: 60%;
+    height: 100%;
     border: 2px solid #ddd;
 }
+
 
 .searchBox{
     padding: 15px;

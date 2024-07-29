@@ -102,6 +102,7 @@ export const ChoiceForm= () =>{
             <div className={styles.header}>
                 <h4 className={styles.headerText}>결재양식 선택</h4>
             </div>
+            <div className={styles.contentWrapper}>
             <div className={styles.content}>
                 <div className={styles.searchBox}>
                     <div className={styles.searchLine}>
@@ -116,6 +117,7 @@ export const ChoiceForm= () =>{
                         ))}
                     </div>
                 </div>
+            </div>
             </div>
            
             {isModalOpen && (
