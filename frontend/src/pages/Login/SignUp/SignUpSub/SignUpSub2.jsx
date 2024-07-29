@@ -63,19 +63,19 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <div className={styles.row}>
               { /* Name Check */
                 checkData.emp_name ?
-                  <></>
-                  :
-                  <p style={{color: "red"}}>유효하지 않은 이름 유형입니다.</p>
+                    <p style={{color: "green"}}>확인되었습니다.</p>
+                    :
+                    <p style={{color: "red"}}>유효하지 않은 이름 유형입니다.</p>
               }
             </div>
-            : <></>
+              : <></>
         }
 
         <div className={styles.row}>
           <span>생년월일</span>
           <div>
             <input type="text" name="emp_birth" maxLength="6" value={ sendData.emp_birth || "" } onChange={handleDataCheck} placeholder=""/>　-　
-            <input type="text" name="emp_gender" maxLength="1" value={ sendData.emp_gender || "" } onChange={handleDataCheck} />******
+            <input type="text" name="emp_gender" maxLength="1" value={ sendData.emp_gender || "" } onChange={handleDataCheck} /> ******
           </div>
         </div>
 
@@ -84,12 +84,12 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <div className={styles.row}>
               { /* Birth & Gender check */
                 checkData.emp_birth && checkData.emp_gender ?
-                <></>
-                :
-                <p style={{color: "red"}}>유효하지 않은 생년월일</p>
+                  <p style={{color: "green"}}>확인되었습니다.</p>
+                  :
+                  <p style={{color: "red"}}>유효하지 않은 생년월일</p>
               }
             </div>
-            :
+              :
             <></>
         }
 
@@ -100,16 +100,16 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
         { /* E-Mail empty check */
           sendData.emp_email !== "" ?
-            <div className={styles.row}>
-              { /* E-Mail check */
-                checkData.emp_email ?
-                <></>
-                :
-                <p style={{color: "red"}}>유효하지 않은 이메일</p>
-              }
-            </div>
-            :
-            <></>
+              <div className={styles.row}>
+                { /* E-Mail check */
+                  checkData.emp_email ?
+                  <p style={{color: "green"}}>확인되었습니다.</p>
+                  :
+                  <p style={{color: "red"}}>유효하지 않은 이메일</p>
+        }
+      </div>
+      :
+      <></>
         }
       </div>
     </div>

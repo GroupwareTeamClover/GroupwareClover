@@ -1,6 +1,7 @@
 import styles from './SignUpSub.module.css'
 import {validatePhone} from '../../../../commons/common';
-import DaumPostcode from "react-daum-postcode";
+import Postcode from "react-daum-postcode";
+import {Modal} from "react-bootstrap";
 
 
 export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) => {
@@ -62,12 +63,12 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <div className={styles.row}>
               { /* ID Check */
                 checkData.emp_tel ?
-                  <></>
-                  :
-                  <p style={{color: "red"}}>유효하지 않은 전화번호 유형입니다.</p>
+                    <p style={{color: "green"}}>확인되었습니다.</p>
+                    :
+                    <p style={{color: "red"}}>유효하지 않은 전화번호 유형입니다.</p>
               }
             </div>
-            : <></>
+              : <></>
         }
 
         <div className={styles.row}>
@@ -85,18 +86,22 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
             <div className={styles.row}>
               { /* Address Check */
                 checkData.address ?
-                <></>
-                :
-                <p style={{color: "red"}}>주소를 입력해주세요</p>
+                    <p style={{color: "green"}}>확인되었습니다.</p>
+                    :
+                    <p style={{color: "red"}}>주소를 입력해주세요</p>
               }
             </div>
-            :
-            <></>
+              :
+              <></>
         }
 
         <div className={styles.row}>
           <button onClick={handleSubmit}>완료</button>
         </div>
+
+        <Modal >
+
+        </Modal>
 
       </div>
     </div>

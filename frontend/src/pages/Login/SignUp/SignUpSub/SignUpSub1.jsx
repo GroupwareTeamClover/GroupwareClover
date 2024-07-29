@@ -56,11 +56,11 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
 
         <div className={styles.row}>
           <span>비밀번호</span>
-          <input type="text" name="emp_pw" maxLength="20" onChange={handleDataCheck} value={sendData.emp_pw}
+          <input type="password" name="emp_pw" maxLength="20" onChange={handleDataCheck} value={sendData.emp_pw}
                  placeholder="8~20자리로 입력하세요"/>
         </div>
         <div className={styles.row}>
-          <input type="text" name="pw_check" maxLength="20" onChange={handleDataCheck} value={ sendData.pw_check } placeholder="8~20자리로 한번더 입력하세요"/>
+          <input type="password" name="pw_check" maxLength="20" onChange={handleDataCheck} value={ sendData.pw_check } placeholder="8~20자리로 한번더 입력하세요"/>
         </div>
 
         { /* Password empty check */
@@ -76,6 +76,7 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
             :
             <></>
         }
+
       </div>
     </div>
   );

@@ -10,12 +10,10 @@ import {FindId} from "./FindId/FindId";
 
 export const Login = ({ setSign }) => {
 
-
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
     setIsModalOpen(false);
-    setSignUpPage(1);
   }
 
 
@@ -47,58 +45,39 @@ export const Login = ({ setSign }) => {
     openModal();
   }
 
-  const [signUpPage, setSignUpPage] = useState(1);
-
-  const handlePageChange = (e) =>{
-      setSignUpPage(prev => {
-        if(e.target.name === "prev") {
-          if(prev === 1) return 1;
-          else return prev - 1;
-        } else {
-          if(prev === 3) return 3;
-          else return prev + 1;
-        }
-      });
-  }
+  const [signUpState, setSignUpState] = useState(false);
 
   return (
     <div className={ styles.container }>
-      <div className={ styles.signInBox }>
-        <img src={ logo } alt="logo"/>
-        <input type="text" name="id" onChange={handleData} placeholder='ID' />
-        <input type="password" name="pw" onChange={handleData} placeholder='Password' />
-        <div className={styles.checkBox}>
-          <div>
-            <input type="checkbox" id="id_save"/>
-            <label htmlFor="id_save"> 아이디 저장 </label>
+      { signUpState ?
+        <SignUp setSignUpState={setSignUpState}/>
+        :
+        <div className={ styles.signInBox }>
+          <img src={ logo } alt="logo"/>
+          <input type="text" name="id" onChange={handleData} placeholder='ID' />
+          <input type="password" name="pw" onChange={handleData} placeholder='Password' />
+          <div className={styles.checkBox}>
+            <div>
+              <input type="checkbox" id="id_save"/>
+              <label htmlFor="id_save"> 아이디 저장 </label>
+            </div>
+            <div>
+              <input type="checkbox" id="login_svae"/>
+              <label htmlFor="login_svae"> 로그인 유지 </label>
+            </div>
           </div>
-          <div>
-            <input type="checkbox" id="login_svae"/>
-            <label htmlFor="login_svae"> 로그인 유지 </label>
+          <button onClick={handleSignIn}>로그인</button>
+          <div className={styles.signHref}>
+            <button name="SignUp" onClick={() => setSignUpState(true)}>회원가입</button>
+            <button name="FindId" onClick={handleModalChange}>아이디 찾기</button>
+            <button name="FindPw" onClick={handleModalChange}>비밀번호 찾기</button>
           </div>
         </div>
-        <button onClick={handleSignIn}>로그인</button>
-        <div className={styles.signHref}>
-          <button name="SignUp" onClick={handleModalChange}>회원가입</button>
-          <button name="FindId" onClick={handleModalChange}>아이디 찾기</button>
-          <button name="FindPw" onClick={handleModalChange}>비밀번호 찾기</button>
-        </div>
-      </div>
+      }
 
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div className={styles.modalForm}>
-
-          { modalState === "SignUp" &&
-            <>
-              <SignUp signUpPage={ signUpPage }/>
-              <div className={ styles.btnBox }>
-                <button name="prev" onClick={handlePageChange}> 이전</button>
-                <button name="next" onClick={handlePageChange}> 다음</button>
-              </div>
-            </> }
-
           {modalState === "FindId" && <FindId/>}
-
           {modalState === "FindPw" && <FindPw/>}
         </div>
       </Modal>
