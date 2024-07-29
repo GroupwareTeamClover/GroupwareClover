@@ -1,7 +1,7 @@
 import styles from './SignUpSub.module.css'
 import {validatePhone} from '../../../../commons/common';
 import Postcode from "react-daum-postcode";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 
 
@@ -21,6 +21,15 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
         return data;
       });
     }
+
+    if(name === "detailAddress") {
+      setSendData(prev => ({ ...prev, [name]: value}));
+      if(sendData.postcode === "" || sendData.roadAddress === "" || sendData.detailAddress === "") {
+        setCheckData( prev => ({...prev, emp_address: false}));
+      } else {
+        setCheckData( prev => ({...prev, emp_address: true}));
+      }
+    }
   }
 
   const completeHandler = (data) => {
@@ -28,21 +37,8 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
     closeModal();
   }
 
-  const handleDetailAddress = (e) => {
-    let { name, value } = e.target;
-    setSendData(prev => ({ ...prev, [name]: value}));
-    if(sendData.postcode === "" || sendData.roadAddress === "") {
-      setCheckData( prev => ({...prev, emp_address: false}));
-    } else {
-      setCheckData( prev => ({...prev, emp_address: true}));
-    }
-  }
-
-
 
   const handleSubmit = async() => {
-    console.log("sendData ==== ", sendData);
-    console.log("checkData ==== ", checkData);
     const keys = ["emp_id", "emp_pw", "emp_name", "emp_email", "emp_birth", "emp_gender", "emp_tel", "emp_address"];
     let validation = true;
     keys.forEach(item => {
@@ -66,6 +62,25 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
     // }
 
   }
+
+  const [successBtn, setSuccessBtn] = useState(false);
+  useEffect(() => {
+    const keys = ["emp_id", "emp_pw", "emp_name", "emp_email", "emp_birth", "emp_gender", "emp_tel", "emp_address"];
+    let validation = true;
+    keys.forEach(item => {
+      if(!checkData[item]) validation = false;
+    });
+    if(validation) setSuccessBtn(true);
+    else setSuccessBtn(false);
+  }, [checkData]);
+
+  useEffect(() => {
+    if(sendData.postcode === "" || sendData.roadAddress === "" || sendData.detailAddress === "") {
+      setCheckData( prev => ({...prev, emp_address: false}));
+    } else {
+      setCheckData( prev => ({...prev, emp_address: true}));
+    }
+  }, [sendData.postcode]);
 
   return (
     <div className={styles.container}>
@@ -95,11 +110,11 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
         <div className={styles.row}>
           <span>주소</span>
           <div>
-            <input type="text" value={sendData.postcode} placeholder="우편번호" readOnly/>
+            <input type="text" name="postcode" value={sendData.postcode} placeholder="우편번호" readOnly/>
             <button onClick={() =>  openModal()}>주소 검색</button>
           </div>
-          <input type="text" value={sendData.roadAddress} placeholder="기본주소" readOnly/>
-          <input type="text" value={sendData.detailAddress||""} onChange={handleDetailAddress} name="detailAddress" placeholder="상세주소"/>
+          <input type="text" name="roadAddress" value={sendData.roadAddress} placeholder="기본주소" readOnly/>
+          <input type="text" name="detailAddress" value={sendData.detailAddress||""} onChange={handleDataCheck} placeholder="상세주소"/>
         </div>
 
         { /* Address empty check */
@@ -115,10 +130,12 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
               :
               <></>
         }
+        { successBtn &&
+          <div className={styles.row}>
+            <button onClick={handleSubmit}>완료</button>
+          </div>
+        }
 
-        <div className={styles.row}>
-          <button onClick={handleSubmit}>완료</button>
-        </div>
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <Postcode onComplete={ completeHandler } />
