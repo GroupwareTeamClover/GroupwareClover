@@ -16,7 +16,7 @@ import com.clover.messenger.dto.ChatRoomDTO;
 import com.clover.messenger.services.ChatService;
 
 @RestController
-@RequestMapping("/api/chat")
+@RequestMapping("/chat")
 public class ChatController {
     @Autowired
     private ChatService chatService;

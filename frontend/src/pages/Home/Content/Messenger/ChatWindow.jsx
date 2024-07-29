@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './Messenger.module.css';
+import { BaseUrl } from '../../../../commons/config';
 
 const ChatWindow = () => {
   const [messages, setMessages] = useState([]); // 메시지 목록을 저장
@@ -12,7 +13,7 @@ const ChatWindow = () => {
   // 컴포넌트가 마운트될 때 WebSocket 연결을 설정하기 위해
   useEffect(() => {
     // 새로운 웹 소켓 연결 생성
-    const newSocket = new WebSocket('ws://localhost:80/chat');
+    const newSocket = new WebSocket('ws://192.168.1.5:80/chat');
     setSocket(newSocket);
 
     // 메시지를 수신했을 때 실행되는 이벤트 핸들러
@@ -43,7 +44,7 @@ const ChatWindow = () => {
   // 새로운 채팅방 생성 함수, 추후 이동해야함.
   const createRoom = async () => {
     try {
-      const response = await axios.post('/api/chat/rooms', {
+      const response = await axios.post(`${BaseUrl()}/chat/rooms`, {
         roomName: 'New Room',
         roomType: 'private',
         empSeq: 1

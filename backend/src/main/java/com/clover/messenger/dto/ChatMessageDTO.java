@@ -6,7 +6,6 @@ public class ChatMessageDTO {
     private int messageSeq;
     private String messageContent;
     private String messageType;
-    private String userConfirm;
     private Timestamp sendTime;
     private int roomSeq;
     private int senderSeq;
@@ -19,7 +18,6 @@ public class ChatMessageDTO {
         this.messageSeq = messageSeq;
         this.messageContent = messageContent;
         this.messageType = messageType;
-        this.userConfirm = userConfirm;
         this.sendTime = sendTime;
         this.roomSeq = roomSeq;
         this.senderSeq = senderSeq;
@@ -34,9 +32,6 @@ public class ChatMessageDTO {
 
     public String getMessageType() { return messageType; }
     public void setMessageType(String messageType) { this.messageType = messageType; }
-
-    public String getUserConfirm() { return userConfirm; }
-    public void setUserConfirm(String userConfirm) { this.userConfirm = userConfirm; }
 
     public Timestamp getSendTime() { return sendTime; }
     public void setSendTime(Timestamp sendTime) { this.sendTime = sendTime; }

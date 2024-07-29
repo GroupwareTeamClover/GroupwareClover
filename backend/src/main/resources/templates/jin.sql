@@ -1,32 +1,4 @@
 --조진혁
--- 채팅방 입장 로그
-Create table chatRoomLog (
-    room_time_seq number primary key,
-    emp_seq number not null,
-    room_seq number not null,
-    join_time timestamp, 
-    left_time timestamp
-);
-
-Create sequence room_time_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
-
-Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
-Create sequence private_room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-Create sequence group_room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
-
-
-
-
-Create sequence notification_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
-
 -- 변경사항
 -- ReadStatus 테이블 -> LastReadMessage 테이블로 변경 
 -- 사유 : 데이터가 너무 커지기 때문
@@ -47,6 +19,7 @@ CREATE TABLE LastReadMessage (
     last_read_time TIMESTAMP DEFAULT SYSDATE NOT NULL,
 );
 
+
 -- 알림정보
 Create table Notifications (
     notification_seq number primary key,
@@ -57,6 +30,20 @@ Create table Notifications (
     emp_seq number not null    
 );
 
+Create sequence notification_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
+-- 채팅방 입장 로그
+Create table chatRoomLog (
+    room_time_seq number primary key,
+    emp_seq number not null,
+    room_seq number not null,
+    join_time timestamp, 
+    left_time timestamp
+);
+
+Create sequence room_time_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
+
 -- 채팅방 메시지
 -- room_seq와 sender_seq가 외래키, user_confirm이 꼭 필요한가.
 
@@ -64,11 +51,12 @@ Create table ChatMessage (
     message_seq number primary key,
     message_content clob not null,
     message_type varchar(20) not null,
-    user_confirm char(1) default 'F' not null,
     send_time timestamp not null,
     room_seq number not null,
     sender_seq number not null
 );
+
+Create sequence message_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 -- 채팅방
 Create table chatRoom (
@@ -77,9 +65,11 @@ Create table chatRoom (
     room_state char(1) default 'T' not null check (room_state in ('T', 'F')),
     room_create_time timestamp default sysdate not null,
     room_type varchar(20) not null check (room_type in ('private', 'group', 'public')),
-    description varchar2(255),
+    room_description varchar2(255),
     emp_seq number not null
 );
+
+Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 -- 멤버채팅방 연결엔티티
 Create table chatMembers (
@@ -87,10 +77,8 @@ Create table chatMembers (
     room_seq number not null,
     member_role VARCHAR2(20) DEFAULT 'MEMBER' 
         CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),
-    joined_at TIMESTAMP DEFAULT SYSDATE NOT NULL    
+    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    
 );
-
-Create sequence message_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 -- 인덱스 추가
 CREATE INDEX idx_chatmessage_room_time ON ChatMessage(room_seq, send_time);
