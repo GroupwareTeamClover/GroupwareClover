@@ -8,17 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class BoardlistDAO {
-
+public class TestBoardListDAO {
+	
 	@Autowired
 	SqlSession mybatis;
 	
-	public List<HashMap<String, Object>> selectAllMember() {
-		return mybatis.selectList("boardList.selectAllMember");
+	public List<HashMap<String, Object>> selectAll() {
+		return mybatis.selectList("testBoardList.selectAll");
 	}
-	
-	public List<String> selectAllDept(){
-		return mybatis.selectList("boardList.selectAllDept");
-	}
-	
 }

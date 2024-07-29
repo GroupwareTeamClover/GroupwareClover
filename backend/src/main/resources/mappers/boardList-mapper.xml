@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardList">
+	<select id="selectAllMember" resultType="java.util.HashMap">
+		select employee.emp_seq, employee.emp_name, role.role_name, department.dept_name
+		from employee
+        join department on employee.dept_code = department.dept_code
+        join role on employee.role_code = role.role_code
+	</select>
+	
+	<select id="selectAllDept" resultType="string">
+		select dept_name from department
+	</select>
+</mapper>
