@@ -26,9 +26,11 @@ export const MemMain = () => {
     const [filtered, setFiltered] = useState(members);
 
 
-    // useEffect(()=>{
-    //     axios.get(`${BaseUrl()}/member`)
-    // })
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/member`).then((resp)=>{
+            setMembers(resp.data);
+        })
+    })
 
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
