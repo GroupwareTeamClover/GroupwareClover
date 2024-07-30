@@ -18,8 +18,12 @@ public class EmployeeDAO {
 
     /** 회원 가입 **/
     public int signUpEmployee(EmployeeDTO dto) {
-        System.out.println("DAO pw ===== "+ dto.getEmpPw());
         return mybatis.insert("Employee.signUp", dto);
+    }
+
+    /** 회원 가입 ( 중복체크 ) **/
+    public int existsId(String empId) {
+        return mybatis.selectOne("Employee.existsId", empId);
     }
 
     /** 사원 정보 조회 **/
