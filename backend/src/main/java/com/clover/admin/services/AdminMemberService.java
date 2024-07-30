@@ -18,4 +18,9 @@ public class AdminMemberService {
 	public List<HashMap<String, Object>> getAllData(){
 		return adminmemberDAO.getAllData();
 	}
+	
+	public List<HashMap<String,Object>> getCountMem(){
+		return adminmemberDAO.getCountMem();
+	}
+	
 }

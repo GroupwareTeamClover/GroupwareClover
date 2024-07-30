@@ -19,9 +19,14 @@ public class AdminMemberController {
 	private AdminMemberService adminmemberService;
 	
 	@GetMapping
-	public ResponseEntity<List<HashMap<String, Object>>> get(){
+	public ResponseEntity<List<HashMap<String, Object>>> getAllData(){
 		return ResponseEntity.ok(adminmemberService.getAllData());
 	}
+	@GetMapping("/countmem")
+	public ResponseEntity<List<HashMap<String,Object>>> getCountMem(){
+		return ResponseEntity.ok(adminmemberService.getCountMem());
+	}
+	
 	
 	
 }

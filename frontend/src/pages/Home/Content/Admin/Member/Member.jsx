@@ -12,6 +12,7 @@ export const Member = () => {
 
   const location = useLocation();
   const state = location.state;
+  console.log("headerTxt"+ state?.type)
 
   // 상태에 따라 header 내용 설정
   const headerText = state?.type || '전자결재';

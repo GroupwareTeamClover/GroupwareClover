@@ -15,7 +15,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
 
   const menus = [
     { name: "Home", link: "/", type: "Home", icon: IoHome },
-    { name: "조직관리", link: "member", type: "member", icon: FaCalendarDays, 
+    { name: "조직관리", link: "member", type: "통합사원목록", icon: FaCalendarDays, 
       submenus: [
         { name: "통합 사원 목록", link: "member", type: "통합사원목록" },
         { name: "가입 승인 목록", link: "member/addmem", type: "가입승인목록" },
@@ -59,7 +59,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
 
   const handleMenuClick = (link, type) => {
     setSelectedMenuState(type);
-    console.log(type, selectedMenu);
+    console.log(type);
     handleNavigation(link, type);
   };
 
@@ -83,7 +83,6 @@ export const AdminSideMenu = ({ open, setOpen }) => {
   useEffect(() => {
     if (!open) {
       const firstSubmenu = menus.find(menu => menu.submenus)?.submenus?.[0];
-      console.log(firstSubmenu)
       if (firstSubmenu) {
         handleMenuClick(firstSubmenu.link, firstSubmenu.type);
       }
@@ -106,34 +105,34 @@ export const AdminSideMenu = ({ open, setOpen }) => {
                 <div key={i}>
                     {open ? (
                   <div className={styles.menuLink} onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)}
-                    style={{ color: selectedMenu === menu.type ? 'orange' : 'black' }}>
+                    style={{ color: selectedMenuState === menu.type ? 'orange' : 'black' }}>
                     <div>
                       {React.createElement(menu.icon, { size: "30", color: "white" })}
                     </div>
                     <h3 className={styles.menuTitle}>{menu?.name}</h3>
                   </div>
                 ) : (
-                  <Link
-                    to={menu?.link}
+                  <div
+                    to={{ pathname: menu.link, state: { type: menu.type } }}
                     className={styles.menuLink}
-                    onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)}
+                    onClick={() => menu.submenus ? handleMenuClick(menu.link, menu.type) : handleMenuClick(menu.link, menu.type)}
                     style={{ color: selectedMenuState === menu.type ? 'orange' : 'black' }}
                   >
                     <div>
                       {React.createElement(menu.icon, { size: "30", color: "white" })}
                     </div>
                     <h3 className={open ? styles.menuTitle : styles.menuTitleAction}>{menu?.name}</h3>
-                  </Link>
+                  </div>
                 )}
               
                 {menu.submenus && dropdown[menu.type] && (
                     <div className={styles.dropdown}>
                       {menu.submenus.map((submenu, j) => (
-                        <Link to={{pathname: submenu?.link, state:{type:submenu.type}}} key={j} className={styles.menuLink} 
+                        <div key={j} className={styles.menuLink} 
                          onClick={() => handleMenuClick(submenu.link, submenu.type)}
                           style={{ color: selectedMenuState === submenu.type ? 'orange' : 'white' }}>
                           <div className={styles.submenuTitle}>{submenu.name}</div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
                   )} 
