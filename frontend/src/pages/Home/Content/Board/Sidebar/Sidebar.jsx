@@ -21,7 +21,7 @@ const Sidebar = () => {
 
     const checkValidateUser = (seq) => {
         console.log(seq);
-        return false;
+        return true;
     }
 
     const [allBoardlist, setAllBoardlist] = useState([]);
@@ -33,7 +33,6 @@ const Sidebar = () => {
         axios.get(`${BaseUrl()}/boardlist/groupBoards`).then((resp)=>{
             setGroupBoardlist(resp.data);
         })
-
     }, []);
 
 
@@ -67,7 +66,7 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronDown />그룹 게시판</div>
             }
             <div className={styles.groupBoard}>
-                {isGroupBoardOpen && [{ seq: 5, name: "인사부 게시판" }, { seq: 6, name: "영업부 게시판" }].map((item, i) => {
+                {isGroupBoardOpen && groupBoardlist.map((item, i) => {
                     return (
                         <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", { state: item }) : alert("접근이 제한된 게시판입니다!") }}>{item.boardlistName}</div>
                     );

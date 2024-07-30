@@ -32,6 +32,10 @@ public class BoardlistDAO {
 		return mybatis.selectList("boardList.selectAllBoards");
 	}
 	
+	public List<BoardlistDTO> getGroupBoardList(){
+		return mybatis.selectList("boardList.selectGroupBoards");
+	}
+	
 	public void createBoard(BoardlistDTO board) {
 		mybatis.insert("boardList.insert", board);
 	}

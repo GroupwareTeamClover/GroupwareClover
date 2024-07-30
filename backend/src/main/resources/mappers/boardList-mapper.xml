@@ -22,8 +22,12 @@
 	</select>
 	
 	<select id="selectAllBoards" resultType="com.clover.board.dto.BoardlistDTO" >
-		select boardlist_seq, boardlist_name, 
-		boardlist_type, boardlist_active from boardlist where boardlist_type = 'A'
+		select * from boardlist where boardlist_type = 'A'
+		order by boardlist_seq
+	</select>
+	
+	<select id="selectGroupBoards" resultType="com.clover.board.dto.BoardlistDTO" >
+		select * from boardlist where boardlist_type = 'G'
 		order by boardlist_seq
 	</select>
 

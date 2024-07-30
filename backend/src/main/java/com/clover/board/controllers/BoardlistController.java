@@ -51,8 +51,7 @@ public class BoardlistController {
 	
 	@GetMapping("groupBoards")
 	public ResponseEntity<List<BoardlistDTO>> getGroupBoardList(){
-		System.out.println(blServ.getAllBoardList());
-		return ResponseEntity.ok(blServ.getAllBoardList());
+		return ResponseEntity.ok(blServ.getGroupBoardList());
 	}
 	
 	@PostMapping
