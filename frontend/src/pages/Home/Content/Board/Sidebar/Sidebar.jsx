@@ -1,7 +1,9 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Sidebar.module.css';
 import { FaStar, FaPlusCircle, FaHammer, FaChevronUp, FaChevronDown } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { BaseUrl } from '../../../../../commons/config';
 
 const Sidebar = () => {
 
@@ -22,8 +24,19 @@ const Sidebar = () => {
         return true;
     }
 
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [allBoardlist, setAllBoardlist] = useState([]);
+    const [groupBoardlist, setGroupBoardlist] = useState([]);
+    useEffect(() => {
+        axios.get(`${BaseUrl()}/boardlist/allBoards`).then((resp) => {
+            setAllBoardlist(resp.data);
+        })
+        axios.get(`${BaseUrl()}/boardlist/groupBoards`).then((resp)=>{
+            setGroupBoardlist(resp.data);
+        })
+    }, []);
 
+
+    const [isAdmin, setIsAdmin] = useState(true);
     const testDTO = { seq: 999, name: "구구구" }
 
     return (
@@ -39,9 +52,9 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsAllBoard}><FaChevronDown />전사 게시판</div>
             }
             <div className={styles.allBoard} >
-                {isAllBoardOpen && [{ seq: 1, name: "사내공지" }, { seq: 4, name: "자유 게시판" }].map((item, i) => {
+                {isAllBoardOpen && allBoardlist.map((item, i) => {
                     return (
-                        <div key={i} className={styles.eachBoard} onClick={() => { navi("board", { state: item }) }}>{item.name}</div>
+                        <div key={i} className={styles.eachBoard} onClick={() => { navi("board", { state: item }) }}>{item.boardlistName}</div>
                     );
                 })
                 }
@@ -53,9 +66,9 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronDown />그룹 게시판</div>
             }
             <div className={styles.groupBoard}>
-                {isGroupBoardOpen && [{ seq: 5, name: "인사부 게시판" }, { seq: 6, name: "영업부 게시판" }].map((item, i) => {
+                {isGroupBoardOpen && groupBoardlist.map((item, i) => {
                     return (
-                        <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", { state: item }) : alert("접근이 제한된 게시판입니다!") }}>{item.name}</div>
+                        <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", { state: item }) : alert("접근이 제한된 게시판입니다!") }}>{item.boardlistName}</div>
                     );
                 })
                 }
