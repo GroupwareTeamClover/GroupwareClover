@@ -55,7 +55,7 @@ public class MessengerHandler extends TextWebSocketHandler {
         
         // WebSocketSession에서 사용자 ID 추출
         String loginId = (String) session.getAttributes().get("cloverId");
-        System.out.println("메시지 보낼 때" + loginId);
+        System.out.println("메시지 보낼 때11" + loginId);
         // 메시지에 발신자 ID 설정
         chatMessage.setSenderSeq(Integer.parseInt(loginId));
         
