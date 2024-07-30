@@ -15,6 +15,15 @@
     font-family: 'DalseoHealingMedium', sans-serif;
     overflow: hidden;
   }
+
+  .noChatSelected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 18px;
+    color: #999;
+  }
   
   /* 왼쪽 패널 (채팅 목록) */
   .leftPanel {

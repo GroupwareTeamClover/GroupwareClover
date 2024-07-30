@@ -17,8 +17,9 @@ public class EmployeeDAO {
     }
 
     /** 회원 가입 **/
-    public void signUpEmployee(EmployeeDTO dto) {
-        mybatis.insert("Employee.signUp", dto);
+    public int signUpEmployee(EmployeeDTO dto) {
+        System.out.println("DAO pw ===== "+ dto.getEmpPw());
+        return mybatis.insert("Employee.signUp", dto);
     }
 
     /** 사원 정보 조회 **/

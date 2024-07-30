@@ -31,7 +31,7 @@
         INSERT INTO
             employee
         VALUES(
-            employee_seq.nextval,
+            employee_sequence.nextval,
             0,
             #{empId},
             #{empPw},
@@ -42,9 +42,9 @@
             #{empTel},
             #{empAddress},
             null,
-            "직급코드",
-            "부서코드",
-            "입사일",
+            99,
+            99,
+            sysdate,
             null,
             0
         )
