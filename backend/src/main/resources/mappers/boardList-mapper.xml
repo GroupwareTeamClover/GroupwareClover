@@ -4,13 +4,41 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="boardList">
 	<select id="selectAllMember" resultType="java.util.HashMap">
-		select employee.emp_seq, employee.emp_name, role.role_name, department.dept_name
+		select employee.emp_seq,
+		employee.emp_name, role.role_name, department.dept_name
 		from employee
-        join department on employee.dept_code = department.dept_code
-        join role on employee.role_code = role.role_code
+		join department on employee.dept_code = department.dept_code
+		join role on employee.role_code = role.role_code
+		order by emp_seq
+	</select>
+
+	<select id="selectAllDept" resultType="string">
+		select dept_name from
+		department
 	</select>
 	
-	<select id="selectAllDept" resultType="string">
-		select dept_name from department
+	<select id="isTitleExist" resultType="boolean">
+		select count(*) from boardlist where boardlist_name = #{title}
 	</select>
+	
+	<select id="selectAllBoards" resultType="com.clover.board.dto.BoardlistDTO" >
+		select boardlist_seq, boardlist_name, 
+		boardlist_type, boardlist_active from boardlist where boardlist_type = 'A'
+		order by boardlist_seq
+	</select>
+
+	<insert id="insert">
+		insert into boardlist values(boardlist_sequence.nextval,
+		#{boardlistName}, #{boardlistType}, #{boardlistActive})
+		<selectKey keyProperty="boardlistSeq" resultType="int" order="AFTER">
+			SELECT boardlist_sequence.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<insert id="createWhitelist" parameterType="java.util.HashMap">
+		insert into board_whitelist (emp_seq, boardlist_seq)
+		<foreach collection="members" item="member" index="index" separator="UNION ALL">
+			SELECT #{member}, #{seq} FROM dual
+		</foreach>
+	</insert>
 </mapper>
