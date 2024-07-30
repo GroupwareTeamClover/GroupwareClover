@@ -1,16 +1,23 @@
 import { useState } from 'react';
 import styles from './ModalPosition.module.css';
+import { useNavigate } from 'react-router-dom';
 
 
-export const ModalPosition = ({modalState})=>{
+export const ModalPosition = ({modalState, setIsModalOpen})=>{
     
     const [members, setMembers]= useState(2);
+    const navi = useNavigate();
+    const closeModal = () => setIsModalOpen(false);
 
     const handleChangeStatus =(e)=>{
         const {name,value} = e.target;
     }
+    const handleSave=()=>{
+
+    }
+   
     return(
-        <div class={styles.container}>
+        <div className={styles.container}>
             <div className={styles.title}>
                 멤버 정보 수정
             </div>
@@ -67,8 +74,8 @@ export const ModalPosition = ({modalState})=>{
                 </div>
             </div>
             <div className={styles.btnstyle}>
-                <button className={styles.save}>저장</button>
-                <button className={styles.cancel}>취소</button>
+                <button className={styles.save} onClick={handleSave}>저장</button>
+                <button className={styles.cancel} onClick={closeModal}>취소</button>
             </div>
         </div>
 
