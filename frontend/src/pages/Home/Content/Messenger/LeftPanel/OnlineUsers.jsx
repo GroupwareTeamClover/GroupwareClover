@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import styles from './Messenger.module.css';
-import { Modal } from '../../../../components/Modal/Modal';
-import { Folder } from '../../../../components/Folder/Folder';
-import UserSelectModal from './UserSelectModal';
+import styles from '../Messenger.module.css';
+import { Modal } from '../../../../../components/Modal/Modal';
+import { Folder } from '../../../../../components/Folder/Folder';
+import UserSelectModal from '../Modals/UserSelectModal';
 
 const OnlineUsers = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,7 +12,7 @@ const OnlineUsers = () => {
   
     return (
       <div className={styles.onlineUsers}>
-        <h3>Online Now <span>6</span></h3>
+        <h3>Online Now <span>4</span></h3>
         <div className={styles.userList}>
           <div className={styles.userIcon}></div>
           <div className={styles.userIcon}></div>

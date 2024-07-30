@@ -3,72 +3,71 @@ package com.clover.messenger.dto;
 import java.sql.Timestamp;
 
 public class ChatMessageDTO {
-    private int message_seq;
-    private String message_content;
-    private String message_type;
-    private Timestamp send_time;
-    private int room_seq;
-    private int sender_seq;
+    private int messageSeq;
+    private String messageContent;
+    private String messageType;
+    private Timestamp sendTime;
+    private int roomSeq;
+    private int senderSeq;
 
-    public ChatMessageDTO() {}
-
-
-    public ChatMessageDTO(int message_seq, String message_content, String message_type, Timestamp send_time, int room_seq, int sender_seq) {
-        this.message_seq = message_seq;;
-        this.message_content = message_content;
-        this.message_type = message_type;
-        this.send_time = send_time;
-        this.room_seq = room_seq;
-        this.sender_seq = sender_seq;
+    // Getters and setters
+    public int getMessageSeq() {
+        return this.messageSeq;
     }
 
-	public int getMessage_seq() {
-		return this.message_seq;
-	}
+    public void setMessageSeq(int messageSeq) {
+        this.messageSeq = messageSeq;
+    }
 
-	public void setMessage_seq(int message_seq) {
-		this.message_seq = message_seq;
-	}
+    public String getMessageContent() {
+        return this.messageContent;
+    }
 
-	public String getMessage_content() {
-		return this.message_content;
-	}
+    public void setMessageContent(String messageContent) {
+        this.messageContent = messageContent;
+    }
 
-	public void setMessage_content(String message_content) {
-		this.message_content = message_content;
-	}
+    public String getMessageType() {
+        return this.messageType;
+    }
 
-	public String getMessage_type() {
-		return this.message_type;
-	}
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
 
-	public void setMessage_type(String message_type) {
-		this.message_type = message_type;
-	}
+    public Timestamp getSendTime() {
+        return this.sendTime;
+    }
 
-	public Timestamp getSend_time() {
-		return this.send_time;
-	}
+    public void setSendTime(Timestamp sendTime) {
+        this.sendTime = sendTime;
+    }
 
-	public void setSend_time(Timestamp send_time) {
-		this.send_time = send_time;
-	}
+    public int getRoomSeq() {
+        return this.roomSeq;
+    }
 
-	public int getRoom_seq() {
-		return this.room_seq;
-	}
+    public void setRoomSeq(int roomSeq) {
+        this.roomSeq = roomSeq;
+    }
 
-	public void setRoom_seq(int room_seq) {
-		this.room_seq = room_seq;
-	}
+    public int getSenderSeq() {
+        return this.senderSeq;
+    }
 
-	public int getSender_seq() {
-		return this.sender_seq;
-	}
+    public void setSenderSeq(int senderSeq) {
+        this.senderSeq = senderSeq;
+    }
 
-	public void setSender_seq(int sender_seq) {
-		this.sender_seq = sender_seq;
-	}
+    // Constructors
+    public ChatMessageDTO() {}
 
-
+    public ChatMessageDTO(int messageSeq, String messageContent, String messageType, Timestamp sendTime, int roomSeq, int senderSeq) {
+        this.messageSeq = messageSeq;
+        this.messageContent = messageContent;
+        this.messageType = messageType;
+        this.sendTime = sendTime;
+        this.roomSeq = roomSeq;
+        this.senderSeq = senderSeq;
+    }
 }

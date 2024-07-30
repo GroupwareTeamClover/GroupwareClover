@@ -3,84 +3,81 @@ package com.clover.messenger.dto;
 import java.sql.Timestamp;
 
 public class ChatRoomDTO {
-    private int room_seq;
-    private String room_name;
-    private String room_state;
-    private Timestamp room_create_time;
-    private String room_type;
-    private String room_description;
-    private int emp_seq;
+    private int roomSeq;
+    private String roomName;
+    private String roomState;
+    private Timestamp roomCreateTime;
+    private String roomType;
+    private String roomDescription;
+    private int empSeq;
 
-    public int getRoom_seq() {
-        return this.room_seq;
+    // Getters and setters
+    public int getRoomSeq() {
+        return this.roomSeq;
     }
 
-    public void setRoom_seq(int room_seq) {
-        this.room_seq = room_seq;
+    public void setRoomSeq(int roomSeq) {
+        this.roomSeq = roomSeq;
     }
 
-    public String getRoom_name() {
-        return this.room_name;
+    public String getRoomName() {
+        return this.roomName;
     }
 
-    public void setRoom_name(String room_name) {
-        this.room_name = room_name;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public String getRoom_state() {
-        return this.room_state;
+    public String getRoomState() {
+        return this.roomState;
     }
 
-    public void setRoom_state(String room_state) {
-        this.room_state = room_state;
+    public void setRoomState(String roomState) {
+        this.roomState = roomState;
     }
 
-    public Timestamp getRoom_create_time() {
-        return this.room_create_time;
+    public Timestamp getRoomCreateTime() {
+        return this.roomCreateTime;
     }
 
-    public void setRoom_create_time(Timestamp room_create_time) {
-        this.room_create_time = room_create_time;
+    public void setRoomCreateTime(Timestamp roomCreateTime) {
+        this.roomCreateTime = roomCreateTime;
     }
 
-    public String getRoom_type() {
-        return this.room_type;
+    public String getRoomType() {
+        return this.roomType;
     }
 
-    public void setRoom_type(String room_type) {
-        this.room_type = room_type;
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
     }
 
-    public String getRoom_description() {
-        return this.room_description;
+    public String getRoomDescription() {
+        return this.roomDescription;
     }
 
-    public void setRoom_description(String room_description) {
-        this.room_description = room_description;
+    public void setRoomDescription(String roomDescription) {
+        this.roomDescription = roomDescription;
     }
 
-    public int getEmp_seq() {
-        return this.emp_seq;
+    public int getEmpSeq() {
+        return this.empSeq;
     }
 
-    public void setEmp_seq(int emp_seq) {
-        this.emp_seq = emp_seq;
+    public void setEmpSeq(int empSeq) {
+        this.empSeq = empSeq;
     }
 
-
+    // Constructors
     public ChatRoomDTO() {}
 
-
-    public ChatRoomDTO(int room_seq, String room_name, String room_state, Timestamp room_create_time, String room_type, String room_description, int emp_seq) {
-        this.room_seq = room_seq;
-        this.room_name = room_name;
-        this.room_state = room_state;
-        this.room_create_time = room_create_time;
-        this.room_type = room_type;
-        this.room_description = room_description;
-        this.emp_seq = emp_seq;
+    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq) {
+        this.roomSeq = roomSeq;
+        this.roomName = roomName;
+        this.roomState = roomState;
+        this.roomCreateTime = roomCreateTime;
+        this.roomType = roomType;
+        this.roomDescription = roomDescription;
+        this.empSeq = empSeq;
     }
-
-
- 
 }

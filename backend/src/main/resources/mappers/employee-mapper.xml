@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Employee">
+
+    <select id="signIn" resultType="com.clover.employee.dto.EmployeeDTO">
+        SELECT
+            emp_seq,
+            emp_id,
+            emp_name,
+            emp_avatar,
+            worker_state_code
+        FROM
+            employee
+        WHERE
+            emp_id = #{empId}
+        AND
+            emp_pw = #{empPw}
+    </select>
+
+    <select id="Info" resultType="com.clover.employee.dto.EmployeeDTO">
+        SELECT
+            *
+        FROM
+            employee
+        WHERE
+            emp_seq = #{empSeq}
+    </select>
+
+    <select id="existsId" resultType="Integer">
+        SELECT
+            count(*)
+        FROM
+            employee
+        WHERE
+            emp_id = #{empId}
+    </select>
+
+    <insert id="signUp">
+        INSERT INTO
+            employee
+        VALUES(
+            employee_sequence.nextval,
+            0,
+            #{empId},
+            #{empPw},
+            #{empName},
+            #{empEmail},
+            #{empBirth},
+            #{empGender},
+            #{empTel},
+            #{empAddress},
+            null,
+            99,
+            99,
+            sysdate,
+            null,
+            0,
+            99
+        )
+    </insert>
+
+    <update id="update">
+        Update
+            employee
+        SET
+            emp_email = #{empEmail},
+            emp_tel = #{empTel},
+            emp_address = #{empAddress}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM
+            employee
+        WHERE
+            emp_seq = #{empSeq}
+    </delete>
+</mapper>

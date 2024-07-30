@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import styles from './Messenger.module.css';
-import { Folder } from '../../../../components/Folder/Folder';
+import styles from '../Messenger.module.css';
+import { Folder } from '../../../../../components/Folder/Folder';
 
 const UserSelectModal = ({ onClose }) => {
+
+  // 검색 내용 가져오기
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([]);
 
+  // 데이터 가져오기
   const folderData = [
     {
-      name: "영업부부(26)",
+      name: "영업본부(26)",
       children: [
         { name: "김상후 대표이사" },
         { name: "구정모 사장" },
@@ -17,7 +20,7 @@ const UserSelectModal = ({ onClose }) => {
         { name: "허각 이사" },
       ]
     },
-    // 필요에 따라 더 많은 부서 추가
+   
   ];
 
   const handleUserSelect = (user) => {

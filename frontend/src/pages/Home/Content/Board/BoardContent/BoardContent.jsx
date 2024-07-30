@@ -7,7 +7,7 @@ const BoardContent = ( {isDefault} ) => {
 
     return (
         <div className={styles.container}>
-            {(isDefault)?<div>{boardInfo.seq} : {boardInfo.name}</div>:<div>{loc.state.seq} : {loc.state.name}</div>}
+            {(isDefault)?<div>{boardInfo.seq} : {boardInfo.name}</div>:<div>{loc.state.boardlistSeq} : {loc.state.boardlistName}</div>}
         </div>
     );
 }
