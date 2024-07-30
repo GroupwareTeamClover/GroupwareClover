@@ -3,7 +3,8 @@ import { FaSearch} from "react-icons/fa";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
-import { Folder } from '../../../../../components/Folder/Folder';
+import { DragFolder } from '../DragFolder/DragFolder';
+
 
 export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}) =>{
 
@@ -93,7 +94,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
                         </div>
                         <div className={styles.searchContent}>
                             {filteredData.map((folder, index) => (
-                                <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedEmpInfo} setSelectedItem={setSelectedEmpInfo}/>
+                                <DragFolder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedEmpInfo} setSelectedItem={setSelectedEmpInfo}/>
                             ))}
                         </div>
                     </div>

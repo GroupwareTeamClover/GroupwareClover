@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styles from './Folder.module.css'
+import styles from './DragFolder.module.css';
 import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder  } from "react-icons/fa";
 import { CiFileOn } from "react-icons/ci";
 
@@ -25,8 +25,8 @@ import { CiFileOn } from "react-icons/ci";
 </div> */
 
 
-export const Folder = ({ folder, level = 0 , onItemClick , selectedItem, setSelectedItem}) => {
-    console.log(`양식폴더컴포넌트: ${selectedItem.children.name}`)
+export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, setSelectedItem}) => {
+    console.log(`라인폴더컴포넌트: ${selectedItem.children.name}`)
     const [isExpanded, setIsExpanded] = useState(false);
 
     // 폴더가 열려 있는 상태가 바뀌면 isExpanded 상태를 업데이트

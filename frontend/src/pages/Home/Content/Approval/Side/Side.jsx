@@ -47,7 +47,7 @@ export const Side = () => {
 
     return (
         <div className={styles.sideBox}>
-            <div className={styles.textBox} onClick={() => handleNavigation('/', '전자결재')}>전자결재</div>
+            <div className={styles.textBox} onClick={() => handleNavigation('/approval', '전자결재')}>전자결재</div>
             <div className={styles.btnBox}>
                 <button className={styles.addBtn} onClick={handleModalChange} name="ModalForm">새 결재 진행하기</button>
             </div>

@@ -18,16 +18,16 @@ export const Main = () => {
             <div className={styles.detail}>
                 <Routes>
                     <Route path="/" element={<DetailMain/>} />
-                    <Route path="/approval/proceeding" element={<Proceeding />} />
-                    <Route path="/approval/waiting"/>
-                    <Route path="/approval/planning" />
-                    <Route path="/approval/receiving" />
-                    <Route path="/approval/participating" />
-                    <Route path="/approval/drafting" />
-                    <Route path="/approval/temp" />
-                    <Route path="/approval/complete" />
-                    <Route path="/approval/received" />
-                    <Route path="/approval/participated" />
+                    <Route path="/proceeding" element={<Proceeding />} />
+                    <Route path="/waiting"/>
+                    <Route path="/planning" />
+                    <Route path="/receiving" />
+                    <Route path="/participating" />
+                    <Route path="/drafting" />
+                    <Route path="/temp" />
+                    <Route path="/complete" />
+                    <Route path="/received" />
+                    <Route path="/participated" />
                 </Routes>
             </div>
         </div>
