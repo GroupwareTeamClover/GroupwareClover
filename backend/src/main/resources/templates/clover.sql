@@ -333,5 +333,28 @@ insert into doc_code values(2, '근태');
 insert into doc_detail_code values(1, '업무기안' ,1);
 insert into doc_detail_code values(2, '휴가신청서', 2);
 
+-- 노시온
+-- Detartment dummy data
+INSERT INTO department values(1, '총무');
+INSERT INTO department values(2, '인사');
+INSERT INTO department values(3, '사무');
+INSERT INTO department values(4, '유통');
+INSERT INTO department values(5, '경영');
+INSERT INTO department values(99, '미정');
+
+-- Role dummy data
+INSERT INTO role values(1, '사장');
+INSERT INTO role values(2, '부사장');
+INSERT INTO role values(3, '이사');
+INSERT INTO role values(4, '부장');
+INSERT INTO role values(5, '차장');
+INSERT INTO role values(6, '과장');
+INSERT INTO role values(7, '대리');
+INSERT INTO role values(8, '사원');
+INSERT INTO role values(9, '인턴');
+INSERT INTO role values(99, '미정');
+
+
 --**************트리거 or 함수***************
+
 
