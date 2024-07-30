@@ -11,8 +11,9 @@ import { Admin } from './pages/Admin/Admin';
 
 function App() {
 
-  const userData = sessionStorage.getItem("sessionData");
-  const { sign, setSign, setUserSession } = useMemberStore();
+  const userData = sessionStorage.getItem("sessionUser");
+  const adminCheck = sessionStorage.getItem("sessionAdmin");
+  const { sign, setSign, setUserSession, admin, setAdmin } = useMemberStore();
 
   // Sidebar toggle
   const [open, setOpen] = useState(true);
@@ -29,23 +30,29 @@ function App() {
       setSign(true);
       setUserSession(data);
     }
+
+    if(adminCheck !== null && adminCheck === "true"){
+      setAdmin(true);
+    }
+
   }, [sign]);
 
   return (
     <div className="container">
       <Router>
-
-
-        { !sign && <Login setSign={ setSign }/> }
-        { sign && <SideMenu open={open} setOpen={setOpen}/>  }
-        { sign && <Home /> }
-
-
-
-        {/* 관리자페이지 */}
-        {/* { !sign && <Login setSign={ setSign }/> }
-        { sign && <AdminSideMenu open={open} setOpen={setOpen} />  }
-        {  sign && <Admin /> } */}
+        { !sign && <Login setSign={ setSign } setAdmin={ setAdmin }/> }
+        { !admin ?
+            <>
+              { sign && <SideMenu open={open} setOpen={setOpen}/>  }
+              { sign && <Home /> }
+            </>
+            :
+            <>
+              {/* 관리자페이지 */}
+              { sign && <AdminSideMenu open={open} />  }
+              { sign && <Admin /> }
+            </>
+        }
       </Router>
     </div>
   );

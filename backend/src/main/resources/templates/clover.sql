@@ -354,6 +354,25 @@ INSERT INTO role values(8, '사원');
 INSERT INTO role values(9, '인턴');
 INSERT INTO role values(99, '미정');
 
+-- Worker_state dummy data
+INSERT INTO worker_state VALUES( 0, '관리자' );
+INSERT INTO worker_state VALUES( 1, '정규직' );
+INSERT INTO worker_state VALUES( 2, '비정규직' );
+INSERT INTO worker_state VALUES( 3, '계약직' );
+INSERT INTO worker_state VALUES( 99, '미정' );
+
+-- Employee_state dummy data
+INSERT INTO employee_state VALUES(0, '가입대기');
+INSERT INTO employee_state VALUES(1, '재직중');
+INSERT INTO employee_state VALUES(2, '퇴사');
+
+-- Dayoff_state dummy data
+INSERT INTO dayoff_state VALUES(1, '연차');
+INSERT INTO dayoff_state VALUES(2, '조퇴');
+INSERT INTO dayoff_state VALUES(3, '지각');
+INSERT INTO dayoff_state VALUES(4, '경조');
+INSERT INTO dayoff_state VALUES(5, '공가');
+INSERT INTO dayoff_state VALUES(6, '질병휴가');
 
 --**************트리거 or 함수***************
 
