@@ -17,20 +17,23 @@ export const MemMain = () => {
 
     const [countMem, setCountMem] = useState({total:100, normal:80, rest:20, stop:20 })
     const [status, setStatus] = useState({status:''});
-    const [member, setMember] = useState();
+    // const [member, setMember] = useState();
     const [members, setMembers] = useState([
-        {seq:1, name:'김일일', dept:'인사팀',position:'대리', group:'정규직',email:'jeesu@naver.com',status:'정상'},
-        {seq:2, name:'정일일', dept:'영업팀',position:'과장', group:'정규직',email:'abc@naver.com',status:'정상'},
-        {seq:3, name:'최일일', dept:'영업팀',position:'대리', group:'계약직',email:'abc1@naver.com',status:'중지'}
+        // {seq:1, name:'김일일', dept:'인사팀',position:'대리', group:'정규직',email:'jeesu@naver.com',status:'정상'},
+        // {seq:2, name:'정일일', dept:'영업팀',position:'과장', group:'정규직',email:'abc@naver.com',status:'정상'},
+        // {seq:3, name:'최일일', dept:'영업팀',position:'대리', group:'계약직',email:'abc1@naver.com',status:'중지'}
+        {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''}
     ]);
     const [filtered, setFiltered] = useState(members);
 
 
     useEffect(()=>{
-        axios.get(`${BaseUrl()}/member`).then((resp)=>{
+        axios.get(`${BaseUrl()}/adminmember`).then((resp)=>{
+            console.log(resp)
             setMembers(resp.data);
+            setFiltered(resp.data)
         })
-    })
+    },[])
 
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
@@ -60,13 +63,6 @@ export const MemMain = () => {
         const modalName = e.target.value;
         setModalState(modalName);
         openModal();
-    }
-
-    // axios로 출력받기 emp table - state가 0인 상태인 것. 
-    const handleGetNew = ()=>{
-        axios.get(`${BaseUrl()}/member`).them((resp)=>{
-            setMembers(resp.data);
-        })
     }
 
     const handleSearch =(e)=>{
@@ -112,23 +108,26 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}><input type="checkbox" onClick={handleCheckAll}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
-                                    <select name='dept' onChange={handleSearch}>
+                                    <select name='DEPT_NAME' onChange={handleSearch}>
                                         <option value="">부서</option>
-                                        <option>인사팀</option> 
-                                        <option>회계팀</option> 
-                                        <option>영업팀</option> 
+                                        <option>사무</option> 
+                                        <option>인사</option> 
+                                        <option>총무</option> 
+                                        <option>미정</option> 
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name='position' onChange={handleSearch}>
+                                    <select name='ROLE_NAME' onChange={handleSearch}>
                                         <option value="">직위</option>
                                         <option>사장</option> 
                                         <option>대리</option> 
                                         <option>사원</option> 
+                                        <option>인턴</option> 
+                                        <option>미정</option> 
                                     </select>   
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name="group" onChange={handleSearch}>
+                                    <select name="WORKER_STATE_NAME" onChange={handleSearch}>
                                         <option value=''>사용자그룹</option>
                                         <option>정규직</option> 
                                         <option>계약직</option> 
@@ -137,11 +136,12 @@ export const MemMain = () => {
                                 </td>
                                 <td className={styles.theadtd}>이메일</td>
                                 <td className={styles.theadtd}>
-                                    <select name='status' onChange={handleSearch}>
+                                    <select name='EMP_STATE_NAME' onChange={handleSearch}>
                                         <option value="">계정상태</option>
                                         <option>정상</option>
                                         <option>휴면</option>
-                                        <option>중지</option>
+                                        <option>퇴사</option>
+                                        <option>가입대기</option>
                                     </select>
                                 </td>
                             </tr>
@@ -151,23 +151,23 @@ export const MemMain = () => {
                             {
                                 filtered.map((mem, i)=>{
                                     return(
-                                        <tr key={mem.seq}>
+                                        <tr key={i}>
                                             <td className={styles.theadtd}><input type="checkbox" ref={data=> checkboxRef.current[i]=data}></input></td>
-                                            <td className={styles.theadtd}>{mem.name}</td>
+                                            <td className={styles.theadtd}>{mem.EMP_NAME}</td>
                                             <td className={styles.theadtd}>
-                                                {mem.dept}
+                                                {mem.DEPT_NAME}
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {mem.position}
+                                                {mem.ROLE_NAME}
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {mem.group}
+                                                {mem.WORKER_STATE_NAME}
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {mem.email}
+                                                {mem.EMP_EMAIL}
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {mem.status}
+                                                {mem.EMP_STATE_NAME}
                                             </td>
                                         </tr>
                                     )
@@ -186,13 +186,11 @@ export const MemMain = () => {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                     { modalState === status.status &&
-                        <ModalPosition modalState={modalState}/>
+                        <ModalPosition modalState={modalState} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                     }
                     { modalState === 'deleteMem' &&
                         <ModalDelete/>
                     }
-                       
-                            
                 </div>
         </Modal>
         
