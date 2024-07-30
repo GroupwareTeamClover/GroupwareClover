@@ -7,8 +7,11 @@ import {SignUp} from "./SignUp/SignUp";
 import {FindPw} from "./FindPw/FindPw";
 import {FindId} from "./FindId/FindId";
 import {BaseUrl} from "../../commons/config";
+import {useNavigate} from "react-router-dom";
 
 export const Login = ({ setSign, setAdmin }) => {
+
+  const navi = useNavigate();
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -44,6 +47,7 @@ export const Login = ({ setSign, setAdmin }) => {
         setAdmin(true);
       }
       setSign(true);
+      navi("/");
       alert("로그인 성공")
     } else {
       alert("로그인 실패")

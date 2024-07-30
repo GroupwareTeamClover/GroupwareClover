@@ -43,14 +43,14 @@ function App() {
         { !sign && <Login setSign={ setSign } setAdmin={ setAdmin }/> }
         { !admin ?
             <>
-              { sign && <SideMenu open={open} setOpen={setOpen}/>  }
-              { sign && <Home /> }
+              { (sign && !admin) && <SideMenu open={open} setOpen={setOpen}/>  }
+              { (sign && !admin) && <Home /> }
             </>
             :
             <>
               {/* 관리자페이지 */}
-              { sign && <AdminSideMenu open={open} />  }
-              { sign && <Admin /> }
+              { (sign && admin) && <AdminSideMenu open={open} setOpen={setOpen}/>  }
+              { (sign && admin) && <Admin /> }
             </>
         }
       </Router>
