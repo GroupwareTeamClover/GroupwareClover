@@ -57,7 +57,6 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData, se
       console.log(data);
 
       const res = await axios.post(`${BaseUrl()}/employee`, sendData);
-      console.log("res.data === ", res.data);
 
       if(res.data === "ok"){
         alert("회원가입 완료");
@@ -90,65 +89,65 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData, se
   }, [sendData.postcode]);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.title}>
-        <h1>Join Employee!</h1>
-      </div>
-      <div className={styles.joinForm}>
-
-        <div className={styles.row}>
-          <span>전화번호</span>
-          <input type="text" name="empTel" onChange={handleDataCheck} value={sendData.empTel} placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
+      <div className={styles.container}>
+        <div className={styles.title}>
+          <h1>Join Employee!</h1>
         </div>
+        <div className={styles.joinForm}>
 
-        { /* Name empty check */
-          sendData.empTel !== "" ?
-            <div className={styles.row}>
-              { /* ID Check */
-                checkData.empTel ?
-                    <p style={{color: "green"}}>확인되었습니다.</p>
-                    :
-                    <p style={{color: "red"}}>유효하지 않은 전화번호 유형입니다.</p>
-              }
-            </div>
-              : <></>
-        }
-
-        <div className={styles.row}>
-          <span>주소</span>
-          <div>
-            <input type="text" name="postcode" value={sendData.postcode} placeholder="우편번호" readOnly/>
-            <button onClick={() =>  openModal()}>주소 검색</button>
-          </div>
-          <input type="text" name="roadAddress" value={sendData.roadAddress} placeholder="기본주소" readOnly/>
-          <input type="text" name="detailAddress" value={sendData.detailAddress||""} onChange={handleDataCheck} placeholder="상세주소"/>
-        </div>
-
-        { /* Address empty check */
-          sendData.detailAddress !== "" ?
-            <div className={styles.row}>
-              { /* Address Check */
-                checkData.empAddress ?
-                    <p style={{color: "green"}}>확인되었습니다.</p>
-                    :
-                    <p style={{color: "red"}}>주소를 입력해주세요</p>
-              }
-            </div>
-              :
-              <></>
-        }
-        { successBtn &&
           <div className={styles.row}>
-            <button onClick={handleSubmit}>완료</button>
+            <span>전화번호</span>
+            <input type="text" name="empTel" onChange={handleDataCheck} value={sendData.empTel} placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
           </div>
-        }
+
+          { /* Name empty check */
+            sendData.empTel !== "" ?
+                <div className={styles.row}>
+                  { /* ID Check */
+                    checkData.empTel ?
+                        <p style={{color: "green"}}>확인되었습니다.</p>
+                        :
+                        <p style={{color: "red"}}>유효하지 않은 전화번호 유형입니다.</p>
+                  }
+                </div>
+                : <></>
+          }
+
+          <div className={styles.row}>
+            <span>주소</span>
+            <div>
+              <input type="text" name="postcode" value={sendData.postcode} placeholder="우편번호" readOnly/>
+              <button onClick={() =>  openModal()}>주소 검색</button>
+            </div>
+            <input type="text" name="roadAddress" value={sendData.roadAddress} placeholder="기본주소" readOnly/>
+            <input type="text" name="detailAddress" value={sendData.detailAddress||""} onChange={handleDataCheck} placeholder="상세주소"/>
+          </div>
+
+          { /* Address empty check */
+            sendData.detailAddress !== "" ?
+                <div className={styles.row}>
+                  { /* Address Check */
+                    checkData.empAddress ?
+                        <p style={{color: "green"}}>확인되었습니다.</p>
+                        :
+                        <p style={{color: "red"}}>주소를 입력해주세요</p>
+                  }
+                </div>
+                :
+                <></>
+          }
+          { successBtn &&
+              <div className={styles.row}>
+                <button onClick={handleSubmit}>완료</button>
+              </div>
+          }
 
 
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <Postcode onComplete={ completeHandler } />
-        </Modal>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <Postcode onComplete={ completeHandler } />
+          </Modal>
 
+        </div>
       </div>
-    </div>
   );
 };

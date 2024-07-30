@@ -4,29 +4,25 @@ import { Folder } from '../../../../../components/Folder/Folder';
 
 const UserSelectModal = ({ onClose }) => {
 
-    // {
-    //     name: "영업부부(26)",
-    //     children: [
-    //       { name: "김상후 대표이사" },
-    //       { name: "구정모 사장" },
-    //       { name: "이재오 전무" },
-    //       { name: "마장동 상무" },
-    //       { name: "허각 이사" },
-    //     ]
-    //   }
-
   // 검색 내용 가져오기
   const [searchTerm, setSearchTerm] = useState('');
-
-
-  
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   // 데이터 가져오기
-  const [folderData, setFolderData] = ([]);
+  const folderData = [
+    {
+      name: "영업본부(26)",
+      children: [
+        { name: "김상후 대표이사" },
+        { name: "구정모 사장" },
+        { name: "이재오 전무" },
+        { name: "마장동 상무" },
+        { name: "허각 이사" },
+      ]
+    },
+   
+  ];
 
-
-  // 선택된 유저 가져오기 
-  const [selectedUsers, setSelectedUsers] = useState([]);
   const handleUserSelect = (user) => {
     if (selectedUsers.some(selectedUser => selectedUser.name === user.name)) {
       setSelectedUsers(selectedUsers.filter(selectedUser => selectedUser.name !== user.name));

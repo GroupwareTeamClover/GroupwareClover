@@ -1,24 +1,23 @@
-.container{
+
+.container {
     display: flex;
     gap: 1.5rem;
 }
+
 .sideFull {
     background-color: #0e0e0e;
     min-height: 100vh;
     width: 14rem;
     transition-duration: 500ms;
-    /* width: 220px;
-    height: 100%;
-    min-height: 100vh;
-    max-height: 1200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    background-color: var(--bg-color);
-    border-right: 1px solid darkgray;
-    color : floralwhite; */
 }
+
+.sideShort {
+    background-color: #0e0e0e;
+    min-height: 100vh;
+    width: 3rem;
+    transition-duration: 500ms;
+}
+
 .toggle {
     padding: 16px 12px;
     display: flex;
@@ -33,6 +32,7 @@
     gap: 1rem;
     position: relative;
 }
+
 .menuLink {
     display: flex;
     align-items: center;
@@ -41,67 +41,58 @@
     padding: 8px;
     border-radius: 6px;
     text-decoration: none;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 300ms;
 }
+
 .menuLink:hover {
     background-color: darkgray;
 }
 
-/* -------------------- */
-.navgation > img {
-    width: 150px;
-    height: 150px;
-    margin: 20px;
-    padding: 4px;
+.menuTitle {
+    color: white;
+    white-space: pre;
+    transition-duration: 500ms;
 }
 
-.navgation > button {
-    width: 90%;
-    height: 50px;
-    border: none;
-    border-bottom: 1px solid darkgray;
-    background-color: transparent;
-    color: black;
-    margin: 4px;
-    padding: 4px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 16px;
+.menuTitleAction {
+    white-space: pre;
+    transition-duration: 500ms;
+    opacity: 0;
+    transform: translate(7rem);
+    overflow: hidden;
 }
 
-.navgation > button > span {
-    margin-left: 10px;
-}
-
-.navgation > button > span:hover {
-    color: orange;
-    font-weight: 800;
-}
-
-/* 드롭다운 스타일 */
 .dropdown {
-    width: 90%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    background-color: var(--bg-color);
-    border-bottom: 1px solid darkgray;
-    padding-left: 20px;  /* 추가 패딩으로 드롭다운 메뉴를 구분 */
+    gap: 0.5rem;
+    padding-left: 1.5rem;
 }
 
 .dropdown button {
-    width: 100%;
-    height: 40px;
+    display: flex;
+    align-items: center;
+    font-size: small;
+    padding: 6px;
+    border-radius: 6px;
+    background: none;
     border: none;
-    background-color: transparent;
-    color: black;
-    margin: 2px 0;
-    padding: 4px 0;
+    text-decoration: none;
+    color: white;
     cursor: pointer;
-    text-align: left;
-    font-size: 14px;
+    transition: background-color 300ms;
 }
 
 .dropdown button:hover {
-    color: orange;
-    font-weight: 600;
+    background-color: darkgray;
 }
+
+.icons {
+    cursor: pointer;
+}
+
+
