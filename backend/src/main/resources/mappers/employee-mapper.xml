@@ -9,11 +9,12 @@
             emp_seq,
             emp_id,
             emp_name,
-            emp_avatar
+            emp_avatar,
+            worker_state_code
         FROM
             employee
         WHERE
-            emp_seq = #{empSeq}
+            emp_id = #{empId}
         AND
             emp_pw = #{empPw}
     </select>
@@ -25,6 +26,15 @@
             employee
         WHERE
             emp_seq = #{empSeq}
+    </select>
+
+    <select id="existsId" resultType="Integer">
+        SELECT
+        count(*)
+        FROM
+        employee
+        WHERE
+        emp_id = #{empId}
     </select>
 
     <insert id="signUp">

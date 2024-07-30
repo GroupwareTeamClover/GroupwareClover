@@ -149,6 +149,10 @@ public class EmployeeDTO {
     }
 
     public EmployeeDTO(){}
+    public EmployeeDTO(String empId, String empPw){
+        this.empId = empId;
+        this.empPw = empPw;
+    }
     public EmployeeDTO(int empSeq, int empStateCode, String empId, String empPw, String empName, String empEmail, int empBirth, String empGender, String empTel, String empAddress, String empAvatar, int roleCode, int deptCode, Timestamp joinDate, Timestamp leaveDate, int annualLeaveDay) {
         this.empSeq = empSeq;
         this.empStateCode = empStateCode;

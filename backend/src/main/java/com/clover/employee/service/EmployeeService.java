@@ -16,17 +16,36 @@ public class EmployeeService {
     private Sha512 sha512;
 
     /** 로그인 **/
-    public EmployeeDTO SignIn(EmployeeDTO dto) {
-        return employeeDAO.SignIn(dto);
+    public EmployeeDTO SignIn(String id, String pw) {
+        EmployeeDTO signInfo = employeeDAO.SignIn(new EmployeeDTO(id, sha512.getSHA512(pw)));
+        System.out.println(" service seq ==== " + signInfo.getEmpSeq());
+
+        if(signInfo != null) {
+            System.out.println("sha-pw ==== " + sha512.getSHA512(pw));
+            if(pw.equals(signInfo.getEmpPw())) {
+                signInfo.setEmpPw("");
+                return signInfo;
+            } else {
+                signInfo.setEmpPw("");
+                return null;
+            }
+        }
+        return null;
     }
 
     /** 회원 가입 **/
     public String signUpEmployee(EmployeeDTO dto) {
-        // DB 저장 전 Sha-512 암호화
         dto.setEmpPw(sha512.getSHA512(dto.getEmpPw()));
         int result = employeeDAO.signUpEmployee(dto);
         if(result > 0) return "ok";
         else return "fail";
+    }
+
+    /** 회원 가입 (ID 중복확인) **/
+    public String existsId(String empId) {
+        int result = employeeDAO.existsId(empId);
+        if(result > 0) return "fail";
+        else return "ok";
     }
 
     /** 사원 정보 조회 **/
