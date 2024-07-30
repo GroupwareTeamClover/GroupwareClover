@@ -25,9 +25,8 @@ import { CiFileOn } from "react-icons/ci";
 </div> */
 
 
-export const Folder = ({ folder, level = 0 , onItemClick , selectedItem}) => {
+export const Folder = ({ folder, level = 0 , onItemClick , selectedItem, setSelectedItem}) => {
     console.log(`폴더컴포넌트: ${selectedItem.children.name}`)
-
     const [isExpanded, setIsExpanded] = useState(false);
 
     // 폴더가 열려 있는 상태가 바뀌면 isExpanded 상태를 업데이트
@@ -50,18 +49,18 @@ export const Folder = ({ folder, level = 0 , onItemClick , selectedItem}) => {
         </div>
         {isExpanded && folder.children && folder.children.length > 0 && (
           <div className={styles.folderContent}>
-          {folder.children.map((child, index) => (
-            <div key={index}  className={styles.fileItem}  onItemClick={onItemClick} >
-              <span><CiFileOn /></span>
-                <span
+            {folder.children.map((child, index) => (
+              <div key={index} className={styles.fileItem}>
+                <span><CiFileOn /></span> 
+                <span 
+                  onClick={() => onItemClick(child)} 
                   className={`${styles.contentText} ${selectedItem.children.name === child.name ? styles.selected : ''}`}>
-                  {child.name}
+                    {child.name}
                 </span>
               </div>
-           ))}
+            ))}
           </div>
         )}
       </div>
     );
   };
-

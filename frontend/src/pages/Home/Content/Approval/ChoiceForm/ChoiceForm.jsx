@@ -128,7 +128,7 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
                         </div>
                         <div className={styles.searchContent}>
                             {filteredData.map((folder, index) => (
-                                <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedDocCode}/>
+                                <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedDocCode} setSelectedItem={setSelectedDocCode}/>
                             ))}
                         </div>
                     </div>
@@ -157,6 +157,12 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
                     </div>
                 </div>
             </div>
+        {/* {isModalOpen && (
+                <Modal 
+                    item={selectedItem} 
+                    onClose={() => setIsModalOpen(false)} 
+                />
+            )} */}
         </div>
     )
 }

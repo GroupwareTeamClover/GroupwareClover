@@ -4,17 +4,10 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { Folder } from '../../../../../components/Folder/Folder';
-import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { ItemTypes } from './ItemTypes';
-import {DroppableArea} from './DroppableArea';
-
-
-
 
 export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}) =>{
 
-    // console.log(`라인컴포넌트: ${selectedDocCode.children.name}`)
+    console.log(`라인컴포넌트: ${selectedDocCode.children.name}`)
 
     const [folderData, setFolderData] = useState([]);
 
@@ -82,16 +75,8 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
         })
     };
 
-    const handleDrop = (roleType, employee) => {
-        setSelectedEmpInfo((prevState) => ({
-            ...prevState,
-            [roleType]: employee,
-        }));
-    };
-
 
     return(
-        <DndProvider backend={HTML5Backend}>
         <div className={styles.container}>
             <div className={styles.header}>
                 <h4 className={styles.headerText}>결재라인 선택</h4>
@@ -118,35 +103,19 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
                     <div className={styles.lineBox}>
                         <div className={styles.apvline}>
                             <div className={styles.apvheader}>결재자</div>
-                            <div className={styles.apvchoice}>
-                            <DroppableArea
-                                title="결재자"
-                                onDrop={(employee) => handleDrop('approver', employee)}
-                            />
-                            </div>
+                            <div className={styles.apvchoice}></div>
                         </div>
                         <div className={styles.recline}>
                             <div className={styles.recheader}>수신자</div>
-                            <div className={styles.recchoice}>
-                            <DroppableArea
-                                title="수신자"
-                                onDrop={(employee) => handleDrop('receiver', employee)}
-                            />
-                            </div>
+                            <div className={styles.recchoice}></div>
                         </div>
                         <div className={styles.refline}>
                             <div className={styles.refheader}>참조자</div>
-                            <div className={styles.refchoice}>
-                            <DroppableArea
-                                title="참조자"
-                                onDrop={(employee) => handleDrop('referrer', employee)}
-                            />
-                            </div>
+                            <div className={styles.refchoice}></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        </DndProvider>
     )
 }
