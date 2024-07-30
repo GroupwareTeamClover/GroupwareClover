@@ -3,6 +3,7 @@ package com.clover.employee.controllers;
 import com.clover.employee.dto.EmployeeDTO;
 import com.clover.employee.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +19,9 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public void signUpEmployee(@RequestBody EmployeeDTO dto) {
-        employeeService.signUpEmployee(dto);
+    public ResponseEntity<String> signUpEmployee(@RequestBody EmployeeDTO dto) {
+        String result = employeeService.signUpEmployee(dto);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping

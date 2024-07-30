@@ -6,7 +6,7 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
 
-    if(name === "emp_id") {
+    if(name === "empId") {
       setSendData( prev => {
         const data = { ...prev, [name]: value}
         if(validateUserId(value)) setCheckData(prev => ({ ...prev, [name]: true}));
@@ -15,18 +15,18 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
       });
     }
 
-    if(name === "emp_pw" || name === "pw_check") {
+    if(name === "empPw" || name === "pwCheck") {
       setSendData(prev =>  ({...prev, [name]: value}));
     }
 
   }
 
   useEffect(() => {
-    if(sendData.emp_pw === sendData.pw_check) {
-      if(validatePassword(sendData.emp_pw)) setCheckData(prev => ({ ...prev, emp_pw: true}));
-      else setCheckData(prev => ({ ...prev, emp_pw: false}));
-    } else setCheckData(prev => ({ ...prev, emp_pw: false}));
-  }, [sendData.emp_pw, sendData.pw_check]);
+    if(sendData.empPw === sendData.pwCheck) {
+      if(validatePassword(sendData.empPw)) setCheckData(prev => ({ ...prev, empPw: true}));
+      else setCheckData(prev => ({ ...prev, empPw: false}));
+    } else setCheckData(prev => ({ ...prev, empPw: false}));
+  }, [sendData.empPw, sendData.pwCheck]);
 
 
   return (
@@ -37,15 +37,15 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
       <div className={styles.joinForm}>
         <div className={styles.row}>
           <span>아이디</span>
-          <input type="text" name="emp_id" maxLength="12" onChange={handleDataCheck} value={sendData.emp_id}
+          <input type="text" name="empId" maxLength="12" onChange={handleDataCheck} value={sendData.empId}
                  placeholder="6~12자리로 작성해주세요!"/>
         </div>
 
         { /* ID empty check */
-          sendData.emp_id !== "" ?
+          sendData.empId !== "" ?
             <div className={styles.row}>
               { /* ID Check */
-                checkData.emp_id ?
+                checkData.empId ?
                   <p style={{color: "green"}}>사용 가능한 아이디 입니다.</p>
                   :
                   <p style={{color: "red"}}>사용할 수 없는 아이디 입니다.</p>
@@ -56,18 +56,18 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
 
         <div className={styles.row}>
           <span>비밀번호</span>
-          <input type="password" name="emp_pw" maxLength="20" onChange={handleDataCheck} value={sendData.emp_pw}
+          <input type="password" name="empPw" maxLength="20" onChange={handleDataCheck} value={sendData.empPw}
                  placeholder="8~20자리로 입력하세요"/>
         </div>
         <div className={styles.row}>
-          <input type="password" name="pw_check" maxLength="20" onChange={handleDataCheck} value={ sendData.pw_check } placeholder="8~20자리로 한번더 입력하세요"/>
+          <input type="password" name="pwCheck" maxLength="20" onChange={handleDataCheck} value={ sendData.pwCheck } placeholder="8~20자리로 한번더 입력하세요"/>
         </div>
 
         { /* Password empty check */
-          sendData.emp_pw !== "" ?
+          sendData.empPw !== "" ?
             <div className={styles.row}>
               { /* Password check */
-                checkData.emp_pw ?
+                checkData.empPw ?
                   <p style={{color: "green"}}>비밀번호 일치</p>
                   :
                   <p style={{color: "red"}}>비밀번호 불일치</p>

@@ -3,9 +3,12 @@ import {validatePhone} from '../../../../commons/common';
 import Postcode from "react-daum-postcode";
 import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
+import axios from "axios";
+import {BaseUrl} from "../../../../commons/config";
 
 
-export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) => {
+export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData, setSignUpState }) => {
+  const keys = ["empId", "empPw", "empName", "empEmail", "empBirth", "empGender", "empTel", "empAddress"];
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -13,10 +16,10 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
   const handleDataCheck = (e) => {
     let {name, value} = e.target;
 
-    if (name === "emp_tel") {
+    if (name === "empTel") {
       setSendData(prev => {
         const data = {...prev, [name]: value};
-        if (validatePhone(data.emp_tel)) setCheckData(prev => ({...prev, [name]: true}));
+        if (validatePhone(data.empTel)) setCheckData(prev => ({...prev, [name]: true}));
         else setCheckData(prev => ({...prev, [name]: false}));
         return data;
       });
@@ -25,9 +28,9 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
     if(name === "detailAddress") {
       setSendData(prev => ({ ...prev, [name]: value}));
       if(sendData.postcode === "" || sendData.roadAddress === "" || sendData.detailAddress === "") {
-        setCheckData( prev => ({...prev, emp_address: false}));
+        setCheckData( prev => ({...prev, empAddress: false}));
       } else {
-        setCheckData( prev => ({...prev, emp_address: true}));
+        setCheckData( prev => ({...prev, empAddress: true}));
       }
     }
   }
@@ -37,9 +40,7 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
     closeModal();
   }
 
-
   const handleSubmit = async() => {
-    const keys = ["emp_id", "emp_pw", "emp_name", "emp_email", "emp_birth", "emp_gender", "emp_tel", "emp_address"];
     let validation = true;
     keys.forEach(item => {
       if(!checkData[item]) validation = false;
@@ -47,25 +48,31 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
     if(validation) {
       let data = sendData;
-      data.emp_gender = data.emp_gender%2 === 1 ? "M" : "F";
-      data.emp_address = data.roadAddress + " " + data.detailAddress;
-      delete data.pw_check;
+      data.empGender = data.empGender%2 === 1 ? "M" : "F";
+      data.empAddress = data.roadAddress + " " + data.detailAddress;
+      delete data.pwCheck;
       delete data.postcode;
       delete data.roadAddress;
       delete data.detailAddress
       console.log(data);
+
+      const res = await axios.post(`${BaseUrl()}/employee`, sendData);
+      console.log("res.data === ", res.data);
+
+      if(res.data === "ok"){
+        alert("회원가입 완료");
+        setSignUpState(false);
+      }
+
+
+    } else {
+      //  checkData가 fales 인 부분으로 포커스 이동하는 로직 필요
+      alert("회원가입 입력창을 확인해주세요");
     }
-
-    // if(validation) {
-    //   const res = await axios.post(`${baseUrl}/member`, sendData);
-    //   console.log("res.data === ", res.data);
-    // }
-
   }
 
   const [successBtn, setSuccessBtn] = useState(false);
   useEffect(() => {
-    const keys = ["emp_id", "emp_pw", "emp_name", "emp_email", "emp_birth", "emp_gender", "emp_tel", "emp_address"];
     let validation = true;
     keys.forEach(item => {
       if(!checkData[item]) validation = false;
@@ -76,9 +83,9 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
   useEffect(() => {
     if(sendData.postcode === "" || sendData.roadAddress === "" || sendData.detailAddress === "") {
-      setCheckData( prev => ({...prev, emp_address: false}));
+      setCheckData( prev => ({...prev, empAddress: false}));
     } else {
-      setCheckData( prev => ({...prev, emp_address: true}));
+      setCheckData( prev => ({...prev, empAddress: true}));
     }
   }, [sendData.postcode]);
 
@@ -91,14 +98,14 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
 
         <div className={styles.row}>
           <span>전화번호</span>
-          <input type="text" name="emp_tel" onChange={handleDataCheck} value={sendData.emp_tel} placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
+          <input type="text" name="empTel" onChange={handleDataCheck} value={sendData.empTel} placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
         </div>
 
         { /* Name empty check */
-          sendData.emp_tel !== "" ?
+          sendData.empTel !== "" ?
             <div className={styles.row}>
               { /* ID Check */
-                checkData.emp_tel ?
+                checkData.empTel ?
                     <p style={{color: "green"}}>확인되었습니다.</p>
                     :
                     <p style={{color: "red"}}>유효하지 않은 전화번호 유형입니다.</p>
@@ -121,7 +128,7 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData }) 
           sendData.detailAddress !== "" ?
             <div className={styles.row}>
               { /* Address Check */
-                checkData.emp_address ?
+                checkData.empAddress ?
                     <p style={{color: "green"}}>확인되었습니다.</p>
                     :
                     <p style={{color: "red"}}>주소를 입력해주세요</p>
