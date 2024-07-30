@@ -53,7 +53,7 @@ export const ChatMain = () => {
       // 새로 생성된 채팅방을 선택
       setSelectedChat(newRoom);
     } catch (error) {
-      console.error('채팅방 생성 오류 :', error);
+      console.error('채팅방 생성 오류11 :', error);
     }
   };
 
