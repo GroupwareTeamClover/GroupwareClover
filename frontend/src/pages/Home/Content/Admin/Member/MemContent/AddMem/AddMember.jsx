@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import styles from './AddMember.module.css';
 import { useEffect, useRef, useState } from "react";
 import axios from 'axios';
+import { Modal } from "../../../../../../../components/Modal/Modal";
+import { ModalPosition } from "../MemMain/ModalPosition/ModalPosition";
 
 
 
@@ -18,20 +20,17 @@ export const AddMember = ()=>{
 
     // axios로 출력받기 emp table - joindate가 이번달인 사람들....  
     useEffect(()=>{
-        // axios.get(`{baseUrl}/member`).then((resp)=>{
+        // axios.get(`${BaseUrl()}/member`).then((resp)=>{
             //     setNewMem(resp.data);
             // })
 
-        // axios.get(`{baseUrl}/member`).then((resp)=>{
+        // axios.get(`${BaseUrl()}/member`).then((resp)=>{
             // setNewMemCount(resp.data);  // 승인대기중 사원 수 select count(state) from emp where state=0;
             // })
     },[])
 
 
-    // axios 수정update하기  emp table - state가 0인 상태인 것 -> 1로 업데이트
-    const handleAddMem =(e)=>{
-        // 모달창 뜨게...
-    }
+   
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
     const handleCheckAll = (e)=>{
@@ -42,12 +41,39 @@ export const AddMember = ()=>{
             }
         })
     }
+
+    // 모달))----------------------------------------------------
+    const [ modalState, setModalState ] = useState("");
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
+    // 승인버튼
+    // 모달) 변경 버튼 클릭시 
+    const handleModalChange = (e) => {
+        const modalName = e.target.value;
+        setModalState(modalName);
+        openModal();
+    }
+   
+    // axios 수정update하기  emp table - state가 0인 상태인 것 -> 1로 업데이트
+    const handleAddMem =(e)=>{
+        // 모달창 뜨게...
+    }
+
     
     return(
         <div className={styles.container}>
             <div className={styles.member_info}>
                 {/* emp table에서 state가 0인 사람 갯수. select count(state) from emp where state=0; */}
+                    <div className={styles.member_info_box}>
+
                     승인대기중  : {newMemCount} 명
+                    </div>
+            </div>
+            <div className={styles.funcBtn}>
+                {/* <div className={styles.col_button}> */}
+                    <button className={styles.addBtn} onClick={handleModalChange} name='ModalForm' >승인</button>
+                {/* </div> */}
             </div>
         
             <div className={styles.body}>
@@ -106,7 +132,7 @@ export const AddMember = ()=>{
                                             <td className={styles.theadtd}>{mem.joindate} </td>
                                             <td className={styles.theadtd}> 
                                                 {mem.status ==='대기중' ? (
-                                                        <button className={styles.statusBtn} onClick={handleAddMem}>{mem.status} </button> 
+                                                        <button className={styles.statusBtn} onClick={handleModalChange}>{mem.status} </button> 
                                                     ) : (
                                                         <button className={styles.statusBtn2}>{mem.status} </button> 
                                                     )
@@ -125,6 +151,14 @@ export const AddMember = ()=>{
             
             <div className={styles.pagination}> 123456789</div>
         </div>
+
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <div className={styles.modalForm}>
+                   
+                        <ModalPosition/>
+                    
+                </div>
+        </Modal>
       </div>
     )
 }

@@ -5,7 +5,7 @@ const ChatList = ({ chatRooms, onChatSelect, onCreateChat }) => {
   return (
     <div className={styles.chatList}>
       {/* 채팅방 목록을 매핑하여 표시 */}
-      {chatRooms.map((chat) => (
+      {/* {chatRooms.map((chat) => (
         <div 
           key={chat.roomSeq} 
           className={styles.chatItem} 
@@ -17,7 +17,7 @@ const ChatList = ({ chatRooms, onChatSelect, onCreateChat }) => {
             <p>{chat.lastMessage}</p>
           </div>
         </div>
-      ))}
+      ))} */}
       {/* 새 채팅 시작 버튼 */}
       <button onClick={() => onCreateChat(1)}>새 채팅 시작</button>
     </div>

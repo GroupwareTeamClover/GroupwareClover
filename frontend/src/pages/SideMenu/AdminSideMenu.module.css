@@ -1,5 +1,13 @@
-.navgation {
-    width: 220px;
+.container{
+    display: flex;
+    gap: 1.5rem;
+}
+.sideFull {
+    background-color: #0e0e0e;
+    min-height: 100vh;
+    width: 14rem;
+    transition-duration: 500ms;
+    /* width: 220px;
     height: 100%;
     min-height: 100vh;
     max-height: 1200px;
@@ -9,9 +17,36 @@
     align-items: center;
     background-color: var(--bg-color);
     border-right: 1px solid darkgray;
-    color : floralwhite;
+    color : floralwhite; */
+}
+.toggle {
+    padding: 16px 12px;
+    display: flex;
+    justify-content: end;
+    color: floralwhite;
 }
 
+.menus {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+}
+.menuLink {
+    display: flex;
+    align-items: center;
+    font-size: medium;
+    gap: 14px;
+    padding: 8px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+.menuLink:hover {
+    background-color: darkgray;
+}
+
+/* -------------------- */
 .navgation > img {
     width: 150px;
     height: 150px;

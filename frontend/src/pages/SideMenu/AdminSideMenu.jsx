@@ -39,79 +39,87 @@ export const AdminSideMenu = () => {
   };
 
   return (
-    <div className={ styles.navgation }>
-      <img src={logo} alt="logo" />
-      <button onClick={() => handleMenuClick('home', '/', 'Home')}
-        style={{ color: selectedMenu == 'home' ? 'orange' : 'black' }}
-      >
-        <IoHome />
-        <span>Home</span>
-      </button>
-    
-
-      <button onClick={() => toggleDropdown('member')}>
-        <FaCalendarDays /> 
-        <span>조직관리</span>
-      </button>
-      {dropdown.member && (
-        <div className={styles.dropdown}>
-          <button onClick={() => handleMenuClick('member', 'member','통합사원목록')}
-            style={{ color: selectedMenu == 'member' ? 'orange' : 'black'}}>
-            통합 사원 목록
-          </button>
-          <button onClick={() => handleMenuClick('addMember','member/addmem','가입승인목록')}
-            style={{ color: selectedMenu == 'addMember' ? 'orange' : 'black'}}>
-            가입 승인 목록
-          </button>
-          <button onClick={() => handleMenuClick('delMember','member/delmem','삭제사원목록')}
-            style={{ color: selectedMenu == 'delMember' ? 'orange' : 'black'}}>
-            삭제 사원 목록</button>
+    <div className={styles.container}>
+      <div className={ styles.sideFull }>
+        <div className={styles.toggle}>
+          <div className={styles.icons}></div>
+          {/* <HiMenuAlt3 size={30} className={styles.icons} onClick={handleSideToggle} /> */}
         </div>
-      )}
-      
-{/* ------------팝업공지--------------------- */}
-      <button onClick={() => toggleDropdown('popup')}>
-        <FaCalendarDays /> 
-        <span>팝업공지관리</span>
-      </button>
-      {dropdown.popup && (
-        <div className={styles.dropdown}>
-          <button onClick={() => handleMenuClick('popuplist', 'popup')}
-            style={{ color: selectedMenu == 'popuplist' ? 'orange' : 'black'}}>
-            공지글 목록
+        <div className={styles.menus}>
+          <button className={styles.menuLink} onClick={() => handleMenuClick('home', '/', 'Home')}
+            style={{ color: selectedMenu == 'home' ? 'orange' : 'black' }}
+          >
+            <IoHome />
+            <span>Home</span>
           </button>
-          <button onClick={() => handleMenuClick('addMember','popup/write')}
-            style={{ color: selectedMenu == 'popupwrite' ? 'orange' : 'black'}}>
-            공지 작성하기
+        
+
+          <button className={styles.menuLink} onClick={() => toggleDropdown('member')}>
+            <FaCalendarDays /> 
+            <span>조직관리</span>
           </button>
+          {dropdown.member && (
+            <div className={styles.dropdown}>
+              <button onClick={() => handleMenuClick('member', 'member','통합사원목록')}
+                style={{ color: selectedMenu == 'member' ? 'orange' : 'black'}}>
+                통합 사원 목록
+              </button>
+              <button onClick={() => handleMenuClick('addMember','member/addmem','가입승인목록')}
+                style={{ color: selectedMenu == 'addMember' ? 'orange' : 'black'}}>
+                가입 승인 목록
+              </button>
+              <button onClick={() => handleMenuClick('delMember','member/delmem','삭제사원목록')}
+                style={{ color: selectedMenu == 'delMember' ? 'orange' : 'black'}}>
+                삭제 사원 목록</button>
+            </div>
+          )}
           
+    {/* ------------팝업공지--------------------- */}
+          <button className={styles.menuLink} onClick={() => toggleDropdown('popup')}>
+            <FaCalendarDays /> 
+            <span>팝업공지관리</span>
+          </button>
+          {dropdown.popup && (
+            <div className={styles.dropdown}>
+              <button onClick={() => handleMenuClick('popuplist', 'popup')}
+                style={{ color: selectedMenu == 'popuplist' ? 'orange' : 'black'}}>
+                공지글 목록
+              </button>
+              <button onClick={() => handleMenuClick('addMember','popup/write')}
+                style={{ color: selectedMenu == 'popupwrite' ? 'orange' : 'black'}}>
+                공지 작성하기
+              </button>
+              
+            </div>
+          )}
+
+
+    {/* ---------------------------------------- */}
+
+          {/* <button onClick={()=>{navi("/")}}>
+            <IoHome />
+            <span>Home</span>
+          </button>
+          <button onClick={()=>{navi("member")}}>
+            <FaCalendarDays /> 
+            <span>조직관리</span>
+          </button> 
+          <button onClick={()=>{navi("popup")}}>
+            <FaAddressBook /> 
+            <span>팝업공지관리</span>
+          </button>*/}
+          <button className={styles.menuLink} onClick={()=>{navi("/community")}}>
+            <LiaClipboardListSolid /> 
+            <span>게시글관리</span>
+          </button>
+          <button className={styles.menuLink} onClick={()=>{navi("log")}}>
+            <FaListAlt /> 
+            <span>보안관리</span>
+          </button>
         </div>
-      )}
-
-
-{/* ---------------------------------------- */}
-
-      {/* <button onClick={()=>{navi("/")}}>
-        <IoHome />
-        <span>Home</span>
-      </button>
-      <button onClick={()=>{navi("member")}}>
-        <FaCalendarDays /> 
-        <span>조직관리</span>
-      </button> 
-      <button onClick={()=>{navi("popup")}}>
-        <FaAddressBook /> 
-        <span>팝업공지관리</span>
-      </button>*/}
-      <button onClick={()=>{navi("/community")}}>
-        <LiaClipboardListSolid /> 
-        <span>게시글관리</span>
-      </button>
-      <button onClick={()=>{navi("log")}}>
-        <FaListAlt /> 
-        <span>보안관리</span>
-      </button>
-      
+        
+        
+      </div>
     </div>
   )
 }

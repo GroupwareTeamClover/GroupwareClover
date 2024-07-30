@@ -13,27 +13,78 @@
     flex-direction: column;
 }
 .member_info{
-    border: 1px solid black;
+    /* border: 1px solid black; */
     /* height: 15%; */
     flex:1;
-     padding-left: 24px;
+    padding-left: 24px;
     display: flex;
     align-items: center;
 }
 .member_total{
-    flex:0.3;
+    /* flex:0.1; */
+    width: 350px;
+    display: flex;
+    border: 1px solid black;
+    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
+    align-items: center;
+    padding: 30px 100px 30px 90px;
+    text-align: left;
 }
 .member_detail{
-    flex:1;
+    /* flex:0.3; */
+    width: 400px;
+    display: flex;
+    border: 1px solid black;
+    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
+    align-items: center;
+    padding: 30px 100px 30px 50px;
+    text-align: left;
+}
+.smallText {
+    font-size: smaller; /* 또는 원하는 크기로 설정 */
 }
 
+/* ===================================================== */
+.funcBtn{
+    padding-top:40px;
+    flex:0.5;
+    /* display: flex; */
+    padding-left: 30px;
+}
+.funcBtn select{
+    height: 30px;
+    margin-left: 10px;
+    
+}
+.funcBtn button{
+    /* flex:0.1; */
+    width: 80px;
+    height: 30px;
+    justify-content:bottom;
+    margin-left: 5px;
+    padding: 5px 0 5px 0;
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 13px;
+    /* padding: 3.5px; */
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+button:hover{
+    cursor: pointer;
+}
+
+
+
+
+/* ===================================================== */
 .body{
-    border: 1px solid black;
+    /* border: 1px solid black; */
     /* height: 75%; */
     flex:7;
+    padding: 0 25px;
 }
-
-
 .tableWrapper{
     flex:8.5;
 }
@@ -54,7 +105,7 @@
 }
 
 .modalForm {
-    height: 500px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
