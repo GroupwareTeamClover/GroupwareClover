@@ -8,6 +8,7 @@ import {FindPw} from "./FindPw/FindPw";
 import {FindId} from "./FindId/FindId";
 import {BaseUrl} from "../../commons/config";
 import {useNavigate} from "react-router-dom";
+import {useMemberStore} from "../../store/store";
 
 export const Login = ({ setSign, setAdmin }) => {
 
@@ -17,6 +18,7 @@ export const Login = ({ setSign, setAdmin }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const {setSessionData} = useMemberStore();
 
   const [ params, setParams ] = useState({id: "", pw: ""});
 
@@ -32,7 +34,6 @@ export const Login = ({ setSign, setAdmin }) => {
     }
     const res = await axios.get(`${BaseUrl()}/sign`, { params });
     if(res.status === 200 && res.data !== "") {
-      console.log(res.data);
       // 세션 데이터 제이슨 형식으로 저장
       const sessionData = {
         empSeq: res.data.empSeq,
@@ -40,8 +41,8 @@ export const Login = ({ setSign, setAdmin }) => {
         empName: res.data.empName,
         empAvatar: res.data.empAvatar,
       }
+      setSessionData(sessionData);
       sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
-      console.log("workerStateCode ====== ", res.data.workerStateCode);
       if(res.data.workerStateCode === 0) {
         sessionStorage.setItem("sessionAdmin", "true");
         setAdmin(true);
