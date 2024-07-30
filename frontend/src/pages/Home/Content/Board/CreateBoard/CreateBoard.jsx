@@ -81,19 +81,29 @@ const CreateBoard = () => {
             navi("/community");
         }
     }
+
     const handleCreate = () => {
-        if(title.trim() == ''){
-            alert("게시판 제목을 입력해주세요!");
-        }else if(boardType === 'G' && addedMembers.length === 0){
-            alert("접근을 허용할 인원을 최소 1명 이상 추가해주세요!");
-        }else{
-            axios.post(`${BaseUrl()}/boardlist`, {
-                title : title,
-                type : boardType,
-                members : addedMembers.map(member => member.EMP_SEQ),
-                active : boardActive
-            });
-        }
+        axios.get(`${BaseUrl()}/boardlist/title`, {params : {title : title.trim()}}).then((resp)=>{
+            if(title.trim() == ''){
+                alert("게시판 제목을 입력해주세요!");
+            }else if(resp.data){
+                alert("이미 존재하는 게시판 이름입니다!");
+            }else if(boardType === 'G' && addedMembers.length === 0){
+                alert("접근을 허용할 인원을 최소 1명 이상 추가해주세요!");
+            }else{
+                axios.post(`${BaseUrl()}/boardlist`, {
+                    title : title,
+                    type : boardType,
+                    members : addedMembers.map(member => member.EMP_SEQ),
+                    active : boardActive
+                }).then((resp)=>{
+                    if(resp.status === 200){
+                        alert("게시판이 생성되었습니다!");
+                        navi("/community");
+                    }
+                });
+            }
+        });
     }
 
     return (

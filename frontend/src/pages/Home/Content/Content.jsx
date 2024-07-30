@@ -4,7 +4,7 @@ import {Route, Routes} from "react-router-dom";
 import {Calendar} from "./Calendar/Calendar";
 import {Address} from "./Address/Address";
 import Board from './Board/Board';
-import { ChatMain } from './Messenger/ChatMain';
+import {ChatMain} from './Messenger/ChatMain';
 import {Approval} from './Approval/Approval';
 import {Member} from './Admin/Member/Member';
 
