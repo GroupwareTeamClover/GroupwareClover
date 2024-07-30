@@ -26,7 +26,7 @@ export const Login = ({ setSign, setAdmin }) => {
   }
 
   const handleSignIn = async() => {
-    if(params.id === "" && params.pw === "") {
+    if(params.id === "" || params.pw === "") {
       alert("아이디 또는 비밀번호를 입력하세요");
       return false;
     }

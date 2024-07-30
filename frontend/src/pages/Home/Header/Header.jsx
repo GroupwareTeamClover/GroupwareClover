@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 export const Header = () => {
   const navi = useNavigate();
 
-  const {setSign} = useMemberStore();
+  const {setSign, setAdmin} = useMemberStore();
 
   const handleSignOut = () => {
     axios.delete(`${BaseUrl()}/sign`).then(resp => {
@@ -17,6 +17,7 @@ export const Header = () => {
         sessionStorage.removeItem("sessionUser");
         sessionStorage.removeItem("sessionAdmin");
         setSign(false);
+        setAdmin(false);
         alert("로그아웃 성공");
         navi("/");
       } else {
