@@ -129,7 +129,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
                 {menu.submenus && dropdown[menu.type] && (
                     <div className={styles.dropdown}>
                       {menu.submenus.map((submenu, j) => (
-                        <Link to={submenu?.link} key={j} className={styles.menuLink} 
+                        <Link to={{pathname: submenu?.link, state:{type:submenu.type}}} key={j} className={styles.menuLink} 
                          onClick={() => handleMenuClick(submenu.link, submenu.type)}
                           style={{ color: selectedMenuState === submenu.type ? 'orange' : 'white' }}>
                           <div className={styles.submenuTitle}>{submenu.name}</div>
