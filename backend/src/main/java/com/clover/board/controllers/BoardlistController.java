@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +47,6 @@ public class BoardlistController {
 	
 	@GetMapping("allBoards")
 	public ResponseEntity<List<BoardlistDTO>> getAllBoardList(){
-		System.out.println(blServ.getAllBoardList());
 		return ResponseEntity.ok(blServ.getAllBoardList());
 	}
 	
@@ -54,17 +55,27 @@ public class BoardlistController {
 		return ResponseEntity.ok(blServ.getGroupBoardList());
 	}
 	
+	@GetMapping("entireBoards")
+	public ResponseEntity<List<BoardlistDTO>> getEntireBoardList(){
+		return ResponseEntity.ok(blServ.getEntireBoardList());
+	}
+	
 	@PostMapping
-	public ResponseEntity<Void> post(@RequestBody HashMap<String, Object> data) {
+	public ResponseEntity<Integer> post(@RequestBody HashMap<String, Object> data) {
 		List<Integer> members =  (List<Integer>) data.get("members");
 		String title = (String) data.get("title");
 		char type = ((String) data.get("type")).charAt(0);
 		char active = ((String) data.get("active")).charAt(0);
 		BoardlistDTO board = new BoardlistDTO(0, title, type, active);
 
-		System.out.println(members.isEmpty());
-		blServ.createBoard(board, members);
+		int newBoardSeq = blServ.createBoard(board, members);
 		
+		return ResponseEntity.ok(newBoardSeq);
+	}
+	
+	@DeleteMapping("/{seq}")
+	public ResponseEntity<Void> delete(@PathVariable int seq){
+		blServ.deleteBoard(seq);
 		return ResponseEntity.ok().build();
 	}
 }

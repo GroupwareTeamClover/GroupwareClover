@@ -36,18 +36,26 @@ public class BoardlistService {
 		return blDao.getGroupBoardList();
 	}
 	
-	@Transactional
-	public void createBoard(BoardlistDTO board, List<Integer> members) {
+	public List<BoardlistDTO> getEntireBoardList(){
+		return blDao.getEntireBoardList();
+	}
+	
+	public int createBoard(BoardlistDTO board, List<Integer> members) {
 		blDao.createBoard(board);
+		int newBoardSeq = board.getBoardlistSeq();
 		
 		if(!members.isEmpty()) {
-			int newBoardSeq = board.getBoardlistSeq();
 			HashMap<String, Object> param = new HashMap<>();
 			param.put("seq", newBoardSeq);
 			param.put("members", members);
 			
 			blDao.createWhitelist(param);
 		}
+		return newBoardSeq;
+	}
+	
+	public void deleteBoard(int seq) {
+		blDao.deleteBoard(seq);
 	}
 	
 }

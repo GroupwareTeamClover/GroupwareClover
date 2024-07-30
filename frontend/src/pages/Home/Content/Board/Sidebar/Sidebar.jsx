@@ -4,6 +4,7 @@ import { FaStar, FaPlusCircle, FaHammer, FaChevronUp, FaChevronDown } from "reac
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
+import { useBoardStore } from '../../../../../store/store';
 
 const Sidebar = () => {
 
@@ -24,20 +25,20 @@ const Sidebar = () => {
         return true;
     }
 
-    const [allBoardlist, setAllBoardlist] = useState([]);
-    const [groupBoardlist, setGroupBoardlist] = useState([]);
+    const { allBoardList, setAllBoardList, groupBoardList, setGroupBoardList} = useBoardStore();
+
     useEffect(() => {
         axios.get(`${BaseUrl()}/boardlist/allBoards`).then((resp) => {
-            setAllBoardlist(resp.data);
+            setAllBoardList(resp.data);
         })
         axios.get(`${BaseUrl()}/boardlist/groupBoards`).then((resp)=>{
-            setGroupBoardlist(resp.data);
+            setGroupBoardList(resp.data);
         })
     }, []);
 
 
     const [isAdmin, setIsAdmin] = useState(true);
-    const testDTO = { seq: 999, name: "구구구" }
+    const testDTO = { boardlistSeq: 999, boardlistName: "구구구" }
 
     return (
         <div className={styles.bar}>
@@ -52,7 +53,7 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsAllBoard}><FaChevronDown />전사 게시판</div>
             }
             <div className={styles.allBoard} >
-                {isAllBoardOpen && allBoardlist.map((item, i) => {
+                {isAllBoardOpen && allBoardList.map((item, i) => {
                     return (
                         <div key={i} className={styles.eachBoard} onClick={() => { navi("board", { state: item }) }}>{item.boardlistName}</div>
                     );
@@ -66,7 +67,7 @@ const Sidebar = () => {
                     <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronDown />그룹 게시판</div>
             }
             <div className={styles.groupBoard}>
-                {isGroupBoardOpen && groupBoardlist.map((item, i) => {
+                {isGroupBoardOpen && groupBoardList.map((item, i) => {
                     return (
                         <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", { state: item }) : alert("접근이 제한된 게시판입니다!") }}>{item.boardlistName}</div>
                     );

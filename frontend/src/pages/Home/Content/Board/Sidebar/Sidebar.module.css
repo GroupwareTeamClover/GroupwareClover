@@ -24,7 +24,7 @@
 }
 
 .board{
-    font-size: 20px;
+    font-size: 16px;
     display: flex;
     align-items: center;
     text-indent : 10px;
@@ -38,7 +38,7 @@
 }
 
 .eachBoard{
-    font-size: 20px;
+    font-size: 14px;
     padding-left: 50px;
     margin : 4px;
     height: 30px;

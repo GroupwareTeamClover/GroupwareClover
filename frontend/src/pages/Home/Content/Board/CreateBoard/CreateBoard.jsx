@@ -7,8 +7,11 @@ import AddMemberCheckBox from './AddMemberModal/AddMemberCheckBox/AddMemberCheck
 import AddMemberCheckBoxGroup from './AddMemberModal/AddMemberCheckBox/AddMemberCheckBoxGroup';
 import { useNavigate } from 'react-router';
 import { BaseUrl } from '../../../../../commons/config';
+import { useBoardStore } from '../../../../../store/store';
 
 const CreateBoard = () => {
+
+    const { addAllBoardList, addGroupBoardList } = useBoardStore();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => {
@@ -36,11 +39,8 @@ const CreateBoard = () => {
     const [addedMembers, setAddedMembers] = useState([]);
     const handleDelAddedMember = (e) => {
         const targetSeq = e.target.getAttribute('data-seq');
-        console.log(targetSeq);
         setAddedMembers((prev) => prev.filter(member => member.EMP_SEQ != targetSeq));
         setAddMembers((prev) => prev.filter(member => member.EMP_SEQ != targetSeq));
-        console.log(addedMembers);
-        console.log("삭제");
     }
 
     // 제목
@@ -66,10 +66,8 @@ const CreateBoard = () => {
     useEffect(() => {
         axios.get(`${BaseUrl()}/boardlist/members`).then((resp) => {
             setMembers(resp.data);
-            console.log(resp.data);
         });
         axios.get(`${BaseUrl()}/boardlist/depts`).then((resp) => {
-            console.log(resp.data);
             setDepts(resp.data);
         });
     }, []);
@@ -77,29 +75,33 @@ const CreateBoard = () => {
     const navi = useNavigate();
     const handleCancel = () => {
         let isCancel = window.confirm("게시판 생성을 취소하시겠습니까?");
-        if(isCancel){
+        if (isCancel) {
             navi("/community");
         }
     }
 
     const handleCreate = () => {
-        axios.get(`${BaseUrl()}/boardlist/title`, {params : {title : title.trim()}}).then((resp)=>{
-            if(title.trim() == ''){
+        axios.get(`${BaseUrl()}/boardlist/title`, { params: { title: title.trim() } }).then((resp) => {
+            if (title.trim() == '') {
                 alert("게시판 제목을 입력해주세요!");
-            }else if(resp.data){
+            } else if (resp.data) {
                 alert("이미 존재하는 게시판 이름입니다!");
-            }else if(boardType === 'G' && addedMembers.length === 0){
+            } else if (boardType === 'G' && addedMembers.length === 0) {
                 alert("접근을 허용할 인원을 최소 1명 이상 추가해주세요!");
-            }else{
+            } else {
                 axios.post(`${BaseUrl()}/boardlist`, {
-                    title : title,
-                    type : boardType,
-                    members : addedMembers.map(member => member.EMP_SEQ),
-                    active : boardActive
-                }).then((resp)=>{
-                    if(resp.status === 200){
+                    title: title,
+                    type: boardType,
+                    members: addedMembers.map(member => member.EMP_SEQ),
+                    active: boardActive
+                }).then((resp) => {
+                    if (resp.status === 200) {
+                        let addedData = { boardlistSeq: resp.data, boardlistName: title, boardlistType: boardType, boardlistActive: boardActive };
+                        if (boardActive === 'T') {
+                            (boardType === 'A') ? addAllBoardList(addedData) : addGroupBoardList(addedData);
+                        }
                         alert("게시판이 생성되었습니다!");
-                        navi("/community");
+                        navi("/community/board", { state: addedData });
                     }
                 });
             }
