@@ -49,7 +49,7 @@ function App() {
             :
             <>
               {/* 관리자페이지 */}
-              { sign && <AdminSideMenu open={open} />  }
+              { sign && <AdminSideMenu open={open} setOpen={setOpen}/>  }
               { sign && <Admin /> }
             </>
         }
