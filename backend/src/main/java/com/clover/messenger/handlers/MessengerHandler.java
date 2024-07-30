@@ -51,15 +51,15 @@ public class MessengerHandler extends TextWebSocketHandler {
         ChatMessageDTO chatMessage = gson.fromJson(message.getPayload(), ChatMessageDTO.class);
         
         // WebSocketSession에서 사용자 ID 추출
-        String loginID = (String) session.getAttributes().get("loginID");
+        String loginId = (String) session.getAttributes().get("loginId");
         
         // 메시지에 발신자 ID 설정
-        chatMessage.setSender_seq(Integer.parseInt(loginID));
+        chatMessage.setSenderSeq(Integer.parseInt(loginId));
         
         chatService.saveMessage(chatMessage);
 
         for (WebSocketSession client : clients) {
-            if (client.isOpen() && chatService.isUserInRoom(client, chatMessage.getRoom_seq())) {
+            if (client.isOpen() && chatService.isUserInRoom(client, chatMessage.getRoomSeq())) {
                 client.sendMessage(new TextMessage(gson.toJson(chatMessage)));
             }
         }

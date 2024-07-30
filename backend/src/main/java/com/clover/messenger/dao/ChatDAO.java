@@ -15,6 +15,14 @@ public class ChatDAO {
     @Autowired
     private SqlSession mybatis;
 
+     /**
+     * 모든 채팅방 목록을 조회하는 메서드
+     * @return 채팅방 목록
+     */
+    public List<ChatRoomDTO> getChatRooms() {
+        return mybatis.selectList("Chat.getChatRooms");
+    }
+
     public void createRoom(ChatRoomDTO room) {
         mybatis.insert("Chat.createRoom", room);
     }
