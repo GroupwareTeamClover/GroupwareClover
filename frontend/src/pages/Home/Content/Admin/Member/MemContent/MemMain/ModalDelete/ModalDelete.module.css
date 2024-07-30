@@ -50,6 +50,9 @@
     border: none;
     font-size: 13px;
 }
+.btnstyle button:hover{
+    cursor: pointer;
+}
 .btnstyle .delete{
     border-radius: 3px;
     background-color: #cf3333;

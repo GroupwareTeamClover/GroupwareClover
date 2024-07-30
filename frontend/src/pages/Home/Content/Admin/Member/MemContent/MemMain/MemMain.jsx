@@ -32,39 +32,48 @@ export const MemMain = () => {
         })
 
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
-            // console.log("5"+resp)
             setCountMem(resp.data);
             console.log(resp.data);
-            console.log(resp.data.EMP_STATE_CODE);
+            console.log("test"+resp.data.EMP_STATE_CODE);
         })
     },[])
 
     // ============= 체크박스 클릭 ==================
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
+
     const handleCheckAll = (e)=>{
         const checked = e.target.checked;
+        const allValues = members.map(mem => mem.EMP_SEQ);
+
         checkboxRef.current.forEach(checkbox => {
             if(checkbox){
                 checkbox.checked = checked;
             }
         })
+        setCheckedMems(checked ? allValues : [])
     }
-    const [checkedMem, setCheckedMem] = useState({emp_state:0});
+    
+    const [ checkedMems, setCheckedMems] = useState([]);
     const handleCheckBox =(e)=>{
-        const {name, value} = e.target;
-        console.log(name, value)
-        setCheckedMem(prev=>({...prev, [name]:value}))
-        console.log(checkedMem)
-
+        const {value, checked} = e.target;
+        setCheckedMems(prev=> {
+            if(checked){
+                return [...prev, value];
+            }else{
+                return prev.filter(el => el !== value);
+            }
+        })
     }
+    // console.log("checkedMem: "+checkedMems)
+    // const checkedCount = checkedMems.length;
+    // console.log("몇개"+checkedCount)
 
     // ------------- 모달----------------------------------------
     const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
 
     // 모달) select 설정시---------------------------------
     const handleSelectChange=(e)=>{
@@ -75,7 +84,10 @@ export const MemMain = () => {
     const handleModalChange = (e) => {
         const modalName = e.target.value;
         setModalState(modalName);
-        openModal();
+        if (modalName !== '') {
+            openModal();
+          }
+          else{alert("상태변경을 선택해주세요.")}
     }
 
     const handleSearch =(e)=>{
@@ -87,7 +99,6 @@ export const MemMain = () => {
         setFiltered(result);
     }
 
- 
 
     return (
       <div className={styles.container}>
@@ -202,10 +213,10 @@ export const MemMain = () => {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                     { modalState === status.status &&
-                        <ModalPosition modalState={modalState} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                        <ModalPosition modalState={modalState} checkedMems={checkedMems} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                     }
                     { modalState === 'deleteMem' &&
-                        <ModalDelete checkedMem={checkedMem}/>
+                        <ModalDelete checkedMems={checkedMems} setIsModalOpen={setIsModalOpen}/>
                     }
                 </div>
         </Modal>
