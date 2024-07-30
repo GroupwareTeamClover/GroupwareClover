@@ -8,6 +8,8 @@ import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
 
 export const Side = () => {
     const navi = useNavigate();
+    //모달상태=새결재진행하기
+    const [ modalState, setModalState ] = useState("");
 
     //화면 url, 상태 navi에 넣기
     const handleNavigation = (path, type) => {
@@ -15,10 +17,18 @@ export const Side = () => {
     };
 
     //새 결재 클릭시 모달창 띄우기
-    const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+
+    // const closeModal = () => setIsModalOpen(false);
+    // 모달을 닫을 때 데이터 초기화
+    const closeModal = () => {
+        setModalState("");
+        setPage(1);
+        setSelectedDocCode({ name: '', children: { name: '', period: 0 } });//초기화
+        setSelectedEmpInfo({ apvchoice: [], recchoice: [], refchoice: [] });//초기화
+        setIsModalOpen(false);
+    };
 
     const handleModalChange = (e) => {
       setModalState(e.target.name);
@@ -43,8 +53,7 @@ export const Side = () => {
 
     //모달사이 전달할 정보저장
     const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0 } });
-    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ name: '', children: { name: '', role: '' } });
-
+    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], recchoice: [], refchoice: [] });
     return (
         <div className={styles.sideBox}>
             <div className={styles.textBox} onClick={() => handleNavigation('/approval', '전자결재')}>전자결재</div>

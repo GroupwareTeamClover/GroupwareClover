@@ -29,10 +29,16 @@ export const Folder = ({ folder, level = 0 , onItemClick , selectedItem, setSele
     console.log(`양식폴더컴포넌트: ${selectedItem.children.name}`)
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // 폴더가 열려 있는 상태가 바뀌면 isExpanded 상태를 업데이트
-    useEffect(() => {
-        setIsExpanded(folder.isOpen || false);
-    }, [folder.isOpen]);
+
+  // 폴더가 열려야 하는지 확인합니다
+  useEffect(() => {
+    // 선택된 항목이 현재 폴더의 자식인지 확인
+    const isItemSelected = folder.children && folder.children.some(child => child.name === selectedItem.children.name);
+
+      if (isItemSelected) {
+        setIsExpanded(true);
+      }
+    }, [selectedItem]);
   
     const handleToggle = () => {
       setIsExpanded(!isExpanded);
