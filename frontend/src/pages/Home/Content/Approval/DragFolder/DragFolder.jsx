@@ -1,33 +1,13 @@
 import { useState, useEffect } from 'react';
-import styles from './Folder.module.css'
+import styles from './DragFolder.module.css';
 import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder  } from "react-icons/fa";
 import { CiFileOn } from "react-icons/ci";
-
-//검색기능까지 할 거라면 Approval/ChoiceForm확인
-
-//넣어야 할 데이터 모습
-// const folderData=[
-//     {
-//         name: "일반",
-//         children: [{name :"업무기안"}]
-//     },
-//     {
-//         name: "인사",
-//         children: [{name: "휴가신청서"},{name:"연차신청서"}]
-//     }
-// ]
-
-//적용방법
-/* <div className={styles.searchContent}>
-    {folderData.map((folder, index) => (
-        <Folder key={index} folder={folder} />
-    ))}
-</div> */
+import { DraggableEmployee } from '../../pages/Home/Content/Approval/ChoiceLine/DraggableEmployee';
 
 
-export const Folder = ({ folder, level = 0 , onItemClick , selectedItem}) => {
+
+export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, setSelectedItem}) => {
     console.log(`폴더컴포넌트: ${selectedItem.children.name}`)
-
     const [isExpanded, setIsExpanded] = useState(false);
 
     // 폴더가 열려 있는 상태가 바뀌면 isExpanded 상태를 업데이트
@@ -51,14 +31,16 @@ export const Folder = ({ folder, level = 0 , onItemClick , selectedItem}) => {
         {isExpanded && folder.children && folder.children.length > 0 && (
           <div className={styles.folderContent}>
           {folder.children.map((child, index) => (
-            <div key={index}  className={styles.fileItem}  onItemClick={onItemClick} >
-              <span><CiFileOn /></span>
-                <span
-                  className={`${styles.contentText} ${selectedItem.children.name === child.name ? styles.selected : ''}`}>
-                  {child.name}
-                </span>
-              </div>
-           ))}
+                    <DraggableEmployee key={index} employee={child.name} onItemClick={onItemClick} selectedItem={selectedItem}>
+                        <div className={styles.fileItem}>
+                            <span><CiFileOn /></span>
+                            <span
+                                className={`${styles.contentText} ${selectedItem.children.name === child.name ? styles.selected : ''}`}>
+                                {child.name}
+                            </span>
+                        </div>
+                    </DraggableEmployee>
+                ))}
           </div>
         )}
       </div>
