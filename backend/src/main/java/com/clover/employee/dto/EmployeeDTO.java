@@ -19,6 +19,7 @@ public class EmployeeDTO {
     private Timestamp joinDate;
     private Timestamp leaveDate;
     private int annualLeaveDay;
+    private int workerStateCode;
 
     public int getEmpSeq() {
         return empSeq;
@@ -148,12 +149,21 @@ public class EmployeeDTO {
         this.annualLeaveDay = annualLeaveDay;
     }
 
+    public int getWorkerStateCode() {
+        return workerStateCode;
+    }
+
+    public void setWorkerStateCode(int workerStateCode) {
+        this.workerStateCode = workerStateCode;
+    }
+
     public EmployeeDTO(){}
     public EmployeeDTO(String empId, String empPw){
         this.empId = empId;
         this.empPw = empPw;
     }
-    public EmployeeDTO(int empSeq, int empStateCode, String empId, String empPw, String empName, String empEmail, int empBirth, String empGender, String empTel, String empAddress, String empAvatar, int roleCode, int deptCode, Timestamp joinDate, Timestamp leaveDate, int annualLeaveDay) {
+
+    public EmployeeDTO(int empSeq, int empStateCode, String empId, String empPw, String empName, String empEmail, int empBirth, String empGender, String empTel, String empAddress, String empAvatar, int roleCode, int deptCode, Timestamp joinDate, Timestamp leaveDate, int annualLeaveDay, int workerStateCode) {
         this.empSeq = empSeq;
         this.empStateCode = empStateCode;
         this.empId = empId;
@@ -170,5 +180,6 @@ public class EmployeeDTO {
         this.joinDate = joinDate;
         this.leaveDate = leaveDate;
         this.annualLeaveDay = annualLeaveDay;
+        this.workerStateCode = workerStateCode;
     }
 }

@@ -30,11 +30,11 @@
 
     <select id="existsId" resultType="Integer">
         SELECT
-        count(*)
+            count(*)
         FROM
-        employee
+            employee
         WHERE
-        emp_id = #{empId}
+            emp_id = #{empId}
     </select>
 
     <insert id="signUp">
@@ -56,7 +56,8 @@
             99,
             sysdate,
             null,
-            0
+            0,
+            99
         )
     </insert>
 

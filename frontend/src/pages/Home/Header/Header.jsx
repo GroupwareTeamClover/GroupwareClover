@@ -14,7 +14,8 @@ export const Header = () => {
     axios.delete(`${BaseUrl()}/sign`).then(resp => {
       console.log(resp.data);
       if(resp.data === "ok"){
-        sessionStorage.removeItem("sessionData");
+        sessionStorage.removeItem("sessionUser");
+        sessionStorage.removeItem("sessionAdmin");
         setSign(false);
         alert("로그아웃 성공");
         navi("/");

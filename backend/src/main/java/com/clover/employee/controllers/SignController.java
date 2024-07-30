@@ -21,7 +21,6 @@ public class SignController {
     public ResponseEntity<EmployeeDTO> signIn(@RequestParam String id, @RequestParam String pw) {
         EmployeeDTO empInfo = employeeService.SignIn(id, pw);
         if(empInfo != null) {
-            System.out.println("sign controller seq ==== " + empInfo.getEmpSeq());
             session.setAttribute("cloverSeq", empInfo.getEmpSeq());
             session.setAttribute("cloverId", empInfo.getEmpId());
             session.setAttribute("cloverName", empInfo.getEmpName());

@@ -2,14 +2,13 @@ import styles from './Login.module.css';
 import logo from '../../test_logo.png';
 import {Modal} from "../../components/Modal/Modal";
 import React, {useEffect, useState} from "react";
-import {useMemberStore} from "../../store/store";
 import axios from "axios";
 import {SignUp} from "./SignUp/SignUp";
 import {FindPw} from "./FindPw/FindPw";
 import {FindId} from "./FindId/FindId";
 import {BaseUrl} from "../../commons/config";
 
-export const Login = ({ setSign }) => {
+export const Login = ({ setSign, setAdmin }) => {
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -32,7 +31,18 @@ export const Login = ({ setSign }) => {
     if(res.status === 200 && res.data !== "") {
       console.log(res.data);
       // 세션 데이터 제이슨 형식으로 저장
-      // sessionStorage.setItem("sessionData", JSON.stringify(response.data));
+      const sessionData = {
+        empSeq: res.data.empSeq,
+        empId: res.data.empId,
+        empName: res.data.empName,
+        empAvatar: res.data.empAvatar,
+      }
+      sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
+      console.log("workerStateCode ====== ", res.data.workerStateCode);
+      if(res.data.workerStateCode === 0) {
+        sessionStorage.setItem("sessionAdmin", "true");
+        setAdmin(true);
+      }
       setSign(true);
       alert("로그인 성공")
     } else {

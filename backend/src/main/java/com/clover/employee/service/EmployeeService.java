@@ -17,20 +17,7 @@ public class EmployeeService {
 
     /** 로그인 **/
     public EmployeeDTO SignIn(String id, String pw) {
-        EmployeeDTO signInfo = employeeDAO.SignIn(new EmployeeDTO(id, sha512.getSHA512(pw)));
-        System.out.println(" service seq ==== " + signInfo.getEmpSeq());
-
-        if(signInfo != null) {
-            System.out.println("sha-pw ==== " + sha512.getSHA512(pw));
-            if(pw.equals(signInfo.getEmpPw())) {
-                signInfo.setEmpPw("");
-                return signInfo;
-            } else {
-                signInfo.setEmpPw("");
-                return null;
-            }
-        }
-        return null;
+        return employeeDAO.SignIn(new EmployeeDTO(id, sha512.getSHA512(pw)));
     }
 
     /** 회원 가입 **/
