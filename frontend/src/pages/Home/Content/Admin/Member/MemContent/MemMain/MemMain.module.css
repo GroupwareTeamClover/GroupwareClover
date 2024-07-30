@@ -16,7 +16,7 @@
     /* border: 1px solid black; */
     /* height: 15%; */
     flex:1;
-    padding-left: 24px;
+    padding-left: 50px;
     display: flex;
     align-items: center;
 }
@@ -52,14 +52,15 @@
     padding-left: 30px;
 }
 .funcBtn select{
-    height: 30px;
-    margin-left: 10px;
+    height: 35px;
+    width: 200px;
+    margin-left: 20px;
     
 }
 .funcBtn button{
     /* flex:0.1; */
-    width: 80px;
-    height: 30px;
+    width: 100px;
+    height: 35px;
     justify-content:bottom;
     margin-left: 5px;
     padding: 5px 0 5px 0;
@@ -71,7 +72,7 @@
     border-radius: 3px;
     letter-spacing: -1px;
 }
-button:hover{
+.funcBtn button:hover{
     cursor: pointer;
 }
 
