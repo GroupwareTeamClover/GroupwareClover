@@ -36,12 +36,20 @@ public class BoardlistDAO {
 		return mybatis.selectList("boardList.selectGroupBoards");
 	}
 	
+	public List<BoardlistDTO> getEntireBoardList(){
+		return mybatis.selectList("boardList.selectEntireBoards");
+	}
+	
 	public void createBoard(BoardlistDTO board) {
 		mybatis.insert("boardList.insert", board);
 	}
 	
 	public void createWhitelist(HashMap<String, Object> param) {
 		mybatis.insert("boardList.createWhitelist", param);
+	}
+	
+	public void deleteBoard(int seq) {
+		mybatis.delete("boardList.deleteBoard", seq);
 	}
 	
 }
