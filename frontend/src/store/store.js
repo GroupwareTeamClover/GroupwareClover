@@ -20,7 +20,7 @@ export const useBoardStore = create(set => ({
   addAllBoardList: (param) => set(prev => ({ allBoardList: [...prev.allBoardList, param] })),
   modifyAllBoardList: (param) => set(prev => ({
     allBoardList: prev.allBoardList.map(dto =>
-      dto.boardlistSeq === param.boardlistSeq ? {
+      dto.boardlistSeq == param.boardlistSeq ? {
         boardlistSeq: param.boardlistSeq, boardlistName: param.boardlistName,
         boardlistType: param.boardlistType, boardlistActive: param.boardlistActive
       } : dto
@@ -35,7 +35,7 @@ export const useBoardStore = create(set => ({
   addGroupBoardList: (param) => set(prev => ({ groupBoardList: [...prev.groupBoardList, param] })),
   modifyGroupBoardList: (param) => set(prev => ({
     groupBoardList: prev.groupBoardList.map(dto =>
-      dto.boardlistSeq === param.boardlistSeq ? {
+      dto.boardlistSeq == param.boardlistSeq ? {
         boardlistSeq: param.boardlistSeq, boardlistName: param.boardlistName,
         boardlistType: param.boardlistType, boardlistActive: param.boardlistActive
       } : dto

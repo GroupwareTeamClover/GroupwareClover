@@ -22,20 +22,24 @@
 	</select>
 	
 	<select id="selectAllBoards" resultType="com.clover.board.dto.BoardlistDTO" >
-		select * from boardlist where boardlist_type = 'A' and boardlist_active = 'T'
+		select * from boardlist where boardlist_type = 'A'
 		order by boardlist_seq
 	</select>
 	
 	<select id="selectGroupBoards" resultType="com.clover.board.dto.BoardlistDTO" >
-		select * from boardlist where boardlist_type = 'G' and boardlist_active = 'T'
+		select * from boardlist where boardlist_type = 'G'
 		order by boardlist_seq
 	</select>
 	
 	<select id="selectEntireBoards" resultType="com.clover.board.dto.BoardlistDTO" >
 		select * from boardlist order by boardlist_seq
 	</select>
+	
+	<select id="selectTargetWhitelistMembers" resultType="Integer">
+		select emp_seq from board_whitelist where boardlist_seq = #{boardSeq}
+	</select>
 
-	<insert id="insert">
+	<insert id="insertBoard">
 		insert into boardlist values(boardlist_sequence.nextval,
 		#{boardlistName}, #{boardlistType}, #{boardlistActive})
 		<selectKey keyProperty="boardlistSeq" resultType="int" order="AFTER">
@@ -51,6 +55,16 @@
 	</insert>
 	
 	<delete id="deleteBoard">
-		delete from boardlist where boardlist_seq = #{seq}
+		delete from BOARDLIST where boardlist_seq = #{seq}
+	</delete>
+	
+	<update id="updateBoard">
+		update BOARDLIST set 
+		BOARDLIST_NAME = #{boardlistName}, BOARDLIST_TYPE = #{boardlistType}, BOARDLIST_ACTIVE = #{boardlistActive}
+		where BOARDLIST_SEQ = #{boardlistSeq}
+	</update>
+	
+	<delete id="deleteWhitelist">
+		delete from BOARD_WHITELIST where BOARDLIST_SEQ = #{boardSeq}
 	</delete>
 </mapper>

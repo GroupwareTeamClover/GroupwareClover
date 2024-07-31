@@ -3,9 +3,11 @@ import styles from './ManageBoard.module.css';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { useBoardStore } from '../../../../../store/store';
+import { useNavigate } from 'react-router-dom';
 
 const ManageBoard = () => {
 
+    const navi = useNavigate();
     const { delAllBoardList, delGroupBoardList } = useBoardStore();
 
     const [boards, setBoards] = useState([]);
@@ -54,7 +56,11 @@ const ManageBoard = () => {
                                 <div className={styles.eachButtonBox}>
                                     {board.boardlistSeq !== 1 &&
                                         <>
-                                            <button className={styles.eachModifyButton}>수정</button>
+                                            <button className={styles.eachModifyButton} onClick={() => {
+                                                axios.get(`${BaseUrl()}/boardlist/whitelist/${board.boardlistSeq}`).then((resp)=>{
+                                                    navi("modifyBoard", { state: {...board, whitelist: resp.data} });
+                                                })
+                                            }}>수정</button>
                                             <button className={styles.eachDeleteButton} onClick={handleDelete} data-seq={board.boardlistSeq}>삭제</button>
                                         </>
                                     }
