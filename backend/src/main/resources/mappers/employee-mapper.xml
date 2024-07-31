@@ -19,11 +19,26 @@
             emp_pw = #{empPw}
     </select>
 
-    <select id="Info" resultType="com.clover.employee.dto.EmployeeDTO">
+    <select id="getMyInfo" resultType="java.util.HashMap">
         SELECT
-            *
+            e.emp_seq,
+            e.emp_id,
+            e.emp_name,
+            e.emp_email,
+            e.emp_birth,
+            e.emp_gender,
+            e.emp_tel,
+            e.emp_address,
+            e.emp_avatar,
+            r.role_name,
+            d.dept_name,
+            e.annual_leave_day
         FROM
-            employee
+            employee e
+            JOIN
+                DEPARTMENT d ON e.DEPT_CODE = d.DEPT_CODE
+            JOIN
+                ROLE r ON e.ROLE_CODE = r.ROLE_CODE
         WHERE
             emp_seq = #{empSeq}
     </select>

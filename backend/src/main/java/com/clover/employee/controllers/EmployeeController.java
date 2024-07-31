@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
@@ -14,8 +16,9 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @GetMapping("/{empSeq}")
-    public EmployeeDTO getMyInfo(@PathVariable int empSeq) {
-        return employeeService.getMyInfo(empSeq);
+    public ResponseEntity<Map<String, Object>> getMyInfo(@PathVariable int empSeq) {
+        Map<String, Object> map = employeeService.getMyInfo(empSeq);
+        return ResponseEntity.ok(map);
     }
 
     @PostMapping

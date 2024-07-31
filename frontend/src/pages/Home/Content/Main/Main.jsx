@@ -4,6 +4,7 @@ import {useMemberStore} from "../../../../store/store";
 import {Modal} from "../../../../components/Modal/Modal";
 import React, {useState} from "react";
 import axios from "axios";
+import {BaseUrl} from "../../../../commons/config";
 
 export const Main = () => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -12,8 +13,17 @@ export const Main = () => {
 
     const {sessionData} = useMemberStore();
 
+    const [mypage, setMypage] = useState({});
     const handleMyPage = () => {
-        // axios.get(``)
+        axios.get(`${BaseUrl()}/employee/${sessionData.empSeq}`).then(res => {
+            console.log(res.data);
+            setMypage(perv => {
+                const data = res.data
+                console.log("data ==== ", data);
+                return data;
+            });
+            console.log(mypage);
+        })
         openModal();
     }
 
@@ -58,7 +68,7 @@ export const Main = () => {
                         }
                     </div>
                     <div className={styles.topInfo}>
-                        <p>이름 : 호이</p>
+                        <p>이름 : {mypage.empName}</p>
                         <p>부서 : K-Degital</p>
                         <p>직급 : 쩌리</p>
                     </div>
