@@ -14,15 +14,15 @@ public class AttendanceDAO {
     private SqlSession mybatis;
 
     public AttendanceDTO todayAtt(Map<String, Object> map) {
-        AttendanceDTO dto =  mybatis.selectOne("Attendance.today", map);
-        System.out.println("att_seq ====== " + dto.getAttSeq());
-        System.out.println("emp_seq ====== " + dto.getEmpSeq());
-        System.out.println("arrive_seq ====== " + dto.getAttArrive());
-        return dto;
+        return mybatis.selectOne("Attendance.today", map);
     }
 
     public int arrive(AttendanceDTO dto) {
         return mybatis.insert("Attendance.arrive", dto);
+    }
+
+    public int leave(AttendanceDTO dto) {
+        return mybatis.update("Attendance.leave", dto);
     }
 
 }

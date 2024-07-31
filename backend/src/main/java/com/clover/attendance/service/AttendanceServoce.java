@@ -27,4 +27,10 @@ public class AttendanceServoce {
         else return "fail";
     }
 
+    public String leave(AttendanceDTO dto) {
+        int result = attendanceDAO.leave(dto);
+        if (result > 0) return "ok";
+        else return "fail";
+    }
+
 }

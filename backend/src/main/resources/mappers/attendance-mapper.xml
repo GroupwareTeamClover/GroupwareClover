@@ -29,4 +29,15 @@
         )
     </insert>
 
+    <update id="leave">
+        UPDATE
+            attendance
+        SET
+            att_leave = #{attLeave},
+            att_total = #{attTOTAL},
+            att_success = #{attSuccess}
+        WHERE
+            att_seq = #{attSeq}
+    </update>
+
 </mapper>

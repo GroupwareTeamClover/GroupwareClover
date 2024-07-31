@@ -30,4 +30,10 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceServoce.arrive(dto));
     }
 
+    @PutMapping
+    public ResponseEntity<String> leave(@RequestBody AttendanceDTO dto) {
+        dto.setEmpSeq((int) session.getAttribute("cloverSeq"));
+        return ResponseEntity.ok(attendanceServoce.leave(dto));
+    }
+
 }

@@ -6,14 +6,19 @@ import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 
 export const Attendance = () => {
-
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = ('0' + (today.getMonth() + 1)).slice(-2);
+    let day = ('0' + today.getDate()).slice(-2);
+    let daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
+    let dayOfWeek = daysOfWeek[today.getDay()];
+    let dateData = `${year}-${month}-${day}`;
 
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-    const leaveKey = ["attSeq", "attArrive", "attLeave", "attTotal", "attSuccess"];
+
     const defaultData = {attSeq: "", empSeq:"", attArrive: "", attLeave: "", attTotal: "", attSuccess: "", attData: ""};
-    const [leave, setLeave] = useState(defaultData);
     const [arrive, setArrive] = useState(defaultData);
     const handleAttDetail = () => {
         openModal();
@@ -21,11 +26,11 @@ export const Attendance = () => {
 
     const handleWorkStart = () => {
         if(arrive.attArrive === ""){
-            const today = new Date();
-            const hours = ('0' + today.getHours()).slice(-2);
-            const minutes = ('0' + today.getMinutes()).slice(-2);
-            const time = `${hours}:${minutes}`
-            const data = {attArrive: time};
+            today = new Date();
+            let hours = ('0' + today.getHours()).slice(-2);
+            let minutes = ('0' + today.getMinutes()).slice(-2);
+            let time = `${hours}:${minutes}`
+            let data = {attArrive: time};
             axios.post(`${BaseUrl()}/attendance`, data).then(res => {
                 if(res.data === "ok") {
                     alert(time + " 출근");
@@ -40,10 +45,10 @@ export const Attendance = () => {
     }
 
     const handleWorkEnd = () => {
-        const today = new Date();
-        const hours = ('0' + today.getHours()).slice(-2);
-        const minutes = ('0' + today.getMinutes()).slice(-2);
-        const time = `${hours}:${minutes}`
+        today = new Date();
+        let hours = ('0' + today.getHours()).slice(-2);
+        let minutes = ('0' + today.getMinutes()).slice(-2);
+        let time = `${hours}:${minutes}`
 
         const workStart = arrive.attArrive.split(":");
         const workTime = (hours - workStart[0])*60 + (minutes - workStart[1]);
@@ -51,24 +56,18 @@ export const Attendance = () => {
         const workMinutes = workTime%60;
 
         alert( time + " 퇴근\n" + workHours+"시간 " + workMinutes + "분 만큼 일하심" );
-        setArrive(prev => ({ ...prev, attLeave: `${hours}:${minutes}` }))
-        // setArrive(prev => ({ ...prev, attLeave: `${workHours}:${workMinutes}` }))
 
-
-
-        // axios.put(`${BaseUrl()}/attendance`, attendance).then(res => {
-        //
-        // });
+        setArrive(prev => {
+            const data = { ...prev, attLeave: `${hours}:${minutes}`, attTotal: workTime, attSuccess: "Y"};
+            axios.put(`${BaseUrl()}/attendance`, arrive).then(res => {
+                console.log(res.data);
+            });
+            return data;
+        });
     }
 
     useEffect(() => {
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = ('0' + (today.getMonth() + 1)).slice(-2);
-        const day = ('0' + today.getDate()).slice(-2);
-        const dateDate = `${year}-${month}-${day}`;
-
-        axios.get(`${BaseUrl()}/attendance/${dateDate}`).then(res => {
+        axios.get(`${BaseUrl()}/attendance/${dateData}`).then(res => {
             console.log(res.data);
             setArrive(res.data);
         });
@@ -82,7 +81,7 @@ export const Attendance = () => {
             </div>
             <div className={styles.attInfo}>
                 <div className={styles.attDate}>
-                    2024-07-31(수)
+                    { dateData } ({dayOfWeek})
                 </div>
                 <div className={styles.attTimers}>
                     <div className={styles.attTimer}>
