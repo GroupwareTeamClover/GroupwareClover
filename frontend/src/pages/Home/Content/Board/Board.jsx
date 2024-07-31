@@ -4,6 +4,7 @@ import BoardContent from './BoardContent/BoardContent';
 import Sidebar from './Sidebar/Sidebar';
 import CreateBoard from './CreateBoard/CreateBoard';
 import ManageBoard from './ManageBoard/ManageBoard';
+import ModifyBoard from './ModifyBoard/ModifyBoard';
 
 const Board = () => {
     return (
@@ -14,6 +15,7 @@ const Board = () => {
                 <Route path="/board/*" element={<BoardContent />} />
                 <Route path="/createBoard" element={<CreateBoard/>}/>
                 <Route path="/manageBoard" element={<ManageBoard/>}/>
+                <Route path="/manageBoard/modifyBoard" element={<ModifyBoard/>}/>
             </Routes>
         </div>
     );

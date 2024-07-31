@@ -11,9 +11,18 @@
         join role on employee.role_code = role.role_code
         join worker_state on employee.worker_state_code = worker_state.worker_state_code
         join employee_state on employee.emp_state_code = employee_state.emp_state_code
+        order by employee.emp_seq desc
 	</select>
 	<select id="getCountMem" resultType="java.util.HashMap">
 		select emp_state_code, count(*) from employee group by emp_state_code
 	</select>
-
+	<update id="updateMem" parameterType="map">
+		update employee 
+		set ${tbObject.stateCode} = (
+		select ${tbObject.stateCode} 
+		from ${tbObject.joinTable} 
+		where ${tbObject.valueCol}= #{newValue}
+		) 
+		where emp_seq = #{empSeq}
+	</update>
 </mapper>

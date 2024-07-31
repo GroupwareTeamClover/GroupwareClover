@@ -1,8 +1,8 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import AddMemberCheckboxContext from "./AddMemberCheckBoxContext";
 import styles from "./AddMemberCheckBox.module.css";
 
-function AddMemberCheckBox({ children, disabled, value, checked, onChange }) {
+function AddMemberCheckBox({ children, disabled, value, checked, onChange}) {
   const context = useContext(AddMemberCheckboxContext);
 
   if (!context) {

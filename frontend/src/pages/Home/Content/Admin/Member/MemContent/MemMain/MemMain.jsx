@@ -20,8 +20,38 @@ export const MemMain = () => {
         {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''}
     ]);
     const [filtered, setFiltered] = useState(members);
-    const [countMem, setCountMem] = useState([])
+    const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
     // const [countMem, setCountMem] = useState({total:0, normal:0, rest:0, stop:0 })
+    const [normalemp, setNormalemp] = useState(0);
+    const [restemp, setRestemp] = useState(0);
+    const [outemp, setOutemp] = useState(0);
+
+    // 상태 값 변환 함수
+    const processCountData = (data) => {
+        const counts = { normal: 0, rest: 0, stop: 0, out: 0 };
+
+        data.forEach(item => {
+            switch(item.EMP_STATE_CODE) {
+                case 0:  // 가입대기
+                    counts.prev = item['COUNT(*)'];
+                    break;
+                case 1:     //재직중 (정상1)
+                    counts.normal = item['COUNT(*)'];
+                    break;
+                case 2:     //퇴사
+                    counts.out = item['COUNT(*)'];
+                    break;
+                case 3:     //휴직 (정상2)
+                    counts.rest = item['COUNT(*)'];
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return counts;
+    };
+
 
 
     useEffect(()=>{
@@ -29,42 +59,52 @@ export const MemMain = () => {
             console.log(resp)
             setMembers(resp.data);
             setFiltered(resp.data)
+            
         })
 
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
-            // console.log("5"+resp)
-            setCountMem(resp.data);
-            console.log(resp.data);
-            console.log(resp.data.EMP_STATE_CODE);
+            const processedData = processCountData(resp.data);
+            setCountMem(processedData);
+
         })
     },[])
 
     // ============= 체크박스 클릭 ==================
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
+
     const handleCheckAll = (e)=>{
         const checked = e.target.checked;
+        const allValues = members.map(mem => mem.EMP_SEQ);
+
         checkboxRef.current.forEach(checkbox => {
             if(checkbox){
                 checkbox.checked = checked;
             }
         })
+        setCheckedMems(checked ? allValues : [])
     }
     const [checkedMem, setCheckedMem] = useState({emp_state:0});
+    const [ checkedMems, setCheckedMems] = useState([]);
     const handleCheckBox =(e)=>{
-        const {name, value} = e.target;
-        console.log(name, value)
-        setCheckedMem(prev=>({...prev, [name]:value}))
-        console.log(checkedMem)
-
+        const {value, checked} = e.target;
+        setCheckedMems(prev=> {
+            if(checked){
+                return [...prev, value];
+            }else{
+                return prev.filter(el => el !== value);
+            }
+        })
     }
+    // console.log("checkedMem: "+checkedMems)
+    // const checkedCount = checkedMems.length;
+    // console.log("몇개"+checkedCount)
 
     // ------------- 모달----------------------------------------
     const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
 
     // 모달) select 설정시---------------------------------
     const handleSelectChange=(e)=>{
@@ -75,31 +115,33 @@ export const MemMain = () => {
     const handleModalChange = (e) => {
         const modalName = e.target.value;
         setModalState(modalName);
-        openModal();
+        if (modalName !== '') {
+            openModal();
+          }
+          else{alert("상태변경을 선택해주세요.")}
     }
 
     const handleSearch =(e)=>{
         const {name,value} = e.target;
-        const keyword = e.target.value;
-        console.log(keyword, name);
         const result = members.filter((data)=>data[name].includes(value))
-        console.log(result);
         setFiltered(result);
     }
 
- 
+
+
+    
 
     return (
       <div className={styles.container}>
-         
         <div className={styles.member_info}>
-          
-                <div className={styles.member_total}>
-                    사원 수 : {countMem.total} 명
-                </div>
-                <div className={styles.member_detail}>
-                    {/* 정상({countMem}명 / <span className={styles.smallText}>휴면 {countMem.rest}명</span>) 중지 {countMem.stop}명 */}
-                </div>
+            <div className={styles.member_total}>
+                사원 수 : {members.length} 명
+            </div>
+            <div className={styles.member_detail}>
+                {countMem.normal + countMem.rest} 명
+                정상({countMem.normal}명 / <span className={styles.smallText}> 퇴사 {countMem.out}명</span>) 
+                <h3>가입대기 {countMem.prev}명</h3>
+            </div>
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
@@ -112,8 +154,7 @@ export const MemMain = () => {
                         <option value="계정상태변경">계정상태변경</option>
                     </select>
                     <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
-            </div>
-                
+            </div>         
         </div>
         <div className={styles.body}>
             {/* ---------------------------------------------------------- */}
@@ -169,7 +210,9 @@ export const MemMain = () => {
                                     return(
                                         <tr key={i}>
                                             <td className={styles.theadtd}><input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input></td>
-                                            <td className={styles.theadtd}>{mem.EMP_NAME}</td>
+                                            <td className={styles.theadtd}>
+                                                {mem.EMP_NAME}
+                                            </td>
                                             <td className={styles.theadtd}>
                                                 {mem.DEPT_NAME}
                                             </td>
@@ -202,10 +245,10 @@ export const MemMain = () => {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                     { modalState === status.status &&
-                        <ModalPosition modalState={modalState} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                        <ModalPosition modalState={modalState} checkedMems={checkedMems} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                     }
                     { modalState === 'deleteMem' &&
-                        <ModalDelete checkedMem={checkedMem}/>
+                        <ModalDelete checkedMems={checkedMems} setIsModalOpen={setIsModalOpen}/>
                     }
                 </div>
         </Modal>
