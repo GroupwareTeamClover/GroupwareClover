@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { DragFolder } from '../DragFolder/DragFolder';
+import { CiTrash } from "react-icons/ci";
 
 
 export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}) =>{
@@ -14,7 +15,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
 
 
     useEffect(() => {
-        axios.get(`${BaseUrl()}/apvLine`).then((resp) => {
+        axios.get(`${BaseUrl()}/employee`).then((resp) => {
             const data = resp.data;
             // 부서별로 데이터를 그룹화
             const departmentMap = data.reduce((acc, current) => {
@@ -82,21 +83,21 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
     // 드래그 중인 아이템을 저장하는 상태
     const [draggingItem, setDraggingItem] = useState(); 
     //드래그 영역별 정보 저장
-    const [dragTypeEmpInfo, setDragTypeEmpInfo] = useState({ apvchoice: [], recchoice: [], refchoice: [] });
+    const [dragTypeEmpInfo, setDragTypeEmpInfo] =  useState({ apvchoice: [], refchoice: [], viechoice: [], recchoice: []});
     //selectedEmpInfo는 드래그된 전체 정보 저장
-
-
 
     const handleDrop = (event, type) => {
         event.preventDefault();
         const data = JSON.parse(event.dataTransfer.getData('application/json'));
         const { item, department } = data;
-        console.log(item, department);
+        // console.log(item, department);
 
         setSelectedEmpInfo(prev => ({
             ...prev,
             [type]: [...(prev[type] || []), { ...item, department }]
         }));
+
+        console.log(selectedEmpInfo);
 
         //영역별 정보 저장 영역
         // 드래그 영역별 정보 저장
@@ -119,15 +120,27 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
         event.target.style.border = 'none';
     };
 
-    console.log(`드래그 상태 ${isDragging}`);
-    console.log(`드래그 아이템 ${draggingItem}`);
-    
+    //결재라인 선택 중에 결재라인 삭제하기
+    const handleDelete =(type, name)=>{
+        console.log(name);
+
+        //포함된 결재라인에서 삭제하기
+        setSelectedEmpInfo((prev)=>({
+            ...prev,
+            [type]: prev[type].filter(line => line.name !== name)
+           
+        }))
+
+    }
+    //콘솔확인
+    // console.log(`드래그 상태 ${isDragging}`);
+    // console.log(`드래그 아이템 ${draggingItem}`);
     // 상태가 업데이트될 때마다 로그 확인
-    useEffect(() => {
-        console.log('선택된 전체정보:', JSON.stringify(selectedEmpInfo, null, 2));
-        console.log('선택된 영역별정보:', JSON.stringify(dragTypeEmpInfo, null, 2));
-        console.log('폴더 저장정보:', JSON.stringify(folderData, null, 2))
-    }, [selectedEmpInfo, dragTypeEmpInfo, folderData]);
+    // useEffect(() => {
+    //     console.log('선택된 전체정보:', JSON.stringify(selectedEmpInfo, null, 2));
+    //     console.log('선택된 영역별정보:', JSON.stringify(dragTypeEmpInfo, null, 2));
+    //     console.log('폴더 저장정보:', JSON.stringify(folderData, null, 2))
+    // }, [selectedEmpInfo, dragTypeEmpInfo, folderData]);
 
     return(
         <div className={styles.container}>
@@ -159,27 +172,28 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
                             <div className={styles.apvheader}>결재자</div>
                             <div className={styles.apvchoice}>
                                 {selectedEmpInfo.apvchoice?.map((item, index) => (
-                                        <div key={index}>{item.name} ({item.department})</div>
+                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('apvchoice', item.name)}/></span></div>
                                     ))}
-                            </div>
-                        </div>
-                        <div className={styles.recline} onDrop={(event) => handleDrop(event, 'recchoice')} onDragOver={handleDragOver}>
-                            <div className={styles.recheader}>수신자</div>
-                            <div className={styles.recchoice}>
-                                {selectedEmpInfo.recchoice?.map((item, index) => (
-                                        <div key={index}>{item.name} ({item.department})</div>
-                                    ))} 
                             </div>
                         </div>
                         <div className={styles.refline}  onDrop={(event) => handleDrop(event, 'refchoice')} onDragOver={handleDragOver}>
                             <div className={styles.refheader}>참조자</div>
                             <div className={styles.refchoice}>
                                 {selectedEmpInfo.refchoice?.map((item, index) => (
-                                        <div key={index}>{`${item.name} (${item.department})`}</div>
+                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('refchoice', item.name)}/></span></div>
                                     ))}
                               
                             </div>
                         </div>
+                        <div className={styles.vieline} onDrop={(event) => handleDrop(event, 'viechoice')} onDragOver={handleDragOver}>
+                            <div className={styles.vieheader}>열람자</div>
+                            <div className={styles.viechoice}>
+                                {selectedEmpInfo.viechoice?.map((item, index) => (
+                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('viechoice', item.name)}/></span></div>
+                                    ))} 
+                            </div>
+                        </div>
+                   
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, set
     const [isExpanded, setIsExpanded] = useState(false);
 
     const isItemSelected = (child) => {
-      const allChoices = [...selectedItem.apvchoice, ...selectedItem.recchoice, ...selectedItem.refchoice];
+      const allChoices = [...selectedItem.apvchoice, ...selectedItem.refchoice, ...selectedItem.viechoice, ...selectedItem.recchoice,];
       return allChoices.some(choice => choice.name === child.name);
     };
 

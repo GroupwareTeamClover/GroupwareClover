@@ -21,8 +21,8 @@
     align-items: center;
 }
 .member_total{
-    /* flex:0.1; */
-    width: 350px;
+    flex:0.1;
+    height: 100px;
     display: flex;
     border: 1px solid black;
     justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
@@ -31,8 +31,8 @@
     text-align: left;
 }
 .member_detail{
-    /* flex:0.3; */
-    width: 400px;
+    flex:0.3;
+    height: 100px;
     display: flex;
     border: 1px solid black;
     justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */

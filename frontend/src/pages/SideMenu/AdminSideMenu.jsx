@@ -34,10 +34,11 @@ export const AdminSideMenu = ({ open, setOpen }) => {
   const handleSideToggle = () => {
     setOpen(prev => {
       const sideState = !prev;
-      if (sideState) localStorage.setItem("sidebar", "true");
-      else localStorage.setItem("sidebar", "false");
-      setDropdown({ member: false, popup: false });
-      
+      if (sideState) {localStorage.setItem("sidebar", "true");}
+      else {localStorage.setItem("sidebar", "false");
+       
+        }  
+      setDropdown({ member: false, popup: false });      
       return sideState;
     });
   };
@@ -93,19 +94,14 @@ export const AdminSideMenu = ({ open, setOpen }) => {
               return (
                 <div key={i}>
                   {open ? (
-                    <div className={styles.menuLink} onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)}
-                      style={{ color: selectedMenu === menu.type ? 'orange' : 'black' }}>
+                    <div className={styles.menuLink} onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)} >
                       <div>
                         {React.createElement(menu.icon, { size: "30", color: "white" })}
                       </div>
                       <h3 className={styles.menuTitle}>{menu?.name}</h3>
                     </div>
                   ) : (
-                    <div
-                      className={styles.menuLink}
-                      onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)}
-                      style={{ color: selectedMenu === menu.type ? 'orange' : 'black' }}
-                    >
+                    <div className={styles.menuLink} onClick={() => handleMenuClick(menu.link, menu.type)} >
                       <div>
                         {React.createElement(menu.icon, { size: "30", color: "white" })}
                       </div>
@@ -116,9 +112,9 @@ export const AdminSideMenu = ({ open, setOpen }) => {
                   {menu.submenus && dropdown[menu.type] && (
                     <div className={styles.dropdown}>
                       {menu.submenus.map((submenu, j) => (
-                        <div key={j} className={styles.menuLink} 
-                          onClick={() => handleMenuClick(submenu.link, submenu.type)}
-                          style={{ color: selectedMenu === submenu.type ? 'orange' : 'white' }}>
+                        <div key={j} className={styles.menuLink} onClick={() => handleMenuClick(submenu.link, submenu.type)}
+                          style={{ color: selectedMenu === submenu.type ? 'orange' : 'white' }}
+                          >
                           <div className={styles.submenuTitle}>{submenu.name}</div>
                         </div>
                       ))}
