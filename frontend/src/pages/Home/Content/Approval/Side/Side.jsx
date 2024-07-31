@@ -5,18 +5,20 @@ import { Modal } from '../../../../../components/Modal/Modal';
 import { BigModal } from '../BigModal/BigModal'
 import { ChoiceForm } from '../ChoiceForm/ChoiceForm';
 import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
+import axios from 'axios';
+import { BaseUrl } from '../../../../../commons/config';
 
 export const Side = () => {
     const navi = useNavigate();
-    //모달상태=새결재진행하기
-    const [ modalState, setModalState ] = useState("");
+   
+    const [ modalState, setModalState ] = useState(""); //새결재진행하기
 
     //화면 url, 상태 navi에 넣기
     const handleNavigation = (path, type) => {
         navi(path, { state: { type } });
     };
 
-    //새 결재 클릭시 모달창 띄우기
+    
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
 
@@ -29,9 +31,10 @@ export const Side = () => {
         setSelectedEmpInfo({ apvchoice: [], recchoice: [], refchoice: [] });//초기화
         setIsModalOpen(false);
     };
-
+    
+    //새 결재 클릭시 모달창 띄우기
     const handleModalChange = (e) => {
-      setModalState(e.target.name);
+      setModalState(e.target.name); //새결재진행하기
       setPage(1);
       openModal();
     }
@@ -53,7 +56,34 @@ export const Side = () => {
 
     //모달사이 전달할 정보저장
     const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0 } });
-    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], recchoice: [], refchoice: [] });
+    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], refchoice: [], viechoice: [], recchoice: []});
+
+    //확인 클릭 시 문서 생성
+    const handleAdd = () =>{
+        console.log(selectedDocCode);
+        console.log(selectedEmpInfo);
+        axios.post(`${BaseUrl()}/document`, {
+            selectedDocCode:selectedDocCode,
+            selectedEmpInfo:selectedEmpInfo
+        }).then((resp)=>{
+            console.log('확인');
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
+
+    }
+
+
+    // 전자결재양식선택에서 다음을 클릭할 때 양식을 선택해야지만 다음으로 넘어가도록 예외 처리
+    const handleFormNext = (event) => {
+        //다음으로 넘어가는 조건
+        if(selectedDocCode.name){
+            handlePageChange(event);
+        }else{
+            alert("결재 양식을 선택하세요.");
+        }
+    };
+
     return (
         <div className={styles.sideBox}>
             <div className={styles.textBox} onClick={() => handleNavigation('/approval', '전자결재')}>전자결재</div>
@@ -111,7 +141,7 @@ export const Side = () => {
                                 <ChoiceForm Page={Page} selectedDocCode={selectedDocCode} setSelectedDocCode={setSelectedDocCode} /> 
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
-                                    <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
+                                    <button name="next" onClick={handleFormNext} className={styles.btn} > 다음</button>
                                 </div>
                                 </>
                             )}
@@ -121,7 +151,7 @@ export const Side = () => {
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
                                     <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
-                                    <button name="comp" className={styles.btn}>확인</button>
+                                    <button name="comp" className={styles.btn} onClick={handleAdd}>확인</button>
                                 </div>
                                 </>
                             )}

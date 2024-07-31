@@ -5,6 +5,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 @Repository
 public class EmployeeDAO {
 
@@ -27,8 +29,8 @@ public class EmployeeDAO {
     }
 
     /** 사원 정보 조회 **/
-    public EmployeeDTO getMyInfo(int empSeq) {
-        return mybatis.selectOne("Employee.Info", empSeq);
+    public Map<String, Object> getMyInfo(int empSeq) {
+        return mybatis.selectOne("Employee.getMyInfo", empSeq);
     }
 
     /** 사원 정보 업데이트 **/

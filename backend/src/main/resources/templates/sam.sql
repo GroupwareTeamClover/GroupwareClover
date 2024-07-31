@@ -54,11 +54,11 @@ CREATE sequence business_sequence start with 1 INCREMENT by 1 nocache nomaxvalue
 
 CREATE TABLE participants_line (
     line_seq     number        primary key,
-    doc_seq      number        NOT NULL,
     emp_seq      number        NOT NULL,
-    pcp_division char(1)       NOT NULL,
+    pcp_division char(1)       CHECK (pcp_division IN ('c', 'f')) NOT NULL,
     read_yn      CHAR(1)       DEFAULT 'n' CHECK (read_yn IN ('y', 'n')) NOT NULL,
-    read_date    timestamp     NULL
+    read_date    timestamp     NULL,
+    doc_seq      number        NOT NULL
 );
 
 CREATE sequence participants_line_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;

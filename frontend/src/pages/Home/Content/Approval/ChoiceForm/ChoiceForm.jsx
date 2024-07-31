@@ -23,7 +23,7 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
     useEffect(() => {
         axios.get(`${BaseUrl()}/docCode`).then((resp) => {
             const data = resp.data;
-            console.log(data)
+            // console.log(data)
             // 부서별로 데이터를 그룹화
             const departmentMap = data.reduce((acc, current) => {
                 const { CODE, NAME, PERIOD } = current;
