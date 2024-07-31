@@ -85,13 +85,11 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
     const [dragTypeEmpInfo, setDragTypeEmpInfo] = useState({ apvchoice: [], recchoice: [], refchoice: [] });
     //selectedEmpInfo는 드래그된 전체 정보 저장
 
-
-
     const handleDrop = (event, type) => {
         event.preventDefault();
         const data = JSON.parse(event.dataTransfer.getData('application/json'));
         const { item, department } = data;
-        console.log(item, department);
+        // console.log(item, department);
 
         setSelectedEmpInfo(prev => ({
             ...prev,
@@ -118,16 +116,15 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
         event.target.style.opacity = '1';
         event.target.style.border = 'none';
     };
-
-    console.log(`드래그 상태 ${isDragging}`);
-    console.log(`드래그 아이템 ${draggingItem}`);
-    
+    //콘솔확인
+    // console.log(`드래그 상태 ${isDragging}`);
+    // console.log(`드래그 아이템 ${draggingItem}`);
     // 상태가 업데이트될 때마다 로그 확인
-    useEffect(() => {
-        console.log('선택된 전체정보:', JSON.stringify(selectedEmpInfo, null, 2));
-        console.log('선택된 영역별정보:', JSON.stringify(dragTypeEmpInfo, null, 2));
-        console.log('폴더 저장정보:', JSON.stringify(folderData, null, 2))
-    }, [selectedEmpInfo, dragTypeEmpInfo, folderData]);
+    // useEffect(() => {
+    //     console.log('선택된 전체정보:', JSON.stringify(selectedEmpInfo, null, 2));
+    //     console.log('선택된 영역별정보:', JSON.stringify(dragTypeEmpInfo, null, 2));
+    //     console.log('폴더 저장정보:', JSON.stringify(folderData, null, 2))
+    // }, [selectedEmpInfo, dragTypeEmpInfo, folderData]);
 
     return(
         <div className={styles.container}>

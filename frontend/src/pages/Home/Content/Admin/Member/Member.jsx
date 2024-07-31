@@ -6,8 +6,6 @@ import {Route, Routes} from "react-router-dom";
 import { AddMember } from './MemContent/AddMem/AddMember';
 
 
-
-
 export const Member = () => {
 
   const location = useLocation();

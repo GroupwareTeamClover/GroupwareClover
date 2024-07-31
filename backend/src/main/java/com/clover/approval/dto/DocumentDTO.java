@@ -3,96 +3,93 @@ package com.clover.approval.dto;
 import java.sql.Timestamp;
 
 public class DocumentDTO {
-	private int doc_seq;
-	private int doc_detail_code;
-	private int doc_state_code;
-	private int drafter_seq;
-	private String egc_yn;
-	private Timestamp write_date;
-	private Timestamp finish_date;
-	private int current_apver_seq;
-	private int final_apver_seq;
-	private String doc_com_seq;
-	
+	private int docSeq;
+	private int docDetailCode;
+	private int docStateCode;
+	private int drafterSeq;
+	private String egcYn;
+	private Timestamp writeDate;
+	private Timestamp finishDate;
+	private int currentApverSeq;
+	private int finalApverSeq;
+	private String docComSeq;
 	public DocumentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	public DocumentDTO(int doc_seq, int doc_detail_code, int doc_state_code, int drafter_seq, String egc_yn,
-			Timestamp write_date, Timestamp finish_date, int current_apver_seq, int final_apver_seq,
-			String doc_com_seq) {
+	public DocumentDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
+			Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq) {
 		super();
-		this.doc_seq = doc_seq;
-		this.doc_detail_code = doc_detail_code;
-		this.doc_state_code = doc_state_code;
-		this.drafter_seq = drafter_seq;
-		this.egc_yn = egc_yn;
-		this.write_date = write_date;
-		this.finish_date = finish_date;
-		this.current_apver_seq = current_apver_seq;
-		this.final_apver_seq = final_apver_seq;
-		this.doc_com_seq = doc_com_seq;
+		this.docSeq = docSeq;
+		this.docDetailCode = docDetailCode;
+		this.docStateCode = docStateCode;
+		this.drafterSeq = drafterSeq;
+		this.egcYn = egcYn;
+		this.writeDate = writeDate;
+		this.finishDate = finishDate;
+		this.currentApverSeq = currentApverSeq;
+		this.finalApverSeq = finalApverSeq;
+		this.docComSeq = docComSeq;
 	}
-	public int getDoc_seq() {
-		return doc_seq;
+	public int getDocSeq() {
+		return docSeq;
 	}
-	public void setDoc_seq(int doc_seq) {
-		this.doc_seq = doc_seq;
+	public void setDocSeq(int docSeq) {
+		this.docSeq = docSeq;
 	}
-	public int getDoc_detail_code() {
-		return doc_detail_code;
+	public int getDocDetailCode() {
+		return docDetailCode;
 	}
-	public void setDoc_detail_code(int doc_detail_code) {
-		this.doc_detail_code = doc_detail_code;
+	public void setDocDetailCode(int docDetailCode) {
+		this.docDetailCode = docDetailCode;
 	}
-	public int getDoc_state_code() {
-		return doc_state_code;
+	public int getDocStateCode() {
+		return docStateCode;
 	}
-	public void setDoc_state_code(int doc_state_code) {
-		this.doc_state_code = doc_state_code;
+	public void setDocStateCode(int docStateCode) {
+		this.docStateCode = docStateCode;
 	}
-	public int getDrafter_seq() {
-		return drafter_seq;
+	public int getDrafterSeq() {
+		return drafterSeq;
 	}
-	public void setDrafter_seq(int drafter_seq) {
-		this.drafter_seq = drafter_seq;
+	public void setDrafterSeq(int drafterSeq) {
+		this.drafterSeq = drafterSeq;
 	}
-	public String getEgc_yn() {
-		return egc_yn;
+	public String getEgcYn() {
+		return egcYn;
 	}
-	public void setEgc_yn(String egc_yn) {
-		this.egc_yn = egc_yn;
+	public void setEgcYn(String egcYn) {
+		this.egcYn = egcYn;
 	}
-	public Timestamp getWrite_date() {
-		return write_date;
+	public Timestamp getWriteDate() {
+		return writeDate;
 	}
-	public void setWrite_date(Timestamp write_date) {
-		this.write_date = write_date;
+	public void setWriteDate(Timestamp writeDate) {
+		this.writeDate = writeDate;
 	}
-	public Timestamp getFinish_date() {
-		return finish_date;
+	public Timestamp getFinishDate() {
+		return finishDate;
 	}
-	public void setFinish_date(Timestamp finish_date) {
-		this.finish_date = finish_date;
+	public void setFinishDate(Timestamp finishDate) {
+		this.finishDate = finishDate;
 	}
-	public int getCurrent_apver_seq() {
-		return current_apver_seq;
+	public int getCurrentApverSeq() {
+		return currentApverSeq;
 	}
-	public void setCurrent_apver_seq(int current_apver_seq) {
-		this.current_apver_seq = current_apver_seq;
+	public void setCurrentApverSeq(int currentApverSeq) {
+		this.currentApverSeq = currentApverSeq;
 	}
-	public int getFinal_apver_seq() {
-		return final_apver_seq;
+	public int getFinalApverSeq() {
+		return finalApverSeq;
 	}
-	public void setFinal_apver_seq(int final_apver_seq) {
-		this.final_apver_seq = final_apver_seq;
+	public void setFinalApverSeq(int finalApverSeq) {
+		this.finalApverSeq = finalApverSeq;
 	}
-	public String getDoc_com_seq() {
-		return doc_com_seq;
+	public String getDocComSeq() {
+		return docComSeq;
 	}
-	public void setDoc_com_seq(String doc_com_seq) {
-		this.doc_com_seq = doc_com_seq;
+	public void setDocComSeq(String docComSeq) {
+		this.docComSeq = docComSeq;
 	}
 	
 	

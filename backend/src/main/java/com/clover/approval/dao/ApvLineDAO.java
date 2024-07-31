@@ -17,9 +17,9 @@ public class ApvLineDAO {
 	//임시
 	public List<Map<String, ?>> selectMemberInfo(){
 		List<Map<String, ?>> list= mybatis.selectList("Documents.selectMemberInfo");
-		for(Map<String,?> map:list) {
-			System.out.println(map);
-		}
+//		for(Map<String,?> map:list) {
+//			System.out.println(map);
+//		}
 		return list;
 	}
 
