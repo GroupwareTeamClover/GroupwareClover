@@ -16,5 +16,13 @@
 	<select id="getCountMem" resultType="java.util.HashMap">
 		select emp_state_code, count(*) from employee group by emp_state_code
 	</select>
-
+	<update id="updateMem" parameterType="map">
+		update employee 
+		set ${tbObject.stateCode} = (
+		select ${tbObject.stateCode} 
+		from ${tbObject.joinTable} 
+		where ${tbObject.valueCol}= #{newValue}
+		) 
+		where emp_seq = #{empSeq}
+	</update>
 </mapper>

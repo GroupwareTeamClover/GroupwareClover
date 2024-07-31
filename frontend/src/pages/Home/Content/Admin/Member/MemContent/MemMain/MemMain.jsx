@@ -20,8 +20,38 @@ export const MemMain = () => {
         {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''}
     ]);
     const [filtered, setFiltered] = useState(members);
-    const [countMem, setCountMem] = useState([])
+    const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
     // const [countMem, setCountMem] = useState({total:0, normal:0, rest:0, stop:0 })
+    const [normalemp, setNormalemp] = useState(0);
+    const [restemp, setRestemp] = useState(0);
+    const [outemp, setOutemp] = useState(0);
+
+    // 상태 값 변환 함수
+    const processCountData = (data) => {
+        const counts = { normal: 0, rest: 0, stop: 0, out: 0 };
+
+        data.forEach(item => {
+            switch(item.EMP_STATE_CODE) {
+                case 0:  // 가입대기
+                    counts.prev = item['COUNT(*)'];
+                    break;
+                case 1:     //재직중 (정상1)
+                    counts.normal = item['COUNT(*)'];
+                    break;
+                case 2:     //퇴사
+                    counts.out = item['COUNT(*)'];
+                    break;
+                case 3:     //휴직 (정상2)
+                    counts.rest = item['COUNT(*)'];
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return counts;
+    };
+
 
 
     useEffect(()=>{
@@ -29,12 +59,13 @@ export const MemMain = () => {
             console.log(resp)
             setMembers(resp.data);
             setFiltered(resp.data)
+            
         })
 
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
-            setCountMem(resp.data);
-            console.log(resp.data);
-            console.log("test"+resp.data.EMP_STATE_CODE);
+            const processedData = processCountData(resp.data);
+            setCountMem(processedData);
+
         })
     },[])
 
@@ -53,7 +84,7 @@ export const MemMain = () => {
         })
         setCheckedMems(checked ? allValues : [])
     }
-    
+    const [checkedMem, setCheckedMem] = useState({emp_state:0});
     const [ checkedMems, setCheckedMems] = useState([]);
     const handleCheckBox =(e)=>{
         const {value, checked} = e.target;
@@ -92,25 +123,25 @@ export const MemMain = () => {
 
     const handleSearch =(e)=>{
         const {name,value} = e.target;
-        const keyword = e.target.value;
-        console.log(keyword, name);
         const result = members.filter((data)=>data[name].includes(value))
-        console.log(result);
         setFiltered(result);
     }
 
 
+
+    
+
     return (
       <div className={styles.container}>
-         
         <div className={styles.member_info}>
-          
-                <div className={styles.member_total}>
-                    사원 수 : {countMem.total} 명
-                </div>
-                <div className={styles.member_detail}>
-                    {/* 정상({countMem}명 / <span className={styles.smallText}>휴면 {countMem.rest}명</span>) 중지 {countMem.stop}명 */}
-                </div>
+            <div className={styles.member_total}>
+                사원 수 : {members.length} 명
+            </div>
+            <div className={styles.member_detail}>
+                {countMem.normal + countMem.rest} 명
+                정상({countMem.normal}명 / <span className={styles.smallText}> 퇴사 {countMem.out}명</span>) 
+                <h3>가입대기 {countMem.prev}명</h3>
+            </div>
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
@@ -123,8 +154,7 @@ export const MemMain = () => {
                         <option value="계정상태변경">계정상태변경</option>
                     </select>
                     <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
-            </div>
-                
+            </div>         
         </div>
         <div className={styles.body}>
             {/* ---------------------------------------------------------- */}
@@ -180,7 +210,9 @@ export const MemMain = () => {
                                     return(
                                         <tr key={i}>
                                             <td className={styles.theadtd}><input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input></td>
-                                            <td className={styles.theadtd}>{mem.EMP_NAME}</td>
+                                            <td className={styles.theadtd}>
+                                                {mem.EMP_NAME}
+                                            </td>
                                             <td className={styles.theadtd}>
                                                 {mem.DEPT_NAME}
                                             </td>
