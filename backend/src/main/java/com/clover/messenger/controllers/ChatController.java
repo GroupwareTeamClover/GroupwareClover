@@ -1,6 +1,8 @@
 package com.clover.messenger.controllers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,8 @@ public class ChatController {
     @Autowired
     private HttpSession session;
 
+
+
     /**
      * 채팅방 목록을 조회하는 API 엔드포인트
      * @return 로그인한 사용자의 채팅방 목록
@@ -44,8 +48,12 @@ public class ChatController {
      * @return 생성된 채팅방 정보
      */
     @PostMapping("/rooms")
-    public ResponseEntity<ChatRoomDTO> createOneToOneRoom(@RequestBody int targetEmpSeq) {
+    public ResponseEntity<ChatRoomDTO> createOneToOneRoom(@RequestBody Map<String, Integer> payload) {
+        Object cloverSeq = session.getAttribute("cloverSeq");
+        System.out.println("cloverSeq from session: " + cloverSeq);
         Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+        Integer targetEmpSeq = payload.get("targetEmpSeq");
+        System.out.println(empSeq.getClass().getName() + " " + targetEmpSeq.getClass().getName());
         ChatRoomDTO room = chatService.createOneToOneRoom(empSeq, targetEmpSeq);
         return ResponseEntity.ok(room);
     }
@@ -85,5 +93,26 @@ public class ChatController {
         Integer empSeq = (Integer) session.getAttribute("cloverSeq");
         List<EmployeeDTO> onlineUsers = chatService.getOnlineUsers(empSeq);
         return ResponseEntity.ok(onlineUsers);
+    }
+
+    /**
+     * 회사 내 조직도를 조회하는 API 앤드포인트
+     * @return 회사 내 조직도
+     */
+	@GetMapping("/organization")
+	public ResponseEntity<List<HashMap<String, Object>>> getAllData(){
+
+		return ResponseEntity.ok(chatService.getOrganization());
+	}
+
+    /**
+     * 현재 로그인한 사용자의 프로필 정보를 조회하는 API 엔드포인트
+     * @return 로그인한 사용자의 프로필 정보
+     */    
+    @GetMapping("/profile")
+    public ResponseEntity<HashMap<String, Object>> getProfile() {
+        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+        HashMap<String, Object> profile = chatService.getProfile(empSeq);
+        return ResponseEntity.ok(profile);
     }
 }

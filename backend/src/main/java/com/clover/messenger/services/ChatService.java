@@ -1,6 +1,8 @@
 package com.clover.messenger.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,15 +37,26 @@ public class ChatService {
      // issue : ChatMembers의 데이터가 너무 커질 우려가 있다. 생각해봐야 함.
     @Transactional
     public ChatRoomDTO createOneToOneRoom(int empSeq, int targetEmpSeq) {
+        System.out.println(1);
         ChatRoomDTO room = new ChatRoomDTO();
+        System.out.println(2);
         room.setRoomName("1:1 채팅");
+        System.out.println(3);
         room.setRoomType("private");
-        room.setRoomState("T");
+        System.out.println(4);
         room.setEmpSeq(empSeq);
+        System.out.println(5);
+        room.setRoomDescription("1:1 채팅방");
 
+        System.out.println(6);
+        System.out.println("roomSeq: " + room.getRoomSeq() + ", roomName: " + room.getRoomName() + ", empSeq: " + room.getEmpSeq());
         chatDAO.createRoom(room);
+        System.out.println("roomSeq: " + room.getRoomSeq());
+        System.out.println(7);
         chatDAO.addUserToRoom(empSeq, room.getRoomSeq());
+        System.out.println(8);
         chatDAO.addUserToRoom(targetEmpSeq, room.getRoomSeq());
+        System.out.println(9);
 
         return room;
     }
@@ -87,7 +100,7 @@ public class ChatService {
         return chatDAO.isUserInRoom(empSeq, roomSeq);
     }
 
-        /**
+    /**
      * 온라인 사용자 목록을 조회하는 메서드
      * @param currentUserSeq 현재 로그인한 사용자의 사원 번호
      * @return 온라인 사용자 목록 (현재 사용자 제외)
@@ -95,4 +108,18 @@ public class ChatService {
     public List<EmployeeDTO> getOnlineUsers(int currentUserSeq) {
         return chatDAO.getOnlineUsers(currentUserSeq);
     }
+    
+	public List<HashMap<String, Object>> getOrganization(){
+		return chatDAO.getOrganization();
+	}
+
+     /**
+     * 특정 사용자의 프로필 정보를 조회하는 메서드
+     * @param empSeq 사용자의 사원 번호
+     * @return 사용자의 프로필 정보
+     */
+    public HashMap<String, Object> getProfile(int empSeq) {
+        return chatDAO.getProfile(empSeq);
+    }
+
 }

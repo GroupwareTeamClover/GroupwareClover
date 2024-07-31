@@ -107,6 +107,21 @@
     object-fit: cover;
 }
   
+.organization{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 10px;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-left: 10px;
+}
   .addUserButton {
     width: 40px;
     height: 40px;
@@ -323,3 +338,38 @@
 
 
   
+/* 프로필 부분 */
+.profilePanel {
+  padding: 20px;
+}
+
+.profilePicture img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.profileInfo h2 {
+  margin-top: 10px;
+  font-size: 24px;
+}
+
+.profileInfo p {
+  margin: 5px 0;
+  font-size: 18px;
+  color: black;
+}
+
+.profileInfo button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profileInfo button:hover {
+  background-color: #45a049;
+}

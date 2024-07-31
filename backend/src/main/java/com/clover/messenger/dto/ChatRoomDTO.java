@@ -7,11 +7,11 @@ import com.clover.employee.dto.EmployeeDTO;
 public class ChatRoomDTO {
     private int roomSeq;
     private String roomName;
-    private String roomState;
+    private char roomState;
     private Timestamp roomCreateTime;
     private String roomType;
     private String roomDescription;
-    private int empSeq;
+    private Integer empSeq;
     private List<EmployeeDTO> participants;
     
 
@@ -39,11 +39,11 @@ public class ChatRoomDTO {
         this.roomName = roomName;
     }
 
-    public String getRoomState() {
+    public char getRoomState() {
         return this.roomState;
     }
 
-    public void setRoomState(String roomState) {
+    public void setRoomState(char roomState) {
         this.roomState = roomState;
     }
 
@@ -71,17 +71,17 @@ public class ChatRoomDTO {
         this.roomDescription = roomDescription;
     }
 
-    public int getEmpSeq() {
+    public Integer getEmpSeq() {
         return this.empSeq;
     }
 
-    public void setEmpSeq(int empSeq) {
+    public void setEmpSeq(Integer empSeq) {
         this.empSeq = empSeq;
     }
 
     public ChatRoomDTO() {}
 
-    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq) {
+    public ChatRoomDTO(int roomSeq, String roomName, char roomState, Timestamp roomCreateTime, String roomType, String roomDescription, Integer empSeq) {
         this.roomSeq = roomSeq;
         this.roomName = roomName;
         this.roomState = roomState;

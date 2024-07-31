@@ -12,6 +12,7 @@ import ProfilePanel from './ProfilePanel/ProfilePanel';
 
 // axios 기본 설정: 모든 요청에 credentials 포함
 axios.defaults.withCredentials = true;
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 export const ChatMain = () => {
   // Zustand 스토어에서 필요한 상태와 액션들을 가져옴
@@ -56,6 +57,7 @@ export const ChatMain = () => {
       socket.close();
     };
   }, [handleWebSocketMessage]);
+
 
   // 채팅방 목록을 서버로부터 가져오는 함수
   const fetchChatRooms = async () => {

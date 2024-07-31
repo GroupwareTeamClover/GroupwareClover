@@ -3,7 +3,7 @@ import styles from '../Messenger.module.css';
 import { Modal } from '../../../../../components/Modal/Modal';
 import { Folder } from '../../../../../components/Folder/Folder';
 
-import UserSelectModal from '../Modals/UserSelectModal';
+import UserSelectModal from './UserSelectModal';
 import { useChatStore } from '../../../../../store/messengerStore';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
@@ -36,8 +36,9 @@ const ChatList = ({ chatRooms, onChatSelect, onCreateChat }) => {
       {/* <button onClick={() => onCreateChat(1)}>새 채팅 시작</button> */}
       <button className={styles.addUserButton} onClick={openModal}> + </button>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <UserSelectModal onClose={closeModal} />
+              <UserSelectModal onClose={closeModal}/>
       </Modal>
+      
    
     </div>
   );

@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.sql.Timestamp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,7 @@ import com.clover.messenger.dto.ChatRoomDTO;
 
 @Repository
 public class ChatDAO {
+    private static final Logger logger = LoggerFactory.getLogger(ChatDAO.class);
     @Autowired
     private SqlSession mybatis;
 
@@ -34,6 +38,7 @@ public class ChatDAO {
      * @param room 생성할 채팅방 정보
      */
     public void createRoom(ChatRoomDTO room) {
+        room.setRoomCreateTime(new Timestamp(System.currentTimeMillis()));
         mybatis.insert("Chat.createRoom", room);
     }
 
@@ -111,5 +116,18 @@ public class ChatDAO {
      */
     public List<EmployeeDTO> getOnlineUsers(int currentUserSeq) {
         return sqlSession.selectList("Chat.getOnlineUsers", currentUserSeq);
+    }
+
+    public List<HashMap<String, Object>> getOrganization(){
+		return mybatis.selectList("Chat.getOrganization");
+	}
+
+    /**
+     * 특정 사용자의 프로필 정보를 조회하는 메서드
+     * @param empSeq 사용자의 사원 번호
+     * @return 사용자의 프로필 정보
+     */
+    public HashMap<String, Object> getProfile(int empSeq) {
+        return mybatis.selectOne("Chat.getProfile", empSeq);
     }
 }

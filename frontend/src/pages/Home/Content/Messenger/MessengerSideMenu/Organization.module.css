@@ -1,0 +1,56 @@
+/* Organization 컴포넌트 스타일 */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #f5f6f7;
+    font-family: 'DalseoHealingMedium', sans-serif;
+}
+
+.header {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.headerText {
+    margin: 0;
+    font-size: 18px;
+}
+
+.content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.searchBox {
+    padding: 15px;
+}
+
+.searchLine {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.inputBox {
+    flex: 1;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.iconBox {
+    margin-left: 10px;
+    color: #999;
+}
+
+.searchContent {
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+}
+
