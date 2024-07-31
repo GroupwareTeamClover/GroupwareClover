@@ -26,12 +26,7 @@ export const Mypage = ({empSeq, closeModal}) => {
 
     useEffect(() => {
         axios.get(`${BaseUrl()}/employee/${empSeq}`).then(res => {
-            console.log(res.data);
-            setMypage(perv => {
-                const data = res.data
-                console.log("data ==== ", data);
-                return data;
-            });
+            setMypage(res.data);
         })
     }, []);
 
@@ -39,7 +34,7 @@ export const Mypage = ({empSeq, closeModal}) => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <div className={styles.avatar}>
-                    {mypage.EMP_AVATAR === null &&
+                    {(mypage.EMP_AVATAR === null || mypage.EMP_AVATAR === undefined) &&
                         <img src={default_image} alt="기본이미지"/>
                     }
                 </div>
