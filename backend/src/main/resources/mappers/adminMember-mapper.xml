@@ -12,5 +12,8 @@
         join worker_state on employee.worker_state_code = worker_state.worker_state_code
         join employee_state on employee.emp_state_code = employee_state.emp_state_code
 	</select>
+	<select id="getCountMem" resultType="java.util.HashMap">
+		select emp_state_code, count(*) from employee group by emp_state_code
+	</select>
 
 </mapper>

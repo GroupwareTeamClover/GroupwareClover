@@ -16,4 +16,8 @@ public class AdminMemberDAO {
 	public List<HashMap<String, Object>> getAllData(){
 		return mybatis.selectList("AdminMember.getAllData");
 	}
+	
+	public List<HashMap<String, Object>> getCountMem(){
+		return mybatis.selectList("AdminMember.getCountMem");
+	}
 }

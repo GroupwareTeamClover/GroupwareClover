@@ -1,17 +1,19 @@
 .container{
     flex:6;
+    display: flex;
+    flex-direction: column;
 }
 
 .header{
     font-size: 40px;
-    height : 100px;
+    flex:2;
     display: flex;
     align-items: center;
     padding-left : 40px;
 }
 
 .titleBox{
-    height : 50px;
+    flex:1;
     display: flex;
     align-items: center;
     padding-left: 40px;
@@ -31,7 +33,7 @@
 }
 
 .typeBox{
-    height : 50px;
+    flex:1;
     display: flex;
     align-items: center;
     font-size: 20px;
@@ -51,8 +53,12 @@
     margin-left: 15px;
 }
 
+.memberBox{
+    flex:10;
+}
+
 .memberBox .memberLetter{
-    height : 50px;
+    height : 10%;
     font-size: 24px;
     display: flex;
     align-items: center;
@@ -66,19 +72,18 @@
 }
 
 .memberBox .memberBoxLayout{
-    height : 350px;
+    height : 90%;
     padding : 5px 0 5px 40px;
 }
 
 .memberBox .addMemberBox{
     height : 100%;
     width : 650px;
-    height : 330px;
     background-color: white;
 }
 
 .memberBox .addMemberBox .addMemberBtn{
-    height: 50px;
+    height: 15%;
     background-color: lightgray;
     display: flex;
     align-items: center;
@@ -91,18 +96,17 @@
     font-weight: bold;
 }
 
-
 .memberBox .addMemberBox .addMemberBtn .addMemberLetter{
     margin-left: 5px;
 }
 
 .memberBox .addMemberBox .addMemberList{
-    height : 280px;
+    height : 85%;
     overflow-y: auto;
 }
 
 .memberBox .addMemberBox .addMemberList .eachAdded{
-    height: 56px;
+    height: 20%;
     display: flex;
     font-size: 24px;
     align-items: center;
@@ -123,7 +127,7 @@
 }
 
 .activeBox{
-    height : 50px;
+    flex:1;
     display: flex;
     align-items: center;
     font-size: 20px;
@@ -156,7 +160,7 @@
 }
 
 .buttonBox{
-    height : 50px;
+    flex:1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -197,7 +201,7 @@
     background-color: rgb(46, 46, 222);
     font-weight: 600;
     font-size: 16px;
-    margin-right: 20px;
+    margin-right: 50px;
     color : white;
 }
 

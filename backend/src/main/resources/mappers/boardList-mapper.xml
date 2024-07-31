@@ -22,13 +22,17 @@
 	</select>
 	
 	<select id="selectAllBoards" resultType="com.clover.board.dto.BoardlistDTO" >
-		select * from boardlist where boardlist_type = 'A'
+		select * from boardlist where boardlist_type = 'A' and boardlist_active = 'T'
 		order by boardlist_seq
 	</select>
 	
 	<select id="selectGroupBoards" resultType="com.clover.board.dto.BoardlistDTO" >
-		select * from boardlist where boardlist_type = 'G'
+		select * from boardlist where boardlist_type = 'G' and boardlist_active = 'T'
 		order by boardlist_seq
+	</select>
+	
+	<select id="selectEntireBoards" resultType="com.clover.board.dto.BoardlistDTO" >
+		select * from boardlist order by boardlist_seq
 	</select>
 
 	<insert id="insert">
@@ -45,4 +49,8 @@
 			SELECT #{member}, #{seq} FROM dual
 		</foreach>
 	</insert>
+	
+	<delete id="deleteBoard">
+		delete from boardlist where boardlist_seq = #{seq}
+	</delete>
 </mapper>

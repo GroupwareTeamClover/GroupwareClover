@@ -15,16 +15,13 @@ export const MemMain = () => {
 
     const navi = useNavigate();
 
-    const [countMem, setCountMem] = useState({total:100, normal:80, rest:20, stop:20 })
     const [status, setStatus] = useState({status:''});
-    // const [member, setMember] = useState();
     const [members, setMembers] = useState([
-        // {seq:1, name:'김일일', dept:'인사팀',position:'대리', group:'정규직',email:'jeesu@naver.com',status:'정상'},
-        // {seq:2, name:'정일일', dept:'영업팀',position:'과장', group:'정규직',email:'abc@naver.com',status:'정상'},
-        // {seq:3, name:'최일일', dept:'영업팀',position:'대리', group:'계약직',email:'abc1@naver.com',status:'중지'}
         {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''}
     ]);
     const [filtered, setFiltered] = useState(members);
+    const [countMem, setCountMem] = useState([])
+    // const [countMem, setCountMem] = useState({total:0, normal:0, rest:0, stop:0 })
 
 
     useEffect(()=>{
@@ -33,8 +30,16 @@ export const MemMain = () => {
             setMembers(resp.data);
             setFiltered(resp.data)
         })
+
+        axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
+            // console.log("5"+resp)
+            setCountMem(resp.data);
+            console.log(resp.data);
+            console.log(resp.data.EMP_STATE_CODE);
+        })
     },[])
 
+    // ============= 체크박스 클릭 ==================
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
     const handleCheckAll = (e)=>{
@@ -44,6 +49,14 @@ export const MemMain = () => {
                 checkbox.checked = checked;
             }
         })
+    }
+    const [checkedMem, setCheckedMem] = useState({emp_state:0});
+    const handleCheckBox =(e)=>{
+        const {name, value} = e.target;
+        console.log(name, value)
+        setCheckedMem(prev=>({...prev, [name]:value}))
+        console.log(checkedMem)
+
     }
 
     // ------------- 모달----------------------------------------
@@ -74,15 +87,18 @@ export const MemMain = () => {
         setFiltered(result);
     }
 
+ 
+
     return (
       <div className={styles.container}>
          
         <div className={styles.member_info}>
+          
                 <div className={styles.member_total}>
                     사원 수 : {countMem.total} 명
                 </div>
                 <div className={styles.member_detail}>
-                    정상({countMem.normal}명 / <span className={styles.smallText}>휴면 {countMem.rest}명</span>) 중지 {countMem.stop}명
+                    {/* 정상({countMem}명 / <span className={styles.smallText}>휴면 {countMem.rest}명</span>) 중지 {countMem.stop}명 */}
                 </div>
         </div>
         <div className={styles.funcBtn}>
@@ -105,7 +121,7 @@ export const MemMain = () => {
                     <table className={styles.table}>
                         <thead className={styles.thead}>
                             <tr>
-                                <td className={styles.theadtd}><input type="checkbox" onClick={handleCheckAll}></input></td>
+                                <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
                                     <select name='DEPT_NAME' onChange={handleSearch}>
@@ -152,7 +168,7 @@ export const MemMain = () => {
                                 filtered.map((mem, i)=>{
                                     return(
                                         <tr key={i}>
-                                            <td className={styles.theadtd}><input type="checkbox" ref={data=> checkboxRef.current[i]=data}></input></td>
+                                            <td className={styles.theadtd}><input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input></td>
                                             <td className={styles.theadtd}>{mem.EMP_NAME}</td>
                                             <td className={styles.theadtd}>
                                                 {mem.DEPT_NAME}
@@ -189,7 +205,7 @@ export const MemMain = () => {
                         <ModalPosition modalState={modalState} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                     }
                     { modalState === 'deleteMem' &&
-                        <ModalDelete/>
+                        <ModalDelete checkedMem={checkedMem}/>
                     }
                 </div>
         </Modal>
