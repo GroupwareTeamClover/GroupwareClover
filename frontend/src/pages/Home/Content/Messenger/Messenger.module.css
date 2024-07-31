@@ -24,10 +24,20 @@
     font-size: 18px;
     color: #999;
   }
+
+  .mSideMenu{
+    flex: 0 0 100px; /* 고정 너비 350px */
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    overflow: hidden;
+  }
   
   /* 왼쪽 패널 (채팅 목록) */
   .leftPanel {
-    flex: 0 0 350px; /* 고정 너비 350px */
+    flex: 0 0 300px; /* 고정 너비 350px */
     border-right: 1px solid #ddd;
     display: flex;
     flex-direction: column;
@@ -37,11 +47,21 @@
   
   /* 오른쪽 패널 (채팅 창) */
   .rightPanel {
+    flex: 3;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    max-width: 60%; /* 최대 너비 설정 */
+    overflow: hidden;
+  }
+
+  /* 맨 오른쪽 패널 (내 프로필) */
+  .profilePanel{
     flex: 1;
     display: flex;
     flex-direction: column;
     background-color: white;
-    max-width: 800px; /* 최대 너비 설정 */
     overflow: hidden;
   }
   
@@ -73,12 +93,19 @@
   }
 
   .userIcon {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background-color: #ddd;
+    overflow: hidden;
     margin-right: 10px;
-  }
+    cursor: pointer;
+}
+
+.userIcon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
   
   .addUserButton {
     width: 40px;
@@ -93,7 +120,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    right: 15px;
+    right: 1500px;
     bottom: 15px;
   }
 
@@ -141,6 +168,11 @@
   .chatList {
     flex: 1;
     overflow-y: auto;
+  }
+
+  .addChat{
+    flex : 1;
+    padding : 20px;
   }
   
   .chatItem {

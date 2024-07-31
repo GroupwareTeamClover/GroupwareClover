@@ -1,6 +1,8 @@
 package com.clover.messenger.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
+import com.clover.employee.dto.EmployeeDTO;
 
 public class ChatRoomDTO {
     private int roomSeq;
@@ -10,8 +12,17 @@ public class ChatRoomDTO {
     private String roomType;
     private String roomDescription;
     private int empSeq;
+    private List<EmployeeDTO> participants;
+    
 
-    // Getters and setters
+    public List<EmployeeDTO> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<EmployeeDTO> participants) {
+        this.participants = participants;
+    }   
+
     public int getRoomSeq() {
         return this.roomSeq;
     }
@@ -68,7 +79,6 @@ public class ChatRoomDTO {
         this.empSeq = empSeq;
     }
 
-    // Constructors
     public ChatRoomDTO() {}
 
     public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq) {

@@ -56,7 +56,7 @@ Create table ChatMessage (
     room_seq number not null,
     sender_seq number not null
 );
-
+ALTER TABLE ChatMembers ADD last_access_time TIMESTAMP;
 Create sequence message_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 -- 채팅방

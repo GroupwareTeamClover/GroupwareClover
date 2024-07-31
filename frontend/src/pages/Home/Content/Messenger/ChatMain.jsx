@@ -1,37 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
+import axios from 'axios';
 import { BaseUrl } from '../../../../commons/config';
 import styles from './Messenger.module.css';
 import ChatList from './LeftPanel/ChatList';
 import ChatWindow from './RightPanel/ChatWindow';
 import OnlineUsers from './LeftPanel/OnlineUsers';
 import SearchBar from './LeftPanel/SearchBar';
-import axios from 'axios';
+import { useChatStore } from '../../../../store/messengerStore'; // Zustand 스토어 import
+import MessengerSideMenu from './MessengerSideMenu/MessengerSideMenu';
+import ProfilePanel from './ProfilePanel/ProfilePanel';
 
+// axios 기본 설정: 모든 요청에 credentials 포함
 axios.defaults.withCredentials = true;
 
 export const ChatMain = () => {
-  const [chatRooms, setChatRooms] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [socket, setSocket] = useState(null);
+  // Zustand 스토어에서 필요한 상태와 액션들을 가져옴
+  const { 
+    chatRooms, setChatRooms, addChatRoom, updateChatRoom, 
+    selectedChat, setSelectedChat, 
+    addMessage, setOnlineUsers 
+  } = useChatStore();
 
-  useEffect(() => {
-    // WebSocket 연결 설정
-    const wsUrl = `ws://${BaseUrl().replace(/^https?:\/\//, '')}/chat`;
-    const newSocket = new WebSocket(wsUrl);
+  // WebSocket 메시지 처리 함수
+  const handleWebSocketMessage = useCallback((event) => {
+    const data = JSON.parse(event.data);
+    console.log('WebSocket message received:', data);
 
-    newSocket.onmessage = (e) => {
-      console.log(`onMessage: ${e.data}`);
+    // 메시지 타입에 따라 적절한 처리를 수행.
+    switch (data.type) {
+      case 'NEW_MESSAGE':
+        addMessage(data.roomSeq, data.message);
+        break;
+      case 'USER_STATUS':
+        setOnlineUsers(data.onlineUsers);
+        break;
+      case 'NEW_CHAT_ROOM':
+        addChatRoom(data.room);
+        break;
+      default:
+        console.log('설정해 놓지 않은 메시지 타입:', data.type);
     }
-    setSocket(newSocket);
+  }, [addMessage, setOnlineUsers, addChatRoom]);
 
-    // 컴포넌트가 마운트될 때 채팅방 목록을 가져옴
+  // 컴포넌트 마운트 시 WebSocket 연결 및 채팅방 목록 fetch
+  useEffect(() => {
+    const wsUrl = `ws://${BaseUrl().replace(/^https?:\/\//, '')}/chat`;
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = handleWebSocketMessage;
+
     fetchChatRooms();
 
-    // 컴포넌트가 언마운트될 때 WebSocket 연결을 닫음
+    // 컴포넌트 언마운트 시 WebSocket 연결 종료
     return () => {
-      newSocket.close();
+      socket.close();
     };
-  }, []);
+  }, [handleWebSocketMessage]);
 
   // 채팅방 목록을 서버로부터 가져오는 함수
   const fetchChatRooms = async () => {
@@ -39,26 +63,28 @@ export const ChatMain = () => {
       const response = await axios.get(`${BaseUrl()}/chat/rooms`);
       setChatRooms(response.data);
     } catch (error) {
-      console.error('채팅방 목록 오류 발생:', error);
+      console.error('채팅방 목록 조회 중 오류 발생:', error);
+      // TODO: 사용자에게 오류 메시지 표시
     }
   };
 
-  // 새로운 1:1 채팅방을 생성하는 함수
-  const createChatRoom = async (userId) => {
+  // 새로운 채팅방을 생성하는 함수
+  const createChatRoom = async (targetEmpSeq) => {
     try {
-      const response = await axios.post(`${BaseUrl()}/chat/rooms`, { empSeq: userId });
-      const newRoom = response.data;
-      // 새로운 채팅방을 목록에 추가
-      setChatRooms([...chatRooms, newRoom]);
-      // 새로 생성된 채팅방을 선택
-      setSelectedChat(newRoom);
+      const response = await axios.post(`${BaseUrl()}/chat/rooms`, targetEmpSeq);
+      addChatRoom(response.data);
+      setSelectedChat(response.data);
     } catch (error) {
-      console.error('채팅방 생성 오류1123 :', error);
+      console.error('채팅방 생성 중 오류 발생:', error);
+      // TODO: 사용자에게 오류 메시지 표시
     }
   };
 
   return (
     <div className={styles.container}>
+      <div className={styles.mSideMenu}>
+        <MessengerSideMenu/>
+      </div>
       <div className={styles.leftPanel}>
         <SearchBar />
         <OnlineUsers />
@@ -70,15 +96,15 @@ export const ChatMain = () => {
       </div>
       <div className={styles.rightPanel}>
         {selectedChat ? (
-          <ChatWindow
-            chat={selectedChat}
-            socket={socket}
-          />
+          <ChatWindow chat={selectedChat} />
         ) : (
           <div className={styles.noChatSelected}>
             채팅방을 선택해주세요.
           </div>
         )}
+      </div>
+      <div className={styles.profilePanel}>
+          <ProfilePanel/>
       </div>
     </div>
   );
