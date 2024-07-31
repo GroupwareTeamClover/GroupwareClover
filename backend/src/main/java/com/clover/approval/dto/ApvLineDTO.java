@@ -3,72 +3,71 @@ package com.clover.approval.dto;
 import java.sql.Timestamp;
 
 public class ApvLineDTO {
-	private int line_seq;
-	private int apv_status_code;
-	private int apver_id;
-	private String line_apver_cmt;
-	private int line_order;
-	private Timestamp line_apv_date;
-	private int doc_seq;
+	private int lineSeq;
+	private int apvStatusCode;
+	private int apverId;
+	private String lineApverCmt;
+	private int lineOrder;
+	private Timestamp lineApvDate;
+	private int docSeq;
 	
 	public ApvLineDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ApvLineDTO(int line_seq, int apv_status_code, int apver_id, String line_apver_cmt, int line_order,
-			Timestamp line_apv_date, int doc_seq) {
+	public ApvLineDTO(int lineSeq, int apvStatusCode, int apverId, String lineApverCmt, int lineOrder,
+			Timestamp lineApvDate, int docSeq) {
 		super();
-		this.line_seq = line_seq;
-		this.apv_status_code = apv_status_code;
-		this.apver_id = apver_id;
-		this.line_apver_cmt = line_apver_cmt;
-		this.line_order = line_order;
-		this.line_apv_date = line_apv_date;
-		this.doc_seq = doc_seq;
+		this.lineSeq = lineSeq;
+		this.apvStatusCode = apvStatusCode;
+		this.apverId = apverId;
+		this.lineApverCmt = lineApverCmt;
+		this.lineOrder = lineOrder;
+		this.lineApvDate = lineApvDate;
+		this.docSeq = docSeq;
 	}
-	public int getLine_seq() {
-		return line_seq;
+	public int getLineSeq() {
+		return lineSeq;
 	}
-	public void setLine_seq(int line_seq) {
-		this.line_seq = line_seq;
+	public void setLineSeq(int lineSeq) {
+		this.lineSeq = lineSeq;
 	}
-	public int getApv_status_code() {
-		return apv_status_code;
+	public int getApvStatusCode() {
+		return apvStatusCode;
 	}
-	public void setApv_status_code(int apv_status_code) {
-		this.apv_status_code = apv_status_code;
+	public void setApvStatusCode(int apvStatusCode) {
+		this.apvStatusCode = apvStatusCode;
 	}
-	public int getApver_id() {
-		return apver_id;
+	public int getApverId() {
+		return apverId;
 	}
-	public void setApver_id(int apver_id) {
-		this.apver_id = apver_id;
+	public void setApverId(int apverId) {
+		this.apverId = apverId;
 	}
-	public String getLine_apver_cmt() {
-		return line_apver_cmt;
+	public String getLineApverCmt() {
+		return lineApverCmt;
 	}
-	public void setLine_apver_cmt(String line_apver_cmt) {
-		this.line_apver_cmt = line_apver_cmt;
+	public void setLineApverCmt(String lineApverCmt) {
+		this.lineApverCmt = lineApverCmt;
 	}
-	public int getLine_order() {
-		return line_order;
+	public int getLineOrder() {
+		return lineOrder;
 	}
-	public void setLine_order(int line_order) {
-		this.line_order = line_order;
+	public void setLineOrder(int lineOrder) {
+		this.lineOrder = lineOrder;
 	}
-	public Timestamp getLine_apv_date() {
-		return line_apv_date;
+	public Timestamp getLineApvDate() {
+		return lineApvDate;
 	}
-	public void setLine_apv_date(Timestamp line_apv_date) {
-		this.line_apv_date = line_apv_date;
+	public void setLineApvDate(Timestamp lineApvDate) {
+		this.lineApvDate = lineApvDate;
 	}
-	public int getDoc_seq() {
-		return doc_seq;
+	public int getDocSeq() {
+		return docSeq;
 	}
-	public void setDoc_seq(int doc_seq) {
-		this.doc_seq = doc_seq;
+	public void setDocSeq(int docSeq) {
+		this.docSeq = docSeq;
 	}
-	
 	
 	
 

@@ -12,10 +12,17 @@ import com.clover.approval.dao.DocumentDAO;
 public class DocumentService {
 	
 	@Autowired
-	private DocumentDAO documentdao;
+	private DocumentDAO documentDAO;
+	
+
 	
 	public List<Map<String,?>> getDocCodeInfo(){
-		return documentdao.selectDocCodeInfo();
+		return documentDAO.selectDocCodeInfo();
 	}
+	
+//
+//	public void addDoc(seletedDocCode, seletedEmpInfo) {
+//		
+//	}
 
 }

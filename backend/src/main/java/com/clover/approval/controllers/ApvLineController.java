@@ -20,10 +20,6 @@ public class ApvLineController {
 	
 	//임시위치 -> 추루 컨트롤러 변경해야함
 	//멤버의 부서이름, 직원이름, 직급이름을 받아오는 코드
-	@GetMapping
-	public ResponseEntity<List<Map<String,?>>> get(){
-		return ResponseEntity.ok(apvLineService.getMemberInfo());
-	}
 	
 
 }

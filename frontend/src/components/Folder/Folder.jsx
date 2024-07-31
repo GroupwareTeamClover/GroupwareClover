@@ -1,4 +1,3 @@
-// 확인
 import { useState, useEffect } from 'react';
 import styles from './Folder.module.css'
 import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder  } from "react-icons/fa";
@@ -27,7 +26,7 @@ import { CiFileOn } from "react-icons/ci";
 
 
 export const Folder = ({ folder, level = 0 , onItemClick , selectedItem, setSelectedItem}) => {
-    console.log(`양식폴더컴포넌트: ${selectedItem.children.name}`)
+    // console.log(`양식폴더컴포넌트: ${selectedItem.children.name}`)
     const [isExpanded, setIsExpanded] = useState(false);
 
 

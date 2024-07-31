@@ -6,6 +6,8 @@ import com.clover.employee.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
 public class EmployeeService {
 
@@ -36,8 +38,9 @@ public class EmployeeService {
     }
 
     /** 사원 정보 조회 **/
-    public EmployeeDTO getMyInfo(int empSeq) {
-        return employeeDAO.getMyInfo(empSeq);
+    public Map<String, Object> getMyInfo(int empSeq) {
+        Map<String, Object> map = employeeDAO.getMyInfo(empSeq);
+        return map;
     }
 
     /** 사원 정보 업데이트 **/

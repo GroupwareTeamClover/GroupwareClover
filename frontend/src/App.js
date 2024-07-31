@@ -13,7 +13,7 @@ function App() {
 
   const userData = sessionStorage.getItem("sessionUser");
   const adminCheck = sessionStorage.getItem("sessionAdmin");
-  const { sign, setSign, setUserSession, admin, setAdmin } = useMemberStore();
+  const { sign, setSign, setSessionData, admin, setAdmin } = useMemberStore();
 
   // Sidebar toggle
   const [open, setOpen] = useState(true);
@@ -28,7 +28,7 @@ function App() {
     const data = JSON.parse(userData);
     if(data !== null) {
       setSign(true);
-      setUserSession(data);
+      setSessionData(data);
     }
 
     if(adminCheck !== null && adminCheck === "true"){
