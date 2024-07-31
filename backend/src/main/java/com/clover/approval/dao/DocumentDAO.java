@@ -12,7 +12,10 @@ public class DocumentDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
+
+	
 	public List<Map<String, ?>> selectDocCodeInfo(){
 		return mybatis.selectList("Documents.selectDocCodeInfo");
 	}
+	
 }

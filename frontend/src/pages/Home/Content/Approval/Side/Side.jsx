@@ -56,7 +56,7 @@ export const Side = () => {
 
     //모달사이 전달할 정보저장
     const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0 } });
-    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], recchoice: [], refchoice: [] });
+    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], refchoice: [], viechoice: [], recchoice: []});
 
     //확인 클릭 시 문서 생성
     const handleAdd = () =>{
@@ -72,6 +72,17 @@ export const Side = () => {
         });
 
     }
+
+
+    // 전자결재양식선택에서 다음을 클릭할 때 양식을 선택해야지만 다음으로 넘어가도록 예외 처리
+    const handleFormNext = (event) => {
+        //다음으로 넘어가는 조건
+        if(selectedDocCode.name){
+            handlePageChange(event);
+        }else{
+            alert("결재 양식을 선택하세요.");
+        }
+    };
 
     return (
         <div className={styles.sideBox}>
@@ -130,7 +141,7 @@ export const Side = () => {
                                 <ChoiceForm Page={Page} selectedDocCode={selectedDocCode} setSelectedDocCode={setSelectedDocCode} /> 
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
-                                    <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
+                                    <button name="next" onClick={handleFormNext} className={styles.btn} > 다음</button>
                                 </div>
                                 </>
                             )}
