@@ -25,6 +25,7 @@
 }
 .member_info_box{
     display: flex;
+    flex-direction: column;
     border: 1px solid black;
     justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
     align-items: center;
@@ -36,6 +37,7 @@
     padding-top:40px;
     flex:0.5;
     padding-left: 30px;
+    padding-bottom:20px;
     /* display: flex; */
 }
 .addBtn{
@@ -115,4 +117,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.pagination{
+    flex:2;
 }
