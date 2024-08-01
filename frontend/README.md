@@ -26,6 +26,9 @@ $ npm install --save \
   @fullcalendar/core \
   @fullcalendar/react \
   @fullcalendar/daygrid
+
+/* EmailJs */
+$ npm i --save @emailjs/browser
   
 ```
 

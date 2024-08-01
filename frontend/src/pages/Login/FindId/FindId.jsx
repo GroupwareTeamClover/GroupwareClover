@@ -2,25 +2,22 @@ import styles from './FindId.module.css'
 import {useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../commons/config";
+import {sendEmail} from "../../../commons/common";
 
 export const FindId = () => {
 
   const [emailCheck, setEmailCheck] = useState(false);
   const [invalidate, setInvalidate] = useState(false);
-
-  const [exists, setExists] = useState({empName: "", empEmail: ""});
+  const [accessNum, setAccessNum] = useState({ code: 0, input: 0});
+  const [exists, setExists] = useState({emp_id: "", empName: "", empEmail: ""});
 
   const handleDataCheck = (e) => {
     const { name, value } = e.target;
-    setExists(prev => ({ ...prev, [name]: value }));
+    if(name === "code" || name === "input") setAccessNum(prev => ({ ...prev, [name]:value }));
+    else setExists(prev => ({ ...prev, [name]: value }));
   }
 
   const handleEmailCheck = () => {
-    if(emailCheck) setEmailCheck(false);
-    else setEmailCheck(true);
-  }
-
-  const handleSubmit = () => {
     if(exists.empName === "" || exists.empEmail === ""){
       alert("입력하지 않은 값이 있습니다.");
       return false;
@@ -28,11 +25,30 @@ export const FindId = () => {
     const params = { ...exists }
     // exists 계정 정보 확인 후 있다면 다음 로직 진행
     axios.get(`${BaseUrl()}/employee/exists`, {params}).then(res => {
-      if(res.data) alert("확인");
+      const ranNumber =  Math.floor(100000 + Math.random() * 900000);
+      console.log("ranNumber ====== ", ranNumber);
+      if(res.data.empSeq > 0) {
+        // 계정 조회 성공
+        // const data = {
+        //   to_name: exists.empName,
+        //   message: ranNumber
+        // }
+        // sendEmail(data);
+        setAccessNum(prev => ({ ...prev, code: ranNumber }));
+        setExists(prev => ({ ...prev, empId: res.data.empId }));
+        setEmailCheck(true);
+      }
       else alert("조건에 맞는 회원 없음");
     });
-    // 이메일 인증 후 인증 번호가 맞다면 아이디 요청
-    setInvalidate(true);
+  }
+
+  const handleSubmit = () => {
+    if(parseInt(accessNum.code) === parseInt(accessNum.input)) {
+      // 이메일 인증 후 인증 번호가 맞다면 아이디 요청하여 아이디 바인딩
+      setInvalidate(true);
+      alert("인증 완료");
+    }
+    else alert("인증번호 틀림");
   }
 
   return (
@@ -57,7 +73,7 @@ export const FindId = () => {
           <div className={styles.row}>
             <span>인증번호</span>
             <div>
-              <input type="text" name="post" placeholder="인증번호"/>
+              <input type="text" name="input" onChange={handleDataCheck} value={accessNum.input || ""} placeholder="인증번호"/>
               <button onClick={handleSubmit}>인증번호 입력</button>
             </div>
           </div>
@@ -65,7 +81,7 @@ export const FindId = () => {
         {
           invalidate &&
           <div className={styles.row}>
-            <p>tester001 입니다.</p>
+            <p>아이디는 {exists.empId} 입니다.</p>
           </div>
         }
       </div>

@@ -49,23 +49,28 @@ public class EmployeeService {
         employeeDAO.updateEmployee(dto);
     }
 
+    /** 사원 비밀번호 변경 **/
+    public String updatePwEmployee(EmployeeDTO dto) {
+        dto.setEmpPw(sha512.getSHA512(dto.getEmpPw()));
+        int result = employeeDAO.updatePwEmployee(dto);
+        if(result > 0) return "ok";
+        else return "fail";
+    }
+
     /** 직원 삭제 **/
     public void leaveEmployee(int empSeq) {
         employeeDAO.leaveEmployee(empSeq);
     }
 
     /** 직원 여부 확인 **/
-    public boolean existsEmployee(String empName, String empId, String empEmail) {
-
-        System.out.println("empName ==== " + empName);
-        System.out.println("empId ==== " + empId);
-        System.out.println("empEmail ==== " + empEmail);
+    public EmployeeDTO existsEmployee(String empName, String empId, String empEmail) {
 
         Map<String, String> map = new HashMap<String, String>();
         map.put("empName", empName);
         map.put("empId", empId);
         map.put("empEmail", empEmail);
-
-        return employeeDAO.existsEmployee(map);
+        EmployeeDTO dto = employeeDAO.existsEmployee(map);
+        if(dto.getEmpSeq() > 0) return dto;
+        else return null;
     }
 }
