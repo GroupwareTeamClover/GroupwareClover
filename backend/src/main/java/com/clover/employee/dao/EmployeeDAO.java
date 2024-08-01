@@ -42,4 +42,9 @@ public class EmployeeDAO {
     public void leaveEmployee(int empSeq) {
         mybatis.delete("Employee.delete", empSeq);
     }
+
+    /** 직원 여부 확인 **/
+    public boolean existsEmployee(Map<String, String> map) {
+        return mybatis.selectOne("Employee.existsEmployee", map);
+    }
 }
