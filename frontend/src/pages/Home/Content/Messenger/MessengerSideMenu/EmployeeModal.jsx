@@ -23,7 +23,7 @@ const EmployeeModal = ({ employee, onClose }) => {
             onClose(); // 모달 닫기
         } catch (error) {
             console.error('1:1 채팅방 생성 중 오류 발생:', error);
-            // TODO: 사용자에게 오류 메시지 표시
+           
         }
     };
 

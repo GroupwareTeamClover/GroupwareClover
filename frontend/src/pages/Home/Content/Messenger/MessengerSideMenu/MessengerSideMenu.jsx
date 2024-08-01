@@ -19,7 +19,7 @@ const MessengerSideMenu = () => {
             <img src={sessionData.empAvatar} ></img>        
         </div>
         <div>
-        <button className={styles.organization}onClick={openModal}> 조직도 </button>
+        <button className={styles.organization}onClick={openModal}> 사원목록 </button>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <Organization onClose={closeModal}/>
             </Modal>

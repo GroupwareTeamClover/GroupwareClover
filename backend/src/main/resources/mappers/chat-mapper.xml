@@ -15,7 +15,14 @@
     
     <!-- 채팅방 생성 -->
     <insert id="createRoom" parameterType="com.clover.messenger.dto.ChatRoomDTO" useGeneratedKeys="true" keyProperty="roomSeq">
-        insert into chatroom (room_seq, emp_seq) values(150, ${empSeq})
+        <selectKey keyProperty="roomSeq" order="BEFORE" resultType="int">
+            SELECT room_sequence.nextval FROM DUAL
+        </selectKey>
+        INSERT INTO chatRoom (
+            room_seq, room_name, room_type, room_description, emp_seq
+        ) VALUES (
+            #{roomSeq}, #{roomName}, #{roomType}, #{roomDescription}, #{empSeq}
+        )
     </insert>
     
     <!-- 사용자를 채팅방에 추가 -->

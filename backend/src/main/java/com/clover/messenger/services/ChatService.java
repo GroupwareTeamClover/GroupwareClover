@@ -38,14 +38,12 @@ public class ChatService {
     @Transactional
     public ChatRoomDTO createOneToOneRoom(int empSeq, int targetEmpSeq) {
         ChatRoomDTO room = new ChatRoomDTO();
-        // room.setRoomName("1:1 채팅");
-        // room.setRoomType("private");
+        room.setRoomSeq(0);
+        room.setRoomName("완전 오른쪽에는 가장 최근 메시지의 시간이 나와야 해");
+        room.setRoomType("private");
         room.setEmpSeq(empSeq);
-        // room.setRoomDescription("1:1 채팅방");
-        int result = room.getRoomSeq() + room.getEmpSeq() + targetEmpSeq;
-        System.out.println(result);
-        System.out.println("roomSeq: " + room.getRoomSeq() + ", empSeq: " + room.getEmpSeq() + targetEmpSeq);
-        System.out.println("예측");
+        room.setRoomDescription("1:1 채팅방");
+
         chatDAO.createRoom(room);
         System.out.println("확인");
         System.out.println("roomSeq: " + room.getRoomSeq());

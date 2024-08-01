@@ -4,13 +4,12 @@ import { BaseUrl } from '../../../../../commons/config';
 import styles from '../Messenger.module.css';
 import { formatDistanceToNow } from 'date-fns'; 
 import { ko } from 'date-fns/locale'; 
-import { useChatStore } from '../../../../../store/messengerStore'; // Zustand 스토어 경로 수정
+import { useChatStore } from '../../../../../store/messengerStore'; 
 
 const ChatWindow = ({ chat }) => {
-  // Zustand 스토어에서 필요한 상태와 액션을 가져옴
-  const { messages, addMessage } = useChatStore();
-  // 입력 메시지를 관리하는 로컬 상태
-  const [inputMessage, setInputMessage] = useState('');
+
+  const { messages, addMessage } = useChatStore(); // 스토어에서 필요한 상태와 액션을 가져옴
+  const [inputMessage, setInputMessage] = useState('');  // 입력 메시지를 관리하는 로컬 상태
 
   // 채팅방이 변경될 때마다 메시지를 불러옵니다.
   useEffect(() => {
@@ -52,6 +51,7 @@ const ChatWindow = ({ chat }) => {
   return (
     <div className={styles.chatWindow}>
       <div className={styles.chatHeader}>
+        <img className={styles.avatar} src={chat.roomAvatar} ></img>
         <h2>{chat.roomName}</h2>
         <span className={styles.status}>Active</span>
       </div>

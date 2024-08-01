@@ -14,7 +14,7 @@ const ProfilePanel = () => {
         const response = await axios.get(`${BaseUrl()}/chat/profile`);
         setProfile(response.data);
       } catch (error) {
-        console.error('프로필 정보를 가져오는 중 오류 발생:', error);
+        console.error('프로필 정보 오류 발생:', error);
       }
     };
 

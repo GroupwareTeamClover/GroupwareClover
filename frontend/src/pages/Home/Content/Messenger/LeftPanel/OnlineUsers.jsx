@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Messenger.module.css';
-import UserSelectModal from './UserSelectModal';
 import { useChatStore } from '../../../../../store/messengerStore';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
@@ -28,16 +27,6 @@ const OnlineUsers = () => {
     //     return () => clearInterval(interval);
     // }, [setOnlineUsers]);
 
-    const createPrivateChat = async (targetUserId) => {
-        try {
-            const response = await axios.post(`${BaseUrl()}/chat/rooms`, targetUserId);
-            const newRoom = response.data;
-            addChatRoom(newRoom);
-            setSelectedChat(newRoom);
-        } catch (error) {
-            console.error('1:1 채팅방 생성 중 오류 발생:', error);
-        }
-    };
 
     return (
         <div className={styles.onlineUsers}>
@@ -47,7 +36,6 @@ const OnlineUsers = () => {
                     <div 
                         key={user.empSeq} 
                         className={styles.userIcon}
-                        onClick={() => createPrivateChat(user.empSeq)}
                     >
                         <img 
                             src={user.empAvatar} 

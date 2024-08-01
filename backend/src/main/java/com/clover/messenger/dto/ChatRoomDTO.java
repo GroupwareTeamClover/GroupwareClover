@@ -13,6 +13,7 @@ public class ChatRoomDTO {
     private String roomDescription;
     private int empSeq;
     private List<EmployeeDTO> participants;
+    private String roomAvatar;
     
 
     public List<EmployeeDTO> getParticipants() {
@@ -29,6 +30,14 @@ public class ChatRoomDTO {
 
     public void setRoomSeq(int roomSeq) {
         this.roomSeq = roomSeq;
+    }
+
+    public String getRoomAvatar() {
+        return this.roomAvatar;
+    }
+
+    public void setRoomAvatar(String roomAvatar) {
+        this.roomAvatar = roomAvatar;
     }
 
     public String getRoomName() {
@@ -81,7 +90,7 @@ public class ChatRoomDTO {
 
     public ChatRoomDTO() {}
 
-    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq) {
+    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq, String roomAvatar) {
         this.roomSeq = roomSeq;
         this.roomName = roomName;
         this.roomState = roomState;
@@ -89,5 +98,6 @@ public class ChatRoomDTO {
         this.roomType = roomType;
         this.roomDescription = roomDescription;
         this.empSeq = empSeq;
+        this.roomAvatar = roomAvatar;
     }
 }

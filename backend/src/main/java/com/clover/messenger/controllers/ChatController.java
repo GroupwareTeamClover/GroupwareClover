@@ -83,14 +83,14 @@ public class ChatController {
      * 온라인 사용자 목록을 조회하는 API 엔드포인트
      * @return 온라인 사용자 목록
      */
-    @GetMapping("/online-users")
-    public ResponseEntity<List<EmployeeDTO>> getOnlineUsers() {
-        Object test = session.getAttribute("cloverSeq");
-        System.out.println("테스트" + test);
-        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
-        List<EmployeeDTO> onlineUsers = chatService.getOnlineUsers(empSeq);
-        return ResponseEntity.ok(onlineUsers);
-    }
+    // @GetMapping("/online-users")
+    // public ResponseEntity<List<EmployeeDTO>> getOnlineUsers() {
+    //     Object test = session.getAttribute("cloverSeq");
+    //     System.out.println("테스트" + test);
+    //     Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+    //     List<EmployeeDTO> onlineUsers = chatService.getOnlineUsers(empSeq);
+    //     return ResponseEntity.ok(onlineUsers);
+    // }
 
     /**
      * 회사 내 조직도를 조회하는 API 앤드포인트
