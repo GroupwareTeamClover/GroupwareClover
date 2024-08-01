@@ -76,4 +76,7 @@ public class BoardlistService {
 		}
 	}
 
+	public BoardlistDTO getBoardInfo(int boardlistSeq) {
+		return blDao.getBoardInfo(boardlistSeq);
+	}
 }

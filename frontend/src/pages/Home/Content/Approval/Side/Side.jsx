@@ -18,6 +18,10 @@ export const Side = () => {
         navi(path, { state: { type } });
     };
 
+    const handleWriteNavigation = (path, type, data) =>{
+        navi(path, {state: { type, data} })
+    }
+
     
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
@@ -55,24 +59,8 @@ export const Side = () => {
     }
 
     //모달사이 전달할 정보저장
-    const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0 } });
+    const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0, detailcode: 0 } });
     const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], refchoice: [], viechoice: [], recchoice: []});
-
-    //확인 클릭 시 문서 생성
-    const handleAdd = () =>{
-        console.log(selectedDocCode);
-        console.log(selectedEmpInfo);
-        axios.post(`${BaseUrl()}/document`, {
-            selectedDocCode:selectedDocCode,
-            selectedEmpInfo:selectedEmpInfo
-        }).then((resp)=>{
-            console.log('확인');
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
-
-    }
-
 
     // 전자결재양식선택에서 다음을 클릭할 때 양식을 선택해야지만 다음으로 넘어가도록 예외 처리
     const handleFormNext = (event) => {
@@ -82,7 +70,41 @@ export const Side = () => {
         }else{
             alert("결재 양식을 선택하세요.");
         }
-    };
+    }
+
+    //확인 클릭 시 문서 생성
+    const handleAdd = () =>{
+        // console.log(selectedDocCode);
+        // console.log(selectedEmpInfo);
+        axios.post(`${BaseUrl()}/document`, {
+            selectedDocCode:selectedDocCode,
+            selectedEmpInfo:selectedEmpInfo
+        }).then((resp)=>{
+            //응답으로 문서 정보 받아서 writeForm으로 이동시키기
+            const data=resp.data
+
+            const combinedData = {
+                docdto: data.docdto,
+                apvlist: data.apvlist,
+                plist: data.plist
+            };
+
+            const path = data?.docDetailName === '업무기안' ? 'business' :
+                        data?.docDetailName  === '휴가신청서' ? 'dayoff' :
+                        '/invalid';
+            // console.log(path);
+            
+            //모달창 닫기
+            closeModal();
+            //wirteForm으로 정보가지고 이동
+            handleWriteNavigation(`/approval/write/${path}`, data.docDetailName, combinedData)
+    
+        }).catch((error) => {
+            alert("전자결재 문서 생성 실패");
+        });
+
+    }
+
 
     return (
         <div className={styles.sideBox}>

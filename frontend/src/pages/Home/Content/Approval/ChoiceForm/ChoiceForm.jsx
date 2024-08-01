@@ -26,11 +26,11 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
             // console.log(data)
             // 부서별로 데이터를 그룹화
             const departmentMap = data.reduce((acc, current) => {
-                const { CODE, NAME, PERIOD } = current;
+                const { CODE, NAME, PERIOD , DETAILCODE } = current;
                 if (!acc[CODE]) {
                     acc[CODE] = { name: CODE, children: [] };
                 }
-                acc[CODE].children.push({ name: NAME, period: PERIOD });
+                acc[CODE].children.push({ name: NAME, period: PERIOD , detailcode:DETAILCODE});
                 return acc;
             }, {});
 

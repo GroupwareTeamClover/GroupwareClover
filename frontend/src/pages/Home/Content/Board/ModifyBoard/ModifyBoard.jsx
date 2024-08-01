@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useBoardStore } from "../../../../../store/store";
+import { useBoardStore, useMemberStore } from "../../../../../store/store";
 import axios from "axios";
 import { BaseUrl } from "../../../../../commons/config";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ const ModifyBoard = () => {
 
     const { setAllBoardList, setGroupBoardList } = useBoardStore();
     const loc = useLocation();
+    const {admin} = useMemberStore();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => {
@@ -122,7 +123,7 @@ const ModifyBoard = () => {
         }
     }
 
-    return (
+    return !admin ? <div className={styles.container}>관리자 전용 페이지입니다.</div> : (
         <div className={styles.container}>
             <div className={styles.header}>게시판 수정</div>
             <div className={styles.titleBox}>
@@ -161,11 +162,11 @@ const ModifyBoard = () => {
                             <AddMemberCheckBoxGroup values={addMembers} onChange={setAddMembers}>
                                 {depts.map((dept, i) => (
                                     <div key={i}>
-                                        <h2>{dept}</h2>
+                                        <div className={styles.eachDept}>{dept}</div>
                                         {
                                             members.filter(member => member.DEPT_NAME === dept).map((member, j) => (
                                                 <AddMemberCheckBox key={`${i}-${j}`} value={member} init={loc.state.whitelist} setValues={setAddMembers} setAdded={setAddMembers}>
-                                                    {member.EMP_NAME} / {member.ROLE_NAME}
+                                                    <div className={styles.eachInfo}>{member.EMP_NAME} / {member.ROLE_NAME}</div>
                                                 </AddMemberCheckBox>
                                             ))
                                         }

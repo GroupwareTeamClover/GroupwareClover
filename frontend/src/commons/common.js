@@ -1,5 +1,8 @@
+import emailjs from '@emailjs/browser'
+
 
 // =============================== [ 정규표현식 ] ===============================
+
 export const validateUserId = (userId) => {
   let regex = /^(?=.*[a-zA-Z])([a-zA-Z0-9]{6,12})$/;
   return regex.test(userId);
@@ -42,6 +45,18 @@ export const validatePhone = (phone) => {
 }
 
 
+// =============================== [ 이메일 인증 ] ===============================
 
+export const sendEmail = (data) => {
+  let result = "";
 
-// =============================== [  ] ===============================
+  const { REACT_APP_EMAIL_SERVICE_ID, REACT_APP_EMAIL_TEMPLATE_ID, REACT_APP_EMAIL_PUBLIC_KEY } = process.env;
+
+  const send = emailjs.send(REACT_APP_EMAIL_SERVICE_ID, REACT_APP_EMAIL_TEMPLATE_ID, data, { publicKey: REACT_APP_EMAIL_PUBLIC_KEY })
+  send.then(res => {
+    if(res.status === 200 && res.text === "OK") result = "ok";
+    else result = "fail";
+  });
+
+  return result;
+}

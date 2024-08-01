@@ -4,7 +4,6 @@ import {Proceeding} from '../Proceeding/Proceeding'
 import {DetailMain} from '../DetailMain/DetailMain'
 
 
-
 export const Main = () => {
     const location = useLocation();
     const state = location.state;
