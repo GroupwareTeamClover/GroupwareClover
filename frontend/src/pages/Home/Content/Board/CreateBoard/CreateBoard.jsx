@@ -102,7 +102,7 @@ const CreateBoard = () => {
                             (boardType === 'A') ? addAllBoardList(addedData) : addGroupBoardList(addedData);
                         }
                         alert("게시판이 생성되었습니다!");
-                        navi("/community/board", { state: addedData });
+                        navi(`/community/board/${addedData.boardlistSeq}`);
                     }
                 });
             }
@@ -148,10 +148,10 @@ const CreateBoard = () => {
                             <AddMemberCheckBoxGroup values={addMembers} onChange={setAddMembers}>
                                 {depts.map((dept, i) => (
                                     <div key={i}>
-                                        <h2>{dept}</h2>
+                                        <div className={styles.eachDept}>{dept}</div>
                                         {members.filter(member => member.DEPT_NAME === dept).map((member, j) => (
                                             <AddMemberCheckBox key={`${i}-${j}`} value={member}>
-                                                {member.EMP_NAME} / {member.ROLE_NAME}
+                                                <div className={styles.eachInfo}>{member.EMP_NAME} / {member.ROLE_NAME}</div>
                                             </AddMemberCheckBox>
                                         ))}
                                     </div>

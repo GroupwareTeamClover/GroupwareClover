@@ -37,13 +37,13 @@ const ManageBoard = () => {
         <div className={styles.container}>
             <div className={styles.header}>게시판 관리</div>
             <div className={styles.content}>
+                <div className={styles.listHeaderBox}>
+                    <div className={styles.listHeader} id={styles.listHeaderTitle}>게시판명</div>
+                    <div className={styles.listHeader}>유형</div>
+                    <div className={styles.listHeader}>활성화</div>
+                    <div className={styles.listHeader}>수정/삭제</div>
+                </div>
                 <div className={styles.listBox}>
-                    <div className={styles.listHeaderBox}>
-                        <div className={styles.listHeader} id={styles.listHeaderTitle}>게시판명</div>
-                        <div className={styles.listHeader}>유형</div>
-                        <div className={styles.listHeader}>활성화</div>
-                        <div className={styles.listHeader}>수정/삭제</div>
-                    </div>
                     {
                         boards.map((board, i) => (
                             <div key={i} className={styles.eachBoard}>
@@ -58,8 +58,8 @@ const ManageBoard = () => {
                                     {board.boardlistSeq !== 1 &&
                                         <>
                                             <button className={styles.eachModifyButton} onClick={() => {
-                                                axios.get(`${BaseUrl()}/boardlist/whitelist/${board.boardlistSeq}`).then((resp)=>{
-                                                    navi("modifyBoard", { state: {...board, whitelist: resp.data} });
+                                                axios.get(`${BaseUrl()}/boardlist/whitelist/${board.boardlistSeq}`).then((resp) => {
+                                                    navi("modifyBoard", { state: { ...board, whitelist: resp.data } });
                                                 })
                                             }}>수정</button>
                                             <button className={styles.eachDeleteButton} onClick={handleDelete} data-seq={board.boardlistSeq}>삭제</button>
