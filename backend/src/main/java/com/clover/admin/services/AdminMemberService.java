@@ -2,13 +2,14 @@ package com.clover.admin.services;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.clover.admin.dao.AdminMemberDAO;
+import com.clover.admin.dto.AdminAddMemDTO;
 import com.clover.admin.dto.AdminUpdateMemDTO;
+import com.clover.employee.dto.EmployeeDTO;
 
 @Service
 public class AdminMemberService {
@@ -25,13 +26,15 @@ public class AdminMemberService {
 	}
 	
 	public void updateMemState(AdminUpdateMemDTO updto) {
-		adminmemberDAO.updateMem(updto);
-//		Map<String, Object> tbObject = updto.getTbObject();
-//		String newValue = updto.getNewValue();
-//		for(int empSeq:updto.getEmpSeqList()) {
-//			adminmemberDAO.updateMem(tbObject, newValue, empSeq);			
-//		}
-		
+		adminmemberDAO.updateMem(updto);		
+	}
+	
+	
+	public List<EmployeeDTO> getAllNew(){
+		return adminmemberDAO.getAllNew();
+	}
+	public void addMemState(AdminAddMemDTO adddto) {
+		adminmemberDAO.addMem(adddto);
 	}
 	
 }

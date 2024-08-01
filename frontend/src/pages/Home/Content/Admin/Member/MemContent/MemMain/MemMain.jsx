@@ -4,32 +4,29 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { Modal } from '../../../../../../../components/Modal/Modal';
 import { ModalPosition } from './ModalPosition/ModalPosition';
-import { ModalGroup } from '../ModalGroup/ModalGroup';
 import {BaseUrl} from '../../../../../../../commons/config';
 import { ModalDelete } from './ModalDelete/ModalDelete';
-
+import { useMemStore } from '../../../../../../../store/store';
+import {Pagination} from '../../../Pagination/Pagination';
 
 
 
 export const MemMain = () => {
 
     const navi = useNavigate();
+    
+    const {storemembers, setstoremembers} = useMemStore();
 
     const [status, setStatus] = useState({status:''});
-    const [members, setMembers] = useState([
-        {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''}
-    ]);
+    const [members, setMembers] = useState([ {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''} ]);
     const [filtered, setFiltered] = useState(members);
     const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
-    // const [countMem, setCountMem] = useState({total:0, normal:0, rest:0, stop:0 })
-    const [normalemp, setNormalemp] = useState(0);
-    const [restemp, setRestemp] = useState(0);
-    const [outemp, setOutemp] = useState(0);
+    const [checkedMems, setCheckedMems] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
 
-    // 상태 값 변환 함수
+    //  사원 수 
     const processCountData = (data) => {
         const counts = { normal: 0, rest: 0, stop: 0, out: 0 };
-
         data.forEach(item => {
             switch(item.EMP_STATE_CODE) {
                 case 0:  // 가입대기
@@ -51,52 +48,72 @@ export const MemMain = () => {
 
         return counts;
     };
+ 
 
-
-
+    // ======= 출력할거 store로 하면 되나...?
     useEffect(()=>{
+        
         axios.get(`${BaseUrl()}/adminmember`).then((resp)=>{
             console.log(resp)
+            // setstoremembers(resp.data)
             setMembers(resp.data);
             setFiltered(resp.data)
-            
+            setstoremembers(false)
+            console.log("filtered.lenth:" +filtered.length)
         })
+    },[storemembers, ])
 
+    useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
             const processedData = processCountData(resp.data);
             setCountMem(processedData);
-
+            
         })
     },[])
 
-    // ============= 체크박스 클릭 ==================
-    // ----전체 체크박스 클릭
-    const checkboxRef = useRef([]);
+    //==========================================================================
+    // Pagingatiokn
+    const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
+    const pageCount = Math.ceil(filtered.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
+    console.log(pageCount + " 페이지 수 ")
+    const handlePageChange = ({selected}) =>{
+        setCurrentPage(selected);
+        window.scrollTo(0,320);     // 페이지 변경 시 스크롤 맨 위로 이동시키기. 
+    }
+    //==========================================================================
+    
 
+    const checkboxRef = useRef([]);
+  
+    // ----전체 체크박스 클릭
     const handleCheckAll = (e)=>{
         const checked = e.target.checked;
         const allValues = members.map(mem => mem.EMP_SEQ);
-
         checkboxRef.current.forEach(checkbox => {
             if(checkbox){
                 checkbox.checked = checked;
             }
         })
         setCheckedMems(checked ? allValues : [])
+ 
     }
-    const [checkedMem, setCheckedMem] = useState({emp_state:0});
-    const [ checkedMems, setCheckedMems] = useState([]);
+      // ============= 체크박스 클릭 ==================
     const handleCheckBox =(e)=>{
         const {value, checked} = e.target;
-        setCheckedMems(prev=> {
-            if(checked){
-                return [...prev, value];
-            }else{
-                return prev.filter(el => el !== value);
-            }
+            setCheckedMems(prev=> {
+                if(checked){
+                    return [...prev, value];
+                }else{
+                    return prev.filter(prev => prev != value); 
+                   
+                }
         })
     }
-    // console.log("checkedMem: "+checkedMems)
+    
+
+
+   
+    console.log("checkedMem: "+checkedMems +" 갯수: " + checkedMems.length)
     // const checkedCount = checkedMems.length;
     // console.log("몇개"+checkedCount)
 
@@ -115,11 +132,14 @@ export const MemMain = () => {
     const handleModalChange = (e) => {
         const modalName = e.target.value;
         setModalState(modalName);
-        if (modalName !== '') {
+        if (modalName !== '' && checkedMems.length !== 0) {
             openModal();
           }
-          else{alert("상태변경을 선택해주세요.")}
+        else if(modalName !=='' && checkedMems.length ==0){alert("변경할 사원을 선택해주세요.")}
+        else if(modalName =='' && checkedMems.length !==0){alert("상태변경을 선택해주세요.")}
     }
+
+
 
     const handleSearch =(e)=>{
         const {name,value} = e.target;
@@ -204,9 +224,10 @@ export const MemMain = () => {
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
-                            {/* 데이터영역 */}
+                            {/* 페이지네이션  데이터 영역 */}
                             {
-                                filtered.map((mem, i)=>{
+                                filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
+                                .map((mem,i)=>{
                                     return(
                                         <tr key={i}>
                                             <td className={styles.theadtd}><input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input></td>
@@ -232,20 +253,31 @@ export const MemMain = () => {
                                     )
                                 })
                             }
+
                         </tbody>
                     </table>
                 </div>              
             {/* ---------------------------------------------------------- */}
            
-            <div className={styles.pagination}>
-                1 2 3 4 5
-            </div>
+            
+       
+           
+        </div>
+        <div className={styles.pagination}>
+         {/* 페이지네이션 */}
+         {pageCount > 0 && (
+            <Pagination
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+            currentPage={currentPage}
+            />
+        )}
         </div>
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                     { modalState === status.status &&
-                        <ModalPosition modalState={modalState} checkedMems={checkedMems} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                        <ModalPosition modalState={modalState} checkedMems={checkedMems}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                     }
                     { modalState === 'deleteMem' &&
                         <ModalDelete checkedMems={checkedMems} setIsModalOpen={setIsModalOpen}/>
