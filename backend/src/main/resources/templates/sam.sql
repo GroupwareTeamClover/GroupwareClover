@@ -5,7 +5,7 @@ CREATE TABLE document (
 	doc_detail_code	number		NOT NULL,
 	doc_state_code	number		NOT NULL,
 	drafter_seq	number		NOT NULL,
-	egc_yn	CHAR(1) DEFAULT 'n' CHECK (egc_yn IN ('y', 'n')) NULL,
+	egc_yn	CHAR(1) DEFAULT 'n' CHECK (egc_yn IN ('y', 'n')) NOT NULL,
 	write_date	timestamp	DEFAULT sysdate	NULL,
 	finish_date	timestamp		NULL,
 	current_apver_seq	number	NULL,
@@ -22,7 +22,7 @@ CREATE TABLE apv_line (
 	apver_id	number		NOT NULL,
 	line_apver_cmt	varchar(300)		NULL,
 	line_order	number	NOT NULL,
-	line_apv_date	timestamp		NOT NULL,
+	line_apv_date	timestamp  NULL,
 	doc_seq	number		NOT NULL
 );
 
@@ -95,11 +95,12 @@ insert into doc_code values(2, '근태');
 insert into doc_detail_code values(1, '업무기안' ,5, 1);
 insert into doc_detail_code values(2, '휴가신청서',5, 2);
 
-insert into doc_state_code values(1, '임시저장');
-insert into doc_state_code values(2, '진행중');
-insert into doc_state_code values(3, '완료');
-insert into doc_state_code values(4, '반려');
-insert into doc_state_code values(5, '상신취소');
+insert into doc_state_code values(1, '대기');
+insert into doc_state_code values(2, '임시저장');
+insert into doc_state_code values(3, '진행중');
+insert into doc_state_code values(4, '완료');
+insert into doc_state_code values(5, '반려');
+insert into doc_state_code values(6, '상신취소');
 
 insert into apv_state_code values(1, '대기');
 insert into apv_state_code values(2, '예정');

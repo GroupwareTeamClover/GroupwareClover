@@ -1,7 +1,8 @@
 import styles from './Approval.module.css'
 import {Side} from './Side/Side'
 import {Main} from './Main/Main'
-
+import { Route, Routes, useLocation } from "react-router-dom";
+import { WriteForm } from './WriteForm/WriteForm';
 
 
 export const Approval = () =>{
@@ -11,7 +12,10 @@ export const Approval = () =>{
                 <Side/>
               </div>
             <div className={styles.main}>
-                <Main/>
+                <Routes>
+                    <Route path="/" element={<Main/>}></Route>
+                    <Route path="/write/*" element={<WriteForm/>}></Route>
+                </Routes>
             </div>
         </div>
     );

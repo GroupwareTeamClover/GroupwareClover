@@ -8,8 +8,8 @@ import { CiFileOn } from "react-icons/ci";
 //넣어야 할 데이터 모습
 // const folderData=[
 //     {
-//         name: "일반",
-//         children: [{name :"업무기안"}]
+//         name: "인사",
+//         children: [{name :"박새미"}]
 //     },
 //     {
 //         name: "인사",
