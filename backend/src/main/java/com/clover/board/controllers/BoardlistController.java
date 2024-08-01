@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,6 +61,11 @@ public class BoardlistController {
 		return ResponseEntity.ok(blServ.getEntireBoardList());
 	}
 	
+	@GetMapping("whitelist/{boardSeq}")
+	public ResponseEntity<List<Integer>> getWhitelistMembers(@PathVariable int boardSeq ){
+		return ResponseEntity.ok(blServ.getWhitelistMembers(boardSeq));
+	}
+	
 	@PostMapping
 	public ResponseEntity<Integer> post(@RequestBody HashMap<String, Object> data) {
 		List<Integer> members =  (List<Integer>) data.get("members");
@@ -76,6 +82,20 @@ public class BoardlistController {
 	@DeleteMapping("/{seq}")
 	public ResponseEntity<Void> delete(@PathVariable int seq){
 		blServ.deleteBoard(seq);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PutMapping
+	public ResponseEntity<Void> put(@RequestBody HashMap<String, Object> data){
+		List<Integer> members =  (List<Integer>) data.get("members");
+		int seq = (int)data.get("seq");
+		String title = (String) data.get("title");
+		char type = ((String) data.get("type")).charAt(0);
+		char active = ((String) data.get("active")).charAt(0);
+		BoardlistDTO board = new BoardlistDTO(seq, title, type, active);
+		
+		blServ.modifyBoard(board, members);
+		
 		return ResponseEntity.ok().build();
 	}
 }

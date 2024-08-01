@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
-import styles from './CreateBoard.module.css';
+import { useEffect, useRef, useState } from "react";
+import { useBoardStore } from "../../../../../store/store";
+import axios from "axios";
+import { BaseUrl } from "../../../../../commons/config";
+import { useLocation, useNavigate } from "react-router-dom";
+import styles from './ModifyBoard.module.css';
 import { FaPlusSquare } from "react-icons/fa";
-import AddMemberModal from './AddMemberModal/AddMemberModal';
-import axios from 'axios';
-import AddMemberCheckBox from './AddMemberModal/AddMemberCheckBox/AddMemberCheckBox';
-import AddMemberCheckBoxGroup from './AddMemberModal/AddMemberCheckBox/AddMemberCheckBoxGroup';
-import { useNavigate } from 'react-router';
-import { BaseUrl } from '../../../../../commons/config';
-import { useBoardStore } from '../../../../../store/store';
+import AddMemberModal from '../CreateBoard/AddMemberModal/AddMemberModal';
+import AddMemberCheckBox from '../CreateBoard/AddMemberModal/AddMemberCheckBox/AddMemberCheckBox';
+import AddMemberCheckBoxGroup from '../CreateBoard/AddMemberModal/AddMemberCheckBox/AddMemberCheckBoxGroup';
 
-const CreateBoard = () => {
+const ModifyBoard = () => {
 
-    const { addAllBoardList, addGroupBoardList } = useBoardStore();
+    const { setAllBoardList, setGroupBoardList } = useBoardStore();
+    const loc = useLocation();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => {
@@ -30,13 +31,17 @@ const CreateBoard = () => {
     const [members, setMembers] = useState([]);
     const [depts, setDepts] = useState([]);
     const [addMembers, setAddMembers] = useState([]);
+
+    // 사용자 추가
     const handleAddMember = () => {
         setAddedMembers(addMembers);
         setIsModalOpen(false);
     }
 
-    // 사용자 추가
+    // 추가된 사용자 목록
     const [addedMembers, setAddedMembers] = useState([]);
+
+    // 추가된 사용자 삭제
     const handleDelAddedMember = (e) => {
         const targetSeq = e.target.getAttribute('data-seq');
         setAddedMembers((prev) => prev.filter(member => member.EMP_SEQ != targetSeq));
@@ -70,47 +75,56 @@ const CreateBoard = () => {
         axios.get(`${BaseUrl()}/boardlist/depts`).then((resp) => {
             setDepts(resp.data);
         });
+        setTitle(loc.state.boardlistName);
+        setBoardType(loc.state.boardlistType);
+        setBoardActive(loc.state.boardlistActive);
     }, []);
+
+    useEffect(() => {
+        const data = members.filter((member) => (loc.state.whitelist.includes(member.EMP_SEQ)));
+        setAddMembers(prev => [...prev, ...data]);
+        setAddedMembers(prev => [...prev, ...data]);
+    }, [members]);
 
     const navi = useNavigate();
     const handleCancel = () => {
-        let isCancel = window.confirm("게시판 생성을 취소하시겠습니까?");
-        if (isCancel) {
-            navi("/community");
+        if (window.confirm("게시판 수정을 취소하시겠습니까?")) {
+            navi("/community/manageBoard");
         }
     }
 
-    const handleCreate = () => {
-        axios.get(`${BaseUrl()}/boardlist/title`, { params: { title: title.trim() } }).then((resp) => {
-            if (title.trim() == '') {
-                alert("게시판 제목을 입력해주세요!");
-            } else if (resp.data) {
-                alert("이미 존재하는 게시판 이름입니다!");
-            } else if (boardType === 'G' && addedMembers.length === 0) {
-                alert("접근을 허용할 인원을 최소 1명 이상 추가해주세요!");
-            } else {
-                axios.post(`${BaseUrl()}/boardlist`, {
-                    title: title,
-                    type: boardType,
-                    members: addedMembers.map(member => member.EMP_SEQ),
-                    active: boardActive
-                }).then((resp) => {
-                    if (resp.status === 200) {
-                        let addedData = { boardlistSeq: resp.data, boardlistName: title, boardlistType: boardType, boardlistActive: boardActive };
-                        if (boardActive === 'T') {
-                            (boardType === 'A') ? addAllBoardList(addedData) : addGroupBoardList(addedData);
-                        }
-                        alert("게시판이 생성되었습니다!");
-                        navi("/community/board", { state: addedData });
-                    }
-                });
-            }
-        });
+    const handleModify = () => {
+        if (title.trim() == '') {
+            alert("게시판 제목을 입력해주세요!");
+        } else if (boardType === 'G' && addedMembers.length === 0) {
+            alert("접근을 허용할 인원을 최소 1명 이상 추가해주세요!");
+        } else {
+            axios.put(`${BaseUrl()}/boardlist`, {
+                seq: loc.state.boardlistSeq,
+                title: title,
+                type: boardType,
+                members: addedMembers.map(member => member.EMP_SEQ),
+                active: boardActive
+            }).then((resp) => {
+                if (resp.status === 200) {
+                    axios.get(`${BaseUrl()}/boardlist/allBoards`).then((resp) => {
+                        setAllBoardList(resp.data);
+                    }).then(() => {
+                        axios.get(`${BaseUrl()}/boardlist/groupBoards`).then((resp) => {
+                            setGroupBoardList(resp.data);
+                        });
+                    }).then(() => {
+                        alert("게시판이 변경되었습니다!");
+                        navi("/community/manageBoard");
+                    })
+                }
+            });
+        }
     }
 
     return (
         <div className={styles.container}>
-            <div className={styles.header}>게시판 만들기</div>
+            <div className={styles.header}>게시판 수정</div>
             <div className={styles.titleBox}>
                 <div className={styles.titleLetter}>게시판이름</div>
                 <input type="text" name="title" onChange={handleChange} value={title} maxLength={10} placeholder='최대 10자까지 작성 가능' />
@@ -148,11 +162,13 @@ const CreateBoard = () => {
                                 {depts.map((dept, i) => (
                                     <div key={i}>
                                         <h2>{dept}</h2>
-                                        {members.filter(member => member.DEPT_NAME === dept).map((member, j) => (
-                                            <AddMemberCheckBox key={`${i}-${j}`} value={member}>
-                                                {member.EMP_NAME} / {member.ROLE_NAME}
-                                            </AddMemberCheckBox>
-                                        ))}
+                                        {
+                                            members.filter(member => member.DEPT_NAME === dept).map((member, j) => (
+                                                <AddMemberCheckBox key={`${i}-${j}`} value={member} init={loc.state.whitelist} setValues={setAddMembers} setAdded={setAddMembers}>
+                                                    {member.EMP_NAME} / {member.ROLE_NAME}
+                                                </AddMemberCheckBox>
+                                            ))
+                                        }
                                     </div>
                                 ))}
                             </AddMemberCheckBoxGroup>
@@ -170,10 +186,10 @@ const CreateBoard = () => {
             </div>
             <div className={styles.mainButtonBox}>
                 <button className={styles.cancelButton} onClick={handleCancel}>취소</button>
-                <button className={styles.createButton} onClick={handleCreate}>만들기</button>
+                <button className={styles.createButton} onClick={handleModify}>수정</button>
             </div>
         </div>
     );
 }
 
-export default CreateBoard;
+export default ModifyBoard;
