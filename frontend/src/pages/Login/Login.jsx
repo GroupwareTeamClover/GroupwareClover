@@ -27,6 +27,10 @@ export const Login = ({ setSign, setAdmin }) => {
     setParams(prev => ({ ...prev, [name]: value }));
   }
 
+  const handleEnter = (e) => {
+    if(e.key === "Enter") handleSignIn();
+  }
+
   const handleSignIn = async() => {
     if(params.id === "" || params.pw === "") {
       alert("아이디 또는 비밀번호를 입력하세요");
@@ -71,8 +75,8 @@ export const Login = ({ setSign, setAdmin }) => {
             :
             <div className={ styles.signInBox }>
               <img src={ logo } alt="logo"/>
-              <input type="text" name="id" onChange={handleData} placeholder='ID' />
-              <input type="password" name="pw" onChange={handleData} placeholder='Password' />
+              <input type="text" name="id" onChange={handleData} onKeyDown={handleEnter} placeholder='ID' />
+              <input type="password" name="pw" onChange={handleData} onKeyDown={handleEnter} placeholder='Password' />
               <div className={styles.checkBox}>
                 <div>
                   <input type="checkbox" id="id_save"/>
