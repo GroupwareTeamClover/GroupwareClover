@@ -3,17 +3,16 @@ import styles from './ModalPosition.module.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../../../commons/config';
+import { useMemStore } from '../../../../../../../../store/store';
 
 
-export const ModalPosition = ({modalState, setIsModalOpen,checkedMems})=>{
+export const ModalPosition = ({modalState, setIsModalOpen,checkedMems })=>{
     
-    const [members, setMembers]= useState([]);
+    const {storemembers, setstoremembers} = useMemStore();
+    const [members, setMembers]= useState([]);  // 선택한 사원 관련 정보들
     const [newValue, setNewValue] = useState('');
-
     const [updateMems, setUpdateMems] = useState({stateCode:'', joinTable:'', valueCol:''})
-    
     const closeModal = () => setIsModalOpen(false);
-
     const checkedCount = checkedMems.length;
     useEffect(()=>{
         if(modalState === '부서변경'){setUpdateMems({stateCode:'dept_code', joinTable:'department', valueCol:'dept_name'}) }
@@ -36,15 +35,17 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems})=>{
             newValue,
             empSeqList: members
         };      
+        
+        
+        if(newValue !==''){
                          // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
-        console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList)
-
-        axios.put(`${BaseUrl()}/adminmember`, param)
-            .then(resp => {
-                setMembers(resp.data)
-                closeModal();
-                window.location.reload(); // 페이지 새로고침.. 너무 새로고침인디.... 
-            })
+                        console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList)
+            axios.put(`${BaseUrl()}/adminmember`, param)    //수정하기
+            .then(
+                setstoremembers(true),
+                closeModal()
+            )
+        }
     };
         
    
@@ -82,6 +83,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems})=>{
                             <option>과장</option> 
                             <option>대리</option> 
                             <option>사원</option> 
+                            <option>미정</option> 
                         </select>
                         </>
                     }

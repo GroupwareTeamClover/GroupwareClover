@@ -93,4 +93,19 @@
         WHERE
             emp_seq = #{empSeq}
     </delete>
+
+    <select id="existsEmployee" resultType="Boolean">
+        SELECT
+            count(*)
+        FROM
+            employee
+        WHERE
+            emp_email = #{empEmail}
+        <if test='empName != null and empName != ""'>
+            AND emp_name = #{empName}
+        </if>
+        <if test='empId != null and empId != ""'>
+            AND emp_id = #{empId}
+        </if>
+    </select>
 </mapper>

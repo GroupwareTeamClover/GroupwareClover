@@ -34,7 +34,7 @@
             attendance
         SET
             att_leave = #{attLeave},
-            att_total = #{attTOTAL},
+            att_total = #{attTotal},
             att_success = #{attSuccess}
         WHERE
             att_seq = #{attSeq}
