@@ -8,7 +8,9 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.clover.admin.dto.AdminAddMemDTO;
 import com.clover.admin.dto.AdminUpdateMemDTO;
+import com.clover.employee.dto.EmployeeDTO;
 
 @Repository
 public class AdminMemberDAO {
@@ -33,8 +35,21 @@ public class AdminMemberDAO {
 			params.put("empSeq", empSeq);
 			System.out.println("확인용 :"+ params.get("tbObject"));
 			System.out.println("String: "+ params.get("newValue"));
+			System.out.println("empSeq"+empSeq);
 			mybatis.update("AdminMember.updateMem", params);
 		}
 	}
+	
+//	사원추가 - { 부서, 직위, 가입대기-> 재직중 } 3개 변경!!!
+	public List<EmployeeDTO> getAllNew(){
+		return mybatis.selectList("AdminMember.getAllNew");
+	}
+	
+	public void addMem(AdminAddMemDTO adddto) {
+		
+	}
+	
+	
+	
 	
 }

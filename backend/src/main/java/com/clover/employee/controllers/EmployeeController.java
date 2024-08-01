@@ -24,7 +24,7 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService employeeService;
-    
+
     @Autowired
 	private LineService lineService;
 
@@ -39,7 +39,7 @@ public class EmployeeController {
         String result = employeeService.signUpEmployee(dto);
         return ResponseEntity.ok(result);
     }
-    
+
     @PutMapping
     public void updateEmployee(@RequestBody EmployeeDTO dto) {
         employeeService.updateEmployee(dto);
@@ -49,11 +49,16 @@ public class EmployeeController {
     public void leaveEmployee(@PathVariable int empSeq) {
         employeeService.leaveEmployee(empSeq);
     }
-    
-    //전자결재 결재자 라인 선택시 임직원 정보 가져오기
+
+    /* 전자결재 결재자 라인 선택시 임직원 정보 가져오기 */
     @GetMapping
 	public ResponseEntity<List<Map<String,?>>> get(){
 		return ResponseEntity.ok(lineService.getMemberInfo());
 	}
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> existsEmployee(String empName, String empId, String empEmail) {
+        return ResponseEntity.ok(employeeService.existsEmployee(empName, empId, empEmail));
+    }
 
 }

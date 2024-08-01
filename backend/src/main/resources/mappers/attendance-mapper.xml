@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Attendance">
+
+    <select id="today" resultType="com.clover.attendance.dto.AttendanceDTO">
+        SELECT
+            *
+        FROM
+            attendance
+        WHERE
+            emp_seq = #{empSeq}
+        AND
+            TRUNC(att_date) = #{today}
+    </select>
+
+    <insert id="arrive">
+        INSERT INTO
+            attendance
+        VALUES(
+            attendance_sequence.nextval,
+            #{empSeq},
+            #{attArrive},
+            null,
+            0,
+            'N',
+            sysdate
+        )
+    </insert>
+
+    <update id="leave">
+        UPDATE
+            attendance
+        SET
+            att_leave = #{attLeave},
+            att_total = #{attTotal},
+            att_success = #{attSuccess}
+        WHERE
+            att_seq = #{attSeq}
+    </update>
+
+</mapper>

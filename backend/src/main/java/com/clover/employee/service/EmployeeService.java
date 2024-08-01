@@ -6,6 +6,7 @@ import com.clover.employee.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -51,5 +52,20 @@ public class EmployeeService {
     /** 직원 삭제 **/
     public void leaveEmployee(int empSeq) {
         employeeDAO.leaveEmployee(empSeq);
+    }
+
+    /** 직원 여부 확인 **/
+    public boolean existsEmployee(String empName, String empId, String empEmail) {
+
+        System.out.println("empName ==== " + empName);
+        System.out.println("empId ==== " + empId);
+        System.out.println("empEmail ==== " + empEmail);
+
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("empName", empName);
+        map.put("empId", empId);
+        map.put("empEmail", empEmail);
+
+        return employeeDAO.existsEmployee(map);
     }
 }
