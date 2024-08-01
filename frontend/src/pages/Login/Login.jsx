@@ -22,26 +22,21 @@ export const Login = ({ setSign, setAdmin }) => {
 
   const [ params, setParams ] = useState({id: "", pw: ""});
 
+  /** Sign-In Data setup **/
   const handleData = (e) => {
     const { name, value } = e.target;
     setParams(prev => ({ ...prev, [name]: value }));
   }
 
-  const handleEnter = (e) => {
-    if(e.key === "Enter") handleSignIn();
-  }
-
+  /** Sign-In Event **/
   const handleSignIn = async() => {
     if(params.id === "" || params.pw === "") {
       alert("아이디 또는 비밀번호를 입력하세요");
       return false;
     }
 
-    if(saveCheck.saveId) {
-      localStorage.setItem("saveId", params.id);
-    } else {
-      localStorage.removeItem("saveId");
-    }
+    if(saveCheck) localStorage.setItem("saveId", params.id);
+    else localStorage.removeItem("saveId");
 
     const res = await axios.get(`${BaseUrl()}/sign`, { params });
     if(res.status === 200 && res.data !== "") {
@@ -67,6 +62,7 @@ export const Login = ({ setSign, setAdmin }) => {
 
   }
 
+  /** Find id, pw : State에 따른 Modal Change **/
   const [ modalState, setModalState ] = useState("");
   const handleModalChange = (e) => {
     setModalState(e.target.name);
@@ -75,19 +71,23 @@ export const Login = ({ setSign, setAdmin }) => {
 
   const [signUpState, setSignUpState] = useState(false);
 
-  const [saveCheck, setSaveCheck] = useState({ saveId: true, saveSignIn: false });
+  /** Enter 키를 통한 로그인 **/
+  const handleEnter = (e) => {
+    if(e.key === "Enter") handleSignIn();
+  }
+
+  /** 아이디 저장 **/
+  const [saveCheck, setSaveCheck] = useState(false);
   const handleCheckBox = (e) => {
-    const { name, checked } = e.target;
-    setSaveCheck(prev => ({ ...prev, [name]: checked }));
-    console.log("saveCheck ====== ", saveCheck);
+    setSaveCheck(e.target.checked);
   }
 
   useEffect(() => {
     const svId = localStorage.getItem("saveId");
     if(svId !== null) {
       setParams(prev => ({ ...prev, id: svId }));
+      setSaveCheck(true);
     }
-    console.log("svId", svId);
   }, []);
 
   return (
@@ -101,12 +101,8 @@ export const Login = ({ setSign, setAdmin }) => {
               <input type="password" name="pw" onChange={handleData} onKeyDown={handleEnter} placeholder='Password' />
               <div className={styles.checkBox}>
                 <div>
-                  <input type="checkbox" name="saveId" onChange={ handleCheckBox } checked={saveCheck.saveId} id="id_save"/>
+                  <input type="checkbox" name="saveId" onChange={ handleCheckBox } checked={saveCheck} id="id_save"/>
                   <label htmlFor="id_save"> 아이디 저장 </label>
-                </div>
-                <div>
-                  <input type="checkbox" name="saveSignIn" checked={saveCheck.saveSignIn} id="login_svae"/>
-                  <label htmlFor="login_svae"> 로그인 유지 </label>
                 </div>
               </div>
               <button onClick={handleSignIn}>로그인</button>
