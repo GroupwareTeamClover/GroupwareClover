@@ -39,15 +39,12 @@ const Sidebar = () => {
         });
     }, []);
 
-
-    const testDTO = { boardlistSeq: 0, boardlistName: "중요 게시물" }
-
     return (
         <div className={styles.bar}>
             <div className={styles.buttonBox}>
-                <button className={styles.writeButton}>글쓰기</button>
+                <button className={styles.writeButton} onClick={() => { navi("writeBoard")}}>글쓰기</button>
             </div>
-            <div className={styles.board} onClick={() => { navi("board/0") }}><FaStar />중요 게시물</div>
+            <div className={styles.board} onClick={() => { navi(`board/0`) }}><FaStar />중요 게시물</div>
             {
                 isAllBoardOpen ?
                     <div className={styles.board} onClick={togleIsAllBoard}><FaChevronUp />전사 게시판</div>
