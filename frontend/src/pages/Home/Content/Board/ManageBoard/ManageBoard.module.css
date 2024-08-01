@@ -1,5 +1,5 @@
 .container {
-    flex: 6;
+    flex: 7;
     display: flex;
     flex-direction: column;
 }
@@ -18,18 +18,20 @@
 }
 
 .content .listBox {
-    height: 680px;
+    height: 72vh;
     background-color: white;
     overflow-y: auto;
-    margin-top: 20px;
+    border : 1px solid black;
 }
 
-.content .listBox .listHeaderBox {
-    height: 5%;
+.content .listHeaderBox {
+    height: 7%;
     display: flex;
+    border : 1px solid black;
+    background-color: lightgray;
 }
 
-.content .listBox .listHeaderBox .listHeader {
+.content .listHeaderBox .listHeader {
     font-size: 20px;
     font-weight: bold;
     flex: 1;
@@ -43,9 +45,10 @@
 }
 
 .content .listBox .eachBoard {
-    height: 9.5%;
+    height: 9.1%;
     display: flex;
     font-size: 16px;
+    border-bottom: 1px solid lightgray;
 }
 
 .content .listBox .eachBoard .eachTitle {
