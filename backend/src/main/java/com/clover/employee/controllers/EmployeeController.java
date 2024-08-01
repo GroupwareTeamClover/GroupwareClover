@@ -1,17 +1,22 @@
 package com.clover.employee.controllers;
 
-import com.clover.approval.services.ApvLineService;
-import com.clover.employee.dto.EmployeeDTO;
-import com.clover.employee.service.EmployeeService;
-
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import com.clover.approval.services.LineService;
+import com.clover.employee.dto.EmployeeDTO;
+import com.clover.employee.service.EmployeeService;
 
 @RestController
 @RequestMapping("/employee")
@@ -21,7 +26,7 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @Autowired
-	private ApvLineService apvLineService;
+	private LineService lineService;
 
     @GetMapping("/{empSeq}")
     public ResponseEntity<Map<String, Object>> getMyInfo(@PathVariable int empSeq) {
@@ -48,7 +53,7 @@ public class EmployeeController {
     /* 전자결재 결재자 라인 선택시 임직원 정보 가져오기 */
     @GetMapping
 	public ResponseEntity<List<Map<String,?>>> get(){
-		return ResponseEntity.ok(apvLineService.getMemberInfo());
+		return ResponseEntity.ok(lineService.getMemberInfo());
 	}
 
     @GetMapping("/exists")

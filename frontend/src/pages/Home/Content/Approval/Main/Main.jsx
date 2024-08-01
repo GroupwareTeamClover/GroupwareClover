@@ -2,6 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import styles from './Main.module.css';
 import {Proceeding} from '../Proceeding/Proceeding'
 import {DetailMain} from '../DetailMain/DetailMain'
+import { WriteForm } from "../WriteForm/WriteForm";
 
 
 
