@@ -99,7 +99,7 @@ export const Login = ({ setSign, setAdmin }) => {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <div className={styles.modalForm}>
             {modalState === "FindId" && <FindId/>}
-            {modalState === "FindPw" && <FindPw/>}
+            {modalState === "FindPw" && <FindPw closeModal={closeModal}/>}
           </div>
         </Modal>
 

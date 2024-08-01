@@ -64,4 +64,8 @@ public class BoardlistDAO {
 		mybatis.delete("boardList.deleteWhitelist", boardSeq);
 	}
 	
+	public BoardlistDTO getBoardInfo(int boardSeq) {
+		return mybatis.selectOne("boardList.selectEachBoard", boardSeq);
+	}
+	
 }

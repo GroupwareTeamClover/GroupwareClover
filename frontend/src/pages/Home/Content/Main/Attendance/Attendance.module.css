@@ -1,6 +1,7 @@
 .attendance {
     width: 90%;
     height: 35%;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;

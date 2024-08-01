@@ -31,6 +31,9 @@
 .row > p {
     font-size: 16px;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .row > span {
@@ -101,4 +104,11 @@
     font-size: 14px;
     font-weight: 900;
     margin-left: 20px;
+}
+
+.row > .description {
+    font-size: 12px;
+    color: darkgray;
+    display: flex;
+    justify-content: center;
 }

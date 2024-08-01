@@ -1,6 +1,8 @@
 package com.clover.messenger.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
+import com.clover.employee.dto.EmployeeDTO;
 
 public class ChatRoomDTO {
     private int roomSeq;
@@ -10,14 +12,32 @@ public class ChatRoomDTO {
     private String roomType;
     private String roomDescription;
     private int empSeq;
+    private List<EmployeeDTO> participants;
+    private String roomAvatar;
+    
 
-    // Getters and setters
+    public List<EmployeeDTO> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<EmployeeDTO> participants) {
+        this.participants = participants;
+    }   
+
     public int getRoomSeq() {
         return this.roomSeq;
     }
 
     public void setRoomSeq(int roomSeq) {
         this.roomSeq = roomSeq;
+    }
+
+    public String getRoomAvatar() {
+        return this.roomAvatar;
+    }
+
+    public void setRoomAvatar(String roomAvatar) {
+        this.roomAvatar = roomAvatar;
     }
 
     public String getRoomName() {
@@ -68,10 +88,9 @@ public class ChatRoomDTO {
         this.empSeq = empSeq;
     }
 
-    // Constructors
     public ChatRoomDTO() {}
 
-    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq) {
+    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq, String roomAvatar) {
         this.roomSeq = roomSeq;
         this.roomName = roomName;
         this.roomState = roomState;
@@ -79,5 +98,6 @@ public class ChatRoomDTO {
         this.roomType = roomType;
         this.roomDescription = roomDescription;
         this.empSeq = empSeq;
+        this.roomAvatar = roomAvatar;
     }
 }

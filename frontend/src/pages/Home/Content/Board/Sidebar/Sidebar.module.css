@@ -1,5 +1,6 @@
 .bar{
     flex:1;
+    border-right: 1px solid black;
 }
 
 .buttonBox {
@@ -8,12 +9,12 @@
 }
 
 .buttonBox .writeButton{
-    width : 200px;
-    height : 50px;
-    font-weight: 500;
-    font-size: 24px;
+    width : 10.42vw;
+    height : 5.66vh;
+    font-weight: bold;
+    font-size: 20px;
     background-color: skyblue;
-    margin: 30px 0 20px 0;
+    margin: 4.3vh 0 2.9vh 0;
     transition-duration: 0.3s;
 }
 
@@ -27,9 +28,9 @@
     font-size: 16px;
     display: flex;
     align-items: center;
-    text-indent : 10px;
-    padding-left: 20px;
-    height : 50px;
+    text-indent : 0.65vw;
+    padding-left: 1.3vw;
+    height : 5vh;
 }
 
 .board:hover{
@@ -39,9 +40,9 @@
 
 .eachBoard{
     font-size: 14px;
-    padding-left: 50px;
-    margin : 4px;
-    height: 30px;
+    padding-left: 3.26vw;
+    margin : 0.3vh 0.26vw;
+    height: 4.3vh;
     display: flex;
     align-items: center;
 }

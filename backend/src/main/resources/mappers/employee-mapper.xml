@@ -77,12 +77,21 @@
     </insert>
 
     <update id="update">
-        Update
+        UPDATE
             employee
         SET
             emp_email = #{empEmail},
             emp_tel = #{empTel},
             emp_address = #{empAddress}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
+    <update id="updatePw">
+        UPDATE
+            employee
+        SET
+            emp_pw = #{empPw}
         WHERE
             emp_seq = #{empSeq}
     </update>
@@ -94,9 +103,10 @@
             emp_seq = #{empSeq}
     </delete>
 
-    <select id="existsEmployee" resultType="Boolean">
+    <select id="existsEmployee" resultType="com.clover.employee.dto.EmployeeDTO">
         SELECT
-            count(*)
+            emp_seq,
+            emp_id
         FROM
             employee
         WHERE
