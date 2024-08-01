@@ -18,7 +18,7 @@ export const Attendance = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
 
-    const defaultData = {attSeq: "", empSeq:"", attArrive: "", attLeave: "", attTotal: "", attSuccess: "", attData: ""};
+    const defaultData = {attSeq: "", empSeq:"", attArrive: "", attLeave: "", attTotal: "", attSuccess: "", attDate: ""};
     const [arrive, setArrive] = useState(defaultData);
     const handleAttDetail = () => {
         openModal();
@@ -59,8 +59,9 @@ export const Attendance = () => {
 
         setArrive(prev => {
             const data = { ...prev, attLeave: `${hours}:${minutes}`, attTotal: workTime, attSuccess: "Y"};
-            axios.put(`${BaseUrl()}/attendance`, arrive).then(res => {
-                console.log(res.data);
+            axios.put(`${BaseUrl()}/attendance`, data).then(res => {
+                if(res.data === "ok") console.log("퇴근 이벤트 성공");
+                else console.log("퇴근 이벤트 오류 발생");
             });
             return data;
         });
@@ -68,8 +69,7 @@ export const Attendance = () => {
 
     useEffect(() => {
         axios.get(`${BaseUrl()}/attendance/${dateData}`).then(res => {
-            console.log(res.data);
-            setArrive(res.data);
+            if(res.data !== "" && res.data !== null && res.data !== undefined) setArrive(res.data);
         });
     }, []);
 
