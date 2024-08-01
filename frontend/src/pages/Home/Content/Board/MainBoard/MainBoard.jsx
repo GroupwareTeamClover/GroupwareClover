@@ -5,7 +5,7 @@ import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
 import { FaSearch } from "react-icons/fa";
 import Post from './Post/Post';
-import Pagenation, { Pagination } from '../../Admin/Pagination/Pagination';
+import { Pagination } from '../../../../../components/Pagination/Pagination';
 
 
 
