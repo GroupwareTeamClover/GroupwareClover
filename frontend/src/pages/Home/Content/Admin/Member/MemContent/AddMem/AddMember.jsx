@@ -3,7 +3,8 @@ import styles from './AddMember.module.css';
 import { useEffect, useRef, useState } from "react";
 import axios from 'axios';
 import { Modal } from "../../../../../../../components/Modal/Modal";
-import { ModalPosition } from "../MemMain/ModalPosition/ModalPosition";
+import { ModalAdd } from "./ModalAdd/ModalAdd";
+import { BaseUrl } from "../../../../../../../commons/config";
 
 
 
@@ -11,18 +12,16 @@ export const AddMember = ()=>{
 
     const navi = useNavigate();
 
-    const [newMem, setNewMem] = useState([
-        {seq:1, name:'김추가', dept:'인사팀',position:'대리', group:'정규직',joindate:'2024.07.11', status:'대기중'},
-        {seq:2, name:'정추가', dept:'영업팀',position:'과장', group:'정규직',joindate:'2024.07.01', status:'승인완료'},
-        {seq:3, name:'최추가', dept:'영업팀',position:'대리', group:'계약직',joindate:'2024.07.28', status:'대기중'}
-    ]);
-    const [newMemCount, setNewMemCount] = useState(3);
+    const [newMem, setNewMem] = useState([{ }]);
 
     // axios로 출력받기 emp table - joindate가 이번달인 사람들....  
     useEffect(()=>{
-        // axios.get(`${BaseUrl()}/member`).then((resp)=>{
-            //     setNewMem(resp.data);
-            // })
+        axios.get(`${BaseUrl()}/adminaddmem`).then((resp)=>{
+            console.log(resp)
+            setNewMem(resp.data);
+            // setFiltered(resp.data)
+            
+        })
 
         // axios.get(`${BaseUrl()}/member`).then((resp)=>{
             // setNewMemCount(resp.data);  // 승인대기중 사원 수 select count(state) from emp where state=0;
@@ -30,14 +29,28 @@ export const AddMember = ()=>{
     },[])
 
 
+    const countNewMem = newMem.length;
    
     // ----전체 체크박스 클릭
     const checkboxRef = useRef([]);
     const handleCheckAll = (e)=>{
         const checked = e.target.checked;
+        const allValues = newMem.map(mem => mem.EMP_SEQ);
         checkboxRef.current.forEach(checkbox => {
             if(checkbox){
                 checkbox.checked = checked;
+            }
+        })
+        setCheckedMems(checked ? allValues : [])
+    }
+    const [ checkedMems, setCheckedMems] = useState([]);
+    const handleCheckBox =(e)=>{
+        const {value, checked} = e.target;
+        setCheckedMems(prev=> {
+            if(checked){
+                return [...prev, value];
+            }else{
+                return prev.filter(el => el !== value);
             }
         })
     }
@@ -66,8 +79,7 @@ export const AddMember = ()=>{
             <div className={styles.member_info}>
                 {/* emp table에서 state가 0인 사람 갯수. select count(state) from emp where state=0; */}
                     <div className={styles.member_info_box}>
-
-                    승인대기중  : {newMemCount} 명
+                        승인대기중  : {countNewMem} 명
                     </div>
             </div>
             <div className={styles.funcBtn}>
@@ -116,25 +128,25 @@ export const AddMember = ()=>{
                             {
                                 newMem.map((mem, i)=>{
                                     return(
-                                        <tr key={mem.seq}>
+                                        <tr key={i}>
                                             <td className={styles.theadtd}>
-                                                {mem.status ==='대기중' ? (
-                                                    <input type="checkbox" ref={data=> checkboxRef.current[i]=data}></input>
+                                                {mem.empStateCode ===0 ? (
+                                                    <input type="checkbox" name="emp_seq" value={mem.empSeq} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input>
                                                 ) : (
                                                     <input type="checkbox" disabled checked ></input>
                                                     )
                                                 }
                                             </td>
-                                            <td className={styles.theadtd}>{mem.name} </td>
-                                            <td className={styles.theadtd}>{mem.dept} </td>
-                                            <td className={styles.theadtd}>{mem.position} </td>
-                                            <td className={styles.theadtd}>{mem.group} </td>
-                                            <td className={styles.theadtd}>{mem.joindate} </td>
+                                            <td className={styles.theadtd}>{mem.empName} </td>
+                                            <td className={styles.theadtd}>{mem.deptCode} </td>
+                                            <td className={styles.theadtd}>{mem.roleCode} </td>
+                                            <td className={styles.theadtd}>{mem.workerStateCode} </td>
+                                            <td className={styles.theadtd}>{mem.joinDate} </td>
                                             <td className={styles.theadtd}> 
-                                                {mem.status ==='대기중' ? (
-                                                        <button className={styles.statusBtn} onClick={handleModalChange}>{mem.status} </button> 
+                                                {mem.empStateCode ===0  ? (
+                                                        <button className={styles.statusBtn} onClick={handleModalChange}> 대기중 </button> 
                                                     ) : (
-                                                        <button className={styles.statusBtn2}>{mem.status} </button> 
+                                                        <button className={styles.statusBtn2}> 승인완료 </button> 
                                                     )
                                                 }
                                             </td>
@@ -155,7 +167,7 @@ export const AddMember = ()=>{
         <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
                    
-                        <ModalPosition/>
+                        <ModalAdd/>
                     
                 </div>
         </Modal>

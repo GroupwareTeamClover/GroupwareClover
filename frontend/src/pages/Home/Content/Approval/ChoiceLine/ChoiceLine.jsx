@@ -19,11 +19,11 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
             const data = resp.data;
             // 부서별로 데이터를 그룹화
             const departmentMap = data.reduce((acc, current) => {
-                const { DEPT, NAME, ROLE } = current;
+                const { DEPT, NAME, SEQ, ROLE } = current;
                 if (!acc[DEPT]) {
                     acc[DEPT] = { name: DEPT, children: [] };
                 }
-                acc[DEPT].children.push({ name: NAME, role: ROLE });
+                acc[DEPT].children.push({ name: NAME, seq: SEQ, role: ROLE });
                 return acc;
             }, {});
 
@@ -69,7 +69,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
     const handleItemClick = (item) => { 
         folderData.map((data,index)=>{
             data.children.map((children,index)=>{
-                if(children.name===item.name){
+                if(children.seq===item.seq){
                     // console.log('접근 확인');
                     setSelectedEmpInfo({name: data.name, children: item})
                 }
@@ -97,7 +97,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
             [type]: [...(prev[type] || []), { ...item, department }]
         }));
 
-        console.log(selectedEmpInfo);
+        // console.log(selectedEmpInfo);
 
         //영역별 정보 저장 영역
         // 드래그 영역별 정보 저장
@@ -121,13 +121,13 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
     };
 
     //결재라인 선택 중에 결재라인 삭제하기
-    const handleDelete =(type, name)=>{
-        console.log(name);
+    const handleDelete =(type, seq)=>{
+        // console.log(name);
 
         //포함된 결재라인에서 삭제하기
         setSelectedEmpInfo((prev)=>({
             ...prev,
-            [type]: prev[type].filter(line => line.name !== name)
+            [type]: prev[type].filter(line => line.seq !== seq)
            
         }))
 
@@ -172,7 +172,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
                             <div className={styles.apvheader}>결재자</div>
                             <div className={styles.apvchoice}>
                                 {selectedEmpInfo.apvchoice?.map((item, index) => (
-                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('apvchoice', item.name)}/></span></div>
+                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('apvchoice', item.seq)}/></span></div>
                                     ))}
                             </div>
                         </div>
@@ -180,7 +180,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
                             <div className={styles.refheader}>참조자</div>
                             <div className={styles.refchoice}>
                                 {selectedEmpInfo.refchoice?.map((item, index) => (
-                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('refchoice', item.name)}/></span></div>
+                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('refchoice', item.seq)}/></span></div>
                                     ))}
                               
                             </div>
@@ -189,7 +189,7 @@ export const ChoiceLine= ({selectedDocCode, selectedEmpInfo, setSelectedEmpInfo}
                             <div className={styles.vieheader}>열람자</div>
                             <div className={styles.viechoice}>
                                 {selectedEmpInfo.viechoice?.map((item, index) => (
-                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('viechoice', item.name)}/></span></div>
+                                        <div key={index} className={styles.choiceText}>{item.name} ({item.department})<span className={styles.trashcan}><CiTrash onClick={()=>handleDelete('viechoice', item.seq)}/></span></div>
                                     ))} 
                             </div>
                         </div>
