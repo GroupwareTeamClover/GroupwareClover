@@ -1,3 +1,96 @@
 .container{
     flex:6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container input:focus{
+    outline: none;
+}
+
+.container select:focus{
+    outline: none;
+}
+
+.header{
+    font-size: 32px;
+	font-weight: 500;
+    padding-left: 40px;
+    height: 80px;
+    width: 1300px;
+    display: flex;
+    align-items: center;
+}
+
+.searchBox{
+    height: 58px;
+    width : 1300px;
+    border-bottom: 1px solid #5a5a64;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right : 20px;
+    padding-bottom: 5px;
+}
+
+.searchBox select {
+	width: 120px;
+	height: 42px;
+	background: white;
+	border: 1px solid #5a5a64;
+	line-height: 39px;
+	cursor: pointer;
+	padding: 0 0 0 10px;
+}
+
+.searchBox input{
+    padding: 0;
+	margin: 0;
+	width: 200px;
+	height: 42px;
+	border: none;
+	border: 1px solid #5a5a64;
+	border-right: 0;
+    border-left : 0;
+	font-size: 14px;
+	line-height: 53px;
+	text-indent: 20px;
+}
+
+.searchBox button{
+    height: 42px;
+    width : 40px;
+	border: 1px solid #5a5a64;
+	border-left: 0;
+    background-color: white;
+}
+
+.searchBox button:hover{
+    cursor: pointer;
+}
+
+.postBox{
+    min-height: 600px;
+    width: 1300px;
+    border-top: 1px solid #5a5a64;
+}
+.pageNavi {
+	margin-top: 20px;
+	display: flex;
+	justify-content: center;
+    font-size: 20px;
+    /* 임시적용 */
+	padding: 0 10px;
+	min-width: 38px;
+	line-height: 35px;
+}
+
+.pageNavi a {
+	display: inline-block;
+	padding: 0 10px;
+	min-width: 38px;
+	height: 36px;
+	line-height: 35px;
+	font-size: 14px;
 }

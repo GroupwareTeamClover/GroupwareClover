@@ -67,4 +67,8 @@
 	<delete id="deleteWhitelist">
 		delete from BOARD_WHITELIST where BOARDLIST_SEQ = #{boardSeq}
 	</delete>
+	
+	<select id="selectEachBoard" resultType="com.clover.board.dto.BoardlistDTO">
+		select * from boardlist where boardlist_seq = #{boardSeq}
+	</select>
 </mapper>

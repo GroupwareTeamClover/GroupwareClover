@@ -98,4 +98,10 @@ public class BoardlistController {
 		
 		return ResponseEntity.ok().build();
 	}
+	
+	@GetMapping("/boardInfo")
+	public ResponseEntity<BoardlistDTO> getBoardInfo(@RequestParam int boardlistSeq){
+		return ResponseEntity.ok(blServ.getBoardInfo(boardlistSeq));
+	}
+	
 }

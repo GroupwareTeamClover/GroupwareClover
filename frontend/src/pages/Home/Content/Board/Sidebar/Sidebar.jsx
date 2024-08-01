@@ -4,11 +4,12 @@ import { FaStar, FaPlusCircle, FaHammer, FaChevronUp, FaChevronDown } from "reac
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
-import { useBoardStore } from '../../../../../store/store';
+import { useBoardStore, useMemberStore } from '../../../../../store/store';
 
 const Sidebar = () => {
 
     const navi = useNavigate();
+    const { sessionData, admin } = useMemberStore();
 
     const [isAllBoardOpen, setIsAllBoardOpen] = useState(true);
     const togleIsAllBoard = () => {
@@ -20,9 +21,11 @@ const Sidebar = () => {
         setIsGroupBoardOpen(prevState => !prevState);
     }
 
-    const checkValidateUser = (seq) => {
-        console.log(seq);
-        return true;
+    const checkValidateUser = (item) => {
+        axios.get(`${BaseUrl()}/boardlist/whitelist/${item.boardlistSeq}`).then((resp) => {
+            (resp.data.includes(sessionData.empSeq)) ? navi(`board/${item.boardlistSeq}`) : alert("접근이 제한된 게시판입니다!")
+        });
+
     }
 
     const { allBoardList, setAllBoardList, groupBoardList, setGroupBoardList } = useBoardStore();
@@ -34,19 +37,17 @@ const Sidebar = () => {
         axios.get(`${BaseUrl()}/boardlist/groupBoards`).then((resp) => {
             setGroupBoardList(resp.data);
         });
-
     }, []);
 
 
-    const [isAdmin, setIsAdmin] = useState(true);
-    const testDTO = { boardlistSeq: 999, boardlistName: "구구구" }
+    const testDTO = { boardlistSeq: 0, boardlistName: "중요 게시물" }
 
     return (
         <div className={styles.bar}>
             <div className={styles.buttonBox}>
                 <button className={styles.writeButton}>글쓰기</button>
             </div>
-            <div className={styles.board} onClick={() => { navi("board", { state: testDTO }) }}><FaStar />중요 게시물</div>
+            <div className={styles.board} onClick={() => { navi("board/0") }}><FaStar />중요 게시물</div>
             {
                 isAllBoardOpen ?
                     <div className={styles.board} onClick={togleIsAllBoard}><FaChevronUp />전사 게시판</div>
@@ -57,7 +58,7 @@ const Sidebar = () => {
                 {isAllBoardOpen && allBoardList.map((item, i) => {
                     if (item.boardlistActive == 'T') {
                         return (
-                            <div key={i} className={styles.eachBoard} onClick={() => { navi("board", { state: item }) }}>{item.boardlistName}</div>
+                            <div key={i} className={styles.eachBoard} onClick={() => { navi(`board/${item.boardlistSeq}`) }}>{item.boardlistName}</div>
                         );
                     }
                 })
@@ -73,14 +74,14 @@ const Sidebar = () => {
                 {isGroupBoardOpen && groupBoardList.map((item, i) => {
                     if (item.boardlistActive == 'T') {
                         return (
-                            <div key={i} className={styles.eachBoard} onClick={() => { (checkValidateUser(item.seq)) ? navi("board", { state: item }) : alert("접근이 제한된 게시판입니다!") }}>{item.boardlistName}</div>
+                            <div key={i} className={styles.eachBoard} onClick={() => {checkValidateUser(item)}}>{item.boardlistName}</div>
                         );
                     }
                 })
                 }
             </div>
-            {isAdmin && <div className={styles.board} onClick={() => { navi("createBoard") }}><FaPlusCircle />게시판 만들기</div>}
-            {isAdmin && <div className={styles.board} onClick={() => { navi("manageBoard") }}><FaHammer />게시판 관리</div>}
+            {admin && <div className={styles.board} onClick={() => { navi("createBoard") }}><FaPlusCircle />게시판 만들기</div>}
+            {admin && <div className={styles.board} onClick={() => { navi("manageBoard") }}><FaHammer />게시판 관리</div>}
         </div>
     );
 }
