@@ -45,3 +45,13 @@ export const useBoardStore = create(set => ({
     groupBoardList: prev.groupBoardList.filter(dto => (dto.boardlistSeq != seq))
   }))
 }));
+
+
+
+
+// 모달에서 사원 정보 수정완료시 데이터 바로 적용하게.
+export const useMemStore = create(set=>({
+  storemembers:false,
+  setstoremembers:(storemembers)=>set({storemembers:storemembers})
+}));
+// checkbox 체크된거 reset하려고
