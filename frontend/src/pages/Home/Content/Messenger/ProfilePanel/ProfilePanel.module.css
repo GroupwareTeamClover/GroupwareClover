@@ -1,0 +1,63 @@
+.profilePanel {
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    gap:20px;
+  }
+  
+  .profileHeader {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .profilePicture img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .profileName h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .profileName p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .chatButton {
+    width: 50%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .profileDetails {
+    width: 80%;
+    border-top: 1px solid #eee;
+    padding-top: 50px;
+  }
+  
+  .detailItem {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .detailLabel {
+    color: #666;
+  }
+  
+  .detailValue {
+    font-weight: bold;
+  }

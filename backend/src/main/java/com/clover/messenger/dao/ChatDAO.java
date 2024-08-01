@@ -39,6 +39,8 @@ public class ChatDAO {
      */
     public void createRoom(ChatRoomDTO room) {
         room.setRoomCreateTime(new Timestamp(System.currentTimeMillis()));
+        System.out.println("채팅방테스트1" + room.getRoomSeq() + "" + room.getEmpSeq());
+        System.out.println(room.getRoomSeq() + room.getEmpSeq());
         mybatis.insert("Chat.createRoom", room);
     }
 

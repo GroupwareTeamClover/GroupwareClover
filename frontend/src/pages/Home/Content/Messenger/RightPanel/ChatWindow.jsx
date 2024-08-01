@@ -23,11 +23,11 @@ const ChatWindow = ({ chat }) => {
   const fetchMessages = useCallback(async () => {
     try {
       const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
-      // 받아온 메시지를 Zustand 스토어에 추가합니다.
+      // 받아온 메시지를 Zustand 스토어에 추가.
       response.data.forEach(message => addMessage(chat.roomSeq, message));
     } catch (error) {
       console.error('메시지를 가져오는 중 오류 발생:', error);
-      // TODO: 사용자에게 오류 메시지 표시
+
     }
   }, [chat.roomSeq, addMessage]);
 
@@ -44,7 +44,7 @@ const ChatWindow = ({ chat }) => {
         setInputMessage(''); // 입력 필드를 비웁니다.
       } catch (error) {
         console.error('메시지 전송 중 오류 발생:', error);
-        // TODO: 사용자에게 오류 메시지 표시
+
       }
     }
   }, [chat.roomSeq, inputMessage, addMessage]);
@@ -56,13 +56,13 @@ const ChatWindow = ({ chat }) => {
         <span className={styles.status}>Active</span>
       </div>
       <div className={styles.messages}>
-        {/* 현재 채팅방의 메시지를 렌더링합니다. */}
+        {/* 현재 채팅방의 메시지를 렌더링. */}
         {messages[chat.roomSeq]?.map((message, index) => (
           <div key={index} className={`${styles.message} ${message.senderSeq === chat.empSeq ? styles.sent : ''}`}>
             <div className={styles.messageWrapper}>
               <div className={styles.messageContent}>{message.messageContent}</div>
               <span className={styles.messageTime}>
-                {/* 메시지 전송 시간을 상대적 시간으로 표시합니다. */}
+                {/* 메시지 전송 시간을 상대적 시간으로 표시 */}
                 {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
               </span>
             </div>

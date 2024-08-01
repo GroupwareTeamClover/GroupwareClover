@@ -72,9 +72,9 @@ Create table chatRoom (
 
 Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
--- 멤버채팅방 연결엔티티
+-- 채팅방 멤버
 Create table chatMembers (
-    emp_seq number primary key,
+    emp_seq number not null,
     room_seq number not null,
     member_role VARCHAR2(20) DEFAULT 'MEMBER' 
         CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),

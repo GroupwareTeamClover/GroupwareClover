@@ -36,7 +36,7 @@ public class MessengerHandler extends TextWebSocketHandler {
         
         // HttpSession에서 사용자 ID 추출
         HttpSession httpSession = (HttpSession) session.getAttributes().get("hSession");
-        Integer empSeq = (Integer) httpSession.getAttribute("cloverSeq");
+        int empSeq = (int) httpSession.getAttribute("cloverSeq");
         
         System.out.println("WebSocket 연결 성공. 사용자 ID: " + empSeq);
         
@@ -52,7 +52,7 @@ public class MessengerHandler extends TextWebSocketHandler {
         ChatMessageDTO chatMessage = gson.fromJson(message.getPayload(), ChatMessageDTO.class);
         
         // WebSocketSession에서 사용자 ID 추출
-        Integer empSeq = (Integer) session.getAttributes().get("empSeq");
+        int empSeq = (int) session.getAttributes().get("empSeq");
         System.out.println("메시지 수신. 발신자 ID: " + empSeq);
         
         // 메시지에 발신자 ID 설정

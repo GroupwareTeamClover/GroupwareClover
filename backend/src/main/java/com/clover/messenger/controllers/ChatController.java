@@ -49,11 +49,8 @@ public class ChatController {
      */
     @PostMapping("/rooms")
     public ResponseEntity<ChatRoomDTO> createOneToOneRoom(@RequestBody Map<String, Integer> payload) {
-        Object cloverSeq = session.getAttribute("cloverSeq");
-        System.out.println("cloverSeq from session: " + cloverSeq);
-        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
-        Integer targetEmpSeq = payload.get("targetEmpSeq");
-        System.out.println(empSeq.getClass().getName() + " " + targetEmpSeq.getClass().getName());
+        int empSeq = (int) session.getAttribute("cloverSeq");        
+        int targetEmpSeq = payload.get("targetEmpSeq");        
         ChatRoomDTO room = chatService.createOneToOneRoom(empSeq, targetEmpSeq);
         return ResponseEntity.ok(room);
     }

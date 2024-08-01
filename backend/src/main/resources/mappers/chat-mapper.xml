@@ -15,19 +15,13 @@
     
     <!-- 채팅방 생성 -->
     <insert id="createRoom" parameterType="com.clover.messenger.dto.ChatRoomDTO" useGeneratedKeys="true" keyProperty="roomSeq">
-        INSERT INTO chatRoom (
-            room_seq, room_name, 
-            room_type, room_description, emp_seq
-        ) VALUES (
-            room_sequence.NEXTVAL, #{roomName},  
-            #{roomType}, #{roomDescription}, #{empSeq, jdbcType=INTEGER}
-        )
+        insert into chatroom (room_seq, emp_seq) values(150, ${empSeq})
     </insert>
     
     <!-- 사용자를 채팅방에 추가 -->
     <insert id="addUserToRoom">
-        INSERT INTO chatMembers (emp_seq, room_seq, member_role, join_time)
-        VALUES (#{empSeq}, #{roomSeq}, 'MEMBER', CURRENT_TIMESTAMP)
+        INSERT INTO chatMembers (emp_seq, room_seq, member_role)
+        VALUES (#{empSeq}, #{roomSeq}, 'MEMBER')
     </insert>
     
     <!-- 메시지 저장 -->

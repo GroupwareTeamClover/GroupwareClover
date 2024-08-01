@@ -37,27 +37,21 @@ public class ChatService {
      // issue : ChatMembers의 데이터가 너무 커질 우려가 있다. 생각해봐야 함.
     @Transactional
     public ChatRoomDTO createOneToOneRoom(int empSeq, int targetEmpSeq) {
-        System.out.println(1);
         ChatRoomDTO room = new ChatRoomDTO();
-        System.out.println(2);
-        room.setRoomName("1:1 채팅");
-        System.out.println(3);
-        room.setRoomType("private");
-        System.out.println(4);
+        // room.setRoomName("1:1 채팅");
+        // room.setRoomType("private");
         room.setEmpSeq(empSeq);
-        System.out.println(5);
-        room.setRoomDescription("1:1 채팅방");
-
-        System.out.println(6);
-        System.out.println("roomSeq: " + room.getRoomSeq() + ", roomName: " + room.getRoomName() + ", empSeq: " + room.getEmpSeq());
+        // room.setRoomDescription("1:1 채팅방");
+        int result = room.getRoomSeq() + room.getEmpSeq() + targetEmpSeq;
+        System.out.println(result);
+        System.out.println("roomSeq: " + room.getRoomSeq() + ", empSeq: " + room.getEmpSeq() + targetEmpSeq);
+        System.out.println("예측");
         chatDAO.createRoom(room);
+        System.out.println("확인");
         System.out.println("roomSeq: " + room.getRoomSeq());
-        System.out.println(7);
-        chatDAO.addUserToRoom(empSeq, room.getRoomSeq());
-        System.out.println(8);
-        chatDAO.addUserToRoom(targetEmpSeq, room.getRoomSeq());
-        System.out.println(9);
-
+        chatDAO.addUserToRoom(empSeq, room.getRoomSeq()); // 이게 정당한 seq인가?
+        chatDAO.addUserToRoom(targetEmpSeq, room.getRoomSeq()); // 이게 정당한 seq인가?
+        // 정당하네;
         return room;
     }
 
