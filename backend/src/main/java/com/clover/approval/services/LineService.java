@@ -6,16 +6,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.clover.approval.dao.ApvLineDAO;
+import com.clover.approval.dao.LineDAO;
 
 @Service
-public class ApvLineService {
+public class LineService {
 	@Autowired
-	private ApvLineDAO apvLineDAO;
+	private LineDAO lineDAO;
 	
 	//임시
 	public List<Map<String,?>> getMemberInfo(){
-		return apvLineDAO.selectMemberInfo();
+		return lineDAO.selectMemberInfo();
 	}
 
 }

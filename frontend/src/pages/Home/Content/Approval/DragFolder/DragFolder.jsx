@@ -10,7 +10,7 @@ export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, set
 
     const isItemSelected = (child) => {
       const allChoices = [...selectedItem.apvchoice, ...selectedItem.refchoice, ...selectedItem.viechoice, ...selectedItem.recchoice,];
-      return allChoices.some(choice => choice.name === child.name);
+      return allChoices.some(choice => choice.seq === child.seq);
     };
 
   // 선택된 자식이 있는지 확인하는 함수
