@@ -191,7 +191,6 @@ export const MemMain = () => {
             setFiltered(result);
         }
         setCurrentPage(0);
-        
     };
     
 
@@ -202,20 +201,14 @@ export const MemMain = () => {
                 사원 수 : {filtered.length} 명
             </div>
             <div className={styles.member_detail}>
-                <div className={styles.count1}>
-                    {countMem.normal + countMem.rest}명
-                </div>
-                <div className={styles.count2}>
-                    <span>(정상{countMem.normal}명   휴직 {countMem.rest}명  /  퇴사 {countMem.out}명</span>) 
-                </div>
-                <div className={styles.count3waiting}>
-                    <p>가입대기 {countMem.prev}명</p>
-                </div>
+                <h1>{countMem.normal + countMem.rest} 명</h1>
+                (정상{countMem.normal}명 / <span className={styles.smallText}> 퇴사 {countMem.out}명</span>) 
+                <h3>가입대기 {countMem.prev}명</h3>
             </div>
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
-                {/* <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>가입 승인</button> */}
+                <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>사원삭제</button>
                 <select name='status' onChange={handleSelectChange}>
                     <option value="">상태변경</option>
                     <option value="부서변경">부서변경</option>
@@ -358,4 +351,45 @@ export const MemMain = () => {
         </Modal>
       </div>
     );
+}
+
+
+
+
+----------------===================================================
+
+
+
+.member_info{
+    /* border: 1px solid black; */
+    /* height: 15%; */
+    flex:1;
+    padding-left: 50px;
+    display: flex;
+    align-items: center;
+}
+.member_total{
+    /* flex:0.1; */
+    width:400px;
+    height: 100px;
+    display: flex;
+    border: 1px solid black;
+    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
+    align-items: center;
+    padding: 30px 100px 30px 90px;
+    text-align: left;
+}
+.member_detail{
+    /* flex:0.3; */
+    width:500px;
+    height: 100px;
+    display: flex;
+    border: 1px solid black;
+    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
+    align-items: center;
+    padding: 30px 100px 30px 50px;
+    text-align: left;
+}
+.smallText {
+    font-size: smaller; /* 또는 원하는 크기로 설정 */
 }

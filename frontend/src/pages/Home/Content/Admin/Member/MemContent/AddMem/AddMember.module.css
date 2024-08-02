@@ -19,33 +19,44 @@
     flex:1;
     padding-left: 50px;
     display: flex;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
     align-items: center;
     
 }
 .member_info_box{
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     border: 1px solid black;
     justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
-    align-items: center;
+    /* align-items: center;
     padding: 30px 300px 30px 50px;
+    text-align: left;  */
+    width:400px;
+    height: 100px;
+    display: flex;
+    border: 1px solid black;
+    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
+    align-items: center;
+    padding: 30px 100px 30px 90px;
     text-align: left;
 
 }
+
+/* ===================================================== */
 .funcBtn{
     padding-top:40px;
     flex:0.5;
+    display: flex;
     padding-left: 30px;
     padding-bottom:20px;
-    /* display: flex; */
 }
-.addBtn{
+.funcBtn button{
     /* flex:0.1; */
     width: 100px;
-    height: 40px;
+    height: 35px;
     justify-content:bottom;
-    margin-left: 10px;
+    margin-left: 20px;
+    padding: 5px 0 5px 0;
     background-color: #a6c76c;
     border: none;
     color: white;
@@ -54,24 +65,54 @@
     border-radius: 3px;
     letter-spacing: -1px;
 }
-.addBtn:hover{
+.funcBtn button:hover{
     cursor: pointer;
 }
 
+
+/* ===================================================== */
 .body{
     /* border: 1px solid black; */
     /* height: 75%; */
-    flex:7;
+    flex:6;
     padding: 0 25px;
 }
-
 .tableWrapper{
     flex:8.5;
+    display: flex;
+    justify-content: center;
+    min-width: 1200px;
 }
 
 .table{
-    width: 100%;
+    /* width: 100%;
+    height: 100%; */
+    width: 100%; /* 테이블의 고정 너비를 설정 */
     height: 100%;
+    table-layout: fixed; /* 테이블의 열 너비를 고정 */
+}
+
+.table thead td:nth-child(1){
+    width:30px;    /* checkbox 너비 */
+}
+.table thead td:nth-child(2) {
+    width: 90px; /* 이름 열의 너비 */
+}
+
+.table thead td:nth-child(3) {
+    width: 90px; /* 부서 열의 너비 */
+}
+.table thead td:nth-child(4) {
+    width: 90px; /* 직위 열의 너비 */
+}
+.table thead td:nth-child(5) {
+    width: 90px; /* 사용자그룹 열의 너비 */
+}
+.table thead td:nth-child(6) {
+    width: 110px; /* 이메일 열의 너비 */
+}
+.table thead td:nth-child(7) {
+    width: 100px; /* 계정상태 열의 너비 */
 }
 
 

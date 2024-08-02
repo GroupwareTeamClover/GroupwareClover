@@ -12,48 +12,94 @@
     display: flex;
     flex-direction: column;
 }
-.member_info{
-    /* border: 1px solid black; */
-    /* height: 15%; */
-    flex:1;
-    padding-left: 50px;
+.member_info {
+    display: flex;
+    justify-content: space-between; /* 요소 간의 간격을 균등하게 분배 */
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #f0f4f8;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.member_total {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2c3e50;
+    background-color: #ecf0f1;
+    padding: 12px 24px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
+    gap: 12px; /* 아이콘과 텍스트 사이의 간격 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.member_total{
-    /* flex:0.1; */
-    width:400px;
-    height: 100px;
+
+.member_total::before {
+    content: "👥";
+    font-size: 26px;
+    color: #3498db;
+}
+
+.member_detail {
     display: flex;
-    border: 1px solid black;
-    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
-    align-items: center;
-    padding: 30px 100px 30px 90px;
-    text-align: left;
+    flex-direction: column;
+    text-align: right; /* 오른쪽 정렬 */
+    color: #34495e;
+    padding-right: 50px;
 }
-.member_detail{
-    /* flex:0.3; */
-    width:500px;
-    height: 100px;
-    display: flex;
-    border: 1px solid black;
-    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
-    align-items: center;
-    padding: 30px 100px 30px 50px;
-    text-align: left;
+
+.member_detail .count1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #a6c76c;
 }
-.smallText {
-    font-size: smaller; /* 또는 원하는 크기로 설정 */
+
+.member_detail .count2 {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-top: 4px;
 }
+
+.member_detail .count2 span {
+    color: #1a4f72;
+}
+
+.member_detail .count3waiting {
+    margin-top: 8px;
+    font-size: 16px;
+    color: #e74c3c;
+    font-weight: bold;
+}
+
+
 
 /* ===================================================== */
 .funcBtn{
     padding-top:40px;
     flex:0.5;
-    /* display: flex; */
+    display: flex;
     padding-left: 30px;
     padding-bottom:20px;
 }
+.col_button{
+    flex: 1;
+}
+.searchWrapper{
+    flex:1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 50px;
+}
+.searchWrapper input{
+    height: 35px;
+    width: 220px;
+    margin-right: 20px;
+    text-align: left;
+    padding-left: 10px;
+}
+
 .funcBtn select{
     height: 35px;
     width: 200px;
@@ -93,11 +139,38 @@
     flex:8.5;
     display: flex;
     justify-content: center;
+    min-width: 1200px;
 }
 
 .table{
-    width: 100%;
+    /* width: 100%;
+    height: 100%; */
+    width: 100%; /* 테이블의 고정 너비를 설정 */
     height: 100%;
+    table-layout: fixed; /* 테이블의 열 너비를 고정 */
+}
+
+.table thead td:nth-child(1){
+    width:30px;    /* checkbox 너비 */
+}
+.table thead td:nth-child(2) {
+    width: 90px; /* 이름 열의 너비 */
+}
+
+.table thead td:nth-child(3) {
+    width: 90px; /* 부서 열의 너비 */
+}
+.table thead td:nth-child(4) {
+    width: 90px; /* 직위 열의 너비 */
+}
+.table thead td:nth-child(5) {
+    width: 90px; /* 사용자그룹 열의 너비 */
+}
+.table thead td:nth-child(6) {
+    width: 110px; /* 이메일 열의 너비 */
+}
+.table thead td:nth-child(7) {
+    width: 100px; /* 계정상태 열의 너비 */
 }
 
 

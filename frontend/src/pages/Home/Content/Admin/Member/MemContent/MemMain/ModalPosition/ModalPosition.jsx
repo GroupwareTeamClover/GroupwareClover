@@ -6,7 +6,7 @@ import { BaseUrl } from '../../../../../../../../commons/config';
 import { useMemStore } from '../../../../../../../../store/store';
 
 
-export const ModalPosition = ({modalState, setIsModalOpen,checkedMems })=>{
+export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheckboxes })=>{
     
     const {storemembers, setstoremembers} = useMemStore();
     const [members, setMembers]= useState([]);  // 선택한 사원 관련 정보들
@@ -41,10 +41,11 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems })=>{
                          // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
                         console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList)
             axios.put(`${BaseUrl()}/adminmember`, param)    //수정하기
-            .then(
-                setstoremembers(true),
-                closeModal()
-            )
+            .then(()=>{
+                setstoremembers(true);
+                closeModal();
+                resetCheckboxes();
+        })
         }else{ alert("수정사항을 선택해주세요.")}
     };
         

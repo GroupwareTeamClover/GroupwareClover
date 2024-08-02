@@ -162,38 +162,17 @@ export const MemMain = () => {
         }
     };
 
-    // // 검색 처리 함수
-    // const handleSearch = (e) => {
-    //     const {name, value} = e.target;
-    //     let result;
-    //     if (name === "EMP_NAME") {
-    //         result = members.filter((data) => data[name].includes(value));
-    //     } else {
-    //         result = members.filter((data) => data[name].includes(value));
-    //     }
-    //     setFiltered(result);
-    // };
-
+    // 검색 처리 함수
     const handleSearch = (e) => {
-        const { name, value } = e.target;
-    
-        if (value === "") {
-            // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
-            setFiltered(members);
+        const {name, value} = e.target;
+        let result;
+        if (name === "EMP_NAME") {
+            result = members.filter((data) => data[name].includes(value));
         } else {
-            // 검색어가 있는 경우 필터링
-            let result;
-            if (name === "EMP_NAME") {
-                result = members.filter((data) => data[name].includes(value));
-            } else {
-                result = members.filter((data) => data[name].includes(value));
-            }
-            setFiltered(result);
+            result = members.filter((data) => data[name].includes(value));
         }
-        setCurrentPage(0);
-        
+        setFiltered(result);
     };
-    
 
     return (
       <div className={styles.container}>
@@ -202,20 +181,14 @@ export const MemMain = () => {
                 사원 수 : {filtered.length} 명
             </div>
             <div className={styles.member_detail}>
-                <div className={styles.count1}>
-                    {countMem.normal + countMem.rest}명
-                </div>
-                <div className={styles.count2}>
-                    <span>(정상{countMem.normal}명   휴직 {countMem.rest}명  /  퇴사 {countMem.out}명</span>) 
-                </div>
-                <div className={styles.count3waiting}>
-                    <p>가입대기 {countMem.prev}명</p>
-                </div>
+                <h1>{countMem.normal + countMem.rest} 명</h1>
+                (정상{countMem.normal}명 / <span className={styles.smallText}> 퇴사 {countMem.out}명</span>) 
+                <h3>가입대기 {countMem.prev}명</h3>
             </div>
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
-                {/* <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>가입 승인</button> */}
+                <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>사원삭제</button>
                 <select name='status' onChange={handleSelectChange}>
                     <option value="">상태변경</option>
                     <option value="부서변경">부서변경</option>
