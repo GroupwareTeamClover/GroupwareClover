@@ -25,6 +25,8 @@ public class EmployeeService {
 
     /** 회원 가입 **/
     public String signUpEmployee(EmployeeDTO dto) {
+        if(dto.getEmpGender().equals("M")) dto.setEmpAvatar("https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/man.png");
+        else dto.setEmpAvatar("https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/woman.png");
         dto.setEmpPw(sha512.getSHA512(dto.getEmpPw()));
         int result = employeeDAO.signUpEmployee(dto);
         if(result > 0) return "ok";

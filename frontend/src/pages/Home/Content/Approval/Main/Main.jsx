@@ -19,7 +19,7 @@ export const Main = () => {
                     <Route path="/" element={<DetailMain/>} />
                     <Route path="/proceeding" element={<Proceeding />} />
                     <Route path="/waiting"/>
-                    <Route path="/planning" />
+                    <Route path="/planning"/>
                     <Route path="/receiving" />
                     <Route path="/participating" />
                     <Route path="/drafting" />

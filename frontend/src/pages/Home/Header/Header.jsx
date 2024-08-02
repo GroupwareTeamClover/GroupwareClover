@@ -42,9 +42,12 @@ export const Header = () => {
           <div className={styles.userInfo}>
             <p className={styles.userName}>{sessionData.empName}</p>
             <div className={styles.userAvatar}>
-              {sessionData.empAvatar === null &&
-                  <img src={defaultImage} alt="기본 이미지" />
+              {sessionData.empAvatar === null ?
+                <img src={defaultImage} alt="기본 이미지"/>
+                :
+                <img src={sessionData.empAvatar} alt="기본 이미지"/>
               }
+
             </div>
             <ImExit size={30} className={styles.icons} onClick={handleSignOut} />
           </div>

@@ -25,6 +25,8 @@ public class SignController {
             session.setAttribute("cloverId", empInfo.getEmpId());
             session.setAttribute("cloverName", empInfo.getEmpName());
             session.setAttribute("cloverAvatar", empInfo.getEmpAvatar());
+            session.setAttribute("cloverDeptCode", empInfo.getDeptCode());
+            session.setAttribute("cloverRoleCode", empInfo.getRoleCode());
             if(empInfo.getEmpStateCode() == 0) session.setAttribute("cloverAdmin", empInfo.getEmpStateCode());
             return ResponseEntity.ok(empInfo);
         }
