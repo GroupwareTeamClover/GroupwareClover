@@ -31,6 +31,7 @@ public class EmployeeController {
     @GetMapping("/{empSeq}")
     public ResponseEntity<Map<String, Object>> getMyInfo(@PathVariable int empSeq) {
         Map<String, Object> map = employeeService.getMyInfo(empSeq);
+        System.out.println(map.get("EMP_AVATAR"));
         return ResponseEntity.ok(map);
     }
 
