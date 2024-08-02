@@ -9,6 +9,8 @@
             emp_seq,
             emp_id,
             emp_name,
+            dept_code,
+            role_code,
             emp_avatar,
             worker_state_code
         FROM

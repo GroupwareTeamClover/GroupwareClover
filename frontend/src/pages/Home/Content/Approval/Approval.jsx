@@ -13,8 +13,8 @@ export const Approval = () =>{
               </div>
             <div className={styles.main}>
                 <Routes>
-                    <Route path="/" element={<Main/>}></Route>
-                    <Route path="/write/*" element={<WriteForm/>}></Route>
+                    <Route path="/*" element={<Main/>}></Route>
+                    <Route path="/write/:formType" element={<WriteForm />} />
                 </Routes>
             </div>
         </div>

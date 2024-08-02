@@ -1,27 +1,30 @@
 import styles from './Side.module.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {useEffect, useState} from "react";
-import { Modal } from '../../../../../components/Modal/Modal';
 import { BigModal } from '../BigModal/BigModal'
 import { ChoiceForm } from '../ChoiceForm/ChoiceForm';
 import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
-import axios from 'axios';
-import { BaseUrl } from '../../../../../commons/config';
+import { useApprovalStore } from '../../../../../store/approvalStore';
+
 
 export const Side = () => {
+    const {selectedDocCode, selectedEmpInfo, resetSelectedEmpInfo, resetSelectedDocCode}=useApprovalStore();
+
     const navi = useNavigate();
    
     const [ modalState, setModalState ] = useState(""); //새결재진행하기
+    const [isComplete, setIsComplete] = useState(false); // 완료 여부 추적
+
 
     //화면 url, 상태 navi에 넣기
     const handleNavigation = (path, type) => {
         navi(path, { state: { type } });
     };
 
-    const handleWriteNavigation = (path, type, data) =>{
-        navi(path, {state: { type, data} })
-    }
-
+    const handleWriteNavigation = (path, type, docinfo, empinfo) => {
+        navi(path, { state: { type, docinfo, empinfo } });
+    };
+    
     
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
@@ -31,9 +34,9 @@ export const Side = () => {
     const closeModal = () => {
         setModalState("");
         setPage(1);
-        setSelectedDocCode({ name: '', children: { name: '', period: 0 } });//초기화
-        setSelectedEmpInfo({ apvchoice: [], recchoice: [], refchoice: [] });//초기화
         setIsModalOpen(false);
+        resetSelectedEmpInfo();
+        resetSelectedDocCode();
     };
     
     //새 결재 클릭시 모달창 띄우기
@@ -58,15 +61,13 @@ export const Side = () => {
         });
     }
 
-    //모달사이 전달할 정보저장
-    const [selectedDocCode, setSelectedDocCode] = useState({ name: '', children: { name: '', period: 0, detailcode: 0 } });
-    const [selectedEmpInfo, setSelectedEmpInfo] = useState({ apvchoice: [], refchoice: [], viechoice: [], recchoice: []});
 
     // 전자결재양식선택에서 다음을 클릭할 때 양식을 선택해야지만 다음으로 넘어가도록 예외 처리
     const handleFormNext = (event) => {
         //다음으로 넘어가는 조건
         if(selectedDocCode.name){
             handlePageChange(event);
+          
         }else{
             alert("결재 양식을 선택하세요.");
         }
@@ -74,36 +75,34 @@ export const Side = () => {
 
     //확인 클릭 시 문서 생성
     const handleAdd = () =>{
-        // console.log(selectedDocCode);
-        // console.log(selectedEmpInfo);
-        axios.post(`${BaseUrl()}/document`, {
-            selectedDocCode:selectedDocCode,
-            selectedEmpInfo:selectedEmpInfo
-        }).then((resp)=>{
-            //응답으로 문서 정보 받아서 writeForm으로 이동시키기
-            const data=resp.data
-
-            const combinedData = {
-                docdto: data.docdto,
-                apvlist: data.apvlist,
-                plist: data.plist
-            };
-
-            const path = data?.docDetailName === '업무기안' ? 'business' :
-                        data?.docDetailName  === '휴가신청서' ? 'dayoff' :
-                        '/invalid';
-            // console.log(path);
-            
-            //모달창 닫기
-            closeModal();
-            //wirteForm으로 정보가지고 이동
-            handleWriteNavigation(`/approval/write/${path}`, data.docDetailName, combinedData)
-    
-        }).catch((error) => {
-            alert("전자결재 문서 생성 실패");
-        });
-
+        //모달창닫기
+        //이거 안하면 writepage넘어가서 새결재하기 눌렀을 때 작동안함
+        setIsComplete(true); 
     }
+
+
+    useEffect(() => {
+        if (isComplete) {
+            const path = selectedDocCode.children.name === '업무기안' ? 'business' :
+            selectedDocCode.children.name === '휴가신청서' ? 'dayoff' :
+            'invalid';
+
+             // selectedDocCode의 깊은 복사본 생성 카피의 복사본이냐 원본의 복사본이냐?...
+             //이유: 이걸 하지 않으면 메인에서 모달창을 띄울때와 writeForm에서 모달창을 띄울때 구분할 수 없게된다.
+             //예를 들어. selectedDocCode를 writeform에서도 사용될 경우
+             //양식이 변경될때마다 제목과 밑에 컴포넌트, 결재라인까지 함께 변경되어 버려서 새 결재 진행같은 느낌이 들지 않음
+             const clonedDocName = structuredClone(selectedDocCode.children.name);
+             const clonedDocCode = structuredClone(selectedDocCode);
+             const clonedLineInfo = structuredClone(selectedEmpInfo);
+             console.log(`원본: ${JSON.stringify(selectedEmpInfo, null, 2)}`);
+             console.log(`복사: ${JSON.stringify(clonedLineInfo, null, 2)}`);
+             
+            handleWriteNavigation(`/approval/write/${path}`, clonedDocName, clonedDocCode, clonedLineInfo); // 페이지 다시 로드
+            closeModal();
+            setIsComplete(false); 
+          
+        }
+    }, [isComplete]);
 
 
     return (
@@ -160,7 +159,7 @@ export const Side = () => {
                         <>
                             {Page === 1 && (
                                 <>
-                                <ChoiceForm Page={Page} selectedDocCode={selectedDocCode} setSelectedDocCode={setSelectedDocCode} /> 
+                                <ChoiceForm Page={Page}/> 
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
                                     <button name="next" onClick={handleFormNext} className={styles.btn} > 다음</button>
@@ -169,7 +168,7 @@ export const Side = () => {
                             )}
                             {Page === 2 && (
                                 <>
-                                <ChoiceLine Page={Page} selectedDocCode={selectedDocCode}  selectedEmpInfo={selectedEmpInfo} setSelectedEmpInfo={setSelectedEmpInfo} />
+                                <ChoiceLine Page={Page}/>
                                 <div className={styles.modalbtnBox}>
                                     <button name="prev" onClick={handlePageChange} className={styles.btn}> 이전</button>
                                     <button name="next" onClick={handlePageChange} className={styles.btn}> 다음</button>
