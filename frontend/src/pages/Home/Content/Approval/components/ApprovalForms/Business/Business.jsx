@@ -1,11 +1,12 @@
 import styles from './Business.module.css'
+import { BsChevronDoubleLeft } from 'react-icons/bs';
 
-export const Business =({data})=>{
-    console.log(data)
+export const Business =({type, docinfo, empinfo})=>{
+    
     return(
         <div className={styles.container}>
             <div className={styles.header}>
-                <span><h2>업무기안</h2></span>
+                <span><h2>{type}</h2></span>
             </div>
             <div className={styles.bigcontent}>
                 {/* 내용 첫번째 줄 */}
