@@ -7,6 +7,7 @@ import { ModalAdd } from "./ModalAdd/ModalAdd";
 import { BaseUrl } from "../../../../../../../commons/config";
 import { useMemStore } from "../../../../../../../store/store";
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
+import {format} from 'date-fns';
 
 
 export const AddMember = ()=>{
@@ -26,7 +27,7 @@ export const AddMember = ()=>{
             console.log(resp.data)
             setNewMem(resp.data);
             setFiltered(resp.data);
-            setstoremembers(false)
+            setstoremembers(false);
 
             // empStateCode가 1인 갯수(승인완료)
             const countState1 = resp.data.filter(mem => mem.empStateCode === 1).length;
@@ -87,6 +88,7 @@ export const AddMember = ()=>{
         openModal();
     }
    
+    //날짜 변환
    
 
     
@@ -94,10 +96,15 @@ export const AddMember = ()=>{
         <div className={styles.container}>
             <div className={styles.member_info}>
                 {/* emp table에서 state가 0인 사람 갯수. select count(state) from emp where state=0; */}
-                    <div className={styles.member_info_box}>
-                        <div>승인대기중  : {waitingNum} 명 </div>
-                       <div> 이번 달 승인완료 : {finishNum} 명 </div>
+                <div className={styles.member_total}>
+                    <div className={styles.member_emoji}>
+                    👥
                     </div>
+                    <div className={styles.member_box}>
+                        승인대기중  : {waitingNum} 명
+                        <div className={styles.member_complete}>이번 달 승인완료 : {finishNum} 명 </div>
+                    </div>
+                </div>
             </div>
             <div className={styles.funcBtn}>
                 {/* <div className={styles.col_button}> */}
@@ -163,7 +170,9 @@ export const AddMember = ()=>{
                                                     mem.workerStateCode === 3 ? '계약직' : '미정'
                                                 } 
                                             </td>
-                                            <td className={styles.theadtd}>{mem.joinDate} </td>
+                                            <td className={styles.theadtd}>
+                                                {format(new Date(mem.joinDate), 'yyyy.MM.dd')}
+                                            </td>
                                             <td className={styles.theadtd}> 
                                                 {mem.empStateCode ===0  ? (
                                                         <button className={styles.statusBtn} onClick={handleModalChange} value={mem.empSeq}> 대기중 </button> 

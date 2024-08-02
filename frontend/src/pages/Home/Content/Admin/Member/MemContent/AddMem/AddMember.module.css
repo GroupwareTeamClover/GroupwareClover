@@ -14,41 +14,50 @@
 }
 
 .member_info{
-    /* border: 1px solid black; */
-    /* height: 15%; */
-    flex:1;
-    padding-left: 50px;
     display: flex;
-    /* justify-content: flex-start; */
+    justify-content: flex-start; /* 요소 간의 간격을 균등하게 분배 */
     align-items: center;
-    
+    padding: 20px 40px;
+    background-color: #f0f4f8;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
-.member_info_box{
-    /* display: flex;
-    flex-direction: column;
-    border: 1px solid black;
-    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
-    /* align-items: center;
-    padding: 30px 300px 30px 50px;
-    text-align: left;  */
-    width:400px;
-    height: 100px;
+.member_total {
+    font-size: 22px;
+    font-weight: bold;
+    color: #e75757;
+    background-color: #ecf0f1;
+    padding: 25px 24px;
+    border-radius: 8px;
     display: flex;
-    border: 1px solid black;
-    justify-content: flex-start; /* 왼쪽 정렬을 명확하게 하기 위해 flex-start 사용 */
-    align-items: center;
-    padding: 30px 100px 30px 90px;
-    text-align: left;
+    align-items: start;
+    gap: 12px; /* 아이콘과 텍스트 사이의 간격 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
+.member_emoji {
+    font-size: 26px;
+    color: #3498db;
+    flex:0.5;
 }
+.member_box{
+    flex:3;
+}
+
+.member_complete{
+    font-size: 16px;
+    color: #2c3e50;
+}
+
 
 /* ===================================================== */
 .funcBtn{
-    padding-top:40px;
+    padding-top:20px;
     flex:0.5;
     display: flex;
     padding-left: 30px;
-    padding-bottom:20px;
+    padding-bottom:15px;
 }
 .funcBtn button{
     /* flex:0.1; */
