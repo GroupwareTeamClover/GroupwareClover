@@ -26,6 +26,7 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
 }
 
 // 상위 컴포넌트에서 EditorBox 호출 및 인자 전달 (ref, handleContentChange, height)
+// <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent=""/>
 
 // <ref> - 에디터 객체 접근용 useRef
 // const editorRef = useRef();
@@ -40,8 +41,6 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
 
 // <defaultContent> - 글 수정 시 기존 내용을 넘기는 인자. 글 작성 시에는 빈 값을 넘김.
 
-// <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent=""/>
-
 
 // <기타 추가 정보>
 
@@ -50,7 +49,5 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
 
 // 에디터 글 가져오기
 // editorRef.current.getInstance().getHTML()
-
-
 
 export default WebEditor;

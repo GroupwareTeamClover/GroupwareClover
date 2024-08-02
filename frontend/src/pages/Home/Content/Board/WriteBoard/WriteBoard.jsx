@@ -65,7 +65,7 @@ const WriteBoard = () => {
             </div>
             <div className={styles.fileBox}>
                 <Uploader autoUpload={false} draggable multiple onChange={setFiles} fileList={files}>
-                    <div style={{ height: 100, width : 1400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ height: 100, width : 1500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <span>클릭이나 드래그로 파일 첨부</span>
                     </div>
                 </Uploader>
