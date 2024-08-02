@@ -7,3 +7,7 @@
 .fc-day-sat a {
     color: blue;
 }
+
+.fc-media-screen{
+    z-index: 1 !important;
+}

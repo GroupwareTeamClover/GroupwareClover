@@ -5,8 +5,13 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {useEffect, useState} from "react";
+import {Modal} from "../../../../components/Modal/Modal";
 
 export const Calendar = () => {
+
+  const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   /** Full calendar plugin **/
   const plugin = [
@@ -25,12 +30,24 @@ export const Calendar = () => {
     else setSelect(prev => ({ ...prev, all : false, [name]: checked }));
   }
 
+  const scheduleColor = (state) => {
+    if(state === 1) return "green"
+    else if(state === 2) return "blue"
+    else if(state === 3) return "red"
+    else return "green";
+  }
+
   /** 캘린더에 표시될 이벤트 상태 **/
   const [schedule, setSchedule] = useState([
-    {title: "캘린더 테스트", date: "2024-08-23"},
-    {title: "합니다", date: "2024-08-24"},
-    {title: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15", color: "green"}
+    {groupCode: 1, title: "캘린더 테스트 1", date: "2024-08-23", color: scheduleColor(1)},
+    {groupCode: 2, title: "캘린더 테스트 2", date: "2024-08-25", color: scheduleColor(2)},
+    {groupCode: 3, title: "캘린더 테스트 3", date: "2024-08-26", color: scheduleColor(3)},
+    {groupCode: 1, title: "캘린더 테스트 4", date: "2024-08-27", color: scheduleColor(1)},
+    {groupCode: 2, title: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15", color: scheduleColor(2)}
   ]);
+
+  const [checkSchedule, setCheckSchedule] = useState(schedule);
+
 
   useEffect(() => {
     // 캘린더 페이지 들어왔을 때 스케줄 목록 바인딩 해야됨
@@ -39,9 +56,21 @@ export const Calendar = () => {
   }, []);
 
   useEffect(() => {
-    // 체크된 목록 바뀌면 필터 사용해서 캘린더에 재 바인딩
+    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
 
   }, [select]);
+
+
+  /** 선택된 날짜를 모달에 표시 **/
+  const [selectDay, setSelectDay] = useState("");
+  const handleDaySelect = (arg) => {
+    openModal();
+    setSelectDay(arg.dateStr);
+  }
+
+  const handleEventSelect = (event) => {
+    console.log("event ==== ", event);
+  }
 
   return (
     <div className={styles.container}>
@@ -58,7 +87,7 @@ export const Calendar = () => {
           </div>
           <div className={styles.row}>
             <input type="checkbox" id="group" name="group" onChange={ handleCheckBox } checked={select.group}/>
-            <label htmlFor="group">그룹 일정</label>
+            <label htmlFor="group">부서 일정</label>
             <div className={styles.colorBox} style={{backgroundColor: "blue"}}></div>
           </div>
           <div className={styles.row}>
@@ -88,7 +117,11 @@ export const Calendar = () => {
               day: "Day"
             }}
 
-            events={schedule}
+            events={checkSchedule}
+
+            dateClick={handleDaySelect} // 날짜가 선택 될 때
+            eventClick={handleEventSelect}
+
           />
 
           {/*
@@ -130,6 +163,37 @@ export const Calendar = () => {
           */}
         </div>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className={styles.modalForm}>
+          <h2> { selectDay } </h2>
+          <div className={styles.list}>
+            <p>일정 목록</p>
+            <ul>
+              {
+                schedule.map((item, i) => {
+                  return (
+                    <li key={i}>
+                      [개인 일정] { item.title.length > 20 ? item.title.slice(0,20)+ "..." : item.title }
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </div>
+          <div className={styles.detail}>
+            <p>일정 상세 정보</p>
+            <div className={styles.content}>
+
+            </div>
+            <div className={styles.btnBox}>
+              <button>일정 추가</button>
+              <button>일정 수정</button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   );
 }
