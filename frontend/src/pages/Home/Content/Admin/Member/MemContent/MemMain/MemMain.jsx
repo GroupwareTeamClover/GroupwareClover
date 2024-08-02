@@ -1,4 +1,3 @@
-import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './MemMain.module.css';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
@@ -7,18 +6,16 @@ import { ModalPosition } from './ModalPosition/ModalPosition';
 import {BaseUrl} from '../../../../../../../commons/config';
 import { ModalDelete } from './ModalDelete/ModalDelete';
 import { useMemStore } from '../../../../../../../store/store';
-import {Pagination} from '../../../Pagination/Pagination';
+import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 
 
 
 export const MemMain = () => {
 
-    const navi = useNavigate();
-    
     const {storemembers, setstoremembers} = useMemStore();
 
     const [status, setStatus] = useState({status:''});
-    const [members, setMembers] = useState([ {EMP_SEQ:'', EMP_NAME:'', DEPT_NAME:'', ROLE_NAME:''} ]);
+    const [members, setMembers] = useState([]);
     const [filtered, setFiltered] = useState(members);
     const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
     const [checkedMems, setCheckedMems] = useState([]);
@@ -26,7 +23,7 @@ export const MemMain = () => {
 
     //  사원 수 
     const processCountData = (data) => {
-        const counts = { normal: 0, rest: 0, stop: 0, out: 0 };
+        const counts = { prev: 0, normal: 0, rest: 0, stop: 0, out: 0 };
         data.forEach(item => {
             switch(item.EMP_STATE_CODE) {
                 case 0:  // 가입대기
@@ -61,7 +58,7 @@ export const MemMain = () => {
             setstoremembers(false)
             console.log("filtered.lenth:" +filtered.length)
         })
-    },[storemembers, ])
+    },[storemembers])
 
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
@@ -71,8 +68,9 @@ export const MemMain = () => {
         })
     },[])
 
+    const checkboxRef = useRef([]);
     //==========================================================================
-    // Pagingatiokn
+    // Pagingation
     const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
     const pageCount = Math.ceil(filtered.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
     console.log(pageCount + " 페이지 수 ")
@@ -83,12 +81,15 @@ export const MemMain = () => {
     //==========================================================================
     
 
-    const checkboxRef = useRef([]);
   
     // ----전체 체크박스 클릭
+    // filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
+    //                            .map((mem,i)=>{
+                                    
     const handleCheckAll = (e)=>{
         const checked = e.target.checked;
-        const allValues = members.map(mem => mem.EMP_SEQ);
+        // const allValues = members.map(mem => mem.EMP_SEQ);
+        const allValues = filtered.slice(currentPage*PER_PAGE, (currentPage+1)*PER_PAGE).map(mem => mem.EMP_SEQ);
         checkboxRef.current.forEach(checkbox => {
             if(checkbox){
                 checkbox.checked = checked;
@@ -100,22 +101,20 @@ export const MemMain = () => {
       // ============= 체크박스 클릭 ==================
     const handleCheckBox =(e)=>{
         const {value, checked} = e.target;
-            setCheckedMems(prev=> {
-                if(checked){
-                    return [...prev, value];
-                }else{
-                    return prev.filter(prev => prev != value); 
-                   
-                }
+        setCheckedMems(prev=> {
+            if(checked){
+                return [...prev, value];
+            }else{
+                return prev.filter(prev => prev != value); 
+                
+            }
         })
     }
-    
-
-
+    console.log(members.EMP_STATE_NAME +" EMP_STATE_NAME는?")
    
     console.log("checkedMem: "+checkedMems +" 갯수: " + checkedMems.length)
-    // const checkedCount = checkedMems.length;
-    // console.log("몇개"+checkedCount)
+    
+
 
     // ------------- 모달----------------------------------------
     const [ modalState, setModalState ] = useState("");
@@ -147,10 +146,6 @@ export const MemMain = () => {
         setFiltered(result);
     }
 
-
-
-    
-
     return (
       <div className={styles.container}>
         <div className={styles.member_info}>
@@ -158,26 +153,25 @@ export const MemMain = () => {
                 사원 수 : {members.length} 명
             </div>
             <div className={styles.member_detail}>
-                {countMem.normal + countMem.rest} 명
-                정상({countMem.normal}명 / <span className={styles.smallText}> 퇴사 {countMem.out}명</span>) 
+                <h1>{countMem.normal + countMem.rest} 명</h1>
+                (정상{countMem.normal}명 / <span className={styles.smallText}> 퇴사 {countMem.out}명</span>) 
                 <h3>가입대기 {countMem.prev}명</h3>
             </div>
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
-                    <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>사원삭제</button>
-                    <select name='status' onChange={handleSelectChange}>
-                        <option value="">상태변경</option>
-                        <option value="부서변경">부서변경</option>
-                        <option value="직위변경">직위변경</option>
-                        <option value="사용자그룹변경">사용자그룹변경</option>
-                        <option value="계정상태변경">계정상태변경</option>
-                    </select>
-                    <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
+                <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>사원삭제</button>
+                <select name='status' onChange={handleSelectChange}>
+                    <option value="">상태변경</option>
+                    <option value="부서변경">부서변경</option>
+                    <option value="직위변경">직위변경</option>
+                    <option value="사용자그룹변경">사용자그룹변경</option>
+                    <option value="계정상태변경">계정상태변경</option>
+                </select>
+                <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
             </div>         
         </div>
         <div className={styles.body}>
-            {/* ---------------------------------------------------------- */}
             <div className={styles.tableWrapper}>
                     <table className={styles.table}>
                         <thead className={styles.thead}>
@@ -225,41 +219,43 @@ export const MemMain = () => {
                         </thead>
                         <tbody className={styles.tbody}>
                             {/* 페이지네이션  데이터 영역 */}
-                            {
-                                filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
-                                .map((mem,i)=>{
-                                    return(
-                                        <tr key={i}>
-                                            <td className={styles.theadtd}><input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input></td>
-                                            <td className={styles.theadtd}>
-                                                {mem.EMP_NAME}
-                                            </td>
-                                            <td className={styles.theadtd}>
-                                                {mem.DEPT_NAME}
-                                            </td>
-                                            <td className={styles.theadtd}>
-                                                {mem.ROLE_NAME}
-                                            </td>
-                                            <td className={styles.theadtd}>
-                                                {mem.WORKER_STATE_NAME}
-                                            </td>
-                                            <td className={styles.theadtd}>
-                                                {mem.EMP_EMAIL}
-                                            </td>
-                                            <td className={styles.theadtd}>
-                                                {mem.EMP_STATE_NAME}
-                                            </td>
-                                        </tr>
-                                    )
+                            { filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem,i)=>{
+                                return(
+                                    <tr key={i}>
+                                        <td className={styles.theadtd}>
+                                            {mem.EMP_STATE_NAME === '가입대기' ? (
+                                                <input type="checkbox" disabled></input>
+                                            ) : (
+                                                <input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input>
+                                                )
+                                            }
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            {mem.EMP_NAME}
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            {mem.DEPT_NAME}
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            {mem.ROLE_NAME}
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            {mem.WORKER_STATE_NAME}
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            {mem.EMP_EMAIL}
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            {mem.EMP_STATE_NAME}
+                                        </td>
+                                    </tr>
+                                )
                                 })
                             }
 
                         </tbody>
                     </table>
-                </div>              
-            {/* ---------------------------------------------------------- */}
-           
-            
+                </div>           
        
            
         </div>
@@ -267,22 +263,22 @@ export const MemMain = () => {
          {/* 페이지네이션 */}
          {pageCount > 0 && (
             <Pagination
-            pageCount={pageCount}
-            onPageChange={handlePageChange}
-            currentPage={currentPage}
+                pageCount={pageCount}
+                onPageChange={handlePageChange}
+                currentPage={currentPage}
             />
-        )}
+            )}
         </div>
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
-                <div className={styles.modalForm}>
-                    { modalState === status.status &&
-                        <ModalPosition modalState={modalState} checkedMems={checkedMems}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
-                    }
-                    { modalState === 'deleteMem' &&
-                        <ModalDelete checkedMems={checkedMems} setIsModalOpen={setIsModalOpen}/>
-                    }
-                </div>
+            <div className={styles.modalForm}>
+                { modalState === status.status &&
+                    <ModalPosition modalState={modalState} checkedMems={checkedMems}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                }
+                { modalState === 'deleteMem' &&
+                    <ModalDelete checkedMems={checkedMems} setIsModalOpen={setIsModalOpen}/>
+                }
+            </div>
         </Modal>
         
       </div>

@@ -104,4 +104,9 @@ public class BoardlistController {
 		return ResponseEntity.ok(blServ.getBoardInfo(boardlistSeq));
 	}
 	
+	@GetMapping("/categories/{empSeq}")
+	public ResponseEntity<List<BoardlistDTO>> getCategories(@PathVariable int empSeq){
+		return ResponseEntity.ok(blServ.getCategories(empSeq));
+	}
+	
 }

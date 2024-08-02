@@ -8,6 +8,7 @@ import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaListAlt } from "react-icons/fa";
 import { GiTalk } from "react-icons/gi";
 import { HiMenuAlt3 } from "react-icons/hi";
+import {ImExit} from "react-icons/im";
 
 export const SideMenu = ({ open, setOpen }) => {
 

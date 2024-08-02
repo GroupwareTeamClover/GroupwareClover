@@ -45,7 +45,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems })=>{
                 setstoremembers(true),
                 closeModal()
             )
-        }
+        }else{ alert("수정사항을 선택해주세요.")}
     };
         
    
@@ -92,6 +92,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems })=>{
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">사용자그룹</option>
                             <option>정규직</option> 
+                            <option>비정규직</option> 
                             <option>계약직</option> 
                             <option>관리자</option> 
                         </select>
@@ -101,9 +102,8 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems })=>{
                         <>
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">계정상태</option>
-                            <option>정상</option> 
-                            <option>휴면</option> 
-                            <option>중지</option> 
+                            <option>재직중</option> 
+                            <option>퇴사</option> 
                         </select>
                         </>
                     }

@@ -22,10 +22,14 @@ $ npm i axios
 $ npm i react-daum-postcode
 
 /* Full Calendar */
-$ npm install --save \
-  @fullcalendar/core \
-  @fullcalendar/react \
+$ npm install --save 
+  @fullcalendar/core 
+  @fullcalendar/react 
   @fullcalendar/daygrid
+  @fullcalendar/interaction
+  @fullcalendar/timegrid
+  
+  
 
 /* EmailJs */
 $ npm i --save @emailjs/browser
