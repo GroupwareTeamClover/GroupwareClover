@@ -20,18 +20,19 @@ export const Main = () => {
   return (
     <div className={styles.container}>
         <div className={styles.form}>
-            <div className={styles.col}>
+            <div className={styles.leftCol}>
 
                 <div className={styles.myInfo}>
                     <div className={styles.avatar}>
-                        {sessionData.empAvatar === null &&
+                        { sessionData.empAvatar === null &&
                             <img src={default_image} alt="기본이미지"/>
                         }
                     </div>
                     <div className={styles.empInfo}>
-                        <p> { sessionData.empName }님 안녕하세요.</p>
-                        <div className={ styles.InfoBox}>
-                            <button onClick={handleMyPageModal}>상세보기</button>
+                        <p> Clover Portal</p>
+                        <p> {sessionData.empName}님 안녕하세요.</p>
+                        <div className={styles.InfoBox}>
+                            <button onClick={handleMyPageModal}>내 정보</button>
                         </div>
                     </div>
                 </div>
