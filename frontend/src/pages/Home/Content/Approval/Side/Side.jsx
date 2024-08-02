@@ -93,10 +93,11 @@ export const Side = () => {
              //양식이 변경될때마다 제목과 밑에 컴포넌트, 결재라인까지 함께 변경되어 버려서 새 결재 진행같은 느낌이 들지 않음
              const clonedDocName = structuredClone(selectedDocCode.children.name);
              const clonedDocCode = structuredClone(selectedDocCode);
-             const clonedEmpInfo = structuredClone(selectedEmpInfo);
-
-
-            handleWriteNavigation(`/approval/write/${path}`, clonedDocName, clonedDocCode, clonedEmpInfo); // 페이지 다시 로드
+             const clonedLineInfo = structuredClone(selectedEmpInfo);
+             console.log(`원본: ${JSON.stringify(selectedEmpInfo, null, 2)}`);
+             console.log(`복사: ${JSON.stringify(clonedLineInfo, null, 2)}`);
+             
+            handleWriteNavigation(`/approval/write/${path}`, clonedDocName, clonedDocCode, clonedLineInfo); // 페이지 다시 로드
             closeModal();
             setIsComplete(false); 
           

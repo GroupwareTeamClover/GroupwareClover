@@ -8,6 +8,9 @@ import { MdOutlineCancel } from "react-icons/md";
 export const WriteForm = () => {
     const location = useLocation();
     const state=location.state;
+    console.log(state.type);
+    console.log(state.docinfo);
+    console.log(state.empinfo);
 
     //맵핑해서 하나로 움직이게 하기
     const formConfig = {
