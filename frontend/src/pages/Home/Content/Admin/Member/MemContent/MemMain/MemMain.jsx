@@ -74,8 +74,20 @@ export const MemMain = () => {
     const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
     const pageCount = Math.ceil(filtered.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
     console.log(pageCount + " 페이지 수 ")
+    // 전체 체크박스에 ref 추가
+const allCheckRef = useRef(null);
     const handlePageChange = ({selected}) =>{
         setCurrentPage(selected);
+        setCheckedMems([]); // 체크박스 상태 초기화
+        // 전체 체크박스 해제
+        if (allCheckRef.current) {
+            allCheckRef.current.checked = false;
+        }
+        checkboxRef.current.forEach(checkbox => {
+            if (checkbox) {
+                checkbox.checked = false; // 체크박스 해제
+            }
+        });
         window.scrollTo(0,320);     // 페이지 변경 시 스크롤 맨 위로 이동시키기. 
     }
     //==========================================================================
@@ -85,19 +97,45 @@ export const MemMain = () => {
     // ----전체 체크박스 클릭
     // filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
     //                            .map((mem,i)=>{
-                                    
-    const handleCheckAll = (e)=>{
-        const checked = e.target.checked;
-        // const allValues = members.map(mem => mem.EMP_SEQ);
-        const allValues = filtered.slice(currentPage*PER_PAGE, (currentPage+1)*PER_PAGE).map(mem => mem.EMP_SEQ);
-        checkboxRef.current.forEach(checkbox => {
-            if(checkbox){
-                checkbox.checked = checked;
-            }
-        })
-        setCheckedMems(checked ? allValues : [])
+       
+        
+
+        const handleCheckAll = (e) => {
+            const checked = e.target.checked;
+        
+            // 현재 페이지에서 선택 가능한 항목들만 추출 (가입대기 제외)
+            const enabledValues = filtered
+                .slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
+                .map(mem => mem.EMP_SEQ);
+        
+            // 각 체크박스의 상태를 설정
+            checkboxRef.current.forEach((checkbox, i) => {
+                const mem = filtered[i + currentPage * PER_PAGE];
+                if (checkbox && mem.EMP_STATE_NAME !== '가입대기') {
+                    checkbox.checked = checked;
+                }
+            });
+        
+            // 선택된 항목만 state에 저장, 가입대기 상태는 제외
+            setCheckedMems(checked ? enabledValues.filter((empSeq, i) => {
+                const mem = filtered[i + currentPage * PER_PAGE];
+                return mem.EMP_STATE_NAME !== '가입대기';
+            }) : []);
+        };
+        
+         
+    // const handleCheckAll = (e)=>{
+    //     const checked = e.target.checked;
+    //     // const allValues = members.map(mem => mem.EMP_SEQ);
+    //     const allValues = filtered.slice(currentPage*PER_PAGE, (currentPage+1)*PER_PAGE).map(mem => mem.EMP_SEQ);
+    //     checkboxRef.current.forEach(checkbox => {
+    //         if(checkbox){
+    //             checkbox.checked = checked;
+    //         }
+    //     })
+    //     setCheckedMems(checked ? allValues : [])
  
-    }
+    // }
       // ============= 체크박스 클릭 ==================
     const handleCheckBox =(e)=>{
         const {value, checked} = e.target;
@@ -111,7 +149,6 @@ export const MemMain = () => {
         })
     }
     console.log(members.EMP_STATE_NAME +" EMP_STATE_NAME는?")
-   
     console.log("checkedMem: "+checkedMems +" 갯수: " + checkedMems.length)
     
 
@@ -175,8 +212,8 @@ export const MemMain = () => {
             <div className={styles.tableWrapper}>
                     <table className={styles.table}>
                         <thead className={styles.thead}>
-                            <tr>
-                                <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll}></input></td>
+                            <tr> 
+                                <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll} ref={allCheckRef} ></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
                                     <select name='DEPT_NAME' onChange={handleSearch}>
