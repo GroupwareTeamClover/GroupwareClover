@@ -37,6 +37,11 @@ public class EmployeeDAO {
     public void updateEmployee(EmployeeDTO dto) {
         mybatis.update("Employee.update", dto);
     }
+    
+    /** 사원 비밀번호 변경 **/
+    public int updatePwEmployee(EmployeeDTO dto) {
+        return mybatis.update("Employee.updatePw", dto);
+    }
 
     /** 직원 삭제 **/
     public void leaveEmployee(int empSeq) {
@@ -44,7 +49,7 @@ public class EmployeeDAO {
     }
 
     /** 직원 여부 확인 **/
-    public boolean existsEmployee(Map<String, String> map) {
+    public EmployeeDTO existsEmployee(Map<String, String> map) {
         return mybatis.selectOne("Employee.existsEmployee", map);
     }
 }

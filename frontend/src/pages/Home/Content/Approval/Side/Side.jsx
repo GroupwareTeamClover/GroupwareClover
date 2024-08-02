@@ -88,22 +88,22 @@ export const Side = () => {
                 apvlist: data.apvlist,
                 plist: data.plist
             };
+
+            const path = data?.docDetailName === '업무기안' ? 'business' :
+                        data?.docDetailName  === '휴가신청서' ? 'dayoff' :
+                        '/invalid';
+            // console.log(path);
             
             //모달창 닫기
             closeModal();
             //wirteForm으로 정보가지고 이동
-            handleWriteNavigation('/approval/write', data.docDetailName, combinedData)
+            handleWriteNavigation(`/approval/write/${path}`, data.docDetailName, combinedData)
     
         }).catch((error) => {
             alert("전자결재 문서 생성 실패");
         });
 
     }
-
-    // console.log(`문서 dto: ${JSON.stringify(docdto, null, 2)}`);
-    // console.log(`문서 양식 이름: ${JSON.stringify(docDetailName, null, 2)}`);
-    // console.log(`결재라인: ${JSON.stringify(apvlist, null, 2)}`);
-    // console.log(`참여자라인: ${JSON.stringify(plist, null, 2)}`);
 
 
     return (

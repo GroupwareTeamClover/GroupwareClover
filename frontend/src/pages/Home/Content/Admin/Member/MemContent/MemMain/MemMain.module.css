@@ -52,6 +52,7 @@
     flex:0.5;
     /* display: flex; */
     padding-left: 30px;
+    padding-bottom:20px;
 }
 .funcBtn select{
     height: 35px;
@@ -95,7 +96,7 @@
 }
 
 .table{
-    width: 95%;
+    width: 100%;
     height: 100%;
 }
 

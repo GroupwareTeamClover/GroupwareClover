@@ -65,7 +65,10 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
                    placeholder="8~20자리로 입력하세요"/>
           </div>
           <div className={styles.row}>
-            <input type="password" name="pwCheck" maxLength="20" onChange={handleDataCheck} value={ sendData.pwCheck } placeholder="8~20자리로 한번더 입력하세요"/>
+            <input type="password" name="pwCheck" maxLength="20" onChange={handleDataCheck} value={sendData.pwCheck}
+                   placeholder="8~20자리로 한번더 입력하세요"/>
+            <span className={styles.description}>비밀번호는 영문 대문자, 소문자, 숫자, 특수문자를</span>
+            <span className={styles.description}>각각 한개이상을 포함해야 합니다.</span>
           </div>
 
           { /* Password empty check */
@@ -75,7 +78,7 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
                     checkData.empPw ?
                         <p style={{color: "green"}}>비밀번호 일치</p>
                         :
-                        <p style={{color: "red"}}>비밀번호 불일치</p>
+                        <p style={{color: "red"}}>비밀번호 불일치 또는 형식 오류</p>
                   }
                 </div>
                 :

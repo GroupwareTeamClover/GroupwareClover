@@ -7,11 +7,12 @@ import AddMemberCheckBox from './AddMemberModal/AddMemberCheckBox/AddMemberCheck
 import AddMemberCheckBoxGroup from './AddMemberModal/AddMemberCheckBox/AddMemberCheckBoxGroup';
 import { useNavigate } from 'react-router';
 import { BaseUrl } from '../../../../../commons/config';
-import { useBoardStore } from '../../../../../store/store';
+import { useBoardStore, useMemberStore } from '../../../../../store/store';
 
 const CreateBoard = () => {
 
     const { addAllBoardList, addGroupBoardList } = useBoardStore();
+    const { admin } = useMemberStore();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => {
@@ -101,14 +102,14 @@ const CreateBoard = () => {
                             (boardType === 'A') ? addAllBoardList(addedData) : addGroupBoardList(addedData);
                         }
                         alert("게시판이 생성되었습니다!");
-                        navi("/community/board", { state: addedData });
+                        navi(`/community/board/${addedData.boardlistSeq}`);
                     }
                 });
             }
         });
     }
 
-    return (
+    return !admin ? <div className={styles.container}>관리자 전용 페이지입니다.</div> : (
         <div className={styles.container}>
             <div className={styles.header}>게시판 만들기</div>
             <div className={styles.titleBox}>
@@ -147,10 +148,10 @@ const CreateBoard = () => {
                             <AddMemberCheckBoxGroup values={addMembers} onChange={setAddMembers}>
                                 {depts.map((dept, i) => (
                                     <div key={i}>
-                                        <h2>{dept}</h2>
+                                        <div className={styles.eachDept}>{dept}</div>
                                         {members.filter(member => member.DEPT_NAME === dept).map((member, j) => (
                                             <AddMemberCheckBox key={`${i}-${j}`} value={member}>
-                                                {member.EMP_NAME} / {member.ROLE_NAME}
+                                                <div className={styles.eachInfo}>{member.EMP_NAME} / {member.ROLE_NAME}</div>
                                             </AddMemberCheckBox>
                                         ))}
                                     </div>

@@ -1,6 +1,6 @@
 .attendance {
     width: 90%;
-    height: 35%;
+    height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -12,6 +12,11 @@
 
 .icons:hover {
     cursor: pointer;
+}
+
+.attForm {
+    width: 100%;
+    height: 100%;
 }
 
 .attTitle {

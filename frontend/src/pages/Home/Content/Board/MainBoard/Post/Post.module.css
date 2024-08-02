@@ -1,0 +1,83 @@
+.post {
+    display: flex;
+    align-items: center;
+    height : 6.37vh;
+    border-bottom: 1px solid #5a5a64;
+    margin-bottom: 0;
+}
+
+.post div {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.post .star {
+    margin: 0;
+    width: 3.125vw;
+    height : 6.37vh;
+    font-weight: 500;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post .star:hover {
+    cursor: pointer;
+}
+
+.starIcon:hover {
+    fill: rgb(192, 192, 26);}
+
+.post .title {
+    width: 780px;
+    height : 6.37vh;
+    text-align: left;
+    font-size: 15px;
+    padding-left: 0.52vw;
+    display: flex;
+    align-items: center;
+}
+
+.post .title:hover{
+    cursor: pointer;
+}
+
+.post .writer {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    width: 10.42vw;
+}
+
+.post .writer .userAvatar {
+    width: 1.5625vw;
+    height: 3.3vh;
+    background-color: orange;
+    border-radius: 50%;
+    margin: 0 1.04vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.post .writer .userAvatar img {
+    width: 1.5625vw;
+    height: 3.3vh;
+    border-radius: 50%;
+}
+
+.date {
+    width: 8.34vw;
+    text-align: center;
+}
+
+.view {
+    width : 5.2vw;
+    display: flex;
+    align-items: center;
+    padding-left: 1.04vw;
+    padding-top: 0.11vh;
+}

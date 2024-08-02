@@ -45,6 +45,12 @@ public class EmployeeController {
         employeeService.updateEmployee(dto);
     }
 
+    @PutMapping("/{empSeq}")
+    public ResponseEntity<String> updateEmployee(@PathVariable int empSeq, @RequestBody EmployeeDTO dto) {
+        String result = employeeService.updatePwEmployee(dto);
+        return ResponseEntity.ok(result);
+    }
+
     @DeleteMapping("/{empSeq}")
     public void leaveEmployee(@PathVariable int empSeq) {
         employeeService.leaveEmployee(empSeq);
@@ -57,7 +63,7 @@ public class EmployeeController {
 	}
 
     @GetMapping("/exists")
-    public ResponseEntity<Boolean> existsEmployee(String empName, String empId, String empEmail) {
+    public ResponseEntity<EmployeeDTO> existsEmployee(String empName, String empId, String empEmail) {
         return ResponseEntity.ok(employeeService.existsEmployee(empName, empId, empEmail));
     }
 
