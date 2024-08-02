@@ -87,15 +87,8 @@
     <!-- 특정 사용자의 프로필 정보를 조회하는 쿼리 -->
     <select id="getProfile" parameterType="int" resultType="java.util.HashMap">
         select 
-            e.emp_seq as empSeq, 
-            e.emp_avatar as empAvatar, 
-            e.emp_name as empName, 
-            e.emp_email as empEmail, 
-            r.role_name as roleName, 
-            d.dept_name as deptName, 
-            e.emp_tel as empTel, 
-            e.emp_birth as empBirth, 
-            r.role_code as roleCode
+            e.emp_seq, e.emp_avatar, e.emp_name, e.emp_email, r.role_name, 
+            d.dept_name, e.emp_tel, e.emp_birth, r.role_code
         from employee e
         join department d on e.dept_code = d.dept_code
         join role r on e.role_code = r.role_code
