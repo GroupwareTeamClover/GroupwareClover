@@ -4,14 +4,17 @@ import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder  } from "react-icons/fa"
 import { CiFileOn } from "react-icons/ci";
 
 export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, setSelectedItem,  setDraggingItem, isDragging, setIsDragging}) => {
-  // console.log('드래그 폴더 selecteditem:', JSON.stringify(selectedItem, null, 2))
-    
     const [isExpanded, setIsExpanded] = useState(false);
 
     const isItemSelected = (child) => {
-      const allChoices = [...selectedItem.apvchoice, ...selectedItem.refchoice, ...selectedItem.viechoice, ...selectedItem.recchoice,];
+      const allChoices = [
+          ...(selectedItem.apvchoice || []),
+          ...(selectedItem.refchoice || []),
+          ...(selectedItem.viechoice || []),
+          ...(selectedItem.recchoice || [])
+      ];
       return allChoices.some(choice => choice.seq === child.seq);
-    };
+  };
 
   // 선택된 자식이 있는지 확인하는 함수
   const isAnyChildSelected = (children) => {
@@ -21,7 +24,7 @@ export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, set
   // 폴더 열림 상태 업데이트
     useEffect(() => {
       setIsExpanded(isAnyChildSelected(folder.children) || folder.isOpen || false);
-    }, [folder.isOpen, selectedItem]);
+    }, [folder.isOpen]);
 
     const handleToggle = () => {
       setIsExpanded(!isExpanded);
@@ -35,21 +38,12 @@ export const DragFolder = ({ folder, level = 0 , onItemClick , selectedItem, set
           item,
           department: folder.name 
       }));
-
-  
     };
 
     const handleClick = (event, item) => {
-      if (isDragging) {
-          event.preventDefault();
-          event.stopPropagation();
-          return;
-      }
       onItemClick(item);
     };
 
-   
-  
     return (
       <div className={styles.folderContainer} style={{ marginLeft: `${level * 20}px` }}>
         <div className={styles.folderHeader} onClick={handleToggle}>
