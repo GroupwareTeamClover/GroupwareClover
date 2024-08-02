@@ -7,8 +7,6 @@ import { FaSearch } from "react-icons/fa";
 import Post from './Post/Post';
 import { Pagination } from '../../../../../components/Pagination/Pagination';
 
-
-
 const MainBoard = () => {
     const { boardlistSeq } = useParams();
     const [boardInfo, setBoardInfo] = useState({ boardlistSeq: 0, boardlistName: '', boardlistType: '', boardlistActive: '' });
@@ -17,19 +15,16 @@ const MainBoard = () => {
     useEffect(() => {
         if (boardlistSeq === undefined) {
             setBoardInfo({ boardlistSeq: 1, boardlistName: '사내공지', boardlistType: 'A', boardlistActive: 'T' })
-        }else if( boardlistSeq == 0){
+        } else if (boardlistSeq == 0) {
             setBoardInfo({ boardlistSeq: 0, boardlistName: '중요 게시물', boardlistType: 'A', boardlistActive: 'T' })
-        }else {
+        } else {
             axios.get(`${BaseUrl()}/boardlist/boardInfo`, { params: { boardlistSeq: boardlistSeq } }).then((resp) => {
                 setBoardInfo(prev => ({ ...prev, ...resp.data }));
             })
         }
     }, [boardlistSeq]);
 
-    const [keyword, setKeyword] = useState('');
-    const handleKeywordChange = (e) => {
-        setKeyword(e.target.value);
-    }
+    
 
     const [posts, setPosts] = useState([]);
     const [filtered, setFiltered] = useState(posts);
@@ -41,31 +36,47 @@ const MainBoard = () => {
         window.scrollTo(0, 320);
     }
 
+    useEffect(() => {
+        axios.get(`${BaseUrl()}/board/posts/${boardInfo.boardlistSeq}`).then(resp => {
+            setPosts(resp.data);
+            setFiltered(resp.data);
+        })
+    }, [boardInfo]);
+
+    //검색
+    const [keyword, setKeyword] = useState('');
+    const [searchType, setSearchType] = useState('');
+    const handleKeywordChange = (e) => {
+        setKeyword(e.target.value);
+    }
+    const handleSearchType = (e) => {
+        setSearchType(e.target.value);
+    }
+    const handleSearch = () => {
+        axios.get(`${BaseUrl()}/board/search`, {params : {boardlistSeq: boardInfo.boardlistSeq, searchType : searchType, keyword : keyword}}).then(resp => {
+            console.log(resp.data);
+        });
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>{boardInfo.boardlistName}</div>
             <div className={styles.searchBox}>
-                <select name="searchType" class="typeBox" id="searchType">
+                <select name="searchType" class="typeBox" id="searchType" onChange={handleSearchType} value={searchType}>
                     <option value="">검색 유형</option>
                     <option value="title">제목</option>
                     <option value="writer">작성자</option>
                 </select>
                 <input type="text" id="keyword" name="keyword" autocomplete="off" onChange={handleKeywordChange} value={keyword} maxLength={100}></input>
-                <button><FaSearch className={styles.searchLogo} /></button>
+                <button onClick={handleSearch}><FaSearch className={styles.searchLogo} /></button>
             </div>
             <div className={styles.postBox}>
-                {/* {filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
-            .map((post,i)=>{} */}
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
-                <Post />
+                {filtered.slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
+                    .map((post, i) => {
+                        return(
+                            <Post title={post.boardTitle} writer={post.boardWriter} data={post.boardWriteDate} view={post.boardViewCount}/>
+                        );
+                    })}
             </div>
             <div className={styles.pageNavi}>
                 {pageCount > 0 && (

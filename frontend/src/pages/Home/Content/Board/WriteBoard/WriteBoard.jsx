@@ -7,8 +7,11 @@ import { useMemberStore } from '../../../../../store/store';
 import 'rsuite/SelectPicker/styles/index.css';
 import 'rsuite/Uploader/styles/index.css';
 import WebEditor from '../../../../../components/WebEditor/WebEditor';
+import { useNavigate } from 'react-router-dom';
 
 const WriteBoard = () => {
+
+    const navi = useNavigate();
 
     //게시판종류
     const [categories, setCategories] = useState([]);
@@ -27,7 +30,7 @@ const WriteBoard = () => {
 
     //게시글 내용
     const editorRef = useRef();
-    const [content, setContent] = useState();
+    const [content, setContent] = useState('');
     const handleContentChange = () => {
         setContent(editorRef.current.getInstance().getHTML());
     }
@@ -43,6 +46,35 @@ const WriteBoard = () => {
             }));
         })
     }, []);
+
+    const handleSubmit = () => {
+        if (category === null) {
+            alert("게시판을 선택해주세요!");
+        } else if (title.trim() === "") {
+            alert("제목을 입력해주세요!");
+        } else {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+            if (textContent.trim() === "") {
+                alert("내용을 입력해주세요!");
+            } else {
+                axios.post(`${BaseUrl()}/board`, {
+                    boardlistSeq: category,
+                    title: title,
+                    writer: sessionData.empId,
+                    content: content,
+                    files: files
+                }).then(resp => {
+                    if (resp.status === 200) {
+                        alert("게시글이 등록되었습니다!");
+                        navi(`/community/board/${category}`)
+                    }
+                })
+            }
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -61,21 +93,21 @@ const WriteBoard = () => {
             </div>
             <div className={styles.title}>
                 <input type="text" placeholder="제목을 입력해 주세요 (최대 30자까지 입력 가능)"
-                    name="title" className={styles.titleInput} maxlength="30" />
+                    name="title" className={styles.titleInput} maxlength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
                 <Uploader autoUpload={false} draggable multiple onChange={setFiles} fileList={files}>
-                    <div style={{ height: 100, width : 1500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span>클릭이나 드래그로 파일 첨부</span>
+                    <div style={{ height: 100, width: 1500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span>클릭하거나 드래그하여 파일 첨부</span>
                     </div>
                 </Uploader>
             </div>
             <div className={styles.editorBox}>
-                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent=""/>
+                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent="" />
             </div>
             <div className={styles.btnBox}>
                 <button className={styles.cancelBtn}>취소</button>
-                <button className={styles.writeBtn}>등록</button>
+                <button className={styles.writeBtn} onClick={handleSubmit}>등록</button>
             </div>
         </div>
     );

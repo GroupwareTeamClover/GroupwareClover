@@ -4,19 +4,12 @@ import { FaSearch} from "react-icons/fa";
 import { Folder } from '../../../../../components/Folder/Folder';
 import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
+import { useApprovalStore } from '../../../../../store/approvalStore';
 
 
-export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
-    //데이터 모습
-    // const folderData=[
-    //     {
-    //         name: "일반",
-    //         children: [{name :"업무기안", period:"5"}.
-    //                    {name: "휴가신청서", period:"5"}]
-    //     },
-    // ]
+export const ChoiceForm= () =>{
+    const {selectedDocCode, setSelectedDocCode, setCopySelectedDocCode}=useApprovalStore();
 
-    //데이터 가져오기
     const [folderData, setFolderData]=useState([]);
 
 
@@ -72,14 +65,16 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
 
     //콜백함수로 전달받은 선택한 양식 이름을 폴더데이터에서 가져와서 비교해 정보저장
      const handleItemClick = (item) => {
-        //찾기
-        folderData.map((data,index)=>{
-            data.children.map((children,index)=>{
-                if(children.name===item.name){
-                    setSelectedDocCode({name: data.name, children: item})
-                }
+        if(item){
+            //찾기
+            folderData.map((data,index)=>{
+                data.children.map((children,index)=>{
+                    if(children.name===item.name){
+                        setSelectedDocCode({name: data.name, children: item})
+                    }
+                })
             })
-        })
+        }
     };
 
     
@@ -128,7 +123,7 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
                         </div>
                         <div className={styles.searchContent}>
                             {filteredData.map((folder, index) => (
-                                <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedDocCode} setSelectedItem={setSelectedDocCode}/>
+                                <Folder key={index} folder={folder}  onItemClick={handleItemClick} selectedItem={selectedDocCode} setSelectedItem={setSelectedDocCode}  />
                             ))}
                         </div>
                     </div>
@@ -141,28 +136,22 @@ export const ChoiceForm= ({ selectedDocCode, setSelectedDocCode }) =>{
                             <div className={styles.choiceInfoLine}>
                                 <span className={styles.choiceContentText}>양식명:</span>
                                 &nbsp;  
-                                <span  className={styles.choiceText}>{selectedDocCode.children.name}</span>
+                                <span  className={styles.choiceText}>{selectedDocCode.children.name ? selectedDocCode.children.name:''}</span>
                             </div>
                             <div className={styles.choiceInfoLine}>
                                 <span className={styles.choiceContentText}>양식구분:</span>
                                 &nbsp; 
-                                <span className={styles.choiceText}>{selectedDocCode.name}</span>
+                                <span className={styles.choiceText}>{selectedDocCode.name ? selectedDocCode.name:''}</span>
                             </div>
                             <div className={styles.choiceInfoLine}>
                                 <span className={styles.choiceContentText}>보존년한:</span> 
                                 &nbsp; 
-                                <span  className={styles.choiceText}>{selectedDocCode.children.period}</span>
+                                <span  className={styles.choiceText}>{selectedDocCode.children.period ? selectedDocCode.children.period:''}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        {/* {isModalOpen && (
-                <Modal 
-                    item={selectedItem} 
-                    onClose={() => setIsModalOpen(false)} 
-                />
-            )} */}
         </div>
     )
 }

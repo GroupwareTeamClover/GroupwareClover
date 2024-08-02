@@ -68,6 +68,8 @@
     border-top: 1px solid #d3d3d3;
 	border-bottom: 1px solid #d3d3d3;
     min-height: 500px;
+	position: relative;
+	z-index: 1;
 }
 
 /* .note-editable {
@@ -78,6 +80,10 @@
 	margin-top: 25px;
 	display: flex;
 	justify-content: center;
+}
+
+.container .btnBox button:hover{
+	cursor: pointer;
 }
 
 .container .btnBox .cancelBtn {

@@ -20,7 +20,7 @@ import { CiFileOn } from "react-icons/ci";
 //적용방법
 /* <div className={styles.searchContent}>
     {folderData.map((folder, index) => (
-        <Folder key={index} folder={folder} />
+        <Folder key={index} folder={folder} onItemClick={?} , selectedItem={?}, setSelectedItem={?}/>
     ))}
 </div> */
 
