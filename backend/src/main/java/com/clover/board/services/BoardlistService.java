@@ -79,4 +79,8 @@ public class BoardlistService {
 	public BoardlistDTO getBoardInfo(int boardlistSeq) {
 		return blDao.getBoardInfo(boardlistSeq);
 	}
+	
+	public List<BoardlistDTO> getCategories(int empSeq){
+		return blDao.getCategories(empSeq);
+	}
 }

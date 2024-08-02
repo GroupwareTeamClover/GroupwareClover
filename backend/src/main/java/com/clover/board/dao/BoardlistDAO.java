@@ -68,4 +68,8 @@ public class BoardlistDAO {
 		return mybatis.selectOne("boardList.selectEachBoard", boardSeq);
 	}
 	
+	public List<BoardlistDTO> getCategories(int empSeq){
+		return mybatis.selectList("boardList.selectIndividualBoard", empSeq);
+	}
+	
 }
