@@ -24,6 +24,21 @@
     height: 700px;
     border: 1px solid darkgray;
     border-radius: 15px;
+    padding: 20px;
+}
+
+.row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.colorBox {
+    width: 30px;
+    height: 13px;
+    border-radius: 3px;
 }
 
 .calendar {

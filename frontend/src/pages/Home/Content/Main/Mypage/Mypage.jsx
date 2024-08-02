@@ -34,8 +34,10 @@ export const Mypage = ({empSeq, closeModal}) => {
         <div className={styles.container}>
             <div className={styles.top}>
                 <div className={styles.avatar}>
-                    {(mypage.EMP_AVATAR === null || mypage.EMP_AVATAR === undefined) &&
-                        <img src={default_image} alt="기본이미지"/>
+                    {(mypage.EMP_AVATAR === null || mypage.EMP_AVATAR === undefined) ?
+                      <img src={default_image} alt="기본이미지"/>
+                      :
+                      <img src={mypage.EMP_AVATAR} alt="기본이미지"/>
                     }
                 </div>
                 <div className={styles.topInfo}>
