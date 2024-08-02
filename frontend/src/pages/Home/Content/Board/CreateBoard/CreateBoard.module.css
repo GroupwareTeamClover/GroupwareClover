@@ -1,7 +1,9 @@
 .container{
     flex:7;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    padding-bottom: 80px;
 }
 
 .header{
@@ -56,7 +58,7 @@
 }
 
 .memberBox{
-    flex:10;
+    flex:8;
 }
 
 .memberBox .memberLetter{
