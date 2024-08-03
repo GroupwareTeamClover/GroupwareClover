@@ -1,10 +1,10 @@
 import styles from './Business.module.css'
 import { BsChevronDoubleLeft } from 'react-icons/bs';
 import { useState, useEffect, useRef } from 'react';
-import { useMemberStore } from '../../../../../../../store/store';
-import  WebEditor  from '../../../../../../../components/WebEditor/WebEditor';
+import { useMemberStore } from '../../../../../../../../store/store';
+import  WebEditor  from '../../../../../../../../components/WebEditor/WebEditor';
 import axios from 'axios';
-import { BaseUrl } from '../../../../../../../commons/config';
+import { BaseUrl } from '../../../../../../../../commons/config';
 
 export const Business =({type, docinfo, empinfo, isInsert})=>{
    console.log(empinfo);
