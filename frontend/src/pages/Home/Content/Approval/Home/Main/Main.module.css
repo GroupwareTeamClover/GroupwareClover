@@ -13,6 +13,15 @@
     flex-direction: column;
 }
 
+/* 제목 */
+.header{
+    flex: 1;
+    padding-left: 12px;
+    display: flex;
+    align-items: center;
+}
+
+/* 카드 */
 .cardWrapper{
     flex: 4;
     display: flex;
@@ -33,14 +42,16 @@
     flex:1;
 }
 
+
+/* 리스트목록 */
 .ingBox{
-    flex: 6;
+    flex: 5;
     display: flex;
     flex-direction: column;
 }
 
-.header{
-    flex:1.5;
+.listheader{
+    flex:1;
 }
 
 .headerText{
@@ -49,7 +60,7 @@
 }
 
 .tableWrapper{
-    flex:8.5;
+    flex:9;
 }
 
 .table{

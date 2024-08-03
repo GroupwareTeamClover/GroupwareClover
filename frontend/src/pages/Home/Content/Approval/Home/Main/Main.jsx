@@ -1,9 +1,10 @@
-import styles from './DetailMain.module.css'
-import { Card } from '../Card/Card'
+import styles from './Main.module.css'
+import { Card } from './Card/Card'
 
-export const DetailMain=()=>{
+export const Main=()=>{
     return(
         <div className={styles.container}>
+            <div className={styles.header}><h3>전자결재</h3></div>
             <div className={styles.cardWrapper}>
                 <div className={styles.cardBox}>
                     <Card/>
@@ -15,7 +16,7 @@ export const DetailMain=()=>{
                 <div className={styles.cardLine}></div>
             </div>
             <div className={styles.ingBox}>
-                <div className={styles.header}><h4 className={styles.headerText}>기안 진행 문서</h4></div>
+                <div className={styles.listheader}><h4 className={styles.headerText}>기안 진행 문서</h4></div>
                 <div className={styles.tableWrapper}>
                     <table className={styles.table}>
                         <thead className={styles.thead}>

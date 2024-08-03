@@ -1,0 +1,58 @@
+/* div{
+    border: 1px solid black;
+} */
+
+.container{
+    width: 100%;
+    height: 100%;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.datatitle{
+    flex: 0.7;
+    display: flex;
+}
+
+.date{
+    flex: 4;
+    display: flex;
+}
+
+.name{
+    flex: 3;
+    background: rgb(221, 221, 221);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.value{
+    flex: 7;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.title{
+    flex: 6;
+    display: flex;
+}
+
+.inputdate{
+    width: 100%;
+    height: 100%;
+}
+
+.inputtitle{
+    width: 100%;
+    height: 100%;
+}
+
+.editerContainer{
+    flex: 9.3;
+}
+
