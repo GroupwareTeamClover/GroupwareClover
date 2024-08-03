@@ -66,7 +66,6 @@ public class EmployeeService {
 
     /** 직원 여부 확인 **/
     public EmployeeDTO existsEmployee(String empName, String empId, String empEmail) {
-
         Map<String, String> map = new HashMap<String, String>();
         map.put("empName", empName);
         map.put("empId", empId);
