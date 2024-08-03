@@ -27,6 +27,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
     const handleChangeStatus =(e)=>{
         const { value } = e.target;
         setNewValue(value);         // select에서 선택한 옵션명
+        console.log(checkedMems)
     }
     
     const handleSave = () => {
@@ -35,7 +36,6 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
             newValue,
             empSeqList: members
         };      
-        
         
         if(newValue !==''){
                          // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)

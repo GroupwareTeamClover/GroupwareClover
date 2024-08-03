@@ -2,7 +2,6 @@ package com.clover.admin.controllers;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clover.admin.dto.AdminUpdateMemDTO;
 import com.clover.admin.services.AdminMemberService;
+import com.clover.employee.dto.EmployeeDTO;
 
 @RestController
 @RequestMapping("/adminmember")
@@ -24,7 +24,7 @@ public class AdminMemberController {
 	
 	
 	@GetMapping
-	public ResponseEntity<List<HashMap<String, Object>>> getAllData(){
+	public ResponseEntity<List<EmployeeDTO>> getAllData(){
 		return ResponseEntity.ok(adminmemberService.getAllData());
 	}
 	@GetMapping("/countmem")

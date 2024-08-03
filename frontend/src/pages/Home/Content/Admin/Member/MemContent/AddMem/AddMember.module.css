@@ -59,6 +59,30 @@
     padding-left: 30px;
     padding-bottom:15px;
 }
+
+.col_button{
+    flex: 1;
+}
+.searchWrapper{
+    flex:1;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 50px;
+}
+.searchWrapper input{
+    height: 35px;
+    width: 220px;
+    margin-right: 20px;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.funcBtn select{
+    height: 35px;
+    width: 200px;
+    margin-left: 20px;
+    
+}
 .funcBtn button{
     /* flex:0.1; */
     width: 100px;

@@ -1,14 +1,11 @@
 import styles from './AdminSideMenu.module.css';
 import { useNavigate } from "react-router-dom";
-import { FaAddressBook } from 'react-icons/fa';
 import { IoHome } from "react-icons/io5";
 import { FaCalendarDays } from "react-icons/fa6";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaListAlt } from "react-icons/fa";
-import { GiTalk } from "react-icons/gi";
-import { useEffect, useState } from 'react';
 import { HiMenuAlt3 } from "react-icons/hi";
-import React from "react";
+import React, { useEffect, useState } from 'react';
 
 export const AdminSideMenu = ({ open, setOpen }) => {
 
@@ -17,8 +14,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     { name: "조직관리", link: "member", type: "통합사원목록", icon: FaCalendarDays, 
       submenus: [
         { name: "통합 사원 목록", link: "member", type: "통합사원목록" },
-        { name: "가입 승인 목록", link: "member/addmem", type: "가입승인목록" },
-        { name: "삭제 사원 목록", link: "member/delmem", type: "삭제사원목록" }
+        { name: "가입 승인 목록", link: "member/addmem", type: "가입승인목록" }
       ]
     },
     { name: "팝업공지관리", link: "popup", type: "popup", icon: FaCalendarDays, 
@@ -31,23 +27,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     { name: "보안관리", link: "log", type: "log", icon: FaListAlt }
   ];
 
-  const handleSideToggle = () => {
-    setOpen(prev => {
-      const sideState = !prev;
-      if (sideState) {localStorage.setItem("sidebar", "true");}
-      else {localStorage.setItem("sidebar", "false");
-       
-        }  
-      setDropdown({ member: false, popup: false });      
-      return sideState;
-    });
-  };
-
   const navi = useNavigate();
-
-  const handleNavigation = (link, type) => {
-    navi(link, { state: { type } });
-  };
 
   const [dropdown, setDropdown] = useState({
     member: false,
@@ -56,22 +36,36 @@ export const AdminSideMenu = ({ open, setOpen }) => {
 
   const [selectedMenu, setSelectedMenu] = useState('');
 
-  const handleMenuClick = (link, type) => {
-    setSelectedMenu(type);
-    console.log(type);
-    handleNavigation(link, type);
+  const handleSideToggle = () => {
+    setOpen(prev => {
+      const sideState = !prev;
+         // 사이드바 상태에 따라 드롭다운 상태를 업데이트
+      if (!sideState) {
+        // 사이드바를 닫을 때만 드롭다운을 닫습니다.
+        setDropdown({ member: false, popup: false });
+      }
+
+      // 로컬 스토리지 업데이트
+      localStorage.setItem("sidebar", sideState ? "true" : "false");
+      
+      return sideState;
+    });
   };
 
-  const toggleDropdown = (menu) => {
+  const handleMenuClick = (link, type) => {
+    setSelectedMenu(type);
+    navi(link, { state: { type } });
+  };
+
+  const toggleDropdown = (menuType, firstSubmenu) => {
     if (!open) {
-      const firstSubmenu = menus.find(m => m.name === menu)?.submenus?.[0];
-      if (firstSubmenu) {
-        handleMenuClick(firstSubmenu.link, firstSubmenu.type);
-      }
+      setOpen(true); // 사이드바가 닫혀있으면 열기
+      handleMenuClick(firstSubmenu.link, firstSubmenu.type); // 첫 번째 서브메뉴로 이동
+      setDropdown(prev => ({ ...prev, [menuType]: true })); // 해당 메뉴의 드롭다운 상태를 열림으로 설정
     } else {
       setDropdown(prevState => ({
         ...prevState,
-        [menu]: !prevState[menu]
+        [menuType]: !prevState[menuType]
       }));
     }
   };
@@ -89,41 +83,34 @@ export const AdminSideMenu = ({ open, setOpen }) => {
           <HiMenuAlt3 size={30} className={styles.icons} onClick={handleSideToggle} />
         </div>
         <div className={styles.menus}>
-          {
-            menus.map((menu, i) => {
-              return (
-                <div key={i}>
-                  {open ? (
-                    <div className={styles.menuLink} onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)} >
-                      <div>
-                        {React.createElement(menu.icon, { size: "30", color: "white" })}
-                      </div>
-                      <h3 className={styles.menuTitle}>{menu?.name}</h3>
+          {menus.map((menu, i) => (
+            <div key={i}>
+              <div 
+                className={styles.menuLink} 
+                onClick={() => menu.submenus 
+                  ? toggleDropdown(menu.type, menu.submenus[0]) 
+                  : handleMenuClick(menu.link, menu.type)}
+                style={{ color: selectedMenu === menu.type ? 'orange' : 'black' }}
+              >
+                <div>{React.createElement(menu.icon, { size: "30", color: "white" })}</div>
+                {open && <h3 className={styles.menuTitle}>{menu.name}</h3>}
+              </div>
+              {menu.submenus && dropdown[menu.type] && (
+                <div className={styles.dropdown}>
+                  {menu.submenus.map((submenu, j) => (
+                    <div 
+                      key={j} 
+                      className={styles.menuLink} 
+                      onClick={() => handleMenuClick(submenu.link, submenu.type)}
+                      style={{ color: selectedMenu === submenu.type ? 'orange' : 'white' }}
+                    >
+                      <div className={styles.submenuTitle}>{submenu.name}</div>
                     </div>
-                  ) : (
-                    <div className={styles.menuLink} onClick={() => handleMenuClick(menu.link, menu.type)} >
-                      <div>
-                        {React.createElement(menu.icon, { size: "30", color: "white" })}
-                      </div>
-                      <h3 className={open ? styles.menuTitle : styles.menuTitleAction}>{menu?.name}</h3>
-                    </div>
-                  )}
-
-                  {menu.submenus && dropdown[menu.type] && (
-                    <div className={styles.dropdown}>
-                      {menu.submenus.map((submenu, j) => (
-                        <div key={j} className={styles.menuLink} onClick={() => handleMenuClick(submenu.link, submenu.type)}
-                          style={{ color: selectedMenu === submenu.type ? 'orange' : 'white' }}
-                          >
-                          <div className={styles.submenuTitle}>{submenu.name}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  ))}
                 </div>
-              )
-            })
-          }
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </div>
