@@ -171,6 +171,7 @@ export const MemMain = () => {
             if (name === "empName") {
                 result = members.filter((data) => data[name].includes(value));
             } else {
+               
                 result = members.filter((data) => data[name]=== parseInt(value));
             }
             setFiltered(result);
@@ -184,14 +185,15 @@ export const MemMain = () => {
       <div className={styles.container}>
         <div className={styles.member_info}>
             <div className={styles.member_total}>
-                사원 수 : {filtered.length} 명
+               
+                전체 사원 수 : {members.length} 명
             </div>
             <div className={styles.member_detail}>
                 <div className={styles.count1}>
                     {countMem.normal + countMem.rest}명
                 </div>
                 <div className={styles.count2}>
-                    <span>(정상{countMem.normal}명   휴직 {countMem.rest}명  /  퇴사 {countMem.out}명</span>) 
+                    <span>(재직 {countMem.normal}명   휴직 {countMem.rest}명  /  퇴사 {countMem.out}명</span>) 
                 </div>
                 <div className={styles.count3waiting}>
                     <p>가입대기 {countMem.prev}명</p>
@@ -232,18 +234,18 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll} ref={allCheckRef}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
-                                    <select name='deptCode' onChange={handleSearch}>
+                                    <select name='deptCode' value='부서' onChange={handleSearch}>
                                         <option value="">부서</option>
-                                        <option value='0'>총무</option> 
-                                        <option value='1'>인사</option> 
-                                        <option value='2'>사무</option> 
+                                        <option value='1'>총무</option> 
+                                        <option value='2'>인사</option> 
+                                        <option value='3'>사무</option> 
                                         <option value='4'>유통</option> 
-                                        <option value='4'>경영</option> 
-                                        <option value='5'>미정</option> 
+                                        <option value='5'>경영</option> 
+                                        <option value='99'>미정</option> 
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name='roleCode' onChange={handleSearch}>
+                                    <select name='roleCode' value='직위' onChange={handleSearch}>
                                         <option value="">직위</option>
                                         <option value='1'>사장</option> 
                                         <option value='2'>부사장</option> 
@@ -258,7 +260,7 @@ export const MemMain = () => {
                                     </select>   
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name="workerSateCode" onChange={handleSearch}>
+                                    <select name="workerSateCode" value='사용자그룹' onChange={handleSearch}>
                                         <option value=''>사용자그룹</option>
                                         <option value=''>정규직</option> 
                                         <option value=''>비정규직</option> 
@@ -269,7 +271,7 @@ export const MemMain = () => {
                                 </td>
                                 <td className={styles.theadtd}>이메일</td>
                                 <td className={styles.theadtd}>
-                                    <select name='empStateCode' onChange={handleSearch}>
+                                    <select name='empStateCode' value='계정상태' onChange={handleSearch}>
                                         <option value=''>계정상태</option>
                                         <option value='1'>재직중</option>
                                         <option value='2'>퇴사</option>
