@@ -1,7 +1,7 @@
 package com.clover.employee.controllers;
 
 import com.clover.employee.dto.EmployeeDTO;
-import com.clover.employee.service.EmployeeService;
+import com.clover.employee.services.EmployeeService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

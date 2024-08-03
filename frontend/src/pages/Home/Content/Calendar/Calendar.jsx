@@ -6,6 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
+import axios from "axios";
 
 export const Calendar = () => {
 
@@ -37,20 +38,21 @@ export const Calendar = () => {
     else return "green";
   }
 
+
   /** 캘린더에 표시될 이벤트 상태 **/
   const [schedules, setSchedules] = useState([
-    {schedule_seq: 1, groupCode: 1, title: "캘린더 테스트 1", date: "2024-08-23"},
-    {schedule_seq: 2, groupCode: 2, title: "캘린더 테스트 2", date: "2024-08-25"},
-    {schedule_seq: 3, groupCode: 3, title: "캘린더 테스트 3", date: "2024-08-26"},
-    {schedule_seq: 4, groupCode: 1, title: "캘린더 테스트 4", date: "2024-08-27"},
-    {schedule_seq: 5, groupCode: 2, title: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15"}
+    {scheduleSeq: 1, deptCode: 1, scheduleContent: "캘린더 테스트 1", date: "2024-08-23"},
+    {scheduleSeq: 2, deptCode: 2, scheduleContent: "캘린더 테스트 2", date: "2024-08-25"},
+    {scheduleSeq: 3, deptCode: 3, scheduleContent: "캘린더 테스트 3", date: "2024-08-26"},
+    {scheduleSeq: 4, deptCode: 1, scheduleContent: "캘린더 테스트 4", date: "2024-08-27"},
+    {scheduleSeq: 5, deptCode: 2, scheduleContent: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15"}
   ]);
 
   useEffect(() => {
     // 체크된 그룹에 대하여 색상 설정 추가
     setSchedules(() => {
       return schedules.map(item => {
-        return { ...item, color: scheduleColor(item.groupCode) }
+        return { ...item, color: scheduleColor(item.deptCode), title: item.scheduleContent }
       });
     });
 
@@ -85,6 +87,17 @@ export const Calendar = () => {
       });
     });
   }
+  
+  /** 선택된 일정에 대한 내용을 디테일 상세 내용에 표시 **/
+  const [ selectSchedule, setSelectSchedule ] =  useState({});
+  const handleSelectDetail = (seq) => {
+    setSelectSchedule(seq)
+  }
+
+  useEffect(() => {
+    // 해당 seq에 맞는 스케줄의 디테일 정보 가져오기
+  }, [selectSchedule]);
+
 
   const handleEventSelect = (event) => {
     console.log("event ==== ", event);
@@ -192,7 +205,7 @@ export const Calendar = () => {
                 detailSchedule.map((item, i) => {
                   return (
                     <li key={i}>
-                      [개인 일정] { item.title.length > 20 ? item.title.slice(0,20)+ "..." : item.title }
+                      [개인 일정] { item.scheduleContent.length > 20 ? item.scheduleContent.slice(0,20)+ "..." : item.scheduleContent }
                     </li>
                   );
                 })
@@ -202,7 +215,6 @@ export const Calendar = () => {
           <div className={styles.detail}>
             <p>일정 상세 정보</p>
             <div className={styles.content}>
-
             </div>
             <div className={styles.btnBox}>
               <button>일정 추가</button>

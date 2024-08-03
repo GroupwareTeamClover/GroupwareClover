@@ -325,6 +325,17 @@ CREATE TABLE doc_code (
 	doc_code_name	varchar(30)		NOT NULL
 );
 
+CREATE TABLE schedule (
+    schedule_seq NUMBER PRIMARY KEY,
+    schedule_content VARCHAR2(300) NOT NULL,
+    emp_seq NUMBER NOT NULL,
+    dept_code NUMBER NOT NULL,
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP NOT NULL
+);
+
+CREATE SEQUENCE schedule_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
 
 --**************insert 데이트 문***************
 --박새미
