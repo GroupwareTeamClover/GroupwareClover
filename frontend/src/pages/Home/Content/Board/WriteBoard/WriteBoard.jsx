@@ -20,9 +20,14 @@ const WriteBoard = () => {
     const { sessionData } = useMemberStore();
 
     //글제목
+    const maxTitleLength = 30;
     const [title, setTitle] = useState('');
     const handleTitleChange = (e) => {
-        setTitle(e.target.value);
+        if (e.target.value.length > maxTitleLength) {
+            e.preventDefault();
+        } else {
+            setTitle(e.target.value);
+        }
     }
 
     //첨부파일
@@ -93,7 +98,7 @@ const WriteBoard = () => {
             </div>
             <div className={styles.title}>
                 <input type="text" placeholder="제목을 입력해 주세요 (최대 30자까지 입력 가능)"
-                    name="title" className={styles.titleInput} maxlength="30" onChange={handleTitleChange} value={title} />
+                    name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
                 <Uploader autoUpload={false} draggable multiple onChange={setFiles} fileList={files}>
