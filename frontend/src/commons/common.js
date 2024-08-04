@@ -60,3 +60,19 @@ export const sendEmail = (data) => {
 
   return result;
 }
+
+
+// =============================== [ 캘린더 스케줄 ] ===============================
+
+export const scheduleColor = (group, seq) => {
+
+  let isEmp  = false;
+  const emp =  sessionStorage.getItem("sessionUser");
+
+  if(seq === emp.empSeq) isEmp = true;
+
+  if(group === emp.deptCode && isEmp) return "green"
+  else if(group === emp.deptCode && !isEmp) return "blue"
+  else if(group === 0) return "red"
+  else return "green";
+}

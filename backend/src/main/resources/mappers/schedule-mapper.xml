@@ -8,8 +8,20 @@
         INSERT INTO
             schedule
         VALUES(
-            0
+            schedule_sequence.nextval,
+            #{scheduleContent},
+            #{empSeq},
+            #{deptCode},
+            #{startDate},
+            #{endDate}
         )
     </insert>
+
+    <select id="getScheduleList" resultType="com.clover.schedule.dto.ScheduleDTO" >
+        SELECT
+            *
+        FROM
+            schedule
+    </select>
 
 </mapper>
