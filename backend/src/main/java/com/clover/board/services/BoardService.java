@@ -28,4 +28,12 @@ public class BoardService {
 	public List<BoardDTO> searchPosts(HashMap<String,Object> data){
 		return bDao.searchPosts(data);
 	}
+	
+	public BoardDTO getPostInfo(int boardSeq) {
+		return bDao.getPostInfo(boardSeq);
+	}
+	
+	public void deletePost(int boardSeq) {
+		bDao.deletePost(boardSeq);
+	}
 }

@@ -3,8 +3,12 @@ import { GoStar } from "react-icons/go";
 import defaultImage from '../../../../../../images/default_avatar.jpg'
 import { IconContext } from "react-icons";
 import { LuEye } from "react-icons/lu";
+import { useNavigate } from 'react-router-dom';
 
-const Post = ({ title, writer, date, view }) => {
+const Post = ({ title, writer, date, view, boardlistSeq, boardSeq }) => {
+
+    const navi = useNavigate();
+
     return (
         <div className={styles.post}>
             <div className={styles.star}>
@@ -12,7 +16,7 @@ const Post = ({ title, writer, date, view }) => {
                     <GoStar size="20" />
                 </IconContext.Provider>
             </div>
-            <div className={styles.title}>{title}</div>
+            <div className={styles.title} onClick={()=> { navi(`/community/board/${boardlistSeq}/detail/${boardSeq}`)}}>{title}</div>
             <div className={styles.writer}>
                 <div className={styles.userAvatar}>
                     <img src={defaultImage} alt="기본 이미지" />

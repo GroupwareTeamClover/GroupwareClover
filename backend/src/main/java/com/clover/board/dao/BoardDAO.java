@@ -25,4 +25,12 @@ public class BoardDAO {
 	public List<BoardDTO> searchPosts(HashMap<String, Object> data){
 		return mybatis.selectList("board.selectSearchedPost", data);
 	}
+	
+	public BoardDTO getPostInfo(int boardSeq) {
+		return mybatis.selectOne("board.selectTargetPost", boardSeq);
+	}
+	
+	public void deletePost(int boardSeq) {
+		mybatis.delete("board.deletePost", boardSeq);
+	}
 }
