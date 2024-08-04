@@ -6,6 +6,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
+import axios from "axios";
 
 export const Calendar = () => {
 
@@ -30,28 +31,30 @@ export const Calendar = () => {
     else setSelect(prev => ({ ...prev, all : false, [name]: checked }));
   }
 
-  const scheduleColor = (state) => {
-    if(state === 1) return "green"
-    else if(state === 2) return "blue"
-    else if(state === 3) return "red"
+  const scheduleColor = (group) => {
+    if(group === 1) return "green"
+    else if(group === 2) return "blue"
+    else if(group === 3) return "red"
     else return "green";
   }
 
+
   /** 캘린더에 표시될 이벤트 상태 **/
-  const [schedule, setSchedule] = useState([
-    {groupCode: 1, title: "캘린더 테스트 1", date: "2024-08-23", color: scheduleColor(1)},
-    {groupCode: 2, title: "캘린더 테스트 2", date: "2024-08-25", color: scheduleColor(2)},
-    {groupCode: 3, title: "캘린더 테스트 3", date: "2024-08-26", color: scheduleColor(3)},
-    {groupCode: 1, title: "캘린더 테스트 4", date: "2024-08-27", color: scheduleColor(1)},
-    {groupCode: 2, title: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15", color: scheduleColor(2)}
+  const [schedules, setSchedules] = useState([
+    {scheduleSeq: 1, deptCode: 1, scheduleContent: "캘린더 테스트 1", date: "2024-08-23"},
+    {scheduleSeq: 2, deptCode: 2, scheduleContent: "캘린더 테스트 2", date: "2024-08-25"},
+    {scheduleSeq: 3, deptCode: 3, scheduleContent: "캘린더 테스트 3", date: "2024-08-26"},
+    {scheduleSeq: 4, deptCode: 1, scheduleContent: "캘린더 테스트 4", date: "2024-08-27"},
+    {scheduleSeq: 5, deptCode: 2, scheduleContent: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15"}
   ]);
 
-  const [checkSchedule, setCheckSchedule] = useState(schedule);
-
-
   useEffect(() => {
-    // 캘린더 페이지 들어왔을 때 스케줄 목록 바인딩 해야됨
-
+    // 체크된 그룹에 대하여 색상 설정 추가
+    setSchedules(() => {
+      return schedules.map(item => {
+        return { ...item, color: scheduleColor(item.deptCode), title: item.scheduleContent }
+      });
+    });
 
   }, []);
 
@@ -60,13 +63,41 @@ export const Calendar = () => {
 
   }, [select]);
 
+  /** 캘린더 디테일 모달에 표시될 데이터 **/
+  const [ detailSchedule, setDetaulSchedule ] = useState(schedules);
 
   /** 선택된 날짜를 모달에 표시 **/
   const [selectDay, setSelectDay] = useState("");
   const handleDaySelect = (arg) => {
     openModal();
     setSelectDay(arg.dateStr);
+    setDetaulSchedule(prev => {
+        // 선택된(arg.dateStr) 날짜에 포함되는 날짜가 있으면 filtering
+        return schedules.filter(item => {
+          if (item.date) {
+            return item.date === arg.dateStr;
+          } else if (item.start && item.end) {
+            const startDate = new Date(item.start);
+            const endDate = new Date(item.end);
+            const selectedDate = new Date(arg.dateStr);
+            return selectedDate >= startDate && selectedDate <= endDate;
+          }
+
+          return false;
+      });
+    });
   }
+  
+  /** 선택된 일정에 대한 내용을 디테일 상세 내용에 표시 **/
+  const [ selectSchedule, setSelectSchedule ] =  useState({});
+  const handleSelectDetail = (seq) => {
+    setSelectSchedule(seq)
+  }
+
+  useEffect(() => {
+    // 해당 seq에 맞는 스케줄의 디테일 정보 가져오기
+  }, [selectSchedule]);
+
 
   const handleEventSelect = (event) => {
     console.log("event ==== ", event);
@@ -117,7 +148,7 @@ export const Calendar = () => {
               day: "Day"
             }}
 
-            events={checkSchedule}
+            events={schedules}
 
             dateClick={handleDaySelect} // 날짜가 선택 될 때
             eventClick={handleEventSelect}
@@ -171,10 +202,10 @@ export const Calendar = () => {
             <p>일정 목록</p>
             <ul>
               {
-                schedule.map((item, i) => {
+                detailSchedule.map((item, i) => {
                   return (
                     <li key={i}>
-                      [개인 일정] { item.title.length > 20 ? item.title.slice(0,20)+ "..." : item.title }
+                      [개인 일정] { item.scheduleContent.length > 20 ? item.scheduleContent.slice(0,20)+ "..." : item.scheduleContent }
                     </li>
                   );
                 })
@@ -184,7 +215,6 @@ export const Calendar = () => {
           <div className={styles.detail}>
             <p>일정 상세 정보</p>
             <div className={styles.content}>
-
             </div>
             <div className={styles.btnBox}>
               <button>일정 추가</button>
