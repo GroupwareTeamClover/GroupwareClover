@@ -1,31 +1,19 @@
 import styles from './Side.module.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { ChoiceLine } from './ChoiceLine/ChoiceLine';
+import { ChoiceForm } from './ChoiceForm/ChoiceForm';
+import { useNavigate } from 'react-router-dom';
 import {useEffect, useState} from "react";
-import { BigModal } from '../BigModal/BigModal'
-import { ChoiceForm } from '../ChoiceForm/ChoiceForm';
-import { ChoiceLine } from '../ChoiceLine/ChoiceLine';
+import { BigModal } from './BigModal/BigModal'
 import { useApprovalStore } from '../../../../../store/approvalStore';
 
-
+//현재 url approval/*
 export const Side = () => {
-    const {selectedDocCode, selectedEmpInfo, resetSelectedEmpInfo, resetSelectedDocCode}=useApprovalStore();
+    const {selectedDocCode, selectedEmpInfo, resetSelectedEmpInfo, resetSelectedDocCode, setCloneDocCode, setCloneEmpInfo}=useApprovalStore();
 
     const navi = useNavigate();
    
     const [ modalState, setModalState ] = useState(""); //새결재진행하기
-    const [isComplete, setIsComplete] = useState(false); // 완료 여부 추적
-
-
-    //화면 url, 상태 navi에 넣기
-    const handleNavigation = (path, type) => {
-        navi(path, { state: { type } });
-    };
-
-    const handleWriteNavigation = (path, type, docinfo, empinfo) => {
-        navi(path, { state: { type, docinfo, empinfo } });
-    };
-    
-    
+    const [isComplete, setIsComplete] = useState(false); // 완료 여부 추적    
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
 
@@ -83,72 +71,50 @@ export const Side = () => {
 
     useEffect(() => {
         if (isComplete) {
-            const path = selectedDocCode.children.name === '업무기안' ? 'business' :
-            selectedDocCode.children.name === '휴가신청서' ? 'dayoff' :
-            'invalid';
-
-             // selectedDocCode의 깊은 복사본 생성 카피의 복사본이냐 원본의 복사본이냐?...
-             //이유: 이걸 하지 않으면 메인에서 모달창을 띄울때와 writeForm에서 모달창을 띄울때 구분할 수 없게된다.
+             //structuredClone이유: 이걸 하지 않으면 메인에서 모달창을 띄울때와 writeForm에서 모달창을 띄울때 구분할 수 없게된다.
              //예를 들어. selectedDocCode를 writeform에서도 사용될 경우
              //양식이 변경될때마다 제목과 밑에 컴포넌트, 결재라인까지 함께 변경되어 버려서 새 결재 진행같은 느낌이 들지 않음
-             const clonedDocName = structuredClone(selectedDocCode.children.name);
-             const clonedDocCode = structuredClone(selectedDocCode);
-             const clonedLineInfo = structuredClone(selectedEmpInfo);
-             console.log(`원본: ${JSON.stringify(selectedEmpInfo, null, 2)}`);
-             console.log(`복사: ${JSON.stringify(clonedLineInfo, null, 2)}`);
-             
-            handleWriteNavigation(`/approval/write/${path}`, clonedDocName, clonedDocCode, clonedLineInfo); // 페이지 다시 로드
+            setCloneDocCode(structuredClone(selectedDocCode));
+            setCloneEmpInfo(structuredClone(selectedEmpInfo));
+            navi(`/approval/document?type=${selectedDocCode.children.name}`); // 페이지 다시 로드
             closeModal();
             setIsComplete(false); 
-          
         }
     }, [isComplete]);
 
 
     return (
         <div className={styles.sideBox}>
-            <div className={styles.textBox} onClick={() => handleNavigation('/approval', '전자결재')}>전자결재</div>
+            <div className={styles.textBox} onClick={() => navi('/approval')}>전자결재</div>
             <div className={styles.btnBox}>
                 <button className={styles.addBtn} onClick={handleModalChange} name="ModalForm">새 결재 진행하기</button>
             </div>
             <div className={styles.proceedingBox}>
                 <div className={styles.boxtext}>진행중 문서</div>
                 <div className={styles.menuBox}>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/proceeding', '기안진행')}>
-                        <span className={styles.menutext}>기안진행</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/waiting', '결재대기')}>
-                        <span className={styles.menutext}>결재대기</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/planning', '결재예정')}>
-                        <span className={styles.menutext}>결재예정</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/receiving', '결재수신')}>
-                        <span className={styles.menutext}>결재수신</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/participating', '참조/열람 대기')}>
-                        <span className={styles.menutext}>참조/열람 대기</span>
-                    </div>
+                    {
+                        ['기안진행','결재대기','결재예정','참조/열람대기'].map((item,index) => {
+                            return(
+                                <div className={styles.menu}  onClick={() => navi(`/approval/list?type=${item}`)}>
+                                    <span className={styles.menutext}>{item}</span>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </div>
             <div className={styles.docBox}>
                 <div className={styles.boxtext}>문서함</div>
                 <div className={styles.menuBox}>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/drafting', '기안문서함')}>
-                        <span className={styles.menutext}>기안문서함</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/temp', '임시문서함')}>
-                        <span className={styles.menutext}>임시문서함</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/complete', '결재문서함')}>
-                        <span className={styles.menutext}>결재문서함</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/received', '수신문서함')}>
-                        <span className={styles.menutext}>수신문서함</span>
-                    </div>
-                    <div className={styles.menu} onClick={() => handleNavigation('/approval/participated', '참조/열람 문서함')}>
-                        <span className={styles.menutext}>참조/열람 문서함</span>
-                    </div>
+                    {
+                        ['기안문서함','임시문서함','결재문서함','참조/열람문서함'].map((item,index)=>{
+                            return(
+                                <div className={styles.menu}  onClick={() => navi(`/approval/list?type=${item}`)}>
+                                    <span className={styles.menutext}>{item}</span>
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </div>
             

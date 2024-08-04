@@ -33,6 +33,7 @@
     "react-scripts": "^5.0.1",
     "rsuite": "^5.68.0",
     "util": "^0.12.5",
+    "vue-material-tabs": "^1.1.2",
     "web-vitals": "^2.1.4",
     "zustand": "^4.5.4"
   },

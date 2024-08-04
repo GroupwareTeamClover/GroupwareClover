@@ -30,6 +30,11 @@ export const useApprovalStore = create((set) => ({
     resetSelectedDocCode: () => set({
         selectedDocCode: { name: '', children: { name: '', period: 0, detailcode: 0 } }
     }),
+
+    cloneDocCode: {},
+    setCloneDocCode: (param)=>{ set({cloneDocCode: param })},
+    cloneEmpInfo: [],
+    setCloneEmpInfo: (param)=>{ set({cloneEmpInfo: param})}
     
 
 
