@@ -1,11 +1,16 @@
 import styles from './ChoiceLine.module.css'
-import { FaSearch} from "react-icons/fa";
-import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { BaseUrl } from '../../../../../commons/config';
-import { DragFolder } from '../DragFolder/DragFolder';
+import { useState, useEffect } from 'react';
+
+//
+import { BaseUrl } from '../../../../../../commons/config';
+import { useApprovalStore } from '../../../../../../store/approvalStore';
+import { DragFolder } from './DragFolder/DragFolder';
+
+//아이콘
 import { CiTrash } from "react-icons/ci";
-import { useApprovalStore } from '../../../../../store/approvalStore';
+import { FaSearch} from "react-icons/fa";
+
 
 
 export const ChoiceLine= () =>{
