@@ -6,15 +6,16 @@
 }
 
 .header{
-    flex:1;
+    flex: 1;
+    padding-left: 12px;
     display: flex;
     align-items: center;
 }
 
-.headerText{
-    padding-left: 24px;
+.menu{
+    flex: 1;
 }
 
-.detail{
-    flex:9;
+.content{
+    flex: 8;
 }

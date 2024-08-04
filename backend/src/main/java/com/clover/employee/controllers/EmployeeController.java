@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clover.approval.services.LineService;
 import com.clover.employee.dto.EmployeeDTO;
-import com.clover.employee.service.EmployeeService;
+import com.clover.employee.services.EmployeeService;
 
 @RestController
 @RequestMapping("/employee")
