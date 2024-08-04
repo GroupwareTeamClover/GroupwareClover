@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,5 +55,24 @@ public class BoardController {
 		
 		return ResponseEntity.ok(bServ.searchPosts(data));
 	}
+	
+	@GetMapping("/postInfo/{boardSeq}")
+	public ResponseEntity<BoardDTO> getPostInfo(@PathVariable int boardSeq){
+		return ResponseEntity.ok(bServ.getPostInfo(boardSeq));
+		
+		// ++ DB 첨부파일 정보(FileController) , 댓글 목록 (CommentController)
+	}
+	
+	@DeleteMapping("/{boardSeq}")
+	public ResponseEntity<Void> deletePost(@PathVariable int boardSeq){
+		bServ.deletePost(boardSeq);
+		
+		//해당 게시글의 첨부파일 삭제 (DB, S3)
+		//해당 게시글의 첨부된 이미지 삭제(S3)
+		//해당 게시글의 댓글 목록 삭제
+		
+		return ResponseEntity.ok().build();
+	}
+	
 	
 }

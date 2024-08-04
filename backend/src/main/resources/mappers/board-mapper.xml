@@ -35,5 +35,13 @@
 		</if>
 		order by board_seq desc
 	</select>
+	
+	<select id="selectTargetPost" resultType="com.clover.board.dto.BoardDTO">
+		select * from board where board_seq = #{boardSeq}
+	</select>
+	
+	<delete id="deletePost">
+		delete from board where board_seq = #{boardSeq}
+	</delete>
 
 </mapper>
