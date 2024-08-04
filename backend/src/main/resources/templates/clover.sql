@@ -13,7 +13,7 @@ CREATE TABLE employee(
     emp_avatar varchar2(1000) Default NULL,
     role_code NUMBER NOT NULL,
     dept_code NUMBER NOT NULL,
-    join_date TIMESTAMP DEFAULT sysdate NOT NULL,
+    join_date TIMESTAMP NULL,
     leave_date TIMESTAMP NULL,
     annual_leave_day NUMBER DEFAULT 0 NOT NULL
 );
