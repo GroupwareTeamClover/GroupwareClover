@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react';
 import styles from './ChoiceForm.module.css'
-import { FaSearch} from "react-icons/fa";
-import { Folder } from '../../../../../components/Folder/Folder';
-import { BaseUrl } from '../../../../../commons/config';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useApprovalStore } from '../../../../../store/approvalStore';
+
+// 컴포넌트 및 자원
+import { Folder } from '../../../../../../components/Folder/Folder';
+import { BaseUrl } from '../../../../../../commons/config';
+import { useApprovalStore } from '../../../../../../store/approvalStore';
+
+//아이콘
+import { FaSearch} from "react-icons/fa";
 
 
 export const ChoiceForm= () =>{
