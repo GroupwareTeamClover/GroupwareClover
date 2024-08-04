@@ -7,6 +7,7 @@ import Board from './Board/Board';
 import {ChatMain} from './Messenger/ChatMain';
 import {Approval} from './Approval/Approval';
 import {Member} from './Admin/Member/Member';
+import { Popup } from './Admin/PopupBoard/Popup';
 
 export const Content = () => {
 
@@ -20,6 +21,7 @@ export const Content = () => {
           <Route path="/chat/*" element={ <ChatMain /> } />
           <Route path="/approval/*" element={<Approval/>}/>
           <Route path="/member/*" element={<Member/>}/>
+          <Route path="/popup/*" element={<Popup/>}/>
         </Routes>
     </div>
   );

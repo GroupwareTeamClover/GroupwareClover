@@ -1,0 +1,177 @@
+.container{
+    flex:7;
+	margin: 0 auto 0 auto;
+	width: 1000px;
+	min-height: 500px;
+	/* padding : 50px; */
+    /* border: 1px solid black; */
+}
+
+.container input[type="text" i] {
+	padding-block: 1px;
+	padding-inline: 2px;
+}
+
+.container h3 {
+	font-size: 20px;
+	line-height: 34px;
+	font-weight: 300;
+	padding-bottom: 10px;
+	padding-left: 20px;
+    /* border: 1px solid black; */
+}
+
+/* .container .categoryBox {
+	position: relative;
+	padding-left: 20px;
+	border-top: 1px solid #8b8a8a;
+	height: 70px;
+	display: flex;
+	align-items: center;
+} */
+
+.container .categoryBox .category{
+	height: 50%;
+	width : 200px;
+}
+
+.category option{
+	height : 200px;
+}
+
+.container .title {
+	border-top: 1px solid #d3d3d3;
+    /* border: 1px solid black; */
+}
+
+.container .title input {
+	width: 100%;
+	height: 40px;
+	line-height: 70px;
+	border: none;
+	font-size: 16px;
+	text-indent: 20px;
+	background-color: #F3F8FF;
+    /* border: 1px solid black; */
+}
+
+.container .title input:focus{
+    outline: none;
+}
+
+.container .fileBox {
+	min-height: 120px;
+	width: 100%;
+	border-top: 1px solid #d3d3d3;
+	display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: center; /* 수직 가운데 정렬 */
+	padding-top : 10px;
+	padding-left : 20px;
+    padding-right: 20px;
+}
+
+.container .editorBox {
+    border-top: 1px solid #d3d3d3;
+	border-bottom: 1px solid #d3d3d3;
+    min-height: 300px;
+	position: relative;
+	z-index: 1;
+}
+
+/* .note-editable {
+	height: 500px;
+} */
+
+.container .btnBox {
+	margin-top: 25px;
+	display: flex;
+	justify-content: center;
+}
+
+.container .btnBox button:hover{
+	cursor: pointer;
+}
+
+.container .btnBox .cancelBtn {
+	width: 160px;
+	height: 45px;
+	background: gray;
+	color: #fff;
+	border: 1px solid #888;;
+	font-size: 13px;
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+.container .btnBox .writeBtn {
+	width: 160px;
+	height: 45px;
+	background: #3392ff;
+	color: white;
+	border: 1px solid #1A6ED8;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+
+
+
+
+.activeBox{
+    flex:1;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    padding-left: 40px;
+}
+
+.activeBox .activeLetter{
+    font-size: 15px;
+    font-weight: bold;
+    flex:0.5;
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+}
+.activeBox .activeRadiobox{
+    flex:4;
+    display: flex;
+    gap: 15px;
+}
+
+.activeBox input{
+    margin-right: 10px;
+}
+
+.activeBox label {
+    display: flex;
+    align-items: center;
+     /* 각 라디오 버튼과 레이블 사이의 간격 */
+}
+
+
+/* 기간 선택 */
+.dateBox {
+    margin-top: 15px;
+    padding: 10px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+}
+
+.dateBox h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.dateBox input,
+.dateBox select {
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+
+.container .footer{
+    min-height: 100px;
+}
+/* *{border: 1px solid black;} */
