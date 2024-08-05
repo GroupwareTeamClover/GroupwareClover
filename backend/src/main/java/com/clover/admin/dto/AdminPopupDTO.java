@@ -3,108 +3,158 @@ package com.clover.admin.dto;
 import java.sql.Timestamp;
 
 public class AdminPopupDTO {
-	private int popSeq;
+	private Integer popSeq;
 	private String popTitle;
-	private String popWriter;
+	private String empId;
 	private String popContent;
 	private Timestamp popWriteDate;
 	private Timestamp popUpdatedDate;
-	private char popIsActive;
+	private String popIsActive;
 	
+	private String empName;
+	
+	private Integer popPeriodSeq;
 	private String periodType; // 'none', 'specific', 'monthly', 'weekly'
-    private Timestamp specificStartDate; // YYYY-MM-DD
-    private Timestamp specificEndDate;   // YYYY-MM-DD
-    private int monthlyDay;       // 1-31
+    private String specificStartDate; // YYYY-MM-DD
+    private String specificEndDate;   // YYYY-MM-DD
+    private String monthlyDay;       // 1-31
     private String weeklyDay;         // 'sunday', 'monday', etc.
-	public int getPopSeq() {
+	
+    
+    
+	public String getEmpName() {
+		return empName;
+	}
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
+	public Integer getPopSeq() {
 		return popSeq;
 	}
-	public void setPopSeq(int popSeq) {
+
+	public void setPopSeq(Integer popSeq) {
 		this.popSeq = popSeq;
 	}
+
 	public String getPopTitle() {
 		return popTitle;
 	}
+
 	public void setPopTitle(String popTitle) {
 		this.popTitle = popTitle;
 	}
-	public String getPopWriter() {
-		return popWriter;
+
+	public String getEmpId() {
+		return empId;
 	}
-	public void setPopWriter(String popWriter) {
-		this.popWriter = popWriter;
+
+	public void setEmpId(String empId) {
+		this.empId = empId;
 	}
+
 	public String getPopContent() {
 		return popContent;
 	}
+
 	public void setPopContent(String popContent) {
 		this.popContent = popContent;
 	}
+
 	public Timestamp getPopWriteDate() {
 		return popWriteDate;
 	}
+
 	public void setPopWriteDate(Timestamp popWriteDate) {
 		this.popWriteDate = popWriteDate;
 	}
+
 	public Timestamp getPopUpdatedDate() {
 		return popUpdatedDate;
 	}
+
 	public void setPopUpdatedDate(Timestamp popUpdatedDate) {
 		this.popUpdatedDate = popUpdatedDate;
 	}
-	public char getPopIsActive() {
+
+	public String getPopIsActive() {
 		return popIsActive;
 	}
-	public void setPopIsActive(char popIsActive) {
+
+	public void setPopIsActive(String popIsActive) {
 		this.popIsActive = popIsActive;
 	}
+
+	public Integer getPopPeriodSeq() {
+		return popPeriodSeq;
+	}
+
+	public void setPopPeriodSeq(Integer popPeriodSeq) {
+		this.popPeriodSeq = popPeriodSeq;
+	}
+
 	public String getPeriodType() {
 		return periodType;
 	}
+
 	public void setPeriodType(String periodType) {
 		this.periodType = periodType;
 	}
-	public Timestamp getSpecificStartDate() {
+
+	public String getSpecificStartDate() {
 		return specificStartDate;
 	}
-	public void setSpecificStartDate(Timestamp specificStartDate) {
+
+	public void setSpecificStartDate(String specificStartDate) {
 		this.specificStartDate = specificStartDate;
 	}
-	public Timestamp getSpecificEndDate() {
+
+	public String getSpecificEndDate() {
 		return specificEndDate;
 	}
-	public void setSpecificEndDate(Timestamp specificEndDate) {
+
+	public void setSpecificEndDate(String specificEndDate) {
 		this.specificEndDate = specificEndDate;
 	}
-	public int getMonthlyDay() {
+
+	public String getMonthlyDay() {
 		return monthlyDay;
 	}
-	public void setMonthlyDay(int monthlyDay) {
+
+	public void setMonthlyDay(String monthlyDay) {
 		this.monthlyDay = monthlyDay;
 	}
+
 	public String getWeeklyDay() {
 		return weeklyDay;
 	}
+
 	public void setWeeklyDay(String weeklyDay) {
 		this.weeklyDay = weeklyDay;
 	}
-	public AdminPopupDTO(int popSeq, String popTitle, String popWriter, String popContent, Timestamp popWriteDate,
-			Timestamp popUpdatedDate, char popIsActive, String periodType, Timestamp specificStartDate,
-			Timestamp specificEndDate, int monthlyDay, String weeklyDay) {
+
+
+	public AdminPopupDTO(Integer popSeq, String popTitle, String empId, String popContent, Timestamp popWriteDate,
+			Timestamp popUpdatedDate, String popIsActive, String empName, Integer popPeriodSeq, String periodType,
+			String specificStartDate, String specificEndDate, String monthlyDay, String weeklyDay) {
 		super();
 		this.popSeq = popSeq;
 		this.popTitle = popTitle;
-		this.popWriter = popWriter;
+		this.empId = empId;
 		this.popContent = popContent;
 		this.popWriteDate = popWriteDate;
 		this.popUpdatedDate = popUpdatedDate;
 		this.popIsActive = popIsActive;
+		this.empName = empName;
+		this.popPeriodSeq = popPeriodSeq;
 		this.periodType = periodType;
 		this.specificStartDate = specificStartDate;
 		this.specificEndDate = specificEndDate;
 		this.monthlyDay = monthlyDay;
 		this.weeklyDay = weeklyDay;
 	}
+
 	public AdminPopupDTO() {
 		super();
 	}

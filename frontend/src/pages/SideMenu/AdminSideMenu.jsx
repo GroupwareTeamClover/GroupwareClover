@@ -35,8 +35,12 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     member: false,
     popup: false
   });
-
   const [selectedMenu, setSelectedMenu] = useState('');
+  const handleMenuClick = (link, type) => {
+    setSelectedMenu(type);
+    navi(link, { state: { type } });
+  };
+
 
   const handleSideToggle = () => {
     setOpen(prev => {
@@ -51,10 +55,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     });
   };
 
-  const handleMenuClick = (link, type) => {
-    setSelectedMenu(type);
-    navi(link, { state: { type } });
-  };
+ 
 
   const toggleDropdown = (menuType, firstSubmenu) => {
     if (!open) {

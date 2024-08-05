@@ -4,6 +4,7 @@ import styles from './Popup.module.css';
 import {Route, Routes} from "react-router-dom";
 import { PopupList } from './PopupContent/PopupList/PopupList';
 import { PopupWrite } from './PopupContent/PopupWrite/PopupWrite';
+import { PopupDetail } from './PopupContent/PopupDetail/PopupDetail';
 
 export const Popup = () => {
 
@@ -24,6 +25,7 @@ export const Popup = () => {
           <Routes>
             <Route path="/" element={ <PopupList /> } />
             <Route path="/write" element={<PopupWrite/>}/>
+            <Route path="/detail/:popSeq" element={<PopupDetail/>}/>
           </Routes>
         </div>
       </div>

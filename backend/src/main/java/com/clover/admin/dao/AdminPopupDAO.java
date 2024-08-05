@@ -1,10 +1,13 @@
 package com.clover.admin.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.clover.admin.dto.AdminPopupDTO;
+import com.clover.employee.dto.EmployeeDTO;
 
 @Repository
 public class AdminPopupDAO {
@@ -13,13 +16,32 @@ public class AdminPopupDAO {
 	private SqlSession mybatis;
 	
 	public void createPopup(AdminPopupDTO popupdto) {
-		mybatis.insert("AdminPopup.insertPop", popupdto);
-		int popSeq = popupdto.getPopSeq(); // popboard에서 생성된 popseq 가져오는거. 
-		if(popSeq != 0) {
-			popupdto.setPopSeq(popSeq);	// dto에 다시 설정...
-			mybatis.insert("AdminPopup.insertPopPeriod", popupdto);
-		}
+		
+		System.out.println(popupdto.getSpecificStartDate());
+
+	    // Insert the popup and automatically get the generated popSeq
+	    mybatis.insert("AdminPopup.insertPop", popupdto);
+
+	    // Get the generated popSeq from the DTO
+	    
+	    System.out.println("Generated popSeq: " + popupdto.getPopSeq());
+	    Integer popSeq = popupdto.getPopSeq();
+	    // Check if popSeq was generated and use it for the next insert
+	    if(popSeq != 0) {
+	        popupdto.setPopSeq(popSeq); // Set the popSeq in the DTO
+	        System.out.println(popupdto.getPopSeq());
+	        mybatis.insert("AdminPopup.insertPopPeriod", popupdto);
+	    }
 	}
+	
+	public List<AdminPopupDTO> getAllPop(){
+		return mybatis.selectList("AdminPopup.getAllPop");
+	}
+	
+	public AdminPopupDTO getPostInfo(int popSeq) {
+		return mybatis.selectOne("AdminPopup.getPostInfo", popSeq);
+	}
+
 }
 
 

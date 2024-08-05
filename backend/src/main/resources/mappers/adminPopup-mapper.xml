@@ -3,16 +3,108 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-  <mapper namespace="AdminPopup">
-  	<insert id="insertPop" parameterType="com.clover.admin.dto.AdminPopupDTO" useGeneratedKeys="true" keyProperty="popSeq">
-        insert into pop_board (pop_title, emp_id, pop_content, pop_is_active, pop_write_date, pop_updated_date)
-        values (#{title}, #{empId}, #{content}, #{boardActive}, #{writeDate}, #{updatedDate})
+<mapper namespace="AdminPopup">
+    <!-- 팝업 생성 쿼리 -->
+  	<insert id="insertPop" parameterType="com.clover.admin.dto.AdminPopupDTO">
+  		<selectKey keyProperty="popSeq" resultType="int" order="BEFORE">
+        	SELECT popup_board_sequence.NEXTVAL FROM dual
+    	</selectKey>
+	    INSERT INTO popup_board (pop_seq, pop_title, emp_id, pop_content, pop_is_active, pop_write_date)
+	    VALUES (#{popSeq}, #{popTitle}, #{empId}, #{popContent}, #{popIsActive}, sysdate)
+	</insert>
+
+
+    <!-- 팝업 기간 생성 쿼리 -->
+    <insert id="insertPopPeriod" parameterType="com.clover.admin.dto.AdminPopupDTO">
+        INSERT INTO popup_period (pop_period_seq, pop_seq, period_type, start_date, end_date, montly_day, weekly_day)
+        VALUES (popup_period_sequence.nextval, #{popSeq}, #{periodType},
+                <choose>
+                    <when test="specificStartDate != null">#{specificStartDate}</when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="specificEndDate != null">#{specificEndDate}</when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="monthlyDay != null">#{monthlyDay}</when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="weeklyDay != null">#{weeklyDay}</when>
+                    <otherwise>null</otherwise>
+                </choose>)
     </insert>
-    <!-- pop_period 테이블에 데이터 삽입 -->
-    <insert id="insertPeriod" parameterType="com.clover.admin.dto.AdminPopupDTO">
-        insert into pop_period (pop_seq, period_type, start_date, end_date, montly_day, weekly_day)
-        values (#{popSeq}, #{periodType}, #{specificStartDate}, #{specificEndDate}, #{monthlyDay}, #{weeklyDay})
-    </insert>
+    <select id="getAllData" resultType="com.clover.employee.dto.EmployeeDTO">
+		select * from employee order by emp_seq desc
+	</select>
+	<select id="getAllPop" resultType="com.clover.admin.dto.AdminPopupDTO">
+    	SELECT
+    pb.pop_seq,
+    pb.pop_title,
+    pb.emp_id,
+    e.emp_name,       
+    pb.pop_content,
+    pb.pop_is_active,
+    pb.pop_write_date,
+    pb.pop_updated_date,
+    pp.pop_period_seq,
+    pp.period_type,
+    pp.start_date,
+    pp.end_date,
+    pp.montly_day,
+    pp.weekly_day
+FROM
+    popup_board pb
+LEFT JOIN
+    popup_period pp ON pb.pop_seq = pp.pop_seq
+LEFT JOIN
+    employee e ON pb.emp_id = e.emp_id
+    	
+    </select>
+    
+    <resultMap id="adminPopupResultMap" type="com.clover.admin.dto.AdminPopupDTO">
+    <result property="popSeq" column="pop_seq"/>
+    <result property="popTitle" column="pop_title"/>
+    <result property="empId" column="emp_id"/>
+    <result property="empName" column="emp_name"/>
+    <result property="popContent" column="pop_content"/>
+    <result property="popIsActive" column="pop_is_active"/>
+    <result property="popWriteDate" column="pop_write_date"/>
+    <result property="popUpdatedDate" column="pop_updated_date"/>
+    <result property="popPeriodSeq" column="pop_period_seq"/>
+    <result property="periodType" column="period_type"/>
+    <result property="specificStartDate" column="start_date"/>
+    <result property="specificEndDate" column="end_date"/>
+    <result property="monthlyDay" column="montly_day"/>
+    <result property="weeklyDay" column="weekly_day"/>
+</resultMap>
+
+<select id="getPostInfo" resultMap="adminPopupResultMap">
+    SELECT
+        pb.pop_seq,
+        pb.pop_title,
+        pb.emp_id,
+        e.emp_name,
+        pb.pop_content,
+        pb.pop_is_active,
+        pb.pop_write_date,
+        pb.pop_updated_date,
+        pp.pop_period_seq,
+        pp.period_type,
+        pp.start_date,
+        pp.end_date,
+        pp.montly_day,
+        pp.weekly_day
+    FROM
+        popup_board pb
+    LEFT JOIN
+        popup_period pp ON pb.pop_seq = pp.pop_seq
+    LEFT JOIN
+        employee e ON pb.emp_id = e.emp_id
+    WHERE pb.pop_seq = #{empSeq}
+</select>
+    
+</mapper>
   
-  </mapper>
   

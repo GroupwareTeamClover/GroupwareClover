@@ -7,6 +7,7 @@ import {useMemberStore} from "./store/store";
 import {useEffect, useState} from "react";
 import { AdminSideMenu } from './pages/SideMenu/AdminSideMenu';
 import { Admin } from './pages/Admin/Admin';
+import { PopupWindow } from './pages/Home/Content/Admin/PopupBoard/PopupContent/PopupWindow/popupWindow';
 
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
 
   // Sidebar toggle
   const [open, setOpen] = useState(true);
+  // 팝업
+  const [showPopup, setShowPopup] = useState(false);
+
 
   useEffect(() => {
     /* Side-Bar toggle */
@@ -29,6 +33,10 @@ function App() {
     if(data !== null) {
       setSign(true);
       setSessionData(data);
+      //팝업
+      if (!localStorage.getItem('popupDismissed')) {
+        setShowPopup(true);
+      }
     }
 
     if(adminCheck !== null && adminCheck === "true"){
@@ -36,6 +44,11 @@ function App() {
     }
 
   }, [sign]);
+
+
+  const handlePopupClose = () => {
+    setShowPopup(false);
+  };
 
   return (
     <div className="container">
@@ -53,6 +66,7 @@ function App() {
               { (sign && admin) && <Admin /> }
             </>
         }
+        { showPopup && <PopupWindow onClose={handlePopupClose} /> }
       </Router>
     </div>
   );
