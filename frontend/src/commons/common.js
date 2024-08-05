@@ -74,3 +74,14 @@ export const scheduleType = (group, seq, emp) => {
   else if(group === 0) return "company";
   else return "individual";
 }
+
+// =============================== [ 날짜 변환 ] ===============================
+
+export const dateYMD = (timestamp) => {
+  let today = new Date(timestamp);
+  let year = today.getFullYear();
+  let month = ('0' + (today.getMonth() + 1)).slice(-2);
+  let day = ('0' + today.getDate()).slice(-2);
+  let dateData = `${year}-${month}-${day}`;
+  return dateData;
+}

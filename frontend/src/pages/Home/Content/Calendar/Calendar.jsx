@@ -4,24 +4,26 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
-import {scheduleType} from "../../../../commons/common";
+import {dateYMD, scheduleType} from "../../../../commons/common";
 import {BaseUrl} from "../../../../commons/config";
 import {useMemberStore} from "../../../../store/store";
 
 export const Calendar = () => {
-  const { sessionData } = useMemberStore();
+  const { sessionData, admin } = useMemberStore();
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => {
+    setSelectSchedule({});
     setModalDisplay("detail");
     setIsModalOpen(false);
+    setUpdateForm(false);
   }
 
-  const [insertState, setInsertState] = useState(false);
+  const [dataState, setDataState] = useState(false);
 
   /** Full calendar plugin **/
   const plugin = [
@@ -88,7 +90,7 @@ export const Calendar = () => {
         });
       });
     });
-  }, [insertState]);
+  }, [dataState]);
 
   /** 캘린더 디테일 모달에 표시될 목록 **/
   const [ detailSchedule, setDetailSchedule ] = useState(schedules);
@@ -98,39 +100,35 @@ export const Calendar = () => {
   const handleDaySelect = (arg) => {
     openModal();
     setSelectDay(arg.dateStr);
-    setDetailSchedule(prev => {
-        // 선택된(arg.dateStr) 날짜에 포함되는 날짜가 있으면 filtering
-        return checkSchedule.filter(item => {
-          if (item.date) {
-            return item.date === arg.dateStr;
-          } else if (item.start && item.end) {
-            const startDate = new Date(item.start);
-            const endDate = new Date(item.end);
-            const selectedDate = new Date(arg.dateStr);
-            return selectedDate >= startDate && selectedDate <= endDate;
-          }
+    selectDayList(arg.dateStr);
+  }
 
-          return false;
+  const selectDayList = (dateStr) => {
+    setDetailSchedule(prev => {
+      return checkSchedule.filter(item => {
+        if (item.date) {
+          return item.date === dateStr;
+        } else if (item.start && item.end) {
+          const startDate = new Date(item.start);
+          const endDate = new Date(item.end);
+          const selectedDate = new Date(dateStr);
+          return selectedDate >= startDate && selectedDate <= endDate;
+        }
+        return false;
       });
     });
   }
-  
+
   /** 선택된 일정에 대한 내용을 디테일 상세 내용에 표시 **/
   const [ selectSchedule, setSelectSchedule ] =  useState({});
   const handleSelectDetail = (seq) => {
-    setSelectSchedule(seq)
+    setSelectSchedule(() => {
+      const data = detailSchedule.filter(item => item.scheduleSeq === seq);
+      setUpdateData(data[0]);
+      return data[0];
+    });
   }
 
-  useEffect(() => {
-    // 해당 seq에 맞는 스케줄의 디테일 정보 가져오기
-  }, [selectSchedule]);
-
-
-  const handleEventSelect = (event) => {
-    console.log("event ==== ", event);
-  }
-  
-  
   /** 모달 화면 스테이트 **/
   const [ modalDisplay, setModalDisplay ] = useState("detail");
 
@@ -147,7 +145,6 @@ export const Calendar = () => {
     setInputData(prev => ({ ...prev, [name]: value }));
   }
 
-
   /**  일정 추가 핸들러 **/
   const handleInsertSchedule = () => {
     if(inputData.scheduleContent === "" || inputData.startDate === "" || inputData.endDate === "") {
@@ -155,18 +152,62 @@ export const Calendar = () => {
       return false;
     }
     axios.post(`${BaseUrl()}/schedule`, inputData).then(res => {
-      console.log(res.data);
       if(res.data === "ok") {
-        setInsertState(prev => !prev);
+        setDataState(prev => !prev);
         closeModal();
         setInputData(defaultInputData);
       }
     });
   }
 
+  /** 일정 삭제 핸들러 **/
+  const handleScheduleDelete = (seq) => {
+    if(window.confirm("일정을 삭제합니까?")){
+      axios.delete(`${BaseUrl()}/schedule/${seq}`).then(res => {
+        if(res.data === "ok"){
+          setDataState(prev => !prev);
+          setSelectSchedule({});
+          setDetailSchedule(prev => prev.filter(item => item.scheduleSeq !== seq))
+        }
+      });
+    }
+  }
+
+  /** 일정 수정 폼 변경 **/
+  const [updateForm, setUpdateForm] = useState(false);
+  const [updateData, setUpdateData] = useState(selectSchedule);
+  const [updateSeq, setUpdateSeq] = useState(0);
+
+  /** 일정 수정 데이터 **/
+  const handleUpdataData = (e) => {
+    const { name, value } = e.target;
+    setUpdateData(prev => ({ ...prev, [name]: value }));
+  }
+
+  /** 일정 수정 핸들러 **/
+  const handleScheduleUpdate = () => {
+    const data = {
+      scheduleSeq: updateData.scheduleSeq,
+      scheduleContent: updateData.title,
+      empSeq : updateData.empSeq,
+      startDate: updateData.start,
+      endDate: updateData.end
+    };
+    setUpdateSeq(updateData.scheduleSeq);
+
+    axios.put(`${BaseUrl()}/schedule`, data).then(res => {
+      if(res.data === "ok"){
+        setUpdateForm(false);
+        setDataState(prev => !prev);
+      }
+    });
+  }
+
   useEffect(() => {
-    // 체크박스 바뀔 시, 인서트 완료 시 재 렌더링
-  }, [select, insertState]);
+    if(selectDay){
+      selectDayList(selectDay);
+    }
+  }, [checkSchedule]);
 
   return (
     <div className={styles.container}>
@@ -220,7 +261,6 @@ export const Calendar = () => {
             events={checkSchedule}
 
             dateClick={handleDaySelect} // 날짜가 선택 될 때
-            eventClick={handleEventSelect}
 
             dayMaxEventRows={2} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
             moreLinkText="more" // "+n more" 링크에 표시되는 텍스트
@@ -270,16 +310,15 @@ export const Calendar = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         { modalDisplay === "detail" &&
           <div className={styles.modalForm}>
-            <h2> {selectDay} </h2>
             <div className={styles.list}>
-              <p>일정 목록</p>
+              <p>일정 목록 ( {selectDay} )</p>
               <ul>
                 { detailSchedule.length > 0 ?
                   detailSchedule.map((item, i) => {
                     return (
-                      <li key={i}>
-                        [개인
-                        일정] {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
+                      <li key={i} onClick={() => handleSelectDetail(item.scheduleSeq) }>
+                        [{ item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사" } 일정]
+                        {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
                       </li>
                     );
                   })
@@ -290,23 +329,59 @@ export const Calendar = () => {
             </div>
             <div className={styles.detail}>
               <p>일정 상세 정보</p>
-              <div className={styles.content}>
-                작성자
-                내용
-                시작 날짜
-                종료 날짜
-              </div>
-              <div className={styles.btnBox}>
-                <button>일정 삭제</button>
-                <button>일정 수정</button>
-              </div>
+              { selectSchedule.scheduleSeq !== undefined &&
+                <>
+                  <div className={styles.content}>
+                    {
+                      !updateForm ?
+                        <div className={styles.contentLabel}>
+                          <p>시작 : {dateYMD(selectSchedule.start)}</p>
+                          <p>종료 : {dateYMD(selectSchedule.end)}</p>
+                          <p>작성자 : {selectSchedule.empSeq} </p>
+                          <p>내용 : {selectSchedule.title}</p>
+                        </div>
+                        :
+                        <div className={styles.contentLabel}>
+                          <p>시작 : <input type="date" name="start" onChange={handleUpdataData} value={dateYMD(updateData.start)}/></p>
+                          <p>종료 : <input type="date" name="end" onChange={handleUpdataData} value={dateYMD(updateData.end)}/></p>
+                          <p>작성자 : {updateData.empSeq}</p>
+                          <p>내용 : <input type="text" name="title" onChange={handleUpdataData} value={updateData.title}/></p>
+                        </div>
+                    }
+
+                  </div>
+
+                  {
+                    updateData.empSeq === sessionData.empSeq &&
+                    <>
+                    {!updateForm ?
+                        <div className={styles.btnBox}>
+                          <button onClick={() => handleScheduleDelete(selectSchedule.scheduleSeq)}>일정 삭제</button>
+                          <button onClick={() => setUpdateForm(true)}>일정 수정</button>
+                        </div>
+                        :
+                        <div className={styles.btnBox}>
+                          <button onClick={handleScheduleUpdate}>확인</button>
+                          <button onClick={() => setUpdateForm(false)}>취소</button>
+                        </div>
+                      }
+                    </>
+                  }
+                </>
+              }
             </div>
           </div>
         }
-        { modalDisplay === "insert" &&
+        {modalDisplay === "insert" &&
           <div className={styles.modalForm}>
             <div className={styles.insert}>
               <h2>일정 추가</h2>
+              { admin &&
+                <div className={styles.companySchedule}>
+                  <input id="deptCode" name="deptCode" type="checkbox"/>
+                  <label htmlFor="deptCode">회사 전체 일정으로 추가하기</label>
+                </div>
+              }
               <div className={styles.inputData}>
                 <div className={styles.insertRow}>
                   <span>시작 날짜</span>
@@ -325,7 +400,7 @@ export const Calendar = () => {
                 </div>
               </div>
               <div className={styles.btnBox}>
-                <button onClick={ handleInsertSchedule } >추가</button>
+                <button onClick={handleInsertSchedule}>추가</button>
                 <button onClick={closeModal}>취소</button>
               </div>
             </div>

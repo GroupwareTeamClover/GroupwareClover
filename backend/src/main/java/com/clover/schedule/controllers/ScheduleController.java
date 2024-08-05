@@ -33,4 +33,16 @@ public class ScheduleController {
         return ResponseEntity.ok(list);
     }
 
+    @DeleteMapping("/{seq}")
+    public ResponseEntity<String> deleteSchedule(@PathVariable int seq){
+        String result = scheduleService.deleteSchedule(seq);
+        return ResponseEntity.ok(result);
+    }
+
+    @PutMapping
+    public ResponseEntity<String> updateSchedule(@RequestBody ScheduleDTO dto){
+        String result = scheduleService.updateSchedule(dto);
+        return ResponseEntity.ok(result);
+    }
+
 }
