@@ -209,12 +209,6 @@ export const Calendar = () => {
     }
   }, [checkSchedule]);
 
-  useEffect(() => {
-    if(updateSeq > 0) {
-      handleSelectDetail(updateSeq);
-    }
-  }, [detailSchedule]);
-
   return (
     <div className={styles.container}>
       <div className={styles.form}>
