@@ -20,4 +20,8 @@ public class ScheduleDAO {
     public List<ScheduleDTO> getScheduleList(){
         return mybatis.selectList("Schedule.getScheduleList");
     }
+
+    public int deleteSchedule(int seq) {
+        return mybatis.delete("Schedule.deleteSchedule", seq);
+    }
 }
