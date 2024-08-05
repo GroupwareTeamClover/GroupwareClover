@@ -42,7 +42,7 @@ const Sidebar = () => {
     return (
         <div className={styles.bar}>
             <div className={styles.buttonBox}>
-                <button className={styles.writeButton} onClick={() => { navi("writeBoard")}}>글쓰기</button>
+                <button className={styles.writeButton} onClick={() => { navi("writePost")}}>글쓰기</button>
             </div>
             <div className={styles.board} onClick={() => { navi(`board/0`) }}><FaStar />중요 게시물</div>
             {
