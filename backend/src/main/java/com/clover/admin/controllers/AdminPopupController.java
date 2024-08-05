@@ -40,6 +40,11 @@ public class AdminPopupController {
 		
 		// ++ DB 첨부파일 정보(FileController) , 댓글 목록 (CommentController)
 	}
+	
+	@GetMapping("/today")
+	public ResponseEntity<List<AdminPopupDTO>> getPopWindow(){
+		return ResponseEntity.ok(adminpopupService.getPopWindow());
+	}
 }
 
 

@@ -27,6 +27,9 @@ public class AdminPopupService {
 		return adminpopupDAO.getPostInfo(popSeq);
 	}
 	
+	public List<AdminPopupDTO> getPopWindow(){
+		return adminpopupDAO.getPopWindow();
+	}
 }
 
 

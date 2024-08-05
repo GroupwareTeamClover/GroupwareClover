@@ -41,6 +41,10 @@ public class AdminPopupDAO {
 	public AdminPopupDTO getPostInfo(int popSeq) {
 		return mybatis.selectOne("AdminPopup.getPostInfo", popSeq);
 	}
+	
+	public List<AdminPopupDTO> getPopWindow(){
+		return mybatis.selectList("AdminPopup.getPopWindow");
+	}
 
 }
 

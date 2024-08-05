@@ -64,46 +64,62 @@ LEFT JOIN
     </select>
     
     <resultMap id="adminPopupResultMap" type="com.clover.admin.dto.AdminPopupDTO">
-    <result property="popSeq" column="pop_seq"/>
-    <result property="popTitle" column="pop_title"/>
-    <result property="empId" column="emp_id"/>
-    <result property="empName" column="emp_name"/>
-    <result property="popContent" column="pop_content"/>
-    <result property="popIsActive" column="pop_is_active"/>
-    <result property="popWriteDate" column="pop_write_date"/>
-    <result property="popUpdatedDate" column="pop_updated_date"/>
-    <result property="popPeriodSeq" column="pop_period_seq"/>
-    <result property="periodType" column="period_type"/>
-    <result property="specificStartDate" column="start_date"/>
-    <result property="specificEndDate" column="end_date"/>
-    <result property="monthlyDay" column="montly_day"/>
-    <result property="weeklyDay" column="weekly_day"/>
-</resultMap>
+	    <result property="popSeq" column="pop_seq"/>
+	    <result property="popTitle" column="pop_title"/>
+	    <result property="empId" column="emp_id"/>
+	    <result property="empName" column="emp_name"/>
+	    <result property="popContent" column="pop_content"/>
+	    <result property="popIsActive" column="pop_is_active"/>
+	    <result property="popWriteDate" column="pop_write_date"/>
+	    <result property="popUpdatedDate" column="pop_updated_date"/>
+	    <result property="popPeriodSeq" column="pop_period_seq"/>
+	    <result property="periodType" column="period_type"/>
+	    <result property="specificStartDate" column="start_date"/>
+	    <result property="specificEndDate" column="end_date"/>
+	    <result property="monthlyDay" column="montly_day"/>
+	    <result property="weeklyDay" column="weekly_day"/>
+	</resultMap>
 
-<select id="getPostInfo" resultMap="adminPopupResultMap">
-    SELECT
-        pb.pop_seq,
-        pb.pop_title,
-        pb.emp_id,
-        e.emp_name,
-        pb.pop_content,
-        pb.pop_is_active,
-        pb.pop_write_date,
-        pb.pop_updated_date,
-        pp.pop_period_seq,
-        pp.period_type,
-        pp.start_date,
-        pp.end_date,
-        pp.montly_day,
-        pp.weekly_day
-    FROM
-        popup_board pb
-    LEFT JOIN
-        popup_period pp ON pb.pop_seq = pp.pop_seq
-    LEFT JOIN
-        employee e ON pb.emp_id = e.emp_id
-    WHERE pb.pop_seq = #{empSeq}
-</select>
+	<select id="getPostInfo" resultMap="adminPopupResultMap">
+	    SELECT
+	        pb.pop_seq,
+	        pb.pop_title,
+	        pb.emp_id,
+	        e.emp_name,
+	        pb.pop_content,
+	        pb.pop_is_active,
+	        pb.pop_write_date,
+	        pb.pop_updated_date,
+	        pp.pop_period_seq,
+	        pp.period_type,
+	        pp.start_date,
+	        pp.end_date,
+	        pp.montly_day,
+	        pp.weekly_day
+	    FROM
+	        popup_board pb
+	    LEFT JOIN
+	        popup_period pp ON pb.pop_seq = pp.pop_seq
+	    LEFT JOIN
+	        employee e ON pb.emp_id = e.emp_id
+	    WHERE pb.pop_seq = #{empSeq}
+	</select>
+	<select id="getPopWindow" resultMap="adminPopupResultMap">
+		<![CDATA[
+	    SELECT pb.POP_SEQ, pb.POP_TITLE, pb.POP_CONTENT, pb.POP_IS_ACTIVE, pb.POP_WRITE_DATE
+	    FROM popup_board pb
+	    JOIN popup_period pp ON pb.POP_SEQ = pp.POP_SEQ
+	    WHERE (
+	        (pp.PERIOD_TYPE = 'specific' 
+	         AND TRUNC(TO_DATE(pp.START_DATE, 'YYYY-MM-DD')) <= TRUNC(SYSDATE) 
+	         AND TRUNC(TO_DATE(pp.END_DATE, 'YYYY-MM-DD')) >= TRUNC(SYSDATE))
+	        OR (pp.PERIOD_TYPE = 'monthly' 
+	            AND TO_CHAR(SYSDATE, 'DD') = LPAD(pp.MONTLY_DAY, 2, '0'))
+	        OR (pp.PERIOD_TYPE = 'weekly' 
+	            AND TRIM(UPPER(TO_CHAR(SYSDATE, 'DAY', 'NLS_DATE_LANGUAGE=ENGLISH'))) = UPPER(pp.WEEKLY_DAY))
+	    ) AND pb.POP_IS_ACTIVE = 'true'
+	    ]]>
+	</select>
     
 </mapper>
   

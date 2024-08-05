@@ -29,7 +29,7 @@ export const PopupDetail =()=>{
    const [specificStartDate, setSpecificStartDate] = useState('');  // specific
    const [specificEndDate, setSpecificEndDate] = useState('');      // specific
    const [monthlyDay, setMonthlyDay] =  useState(1);               // monthly
-   const [weeklyDay, setWeeklyDay] = useState('');                  // weekly
+   const [weeklyDay, setWeeklyDay] = useState('MONDAY');                  // weekly
 
     // 현재 날짜
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 현재 날짜를 구하는 거!
@@ -248,13 +248,13 @@ export const PopupDetail =()=>{
                     <h4>매주 반복:</h4>
                     <label>매주
                         <select name="weeklyDay" value={weeklyDay} onChange={(e) => setWeeklyDay(e.target.value)}>
-                            <option value="sunday">일요일</option>
-                            <option value="monday">월요일</option>
-                            <option value="tuesday">화요일</option>
-                            <option value="wednesday">수요일</option>
-                            <option value="thursday">목요일</option>
-                            <option value="friday">금요일</option>
-                            <option value="saturday">토요일</option>
+                            <option value="MONDAY">월요일</option>
+                            <option value="TUESDAY">화요일</option>
+                            <option value="WEDNESDAY">수요일</option>
+                            <option value="THURSDAY">목요일</option>
+                            <option value="FRIDAY">금요일</option>
+                            <option value="SATURDAY">토요일</option>
+                            <option value="SUNDAY">일요일</option>
                         </select>
                     </label>
                 </div>
