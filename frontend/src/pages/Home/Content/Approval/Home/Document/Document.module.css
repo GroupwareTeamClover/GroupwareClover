@@ -33,6 +33,10 @@
     padding-right: 10px;
 }
 
+.menuspancenter:hover{
+    cursor: pointer;
+}
+
 .menuright{
     margin-right: 3px;
 }
@@ -155,6 +159,7 @@
     display: flex;
     width: 100%;
     height: 100%;
+    justify-content: right;
 }
 
 .tablelbox2{
@@ -164,7 +169,7 @@
     width: 100%;
     height: 100%;
     border: 1px solid black;
-
+    max-width: 100px;
 }
 
 .role{

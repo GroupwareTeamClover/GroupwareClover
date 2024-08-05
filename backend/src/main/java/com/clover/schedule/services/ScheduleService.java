@@ -5,6 +5,8 @@ import com.clover.schedule.dto.ScheduleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScheduleService {
 
@@ -15,5 +17,9 @@ public class ScheduleService {
         int result = scheduleDAO.addSchedule(dto);
         if(result > 0) return "ok";
         else return "fail";
+    }
+
+    public List<ScheduleDTO> getScheduleList() {
+        return scheduleDAO.getScheduleList();
     }
 }

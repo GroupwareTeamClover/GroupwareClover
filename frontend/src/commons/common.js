@@ -60,3 +60,17 @@ export const sendEmail = (data) => {
 
   return result;
 }
+
+
+// =============================== [ 캘린더 스케줄 ] ===============================
+
+export const scheduleType = (group, seq, emp) => {
+
+  let isEmp  = false;
+  if(seq === emp.empSeq) isEmp = true;
+
+  if(group === emp.empDeptCode && isEmp === true) return "individual";
+  else if(group === emp.empDeptCode && isEmp === false) return "department";
+  else if(group === 0) return "company";
+  else return "individual";
+}
