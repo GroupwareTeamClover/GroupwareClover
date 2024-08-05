@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="AdminPopup">
+  	<insert id="insertPop" parameterType="com.clover.admin.dto.AdminPopupDTO" useGeneratedKeys="true" keyProperty="popSeq">
+        insert into pop_board (pop_title, emp_id, pop_content, pop_is_active, pop_write_date, pop_updated_date)
+        values (#{title}, #{empId}, #{content}, #{boardActive}, #{writeDate}, #{updatedDate})
+    </insert>
+    <!-- pop_period 테이블에 데이터 삽입 -->
+    <insert id="insertPeriod" parameterType="com.clover.admin.dto.AdminPopupDTO">
+        insert into pop_period (pop_seq, period_type, start_date, end_date, montly_day, weekly_day)
+        values (#{popSeq}, #{periodType}, #{specificStartDate}, #{specificEndDate}, #{monthlyDay}, #{weeklyDay})
+    </insert>
+  
+  </mapper>
+  

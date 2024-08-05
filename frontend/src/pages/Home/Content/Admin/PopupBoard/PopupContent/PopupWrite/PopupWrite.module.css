@@ -124,6 +124,8 @@
     align-items: center;
     font-size: 15px;
     padding-left: 40px;
+    padding-bottom: 20px;
+    border:1px solid black;
 }
 
 .activeBox .activeLetter{
@@ -154,8 +156,10 @@
 .dateBox {
     margin-top: 15px;
     padding: 10px;
+    padding-left: 90px;
     border: 1px solid #d3d3d3;
     border-radius: 5px;
+    background-color: pink;
 }
 
 .dateBox h4 {
@@ -167,6 +171,7 @@
 .dateBox select {
     margin-right: 10px;
     padding: 5px;
+    margin-left: 20px;
     font-size: 14px;
 }
 
