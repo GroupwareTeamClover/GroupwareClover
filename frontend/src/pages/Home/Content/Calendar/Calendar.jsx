@@ -177,7 +177,6 @@ export const Calendar = () => {
   const [updateForm, setUpdateForm] = useState(false);
   const [updateData, setUpdateData] = useState(selectSchedule);
   const [updateSeq, setUpdateSeq] = useState(0);
-  const defaultUpdateData = {scheduleSeq: 0, title: "", start: "", end: ""};
 
   /** 일정 수정 데이터 **/
   const handleUpdataData = (e) => {
@@ -187,7 +186,6 @@ export const Calendar = () => {
 
   /** 일정 수정 핸들러 **/
   const handleScheduleUpdate = () => {
-
     const data = {
       scheduleSeq: updateData.scheduleSeq,
       scheduleContent: updateData.title,
@@ -206,18 +204,14 @@ export const Calendar = () => {
   }
 
   useEffect(() => {
-    if (selectDay) {
+    if(selectDay){
       selectDayList(selectDay);
     }
   }, [checkSchedule]);
 
   useEffect(() => {
-    if(updateSeq > 0){
-      setSelectSchedule(() => {
-        const data = detailSchedule.filter(item => item.scheduleSeq === updateSeq);
-        setUpdateData(data[0]);
-        return data[0];
-      });
+    if(updateSeq > 0) {
+      handleSelectDetail(updateSeq);
     }
   }, [detailSchedule]);
 
@@ -341,7 +335,7 @@ export const Calendar = () => {
             </div>
             <div className={styles.detail}>
               <p>일정 상세 정보</p>
-              { selectSchedule.empSeq !== undefined &&
+              { selectSchedule.scheduleSeq !== undefined &&
                 <>
                   <div className={styles.content}>
                     {
