@@ -7,10 +7,12 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
-import {scheduleColor} from "../../../../commons/common";
+import {scheduleType} from "../../../../commons/common";
 import {BaseUrl} from "../../../../commons/config";
+import {useMemberStore} from "../../../../store/store";
 
 export const Calendar = () => {
+  const { sessionData } = useMemberStore();
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -21,7 +23,6 @@ export const Calendar = () => {
 
   const [insertState, setInsertState] = useState(false);
 
-
   /** Full calendar plugin **/
   const plugin = [
     dayGridPlugin,      // 월간 달력
@@ -30,7 +31,8 @@ export const Calendar = () => {
   ];
 
   /** 캘린더에 표시할 이벤트 그룹 **/
-  const defaultSelect = { all : true, individual: false, group: false, company: false }
+  const checkBoxKey = ["all", "individual", "department", "company"];
+  const defaultSelect = { all : true, individual: false, department: false, company: false }
   const [select, setSelect] = useState(defaultSelect);
 
   const handleCheckBox = (e) => {
@@ -39,48 +41,66 @@ export const Calendar = () => {
     else setSelect(prev => ({ ...prev, all : false, [name]: checked }));
   }
 
-  /** 캘린더에 표시될 이벤트 상태 **/
-  const [schedules, setSchedules] = useState([
-    {scheduleSeq: 1, deptCode: 1, scheduleContent: "캘린더 테스트 1", date: "2024-08-23"},
-    {scheduleSeq: 2, deptCode: 2, scheduleContent: "캘린더 테스트 2", date: "2024-08-25"},
-    {scheduleSeq: 3, deptCode: 3, scheduleContent: "캘린더 테스트 3", date: "2024-08-26"},
-    {scheduleSeq: 4, deptCode: 1, scheduleContent: "캘린더 테스트 4", startDate: "2024-08-27", endDate: "2024-08-29"},
-    {scheduleSeq: 5, deptCode: 2, scheduleContent: "K-Degital 지옥의 부트캠프", start: "2024-08-12", end: "2024-08-15"}
-  ]);
+  /** 서브사이드바에서 체크된 목록만 캘린더에 표시 **/
+  const [checkSchedule, setCheckSchedule] = useState([]);
 
   useEffect(() => {
+    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
+    setCheckSchedule([]);
+    checkBoxKey.forEach(key => {
+      if(select[key] && key === "all") {
+        setCheckSchedule(schedules);
+      }
+      if(select[key]){
+        schedules.filter(item => {
+          if(item.type === key) {
+            setCheckSchedule(prev => ([ ...prev, item]));
+            return item;
+          }
+        });
+      }
+    });
+  }, [select]);
+
+  /** 캘린더에 표시될 이벤트 상태 **/
+  const [schedules, setSchedules] = useState([]);
+  useEffect(() => {
     axios.get(`${BaseUrl()}/schedule`).then(res => {
-      console.log("Res === ", JSON.stringify(res.data));
-      setSchedules(res.data);
       // 체크된 그룹에 대하여 색상 설정 추가
       setSchedules(() => {
         return res.data.map(item => {
-          const data = { ...item, color: scheduleColor(item.deptCode, item.empSeq), title: item.scheduleContent, start: item.startDate, end: item.endDate };
-          delete item.startDate;
-          delete item.endDate;
-          delete item.scheduleContent;
+          let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
+          data.color = data.type === "individual" ? "green" : data.type === "department" ? "blue" : "red";
+          delete data.startDate;
+          delete data.endDate;
+          delete data.scheduleContent;
+          return data;
+        });
+      });
+      setCheckSchedule(() => {
+        return res.data.map(item => {
+          let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
+          data.color = data.type === "individual" ? "green" : data.type === "department" ? "blue" : "red";
+          delete data.startDate;
+          delete data.endDate;
+          delete data.scheduleContent;
           return data;
         });
       });
     });
-  }, []);
+  }, [insertState]);
 
-  useEffect(() => {
-    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
-
-  }, [select]);
-
-  /** 캘린더 디테일 모달에 표시될 데이터 **/
-  const [ detailSchedule, setDetaulSchedule ] = useState(schedules);
+  /** 캘린더 디테일 모달에 표시될 목록 **/
+  const [ detailSchedule, setDetailSchedule ] = useState(schedules);
 
   /** 선택된 날짜를 모달에 표시 **/
   const [selectDay, setSelectDay] = useState("");
   const handleDaySelect = (arg) => {
     openModal();
     setSelectDay(arg.dateStr);
-    setDetaulSchedule(prev => {
+    setDetailSchedule(prev => {
         // 선택된(arg.dateStr) 날짜에 포함되는 날짜가 있으면 filtering
-        return schedules.filter(item => {
+        return checkSchedule.filter(item => {
           if (item.date) {
             return item.date === arg.dateStr;
           } else if (item.start && item.end) {
@@ -112,8 +132,12 @@ export const Calendar = () => {
   
   
   /** 모달 화면 스테이트 **/
-  const [ modalDisplay, setModalDisplay ] = useState("insert");
+  const [ modalDisplay, setModalDisplay ] = useState("detail");
 
+  const handleInsertModal = () => {
+    setModalDisplay("insert");
+    openModal();
+  }
 
   /**  일정 추가 데이터 **/
   const defaultInputData = {scheduleContent: "", startDate: "", endDate: ""};
@@ -135,6 +159,7 @@ export const Calendar = () => {
       if(res.data === "ok") {
         setInsertState(prev => !prev);
         closeModal();
+        setInputData(defaultInputData);
       }
     });
   }
@@ -148,21 +173,25 @@ export const Calendar = () => {
       <div className={styles.form}>
         <div className={styles.subMenu}>
           <div className={styles.row}>
-            <input type="checkbox" id="all" name="all" onChange={ handleCheckBox } checked={select.all}/>
+            <button onClick={handleInsertModal}>일정추가</button>
+          </div>
+          <div className={styles.row}>
+            <input type="checkbox" id="all" name="all" onChange={handleCheckBox} checked={select.all}/>
             <label htmlFor="all">전체 일정</label>
           </div>
           <div className={styles.row}>
-            <input type="checkbox" id="individual" name="individual" onChange={ handleCheckBox } checked={select.individual} />
+            <input type="checkbox" id="individual" name="individual" onChange={handleCheckBox}
+                   checked={select.individual}/>
             <label htmlFor="individual">개인 일정</label>
             <div className={styles.colorBox} style={{backgroundColor: "green"}}></div>
           </div>
           <div className={styles.row}>
-            <input type="checkbox" id="group" name="group" onChange={ handleCheckBox } checked={select.group}/>
-            <label htmlFor="group">부서 일정</label>
+            <input type="checkbox" id="department" name="department" onChange={handleCheckBox} checked={select.department}/>
+            <label htmlFor="department">부서 일정</label>
             <div className={styles.colorBox} style={{backgroundColor: "blue"}}></div>
           </div>
           <div className={styles.row}>
-            <input type="checkbox" id="company" name="company" onChange={ handleCheckBox } checked={select.company}/>
+            <input type="checkbox" id="company" name="company" onChange={handleCheckBox} checked={select.company}/>
             <label htmlFor="company">회사 일정</label>
             <div className={styles.colorBox} style={{backgroundColor: "red"}}></div>
           </div>
@@ -188,10 +217,13 @@ export const Calendar = () => {
               day: "Day"
             }}
 
-            events={schedules}
+            events={checkSchedule}
 
             dateClick={handleDaySelect} // 날짜가 선택 될 때
             eventClick={handleEventSelect}
+
+            dayMaxEventRows={2} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
+            moreLinkText="more" // "+n more" 링크에 표시되는 텍스트
 
           />
 
@@ -242,15 +274,17 @@ export const Calendar = () => {
             <div className={styles.list}>
               <p>일정 목록</p>
               <ul>
-                {
+                { detailSchedule.length > 0 ?
                   detailSchedule.map((item, i) => {
                     return (
                       <li key={i}>
                         [개인
-                        일정] {item.scheduleContent.length > 20 ? item.scheduleContent.slice(0, 20) + "..." : item.scheduleContent}
+                        일정] {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
                       </li>
                     );
                   })
+                  :
+                  <li>해당 날짜에 스케줄이 없습니다.</li>
                 }
               </ul>
             </div>
@@ -263,7 +297,7 @@ export const Calendar = () => {
                 종료 날짜
               </div>
               <div className={styles.btnBox}>
-                <button onClick={ () => setModalDisplay("insert") }>일정 추가</button>
+                <button>일정 삭제</button>
                 <button>일정 수정</button>
               </div>
             </div>
