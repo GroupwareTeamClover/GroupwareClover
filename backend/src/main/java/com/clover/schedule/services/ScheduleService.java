@@ -28,4 +28,10 @@ public class ScheduleService {
         if(result > 0) return "ok";
         else return "fail";
     }
+
+    public String updateSchedule(ScheduleDTO dto) {
+        int result = scheduleDAO.updateSchedule(dto);
+        if(result > 0) return "ok";
+        else return "fail";
+    }
 }

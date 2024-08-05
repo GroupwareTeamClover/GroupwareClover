@@ -4,7 +4,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
 import {dateYMD, scheduleType} from "../../../../commons/common";
@@ -12,7 +12,7 @@ import {BaseUrl} from "../../../../commons/config";
 import {useMemberStore} from "../../../../store/store";
 
 export const Calendar = () => {
-  const { sessionData } = useMemberStore();
+  const { sessionData, admin } = useMemberStore();
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -20,6 +20,7 @@ export const Calendar = () => {
     setSelectSchedule({});
     setModalDisplay("detail");
     setIsModalOpen(false);
+    setUpdateForm(false);
   }
 
   const [dataState, setDataState] = useState(false);
@@ -99,14 +100,18 @@ export const Calendar = () => {
   const handleDaySelect = (arg) => {
     openModal();
     setSelectDay(arg.dateStr);
+    selectDayList(arg.dateStr);
+  }
+
+  const selectDayList = (dateStr) => {
     setDetailSchedule(prev => {
       return checkSchedule.filter(item => {
         if (item.date) {
-          return item.date === arg.dateStr;
+          return item.date === dateStr;
         } else if (item.start && item.end) {
           const startDate = new Date(item.start);
           const endDate = new Date(item.end);
-          const selectedDate = new Date(arg.dateStr);
+          const selectedDate = new Date(dateStr);
           return selectedDate >= startDate && selectedDate <= endDate;
         }
         return false;
@@ -114,20 +119,15 @@ export const Calendar = () => {
     });
   }
 
-
   /** 선택된 일정에 대한 내용을 디테일 상세 내용에 표시 **/
   const [ selectSchedule, setSelectSchedule ] =  useState({});
   const handleSelectDetail = (seq) => {
     setSelectSchedule(() => {
       const data = detailSchedule.filter(item => item.scheduleSeq === seq);
+      setUpdateData(data[0]);
       return data[0];
     });
   }
-
-  const handleEventSelect = (event) => {
-    console.log("event ==== ", event);
-  }
-
 
   /** 모달 화면 스테이트 **/
   const [ modalDisplay, setModalDisplay ] = useState("detail");
@@ -162,14 +162,64 @@ export const Calendar = () => {
 
   /** 일정 삭제 핸들러 **/
   const handleScheduleDelete = (seq) => {
-    axios.delete(`${BaseUrl()}/schedule/${seq}`).then(res => {
+    if(window.confirm("일정을 삭제합니까?")){
+      axios.delete(`${BaseUrl()}/schedule/${seq}`).then(res => {
+        if(res.data === "ok"){
+          setDataState(prev => !prev);
+          setSelectSchedule({});
+          setDetailSchedule(prev => prev.filter(item => item.scheduleSeq !== seq))
+        }
+      });
+    }
+  }
+
+  /** 일정 수정 폼 변경 **/
+  const [updateForm, setUpdateForm] = useState(false);
+  const [updateData, setUpdateData] = useState(selectSchedule);
+  const [updateSeq, setUpdateSeq] = useState(0);
+  const defaultUpdateData = {scheduleSeq: 0, title: "", start: "", end: ""};
+
+  /** 일정 수정 데이터 **/
+  const handleUpdataData = (e) => {
+    const { name, value } = e.target;
+    setUpdateData(prev => ({ ...prev, [name]: value }));
+  }
+
+  /** 일정 수정 핸들러 **/
+  const handleScheduleUpdate = () => {
+
+    const data = {
+      scheduleSeq: updateData.scheduleSeq,
+      scheduleContent: updateData.title,
+      empSeq : updateData.empSeq,
+      startDate: updateData.start,
+      endDate: updateData.end
+    };
+    setUpdateSeq(updateData.scheduleSeq);
+
+    axios.put(`${BaseUrl()}/schedule`, data).then(res => {
       if(res.data === "ok"){
+        setUpdateForm(false);
         setDataState(prev => !prev);
-        setSelectSchedule({});
-        setDetailSchedule(prev => prev.filter(item => item.scheduleSeq !== seq))
       }
     });
   }
+
+  useEffect(() => {
+    if (selectDay) {
+      selectDayList(selectDay);
+    }
+  }, [checkSchedule]);
+
+  useEffect(() => {
+    if(updateSeq > 0){
+      setSelectSchedule(() => {
+        const data = detailSchedule.filter(item => item.scheduleSeq === updateSeq);
+        setUpdateData(data[0]);
+        return data[0];
+      });
+    }
+  }, [detailSchedule]);
 
   return (
     <div className={styles.container}>
@@ -223,7 +273,6 @@ export const Calendar = () => {
             events={checkSchedule}
 
             dateClick={handleDaySelect} // 날짜가 선택 될 때
-            eventClick={handleEventSelect}
 
             dayMaxEventRows={2} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
             moreLinkText="more" // "+n more" 링크에 표시되는 텍스트
@@ -295,27 +344,41 @@ export const Calendar = () => {
               { selectSchedule.empSeq !== undefined &&
                 <>
                   <div className={styles.content}>
-                    <div className={styles.row}>
-                      <span>작성자</span>
-                      <input type="text" value={selectSchedule.empSeq}/>
-                    </div>
-                    <div className={styles.row}>
-                      <span>내용</span>
-                      <input type="text" value={selectSchedule.title}/>
-                    </div>
-                    <div className={styles.row}>
-                      <span>시작</span>
-                      <input type="text" value={dateYMD(selectSchedule.start)}/>
-                    </div>
-                    <div className={styles.row}>
-                      <span>종료</span>
-                      <input type="text" value={dateYMD(selectSchedule.end)}/>
-                    </div>
+                    {
+                      !updateForm ?
+                        <div className={styles.contentLabel}>
+                          <p>시작 : {dateYMD(selectSchedule.start)}</p>
+                          <p>종료 : {dateYMD(selectSchedule.end)}</p>
+                          <p>작성자 : {selectSchedule.empSeq} </p>
+                          <p>내용 : {selectSchedule.title}</p>
+                        </div>
+                        :
+                        <div className={styles.contentLabel}>
+                          <p>시작 : <input type="date" name="start" onChange={handleUpdataData} value={dateYMD(updateData.start)}/></p>
+                          <p>종료 : <input type="date" name="end" onChange={handleUpdataData} value={dateYMD(updateData.end)}/></p>
+                          <p>작성자 : {updateData.empSeq}</p>
+                          <p>내용 : <input type="text" name="title" onChange={handleUpdataData} value={updateData.title}/></p>
+                        </div>
+                    }
+
                   </div>
-                  <div className={styles.btnBox}>
-                    <button onClick={() => handleScheduleDelete(selectSchedule.scheduleSeq)} >일정 삭제</button>
-                    <button>일정 수정</button>
-                  </div>
+
+                  {
+                    updateData.empSeq === sessionData.empSeq &&
+                    <>
+                    {!updateForm ?
+                        <div className={styles.btnBox}>
+                          <button onClick={() => handleScheduleDelete(selectSchedule.scheduleSeq)}>일정 삭제</button>
+                          <button onClick={() => setUpdateForm(true)}>일정 수정</button>
+                        </div>
+                        :
+                        <div className={styles.btnBox}>
+                          <button onClick={handleScheduleUpdate}>확인</button>
+                          <button onClick={() => setUpdateForm(false)}>취소</button>
+                        </div>
+                      }
+                    </>
+                  }
                 </>
               }
             </div>
@@ -325,6 +388,12 @@ export const Calendar = () => {
           <div className={styles.modalForm}>
             <div className={styles.insert}>
               <h2>일정 추가</h2>
+              { admin &&
+                <div className={styles.companySchedule}>
+                  <input id="deptCode" name="deptCode" type="checkbox"/>
+                  <label htmlFor="deptCode">회사 전체 일정으로 추가하기</label>
+                </div>
+              }
               <div className={styles.inputData}>
                 <div className={styles.insertRow}>
                   <span>시작 날짜</span>
@@ -343,7 +412,7 @@ export const Calendar = () => {
                 </div>
               </div>
               <div className={styles.btnBox}>
-                <button onClick={ handleInsertSchedule } >추가</button>
+                <button onClick={handleInsertSchedule}>추가</button>
                 <button onClick={closeModal}>취소</button>
               </div>
             </div>

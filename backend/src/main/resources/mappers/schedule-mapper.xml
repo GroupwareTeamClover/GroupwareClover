@@ -26,9 +26,20 @@
 
     <delete id="deleteSchedule">
         DELETE FROM
-        schedule
+            schedule
         WHERE
-        schedule_seq = #{seq}
+            schedule_seq = #{seq}
     </delete>
+
+    <update id="updateSchedule">
+        UPDATE
+            schedule
+        SET
+            schedule_content = #{scheduleContent},
+            start_date = #{startDate},
+            end_date = #{endDate}
+        WHERE
+            schedule_seq = #{scheduleSeq}
+    </update>
 
 </mapper>
