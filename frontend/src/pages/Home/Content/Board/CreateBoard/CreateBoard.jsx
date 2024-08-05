@@ -45,9 +45,14 @@ const CreateBoard = () => {
     }
 
     // 제목
+    const maxTitleLength = 10;
     const [title, setTitle] = useState('');
     const handleChange = (e) => {
-        setTitle(e.target.value);
+        if (e.target.value.length > maxTitleLength) {
+            e.preventDefault();
+        } else {
+            setTitle(e.target.value);
+        }
     }
 
     // 유형
@@ -114,7 +119,7 @@ const CreateBoard = () => {
             <div className={styles.header}>게시판 만들기</div>
             <div className={styles.titleBox}>
                 <div className={styles.titleLetter}>게시판이름</div>
-                <input type="text" name="title" onChange={handleChange} value={title} maxLength={10} placeholder='최대 10자까지 작성 가능' />
+                <input type="text" name="title" onChange={handleChange} value={title} maxLength={maxTitleLength} placeholder='최대 10자까지 작성 가능' />
             </div>
             <div className={styles.typeBox}>
                 <div className={styles.typeLetter}>게시판유형</div>

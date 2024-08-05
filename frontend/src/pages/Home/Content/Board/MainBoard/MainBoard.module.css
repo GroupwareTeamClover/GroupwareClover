@@ -83,3 +83,11 @@
 	min-width: 38px;
 	line-height: 35px;
 }
+
+.loading{
+    width:100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

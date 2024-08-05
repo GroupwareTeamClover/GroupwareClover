@@ -41,19 +41,21 @@ export const Login = ({ setSign, setAdmin }) => {
     const res = await axios.get(`${BaseUrl()}/sign`, { params });
     if(res.status === 200 && res.data !== "") {
 
+      console.log("res.data.empDeptCode ==== ", res.data.deptCode);
+      console.log("res.data.empRoleCode ==== ", res.data.roleCode);
+
       // 세션 데이터 제이슨 형식으로 저장
       const sessionData = {
         empSeq: res.data.empSeq,
         empId: res.data.empId,
         empName: res.data.empName,
         empAvatar: res.data.empAvatar,
-        empDeptCode: res.data.empDeptCode,
-        empRoleCode: res.data.empRoleCode,
+        empDeptCode: res.data.deptCode,
+        empRoleCode: res.data.roleCode,
       }
       setSessionData(sessionData);
 
       // 가입 대기 막아야됨
-
       sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
       if(res.data.workerStateCode === 0) {
         sessionStorage.setItem("sessionAdmin", "true");
