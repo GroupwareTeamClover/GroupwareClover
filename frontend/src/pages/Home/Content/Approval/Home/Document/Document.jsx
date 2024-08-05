@@ -10,7 +10,10 @@ import { useMemberStore } from "../../../../../../store/store";
 import { useApprovalStore } from "../../../../../../store/approvalStore";
 
 
-export const Document = ({type}) => {
+export const Document = ({type, seq}) => {
+    // if(seq===''){
+    //     console.log("insert 확인");
+    // }
 
     const {cloneDocCode, cloneEmpInfo} =useApprovalStore();
 
@@ -40,19 +43,21 @@ export const Document = ({type}) => {
         { label: '문서번호', value: '' }
     ];
     
-    
-
-    
+    //결재요청 클릭시 각 양식에서 상태확인
     const [isInsert, setIsInsert] = useState(false);
-
     const handleInsert= () =>{
+        console.log('Insert button clicked'); // 디버깅용
         setIsInsert(true);
     }
 
     // 긴급여부 체크박스 상태
-    const [isEmergency, setIsEmergency] = useState(false);
+    const [isEmergency, setIsEmergency] = useState('n');
     const handleEmergencyChange = (e) => {
-       setIsEmergency(e.target.checked);
+        if(e.target.checked){
+            setIsEmergency('y');
+        }else{
+            setIsEmergency('n');
+        }
     }
 
 
@@ -101,7 +106,7 @@ export const Document = ({type}) => {
                                     )}
                         </div>
                         <div className={styles.form}>
-                            <FormComponent isInsert={isInsert}/> 
+                            <FormComponent isInsert={isInsert} setIsInsert={setIsInsert} isEmergency={isEmergency}/> 
                         </div>
                     </div> 
                     </div>

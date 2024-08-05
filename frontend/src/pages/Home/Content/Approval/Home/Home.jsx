@@ -11,12 +11,13 @@ export const Home=()=>{
     const queryParams = new URLSearchParams(location.search);
     //url의 type정보 컴포넌트로 넘겨줌
     const type = queryParams.get('type');
+    const seq = queryParams.get('seq') || '';
 
     return(
         <div className={styles.container}>
             <Routes>
                 <Route path="/*" element={<Main/>}/>
-                <Route path="/document/*" element={<Document type={type}/>}/>
+                <Route path="/document/*" element={<Document type={type} seq={seq}/>}/>
                 <Route path="/list/*" element={<List type={type}/>}></Route>
             </Routes>
         </div>

@@ -22,14 +22,14 @@ public class LineDAO {
 		return mybatis.selectList("Document.selectMemberInfo");
 	}
 	
-	//모달정보로 insert
-	public void modalInsertApvLine(ApvLineDTO apvdto) {
-		mybatis.insert("Line.modalInsertApvLine", apvdto);
+	//결재라인 insert
+	public void insertApvLine(ApvLineDTO apvdto) {
+		mybatis.insert("Line.insertApvLine", apvdto);
 	}
 	
-	//모달정보로 insert
-	public void modalInsertPartLine(ParticipantsLineDTO pdto) {
-		mybatis.insert("Line.modalInsertPartLine", pdto);
+	//참조자,열람자 insert
+	public void insertPartLine(ParticipantsLineDTO pdto) {
+		mybatis.insert("Line.insertPartLine", pdto);
 	}
 	
 	
