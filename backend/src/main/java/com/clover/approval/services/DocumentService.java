@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.clover.approval.dao.DocumentDAO;
 import com.clover.approval.dao.LineDAO;
 import com.clover.approval.dto.ApvLineDTO;
+import com.clover.approval.dto.BusinessDTO;
 import com.clover.approval.dto.DocumentDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
 
@@ -22,8 +23,6 @@ public class DocumentService {
 	@Autowired
 	private LineDAO lineDAO;
 	
-	
-	
 
 	//폴더에 보여줄 양식 전체 정보
 	public List<Map<String,?>> getDocCodeInfo(){
@@ -31,23 +30,29 @@ public class DocumentService {
 	}
 	
 	@Transactional
-	public void modalInsertDoc(DocumentDTO docdto, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist) {
-		documentDAO.modalInsetDoc(docdto);
-		System.out.println(docdto.getDocSeq());
+	public void insertDoc(DocumentDTO docDTO, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist, DocumentDTO typeDocDTO) {
+		documentDAO.insetDoc(docDTO);
+		System.out.println(docDTO.getDocSeq());
 		
 		if(apvlist.size()>0) {
 			for(ApvLineDTO dto:apvlist) {
-				dto.setDocSeq(docdto.getDocSeq());
-				lineDAO.modalInsertApvLine(dto);
+				dto.setDocSeq(docDTO.getDocSeq());
+				lineDAO.insertApvLine(dto);
 			}
 		}
 		
 		if(plist.size()>0) {
 			for(ParticipantsLineDTO dto: plist) {
-				dto.setDocSeq(docdto.getDocSeq());
-				lineDAO.modalInsertPartLine(dto);
+				dto.setDocSeq(docDTO.getDocSeq());
+				lineDAO.insertPartLine(dto);
 			}
 			
+		}
+		
+		//업무양식
+		if(typeDocDTO instanceof BusinessDTO) {
+			((BusinessDTO) typeDocDTO).setParentSeq(docDTO.getDocSeq());
+			documentDAO.insertBusiness((BusinessDTO)typeDocDTO);
 		}
 		
 		
