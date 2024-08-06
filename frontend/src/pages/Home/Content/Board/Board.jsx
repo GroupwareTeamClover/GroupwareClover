@@ -5,7 +5,7 @@ import CreateBoard from './CreateBoard/CreateBoard';
 import ManageBoard from './ManageBoard/ManageBoard';
 import ModifyBoard from './ModifyBoard/ModifyBoard';
 import MainBoard from './MainBoard/MainBoard';
-import WriteBoard from './WriteBoard/WriteBoard';
+import WritePost from './WritePost/WritePost';
 import DetilBoard from './DetailBoard/DetailBoard';
 
 const Board = () => {
@@ -18,7 +18,7 @@ const Board = () => {
                 <Route path="/createBoard" element={<CreateBoard />} />
                 <Route path="/manageBoard" element={<ManageBoard />} />
                 <Route path="/manageBoard/modifyBoard" element={<ModifyBoard />} />
-                <Route path="/writeBoard" element={<WriteBoard />}/>
+                <Route path="/writePost" element={<WritePost />}/>
                 <Route path="/board/:boardlistSeq/detail/:boardSeq" element={<DetilBoard/>}/>
             </Routes>
         </div>

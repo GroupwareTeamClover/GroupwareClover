@@ -6,22 +6,40 @@
 
     <insert id="addSchedule">
         INSERT INTO
-            schedule
+        schedule
         VALUES(
-            schedule_sequence.nextval,
-            #{scheduleContent},
-            #{empSeq},
-            #{deptCode},
-            #{startDate},
-            #{endDate}
+        schedule_sequence.nextval,
+        #{scheduleContent},
+        #{empSeq},
+        #{deptCode},
+        #{startDate},
+        #{endDate}
         )
     </insert>
 
     <select id="getScheduleList" resultType="com.clover.schedule.dto.ScheduleDTO" >
         SELECT
-            *
+        *
         FROM
-            schedule
+        schedule
     </select>
+
+    <delete id="deleteSchedule">
+        DELETE FROM
+            schedule
+        WHERE
+            schedule_seq = #{seq}
+    </delete>
+
+    <update id="updateSchedule">
+        UPDATE
+            schedule
+        SET
+            schedule_content = #{scheduleContent},
+            start_date = #{startDate},
+            end_date = #{endDate}
+        WHERE
+            schedule_seq = #{scheduleSeq}
+    </update>
 
 </mapper>

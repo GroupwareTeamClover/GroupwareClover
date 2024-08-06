@@ -56,10 +56,11 @@
 }
 
 .container .fileBox {
-	min-height: 120px;
+	height : 70px;
 	width: 100%;
 	border-top: 1px solid #d3d3d3;
 	display: flex;
+	align-items: center;
 	padding-top : 10px;
 	padding-left : 20px;
 }

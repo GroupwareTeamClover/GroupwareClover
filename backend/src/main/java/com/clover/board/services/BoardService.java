@@ -21,6 +21,11 @@ public class BoardService {
 		return newPostSeq; 
 	}
 	
+	public String getWriterInfo(String writer) {
+		HashMap<String, String> data = bDao.getWriterInfo(writer);
+		return data.get("EMP_NAME") + "/" + data.get("ROLE_NAME") + "/" + data.get("DEPT_NAME");
+	}
+	
 	public List<BoardDTO> getPosts(int boardlistSeq){
 		return bDao.getPosts(boardlistSeq);
 	}

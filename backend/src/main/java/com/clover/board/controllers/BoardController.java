@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.clover.board.dto.BoardDTO;
 import com.clover.board.services.BoardService;
@@ -24,21 +25,25 @@ public class BoardController {
 	private BoardService bServ;
 
 	@PostMapping
-	public ResponseEntity<Void> post(@RequestBody HashMap<String, Object> data){
+	public ResponseEntity<Integer> post(@RequestBody HashMap<String, Object> data){
 		int boardlistSeq = (int)data.get("boardlistSeq");
 		String title = (String)data.get("title");
 		String writer = (String)data.get("writer");
+		String writerInfo = bServ.getWriterInfo(writer);
 		String content = (String)data.get("content");
-		BoardDTO post = new BoardDTO(0, boardlistSeq, title, writer, content, null, 0);
+		BoardDTO post = new BoardDTO(0, boardlistSeq, title, writerInfo, content, null, 0);
 		
 		int newPostSeq = bServ.insertPost(post);
 
 //		파일 첨부(미구현)
-//		System.out.println(data.get("files"));
-		
 //		이미지 이동(임시 -> postSeq폴더) [미구현]
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(newPostSeq);
+	}
+	
+	@GetMapping("/writerInfo/{id}")
+	public ResponseEntity<String> getSessionWriter(@PathVariable String id){
+		return ResponseEntity.ok(bServ.getWriterInfo(id));
 	}
 	
 	@GetMapping("/posts/{boardlistSeq}")

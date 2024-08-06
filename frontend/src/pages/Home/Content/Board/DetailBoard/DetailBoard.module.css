@@ -1,9 +1,13 @@
 .container {
     flex: 7;
-    height: 100vh;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.container textarea:focus {
+    outline:none;
 }
 
 .container button:hover {
@@ -88,7 +92,6 @@
     line-height: 30px;
     font-weight: 400;
     word-break: break-all;
-    min-height: 500px;
 }
 
 .buttonBox {
@@ -127,4 +130,58 @@
     font-size: 13px;
     font-weight: bold;
     margin-right: 10px;
+}
+
+.commentBox{
+    margin: 20px 0 50px 0;
+    width: 67.7vw;
+}
+
+.commentBox .writeCommentBox {
+	height: 130px;
+	border: 1px solid gray;
+}
+
+.commentBox .writeCommentBox .commentWriter {
+	height: 30px;
+	padding: 5px 0 0 20px;
+	font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.commentBox .writeCommentBox .commentContentBox {
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.commentBox .writeCommentBox .commentContentBox .commentContent {
+	font-size: 15px;
+	padding-left: 10px;
+	padding-top: 10px;
+	width: 90%;
+    height: 80px;
+	resize: none;
+	margin-bottom: 10px;
+    border-color: lightgray;
+}
+
+.writeCommentButton {
+	width: 8%;
+	height: 80px;
+	margin-left: 5px;
+	margin-bottom: 10px;
+}
+
+.commentBox .commentLetter {
+	height: 36px;
+    width: 67.7vw;
+	position: relative;
+	margin-top : 40px;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 36px;
+    border-bottom: 1px solid black;
 }

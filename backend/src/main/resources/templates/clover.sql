@@ -154,7 +154,8 @@ create table board_comment(
     board_comment_writer varchar2(30 char) not null,
     board_comment_content varchar2(1000 char) not null,
     board_comment_write_date Timestamp default sysdate not null,
-    board_seq number not null
+    board_seq number not null,
+    board_comment_reply_seq number
 );
 
 create sequence board_comment_sequence start with 1 increment by 1 nomaxvalue nocache;
