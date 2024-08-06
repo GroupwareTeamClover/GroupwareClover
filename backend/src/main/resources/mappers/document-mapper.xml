@@ -18,17 +18,30 @@
 	</select>
 	
 	<insert id="insertDoc">
-		insert into document 
-		values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
-		sysdate, null, #{currentApverSeq}, #{finalApverSeq}, null)
-		<selectKey keyProperty="docSeq" resultType="int" order="AFTER">
-	        select document_sequence.currval from dual
-	    </selectKey>
-	</insert>
+    insert into document 
+    values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
+        <if test="writeDate == null">
+            SYSDATE
+        </if>
+        <if test="writeDate != null">
+            #{writeDate}
+        </if>,
+        null, #{currentApverSeq}, #{finalApverSeq}, null)
+    <selectKey keyProperty="docSeq" resultType="int" order="AFTER">
+        select document_sequence.currval from dual
+    </selectKey>
+</insert>
 	
 	<insert id="insertBusiness">
-		insert into business
-		values(business_sequence.nextval, #{bsTitle}, #{bsContent}, #{bsWriteDate}, #{parentSeq})
+	    insert into business
+	    values(business_sequence.nextval, #{bsTitle}, #{bsContent},
+	            <if test="bsWriteDate == null">
+	                SYSDATE
+	            </if>
+	            <if test="bsWriteDate != null">
+	                #{bsWriteDate}
+	            </if>,
+	            #{parentSeq})
 	</insert>
 	
 	<select id="selectDoc" resultType="com.clover.approval.dto.DocumentDTO">
@@ -38,6 +51,12 @@
 		join department d on e.DEPT_CODE=d.DEPT_CODE
 		join role r on e.ROLE_CODE=r.ROLE_CODE
 		where doc_seq=#{seq}
+	</select>
+	
+	
+	<select id="selectTypeDoc" resultType="java.util.Map">
+		select * from ${table}
+		where parent_seq=#{seq}
 	</select>
 	
 </mapper>

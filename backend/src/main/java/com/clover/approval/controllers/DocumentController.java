@@ -1,11 +1,8 @@
 package com.clover.approval.controllers;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clover.approval.dto.ApvLineDTO;
@@ -23,7 +21,6 @@ import com.clover.approval.dto.BusinessDTO;
 import com.clover.approval.dto.DocumentDTO;
 import com.clover.approval.dto.InsertMappingDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
-import com.clover.approval.dto.TotalLineEmpInfo;
 import com.clover.approval.factory.DocumentFactory;
 import com.clover.approval.services.DocumentService;
 import com.clover.approval.services.LineService;
@@ -47,7 +44,7 @@ public class DocumentController {
 	@Autowired
 	private HttpSession session;
 	
-	
+	//insert-문서,결재자,참조/열람자,양식정보까지
 	@PostMapping
 	 public ResponseEntity<Integer> insertData(@RequestBody InsertMappingDTO insertMappingDTO) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -68,7 +65,7 @@ public class DocumentController {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-				TypeDocDTO.setBsWriteDate(new Timestamp(parsedDate.getTime()));
+				TypeDocDTO.setBsWriteDate(parsedDate);
 				TypeDocDTO.setParentSeq((int) insertMappingDTO.getDocData().get("parentSeq"));
 //	            System.out.println(business.getBsContent());
 		        documentService.insertDoc(document, insertMappingDTO.getApvline(), insertMappingDTO.getPline(), TypeDocDTO);
@@ -77,24 +74,34 @@ public class DocumentController {
 	        return ResponseEntity.ok(document.getDocSeq());
 	    }
 	
-	@GetMapping("/{seq}")
-	public ResponseEntity<InsertMappingDTO> getDocBySeq(@PathVariable Integer seq, String type){
-		System.out.println("디테일페이지 타입정보"+type);
+	//select-문서,기안자,참조/열람자 정보
+	@GetMapping("/{id}")
+	public ResponseEntity<InsertMappingDTO> getDocBySeq(@PathVariable Integer id){
 		DocumentDTO documentDTO=null;
 		List<ApvLineDTO> apvlist=null;
 		List<ParticipantsLineDTO> plist=null;
 		InsertMappingDTO selectInfos=null;
 		
 		
-		if(seq != null) {
-			documentDTO = documentService.getDocBySeq(seq);
-			apvlist=lineService.getLineBySeq(seq);	
-			plist=lineService.getPartBySeq(seq);
+		if(id != null) {
+			documentDTO = documentService.getDocBySeq(id);
+			apvlist=lineService.getLineBySeq(id);	
+			plist=lineService.getPartBySeq(id);
 			selectInfos=new InsertMappingDTO(documentDTO, apvlist, plist);
 		}
 		
 		return ResponseEntity.ok(selectInfos);
 	}
+	
+	//select-양식 정보
+	@GetMapping("/{id}/{type}")
+	public ResponseEntity<Map<String,Object>> getDocTypeBySeq(@PathVariable Integer id, @PathVariable String type, @RequestParam String table){
+		System.out.println(type);
+		System.out.println(table);
+		Map<String, Object> map =documentService.getDocTypeBySeq(id, table);
+		return ResponseEntity.ok(map);
+	}
+	
 	
 	
 	

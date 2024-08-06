@@ -15,10 +15,10 @@ import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./../Document/Menus/DrafterMenu/DrafterMenu";
 
 
-export const DetailDocument = ({type, seq}) => {
+export const DetailDocument = ({type}) => {
 
     const { id } = useParams();
-    console.log(id);
+    // console.log(id);
     //맵핑해서 양식별 메뉴와 폼 컴포넌트 결정
     const formConfig = {
         업무기안: Business,
@@ -51,9 +51,9 @@ export const DetailDocument = ({type, seq}) => {
 
     useEffect(()=>{
         if(id!==''){
-            axios.get(`${BaseUrl()}/approval/document/${id}?type=${type}`, document).then((resp)=>{
-                console.log(`detail접근확인`);
-                console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
+            axios.get(`${BaseUrl()}/approval/document/${id}`, document).then((resp)=>{
+                // console.log(`detail접근확인`);
+                // console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
                 const documentData = resp.data.document ? [{
                     type: 'document',
                     empName: resp.data.document.empName,
@@ -150,7 +150,7 @@ export const DetailDocument = ({type, seq}) => {
                                     ) }
                         </div>
                         <div className={styles.form}>
-                            <FormComponent type={type} seq={seq} /> 
+                            <FormComponent type={type} id={id} /> 
                         </div>
                     </div> 
                     </div>

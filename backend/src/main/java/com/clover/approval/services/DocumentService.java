@@ -30,9 +30,10 @@ public class DocumentService {
 		return documentDAO.selectDocCodeInfo();
 	}
 	
+	//insert
 	@Transactional
 	public void insertDoc(DocumentDTO docDTO, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist, DocumentDTO typeDocDTO) {
-		documentDAO.insetDoc(docDTO);
+		documentDAO.insertDoc(docDTO);
 		System.out.println(docDTO.getDocSeq());
 		
 		if(apvlist.size()>0) {
@@ -61,6 +62,10 @@ public class DocumentService {
 	public DocumentDTO getDocBySeq(int seq){
 		DocumentDTO documentdto = documentDAO.selectDocBySeq(seq);
 		return documentdto;
+	}
+	
+	public Map<String,Object> getDocTypeBySeq(int seq, String table) {
+		return documentDAO.selectDocTypeBySeq(seq, table);
 	}
 
 

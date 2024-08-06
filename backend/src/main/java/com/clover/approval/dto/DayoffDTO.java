@@ -2,30 +2,35 @@
 package com.clover.approval.dto;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class DayoffDTO extends DocumentDTO {
     private int dayoffSeq;
     private int dayoffCode;
-    private Timestamp startDate;
-    private Timestamp endDate;
+    private Date startDate;
+    private Date endDate;
     private String dayoffHalf;
     private String halfType;
     private int parentSeq;
-    
 	public DayoffDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+	public DayoffDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn, Timestamp writeDate,
+			Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq, String empName,
+			String deptName, String roleName) {
+		super(docSeq, docDetailCode, docStateCode, drafterSeq, egcYn, writeDate, finishDate, currentApverSeq, finalApverSeq,
+				docComSeq, empName, deptName, roleName);
+		// TODO Auto-generated constructor stub
+	}
 	public DayoffDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn, Timestamp writeDate,
 			Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq) {
 		super(docSeq, docDetailCode, docStateCode, drafterSeq, egcYn, writeDate, finishDate, currentApverSeq, finalApverSeq,
 				docComSeq);
 		// TODO Auto-generated constructor stub
 	}
-	
-	public DayoffDTO(int dayoffSeq, int dayoffCode, Timestamp startDate, Timestamp endDate, String dayoffHalf,
-			String halfType, int parentSeq) {
+	public DayoffDTO(int dayoffSeq, int dayoffCode, Date startDate, Date endDate, String dayoffHalf, String halfType,
+			int parentSeq) {
 		super();
 		this.dayoffSeq = dayoffSeq;
 		this.dayoffCode = dayoffCode;
@@ -35,7 +40,6 @@ public class DayoffDTO extends DocumentDTO {
 		this.halfType = halfType;
 		this.parentSeq = parentSeq;
 	}
-	
 	public int getDayoffSeq() {
 		return dayoffSeq;
 	}
@@ -48,16 +52,16 @@ public class DayoffDTO extends DocumentDTO {
 	public void setDayoffCode(int dayoffCode) {
 		this.dayoffCode = dayoffCode;
 	}
-	public Timestamp getStartDate() {
+	public Date getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(Timestamp startDate) {
+	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-	public Timestamp getEndDate() {
+	public Date getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(Timestamp endDate) {
+	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
 	public String getDayoffHalf() {
@@ -78,6 +82,11 @@ public class DayoffDTO extends DocumentDTO {
 	public void setParentSeq(int parentSeq) {
 		this.parentSeq = parentSeq;
 	}
+    
+	
+	
+    
+    
 
     
 }

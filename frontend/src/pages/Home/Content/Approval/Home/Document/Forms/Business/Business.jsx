@@ -13,7 +13,8 @@ import { BsChevronDoubleLeft } from 'react-icons/bs';
 export const Business =({type, isInsert, setIsInsert, isEmergency, 
     documentDTO, setDocumentDTO, 
     apvLineDTOs, setApvLineDTOs, 
-    participantsLineDTOs, setParticipantsLineDTOs, 
+    participantsLineDTOs, setParticipantsLineDTOs,
+    id 
 })=>{  
     const navi = useNavigate();
 
@@ -21,8 +22,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const {cloneDocCode, cloneEmpInfo} =useApprovalStore();
     //세션정보
     const {sessionData} = useMemberStore();
-
-    const editorRef = useRef();
+    const [isReadOnly, setIsReadOnly] = useState(false); // 추가된 상태
     //날짜, 제목
     const [date, setDate]=useState();
     const [title, setTitle]=useState();
@@ -31,14 +31,33 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     // <handleContentChange> - 에디터 내용 변경 시 호출할 onChange함수
     const [content, setContent] = useState();
+    const editorRef = useRef();
     const handleContentChange = () => {
         setContent(editorRef.current.getInstance().getHTML());
     }
+    
 
     // DTO로 만들 데이터
     const [business, setBusiness] = useState({});
-        console.log(cloneDocCode);
-        console.log(cloneEmpInfo);
+        // console.log(cloneDocCode);
+        // console.log(cloneEmpInfo);
+    const [docData, setDocData] = useState({
+        "bsSeq" : 0,
+        "bsTitle" : title,
+        "bsContent" :content,
+        "bsWriteDate" : date,
+        "parentSeq" : 0
+    })
+
+    useEffect(() => {
+        // DTO 상태 업데이트
+        setDocData((prev) => ({
+            ...prev,
+            bsTitle: title,
+            bsContent: content,
+            bsWriteDate: date
+        }));
+    }, [date, title, content]);
      
  
     useEffect(() => {
@@ -48,24 +67,20 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             "apvline" : apvLineDTOs,
             "pline" : participantsLineDTOs,
             "docType" : 'business', // 문서 타입
-            "docData" : {
-                "bsSeq" : 0,
-                "bsTitle" : title,
-                "bsContent" :content,
-                "bsWriteDate" : date,
-                "parentSeq" : 0
-            }
+            "docData" : docData
+        })
+        console.log(documentDTO);
+        console.log(apvLineDTOs);
+        console.log(participantsLineDTOs);
+        console.log(docData);
 
-    })}, [date, title, content, isEmergency]);
+    }, [date, title, content, isEmergency, docData]);
    
 
     //insert
     useEffect(() => {
-        if (isInsert) {
-            // console.log('Business state:', business); // 디버깅용
-            
+        if (isInsert && !id) {  // id가 없는 경우에만 실행
             axios.post(`${BaseUrl()}/approval/document`, business).then((resp) => {
-                // console.log("응답 생성된 seq번호: "+ resp.data);
                 alert("문서 생성 성공");
                 navi(`/approval/document/${resp.data}?type=${type}`);
                 setIsInsert(false);
@@ -74,8 +89,28 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 console.log(error);
                 setIsInsert(false);
             });
+            
         }
-    }, [isInsert, business]);
+    }, [isInsert, business, id]);
+
+    //select
+    useEffect(() => {
+        if (id) {
+            axios.get(`${BaseUrl()}/approval/document/${id}/${type}?table=business`, business).then((resp) => {
+                console.log(resp.data);
+                const writeDate = new Date(resp.data.BS_WRITE_DATE).toISOString().split('T')[0];
+                setDocData((prev) => ({
+                    ...prev,
+                    bsSeq: resp.data.BS_SEQ,
+                    bsTitle: resp.data.BS_TITLE,
+                    bsContent: resp.data.BS_CONTENT,
+                    bsWriteDate: writeDate,
+                    parentSeq: resp.data.PARENT_SEQ
+                }));
+                setIsReadOnly(true); // 데이터를 가져온 후 필드를 읽기 전용으로 설정
+            });
+        }
+    }, [id]);
     
     return(
         <div className={styles.container}>
@@ -83,18 +118,19 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 <div className={styles.date}>
                     <div className={styles.name}>시행일자</div>
                     <div className={styles.value}>
-                        <input type='date' className={styles.inputdate} onChange={handleDateChange}></input>
+                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={date} ></input>
                     </div>
                 </div>
                 <div className={styles.title}>
                     <div className={styles.name}>제목</div>
                         <div className={styles.value}>
-                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange}></input>
+                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange} value={title} ></input>
                         </div>
                     </div>
                 </div>
             <div className={styles.editerContainer}>
-                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent=""/>
+                {!id && <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent=""/>}
+                {/* {id && <textarea onChange={handleContentChange} value={content} ></textarea>} */}
             </div>                     
         </div>
     
