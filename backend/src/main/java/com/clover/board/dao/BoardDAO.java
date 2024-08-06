@@ -18,6 +18,10 @@ public class BoardDAO {
 		mybatis.insert("board.insertPost", post);
 	}
 	
+	public HashMap<String, String> getWriterInfo(String writer) {
+		return mybatis.selectOne("board.selectWriterInfo", writer);
+	}
+	
 	public List<BoardDTO> getPosts(int boardlistSeq){
 		return mybatis.selectList("board.selectAllPost", boardlistSeq);
 	}

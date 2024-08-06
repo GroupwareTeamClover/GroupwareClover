@@ -35,6 +35,20 @@
     margin: 10px 0;
 }
 
+
+.row > button {
+    width: 100%;
+    height: 40px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: orange;
+    color: white;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
 .colorBox {
     width: 30px;
     height: 13px;
@@ -56,13 +70,9 @@
     gap: 20px;
 }
 
-.modalForm > h2 {
-    height: 5%;
-}
-
 .list {
     width: 90%;
-    height: 30%;
+    height: 35%;
     gap: 5px;
     padding: 5px;
     display: flex;
@@ -96,7 +106,7 @@
 
 .detail {
     width: 90%;
-    height: 50%;
+    height: 60%;
     gap: 5px;
     padding: 5px;
     border: 1px solid darkgray;
@@ -113,11 +123,41 @@
 }
 
 .content {
-    height: 70%
+    height: 75%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.contentLabel {
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding-left: 14px;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.contentLabel > p > input {
+    width: 250px;
+    height: 30px;
+    border-radius: 5px;
+    margin: 2px 0;
+    padding: 0 5px;
+    border: 1px solid burlywood;
+}
+
+.contentLabel > input:focus {
+    background-color: floralwhite;
 }
 
 .btnBox {
-    height: 15%;
+    height: 10%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -167,12 +207,16 @@
     align-items: center;
 }
 
+.companySchedule {
+    display: flex;
+    gap: 6px;
+}
+
 .inputData {
     width: 90%;
     height: 65%;
-    border: 1px solid darkgray;
-    border-radius: 15px;
     display: flex;
+    gap: 10px;
     flex-direction: column;
     justify-content: center;
     align-items: center;

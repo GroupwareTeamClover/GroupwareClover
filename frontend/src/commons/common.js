@@ -64,15 +64,91 @@ export const sendEmail = (data) => {
 
 // =============================== [ 캘린더 스케줄 ] ===============================
 
-export const scheduleColor = (group, seq) => {
+export const scheduleType = (group, seq, emp) => {
 
   let isEmp  = false;
-  const emp =  sessionStorage.getItem("sessionUser");
-
   if(seq === emp.empSeq) isEmp = true;
 
-  if(group === emp.deptCode && isEmp) return "green"
-  else if(group === emp.deptCode && !isEmp) return "blue"
-  else if(group === 0) return "red"
-  else return "green";
+  if(group === emp.empDeptCode && isEmp === true) return "individual";
+  else if(group === emp.empDeptCode && isEmp === false) return "department";
+  else if(group === 0) return "company";
+  else return "individual";
+}
+
+// =============================== [ 날짜 변환 ] ===============================
+
+export const dateYMD = (timestamp) => {
+  let today = new Date(timestamp);
+  let year = today.getFullYear();
+  let month = ('0' + (today.getMonth() + 1)).slice(-2);
+  let day = ('0' + today.getDate()).slice(-2);
+  let dateData = `${year}-${month}-${day}`;
+  return dateData;
+}
+
+
+// =============================== [ 부서, 직급 코드 이름으로 변환 ] ===============================
+
+export const roleName = (code) => {
+  let name = "";
+  switch (parseInt(code)) {
+    case 1:
+      name = "사장";
+      break;
+    case 2:
+      name = "부사장";
+      break;
+    case 3:
+      name = "이사";
+      break;
+    case 4:
+      name = "부장";
+      break;
+    case 5:
+      name = "차장";
+      break;
+    case 6:
+      name = "과장";
+      break;
+    case 7:
+      name = "대리";
+      break;
+    case 8:
+      name = "사원";
+      break;
+    case 9:
+      name = "인턴";
+      break;
+    case 99:
+      name = "미정";
+      break;
+  }
+  return name;
+}
+
+export const deptName = (code) => {
+  let name = "";
+  switch (parseInt(code)) {
+    case 1:
+      name = "총무";
+      break;
+    case 2:
+      name = "인사";
+      break;
+    case 3:
+      name = "사무";
+      break;
+    case 4:
+      name = "유통";
+      break;
+    case 5:
+      name = "경영";
+      break;
+    case 99:
+      name = "미정";
+      break;
+    default :
+      name = "미정";
+  }
+  return name;
 }

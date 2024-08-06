@@ -1,0 +1,110 @@
+.container{
+    padding: 20px 0 5px 30px;
+	border-bottom: 1px solid #5a5a64;
+}
+
+.container textarea:focus {
+    outline:none;
+}
+
+.comment {
+	position: relative;
+	width: 67.7vw;
+}
+
+.comment .commentWriter {
+	font-weight: bold;
+}
+
+.comment .commentContent {
+	padding-top: 20px;
+	padding-right : 40px;
+	word-break: break-all;
+	white-space: pre-wrap;
+}
+
+.comment .commentDateBox {
+	margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment .commentDateBox .commentDate{
+    color: #6a6e76;
+}
+
+.comment .commentDateBox .commentButtonBox {
+	padding-right: 50px;
+}
+
+.commentModifyButton{
+    margin : 0 0 4px 10px;
+    color : black;
+}
+
+.commentDeleteButton{
+    margin : 0 0 4px 0;
+    color : black;
+}
+
+.openRepleWriteButton:focus{
+	outline:none;
+}
+
+/* 답글쓰기창 */
+.replyWriteBox {
+	height: 130px;
+    margin-top : 20px;
+}
+
+.replyWriteBox .replyWriter {
+	height: 30px;
+	padding: 5px 0 0 20px;
+	font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.replyWriteBox .replyContentBox {
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.replyWriteBox .replyContentBox .replyContent {
+	font-size: 15px;
+	padding-left: 10px;
+	padding-top: 10px;
+	width: 90%;
+    height: 80px;
+	resize: none;
+	margin-bottom: 10px;
+    border-color: lightgray;
+}
+
+.writeReplyButton {
+	width: 8%;
+	height: 80px;
+	margin-left: 5px;
+	margin-bottom: 10px;
+}
+
+.modifyInput{
+	width : 100%;
+	background-color: transparent;
+	font-size: 16px;
+	resize: none;
+	border : 0;
+}
+
+.modifyInput:focus{
+	outline: none;
+}
+
+.modifyButtonBox{
+	width:95%;
+	display: flex;
+	justify-content: end;
+}

@@ -1,0 +1,60 @@
+.container{
+    padding: 20px 0 5px 30px;
+	border-top: 1px solid #d3d3d3;
+    margin-top:10px;
+}
+
+.reply {
+	position: relative;
+	width: 67.7vw;
+}
+
+.reply .replyWriter {
+	font-weight: bold;
+}
+
+.reply .replyContent {
+	padding-top: 20px;
+	padding-right : 40px;
+	word-break: break-all;
+	white-space: pre-wrap;
+}
+
+.reply .replyDateBox {
+	margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reply .replyDateBox .replyDate{
+    color: #6a6e76;
+}
+
+.replyModifyButton{
+    margin : 0 0 4px 10px;
+    color : black;
+}
+
+.replyDeleteButton{
+    margin : 0 0 4px 0;
+    color : black;
+}
+
+.modifyInput{
+	width : 100%;
+	background-color: transparent;
+	font-size: 16px;
+	resize: none;
+	border : 0;
+}
+
+.modifyInput:focus{
+	outline: none;
+}
+
+.modifyButtonBox{
+	width:95%;
+	display: flex;
+	justify-content: end;
+}

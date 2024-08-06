@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import styles from './WriteBoard.module.css';
-import { SelectPicker, Uploader } from 'rsuite';
+import styles from './WritePost.module.css';
+import { SelectPicker } from 'rsuite';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { useMemberStore } from '../../../../../store/store';
@@ -32,6 +32,9 @@ const WriteBoard = () => {
 
     //첨부파일
     const [files, setFiles] = useState([]);
+    const handleFileChange = (e) => {
+        setFiles([...e.target.files]);
+    }
 
     //게시글 내용
     const editorRef = useRef();
@@ -69,15 +72,20 @@ const WriteBoard = () => {
                     boardlistSeq: category,
                     title: title,
                     writer: sessionData.empId,
-                    content: content,
-                    files: files
+                    content: content
                 }).then(resp => {
                     if (resp.status === 200) {
-                        alert("게시글이 등록되었습니다!");
-                        navi(`/community/board/${category}`)
+                        alert("게시글이 등록되었습니다.");
+                        navi(`/community/board/${category}`);
                     }
                 })
             }
+        }
+    }
+
+    const handleCancel = () => {
+        if (window.confirm("작성중인 글은 사라집니다. 계속하시겠습니까?")) {
+            (category === 0) ? navi("/community") : navi(`/community/board/${category}`)
         }
     }
 
@@ -101,17 +109,13 @@ const WriteBoard = () => {
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={false} draggable multiple onChange={setFiles} fileList={files}>
-                    <div style={{ height: 100, width: 1500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span>클릭하거나 드래그하여 파일 첨부</span>
-                    </div>
-                </Uploader>
+                <input type="file" name="files" multiple onChange={handleFileChange} />
             </div>
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent="" />
             </div>
             <div className={styles.btnBox}>
-                <button className={styles.cancelBtn}>취소</button>
+                <button className={styles.cancelBtn} onClick={handleCancel}>취소</button>
                 <button className={styles.writeBtn} onClick={handleSubmit}>등록</button>
             </div>
         </div>
