@@ -31,10 +31,6 @@
     color: #6a6e76;
 }
 
-.reply .replyDateBox .replyButtonBox {
-	padding-right: 50px;
-}
-
 .replyModifyButton{
     margin : 0 0 4px 10px;
     color : black;
@@ -43,4 +39,22 @@
 .replyDeleteButton{
     margin : 0 0 4px 0;
     color : black;
+}
+
+.modifyInput{
+	width : 100%;
+	background-color: transparent;
+	font-size: 16px;
+	resize: none;
+	border : 0;
+}
+
+.modifyInput:focus{
+	outline: none;
+}
+
+.modifyButtonBox{
+	width:95%;
+	display: flex;
+	justify-content: end;
 }
