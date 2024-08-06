@@ -1,6 +1,7 @@
 import styles from './Business.module.css'
 import axios from 'axios';
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { BaseUrl } from '../../../../../../../../commons/config';
 import { useApprovalStore } from '../../../../../../../../store/approvalStore';
@@ -9,13 +10,19 @@ import  WebEditor  from '../../../../../../../../components/WebEditor/WebEditor'
 
 import { BsChevronDoubleLeft } from 'react-icons/bs';
 
-export const Business =({isInsert, setIsInsert, isEmergency})=>{  
+export const Business =({type, isInsert, setIsInsert, isEmergency, 
+    documentDTO, setDocumentDTO, 
+    apvLineDTOs, setApvLineDTOs, 
+    participantsLineDTOs, setParticipantsLineDTOs, 
+})=>{  
+    const navi = useNavigate();
+
+    //********************************write 시 코드******************************************/
     const {cloneDocCode, cloneEmpInfo} =useApprovalStore();
     //세션정보
     const {sessionData} = useMemberStore();
 
     const editorRef = useRef();
-
     //날짜, 제목
     const [date, setDate]=useState();
     const [title, setTitle]=useState();
@@ -29,65 +36,11 @@ export const Business =({isInsert, setIsInsert, isEmergency})=>{
     }
 
     // DTO로 만들 데이터
-    const [business, setBusiness] = useState({
-        // DocumentDTO: {},
-        // ApvLineDTO: {},
-        // ParticipantsLineDTO: {},
-        // docType: '',
-        // docData:{}
-    });
-
-
+    const [business, setBusiness] = useState({});
         console.log(cloneDocCode);
         console.log(cloneEmpInfo);
-        console.log(cloneEmpInfo.apvchoice[0].seq);
      
-
-        // DocumentDTO 구성
-        const documentDTO = {
-            docSeq:0,
-            docDetailCode: cloneDocCode.children.detailcode, // 예시 값
-            docStateCode: 1, // 진행중의미
-            drafterSeq: sessionData.empSeq, // 기안자seq
-            egcYn: isEmergency, //긴급여부
-            writeDate: null,
-            finishDate: null,
-            currentApverSeq: cloneEmpInfo.apvchoice[0].seq, // 현재결재자
-            finalApverSeq: cloneEmpInfo.apvchoice[cloneEmpInfo.apvchoice.length-1].seq, // 최종결재자
-            docComSeq: null
-        };
-
-        // ApvLineDTO 
-        const apvLineDTOs= cloneEmpInfo.apvchoice.map((line, index)=>({
-            apvStatusCode:  index === 0 ? 1 : 2,
-            apverId: line.seq,
-            lineApverCmt: '',
-            lineOrder: index + 1
-        }))
-
-    // ParticipantsLineDTO 구성
-    // refchoice
-    const refParticipants = cloneEmpInfo.refchoice.map((line, index) => ({
-        lineSeq:0,
-        empSeq: line.seq,
-        pcpDivision: 'r',
-        readYN: 'n',
-        readDate: null,
-        docSeq: 0
-    }));
-
-    // viechoice
-    const vieParticipants = cloneEmpInfo.viechoice.map((line, index) => ({
-        lineSeq:0,
-        empSeq: line.seq,
-        pcpDivision: 'v',
-        readYN: 'n',
-        readDate: null,
-        docSeq: 0
-    }));
-
-    const participantsLineDTOs = [...refParticipants, ...vieParticipants];
-
+ 
     useEffect(() => {
         // DTO 상태 업데이트
         setBusiness({
@@ -109,12 +62,12 @@ export const Business =({isInsert, setIsInsert, isEmergency})=>{
     //insert
     useEffect(() => {
         if (isInsert) {
-            console.log('Business state:', business); // 디버깅용
-            console.log(`refParticipants : ${refParticipants}`);
-            console.log(`vieParticipants : ${vieParticipants}`);
+            // console.log('Business state:', business); // 디버깅용
             
             axios.post(`${BaseUrl()}/approval/document`, business).then((resp) => {
-                console.log("응답 생성된 seq번호: "+ resp.data);
+                // console.log("응답 생성된 seq번호: "+ resp.data);
+                alert("문서 생성 성공");
+                navi(`/approval/document/${resp.data}?type=${type}`);
                 setIsInsert(false);
             }).catch((error) => {
                 alert('문서 생성 실패');
@@ -124,9 +77,6 @@ export const Business =({isInsert, setIsInsert, isEmergency})=>{
         }
     }, [isInsert, business]);
     
-
-
-
     return(
         <div className={styles.container}>
             <div className={styles.datatitle}>

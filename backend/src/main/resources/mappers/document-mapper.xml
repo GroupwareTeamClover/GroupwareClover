@@ -20,7 +20,7 @@
 	<insert id="insertDoc">
 		insert into document 
 		values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
-		null, null, #{currentApverSeq}, #{finalApverSeq}, null)
+		sysdate, null, #{currentApverSeq}, #{finalApverSeq}, null)
 		<selectKey keyProperty="docSeq" resultType="int" order="AFTER">
 	        select document_sequence.currval from dual
 	    </selectKey>
@@ -30,5 +30,14 @@
 		insert into business
 		values(business_sequence.nextval, #{bsTitle}, #{bsContent}, #{bsWriteDate}, #{parentSeq})
 	</insert>
+	
+	<select id="selectDoc" resultType="com.clover.approval.dto.DocumentDTO">
+		select doc.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
+		from document doc
+		join employee e on doc.DRAFTER_SEQ=e.EMP_SEQ
+		join department d on e.DEPT_CODE=d.DEPT_CODE
+		join role r on e.ROLE_CODE=r.ROLE_CODE
+		where doc_seq=#{seq}
+	</select>
 	
 </mapper>

@@ -76,9 +76,9 @@ export const Side = () => {
              //양식이 변경될때마다 제목과 밑에 컴포넌트, 결재라인까지 함께 변경되어 버려서 새 결재 진행같은 느낌이 들지 않음
             setCloneDocCode(structuredClone(selectedDocCode));
             setCloneEmpInfo(structuredClone(selectedEmpInfo));
-            navi(`/approval/document?type=${selectedDocCode.children.name}&seq=`); // 페이지 다시 로드
             closeModal();
-            setIsComplete(false); 
+            navi(`/approval/document/new?type=${selectedDocCode.children.name}`); // 페이지 다시 로드
+            setIsComplete(false);
         }
     }, [isComplete]);
 

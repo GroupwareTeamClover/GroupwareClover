@@ -32,6 +32,12 @@ public class DocumentDAO {
 	}
 	
 	
+	//document정보 select
+	public DocumentDTO selectDocBySeq(int seq) {
+		return mybatis.selectOne("Document.selectDoc", seq);
+	}
+	
+	
 	
 	
 

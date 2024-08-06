@@ -12,6 +12,7 @@ import com.clover.approval.dao.LineDAO;
 import com.clover.approval.dto.ApvLineDTO;
 import com.clover.approval.dto.BusinessDTO;
 import com.clover.approval.dto.DocumentDTO;
+import com.clover.approval.dto.InsertMappingDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
 
 @Service
@@ -54,11 +55,12 @@ public class DocumentService {
 			((BusinessDTO) typeDocDTO).setParentSeq(docDTO.getDocSeq());
 			documentDAO.insertBusiness((BusinessDTO)typeDocDTO);
 		}
-		
-		
-		
-		
-		
+	}
+	
+	
+	public DocumentDTO getDocBySeq(int seq){
+		DocumentDTO documentdto = documentDAO.selectDocBySeq(seq);
+		return documentdto;
 	}
 
 
