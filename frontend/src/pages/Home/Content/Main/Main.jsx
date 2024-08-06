@@ -2,7 +2,7 @@ import styles from './Main.module.css'
 import default_image from '../../../../images/default_avatar.jpg';
 import {useMemberStore} from "../../../../store/store";
 import {Modal} from "../../../../components/Modal/Modal";
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Mypage} from "./Mypage/Mypage";
 import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
@@ -14,6 +14,13 @@ export const Main = () => {
     const closeModal = () => setIsModalOpen(false);
 
     const {sessionData} = useMemberStore();
+
+    /** 스크롤 맨 아래로 이동 **/
+    const mainNoticeEndRef = useRef(null);
+    useEffect(() => {
+        mainNoticeEndRef.current.scrollIntoView({ behavior: 'auto' });
+    }, []);
+
 
     const handleMyPageModal = () => {
         openModal();
@@ -65,7 +72,7 @@ export const Main = () => {
               <div className={styles.col}>
                   <div className={styles.review}>
                       <div className={styles.reviewTitle}>
-                          <h2>Clover 공지사항</h2>
+                          <h2>Company Notice!!</h2>
                       </div>
                       <div className={styles.notice}>
                           <>
@@ -115,6 +122,7 @@ export const Main = () => {
                                   망한 부서 대표 : 노시온 대리 ( 8월부로 노시온 대리 사원으로 강등 )
                               </p>
                           </div>
+                          <div ref={mainNoticeEndRef}></div>
                       </div>
                   </div>
               </div>
