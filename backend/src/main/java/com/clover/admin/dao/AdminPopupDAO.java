@@ -19,16 +19,12 @@ public class AdminPopupDAO {
 		
 		System.out.println(popupdto.getSpecificStartDate());
 
-	    // Insert the popup and automatically get the generated popSeq
 	    mybatis.insert("AdminPopup.insertPop", popupdto);
-
-	    // Get the generated popSeq from the DTO
 	    
 	    System.out.println("Generated popSeq: " + popupdto.getPopSeq());
 	    Integer popSeq = popupdto.getPopSeq();
-	    // Check if popSeq was generated and use it for the next insert
 	    if(popSeq != 0) {
-	        popupdto.setPopSeq(popSeq); // Set the popSeq in the DTO
+	        popupdto.setPopSeq(popSeq); 
 	        System.out.println(popupdto.getPopSeq());
 	        mybatis.insert("AdminPopup.insertPopPeriod", popupdto);
 	    }
@@ -45,6 +41,13 @@ public class AdminPopupDAO {
 	public List<AdminPopupDTO> getPopWindow(){
 		return mybatis.selectList("AdminPopup.getPopWindow");
 	}
+	
+	public void updatePopup(AdminPopupDTO popupdto) {
+		mybatis.update("AdminPopup.updatePopup", popupdto);
+		mybatis.update("AdminPopup.updatePopPeriod", popupdto);
+	}
+	
+	
 
 }
 

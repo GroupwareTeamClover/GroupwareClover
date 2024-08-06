@@ -30,6 +30,11 @@ public class AdminPopupService {
 	public List<AdminPopupDTO> getPopWindow(){
 		return adminpopupDAO.getPopWindow();
 	}
+	
+	public void updatePopup(AdminPopupDTO popupdto) {
+		adminpopupDAO.updatePopup(popupdto);
+	}
+	
 }
 
 

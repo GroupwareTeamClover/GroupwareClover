@@ -18,10 +18,10 @@ export const AdminSideMenu = ({ open, setOpen }) => {
       ]
     },
     { 
-      name: "팝업공지관리", link: "/popup", type: "공지글목록", icon: FaCalendarDays, 
+      name: "팝업공지관리", link: "/popup", type: "팝업공지글 목록", icon: FaCalendarDays, 
       submenus: [
-        { name: "공지글 목록", link: "/popup", type: "공지글목록" },
-        { name: "공지 작성하기", link: "/popup/write", type: "공지작성하기" }
+        { name: "팝업공지글 목록", link: "/popup", type: "팝업공지글 목록" },
+        { name: "팝업공지 작성하기", link: "/popup/write", type: "팝업공지 작성하기" }
       ]
     },
     { name: "게시글관리", link: "/community", type: "community", icon: LiaClipboardListSolid },

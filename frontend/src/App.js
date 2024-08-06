@@ -40,9 +40,7 @@ function App() {
     }
   }, [sign]);
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-  };
+ 
 
   return (
     <div className="container">
@@ -60,7 +58,7 @@ function App() {
               { (sign && admin) && <Admin /> }
             </>
         }
-        {showPopup && <PopupWindow onClose={handlePopupClose} />}
+        {showPopup && <PopupWindow showPopup={showPopup} setShowPopup={setShowPopup} />}
       </Router>
     </div>
   );

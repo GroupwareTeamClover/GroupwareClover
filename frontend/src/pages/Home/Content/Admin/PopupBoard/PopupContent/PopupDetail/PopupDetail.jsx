@@ -47,7 +47,7 @@ export const PopupDetail =()=>{
             // 받아온 데이터를 상태에 대입
             setTitle(data.popTitle || '');
             console.log(data.popContent)
-            setBoardActive(data.popIsActive==='T' ? 'T' : 'F');
+            setBoardActive(data.popIsActive==='true' ? 'T' : 'F');
             
             // 공지 기간 옵션 상태 설정
             if (data.periodType === 'specific') {
@@ -170,19 +170,20 @@ export const PopupDetail =()=>{
                 console.log("확인")
                 console.log(payload);
 
-                // axios.put(`${BaseUrl()}/adminpopup`, payload)
-                // .then(resp =>{
-                //     if(resp.status ===200){
-                //         alert("공지팝업이 수정되었습니다.");
-                //         navi('/popup/detail'); 
-                //     }else {
-                //         alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
-                //     }
-                // })
-                // .catch(error=>{
-                //     console.log("서버오류: ", error);
-                //     alert("서버에 문제 발생.")
-                // })
+                axios.put(`${BaseUrl()}/adminpopup/${popSeq}`, payload)
+                .then(resp =>{
+                    console.log(resp.data)
+                    if(resp.status ===200){
+                        alert("공지팝업이 수정되었습니다.");
+                        navi('/popup'); 
+                    }else {
+                        alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+                    }
+                })
+                .catch(error=>{
+                    console.log("서버오류: ", error);
+                    alert("서버에 문제 발생.")
+                })
 
             }
         }
@@ -190,14 +191,18 @@ export const PopupDetail =()=>{
 
     return (
         <div className={styles.container}>
-            <h3>{post.empName} 관리자님의 팝업공지글</h3>
+            <div className={styles.headbox}>
+                <h3>{post.empName} 관리자님의 팝업공지글</h3>
+                <div className={styles.popWriteDate}>
+                    <div>작성일: {post.popWriteDate ? format(new Date(post.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}</div>
+                    <div>수정일: {post.popUpdatedDate ? format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm'): ''}</div>
+                </div>
+            </div>
             <div className={styles.title}>
                 <input type="text" placeholder="공지 제목을 입력해 주세요 (최대 30자까지 입력 가능)"
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title}/> 
             </div>
-            <div>
-                {post.popWriteDate ? format(new Date(post.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}
-            </div>
+           
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px"  defaultContent={post.popContent}/>
             </div>
@@ -270,7 +275,7 @@ export const PopupDetail =()=>{
             </div>
             <div className={styles.btnBox}>
                 <button className={styles.cancelBtn} onClick={() => navi(-1)}>취소</button>
-                <button className={styles.writeBtn} onClick={handleSubmit}>등록</button>
+                <button className={styles.writeBtn} onClick={handleSubmit}>수정</button>
             </div>
             <div className={styles.footer}>
 

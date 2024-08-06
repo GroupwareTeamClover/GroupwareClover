@@ -105,15 +105,17 @@ export const PopupList=()=>{
                         </thead>
                         <tbody className={styles.tbody}>
                             {isLoading ? (
-                                <div className={styles.loading}>글 목록을 불러오는 중입니다..</div>
+                                <tr className={styles.loading}>글 목록을 불러오는 중입니다..</tr>
                             ) : ((filtered.length === 0) ? (
-                                <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
+                                <tr className={styles.loading}>해당 게시판의 글이 없습니다.</tr>
                             ) : (
                                 filtered.length > 0 ? (
                                     filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
+                              
+
                                         <tr key={i}>
                                         <td className={styles.theadtd} onClick={()=> { 
-                                            navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지 상세" } }); 
+                                            navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지글 목록 >  상세" } }); 
                                         }}>
                                           {mem.popTitle}
                                         </td>
@@ -125,12 +127,16 @@ export const PopupList=()=>{
                                         </td>
                                         </tr>
                                     ))): (
+                                       
+
                                         <tr>
                                             <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
                                         </tr>
                                     )
                             )
-                            )}
+                            )
+                            }
+                            </tbody>
 
 
                            
@@ -153,7 +159,7 @@ export const PopupList=()=>{
                                     </tr>
                                 )} */}
                             
-                        </tbody>
+                        {/* </tbody> */}
                     </table>
                 </div>
             </div>
