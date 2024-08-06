@@ -7,6 +7,7 @@ import {BaseUrl} from '../../../../../../../commons/config';
 import { ModalDelete } from './ModalDelete/ModalDelete';
 import { useMemStore } from '../../../../../../../store/store';
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
+import { FaSearch } from 'react-icons/fa';
 
 export const MemMain = () => {
 
@@ -165,20 +166,26 @@ export const MemMain = () => {
         if (value === "") {
             // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
             setFiltered(members);
-        } else {
+        } 
+        else if(value=== "100"){
+            setFiltered(members)
+        }
+        else {
             // 검색어가 있는 경우 필터링
             let result;
             if (name === "empName") {
                 result = members.filter((data) => data[name].includes(value));
             } else {
-               
-                result = members.filter((data) => data[name]=== parseInt(value));
+                
+                result = members.filter((data) => data[name] === parseInt(value));
+                
             }
             setFiltered(result);
         }
-        setCurrentPage(0);
-        
+        setCurrentPage(0); // 페이지를 처음으로 이동
     };
+    
+    
     
 
     return (
@@ -222,6 +229,10 @@ export const MemMain = () => {
                     onChange={handleSearch}
                     className={styles.searchInput}
                 />
+             
+{/*   <input type="text" id="keyword" name="keyword" autoComplete="off" onKeyDown={handleEnter} 
+                    onChange={handleKeywordChange} value={keyword} maxLength={maxSearchLength}></input> */}
+                <button onClick={handleSearch}><FaSearch className={styles.searchLogo} /></button>
             </div>
         </div>
 
@@ -234,8 +245,8 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll} ref={allCheckRef}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
-                                    <select name='deptCode' value='부서' onChange={handleSearch}>
-                                        <option value="">부서</option>
+                                    <select name='deptCode'  onChange={handleSearch}>
+                                        <option value='100'>부서</option>
                                         <option value='1'>총무</option> 
                                         <option value='2'>인사</option> 
                                         <option value='3'>사무</option> 
@@ -245,8 +256,8 @@ export const MemMain = () => {
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name='roleCode' value='직위' onChange={handleSearch}>
-                                        <option value="">직위</option>
+                                    <select name='roleCode' onChange={handleSearch}>
+                                        <option value='100'>직위</option>
                                         <option value='1'>사장</option> 
                                         <option value='2'>부사장</option> 
                                         <option value='3'>이사</option> 
@@ -256,26 +267,26 @@ export const MemMain = () => {
                                         <option value='7'>대리</option> 
                                         <option value='8'>사원</option> 
                                         <option value='9'>인턴</option> 
-                                        <option value='0'>미정</option> 
+                                        <option value='99'>미정</option> 
                                     </select>   
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name="workerSateCode" value='사용자그룹' onChange={handleSearch}>
-                                        <option value=''>사용자그룹</option>
-                                        <option value=''>정규직</option> 
-                                        <option value=''>비정규직</option> 
-                                        <option value=''>계약직</option> 
-                                        <option value=''>관리자</option> 
-                                        <option value=''>미정</option> 
+                                    <select name="workerSateCode" onChange={handleSearch}>
+                                        <option value='100'>사용자그룹</option>
+                                        <option value='1'>정규직</option> 
+                                        <option value='2'>비정규직</option> 
+                                        <option value='3'>계약직</option> 
+                                        <option value='0'>관리자</option> 
+                                        <option value='99'>미정</option> 
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>이메일</td>
                                 <td className={styles.theadtd}>
-                                    <select name='empStateCode' value='계정상태' onChange={handleSearch}>
-                                        <option value=''>계정상태</option>
+                                    <select name='empStateCode'  onChange={handleSearch}>
+                                        <option value='100'>계정상태</option>
                                         <option value='1'>재직중</option>
                                         <option value='2'>퇴사</option>
-                                        <option value='3'>가입대기</option>
+                                        <option value='0'>가입대기</option>
                                         <option>휴면</option>
                                     </select>
                                 </td>

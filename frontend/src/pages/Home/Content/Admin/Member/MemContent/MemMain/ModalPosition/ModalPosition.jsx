@@ -81,9 +81,14 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">직위</option>
                             <option>사장</option> 
+                            <option>부사장</option> 
+                            <option>이사</option> 
+                            <option>부장</option> 
+                            <option>차장</option> 
                             <option>과장</option> 
                             <option>대리</option> 
                             <option>사원</option> 
+                            <option>인턴</option> 
                             <option>미정</option> 
                         </select>
                         </>

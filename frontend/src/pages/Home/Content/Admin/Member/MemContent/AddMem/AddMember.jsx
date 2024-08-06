@@ -229,7 +229,8 @@ export const AddMember = ()=>{
                                                     mem.roleCode === 6 ? '과장' :
                                                     mem.roleCode === 7 ? '대리' :
                                                     mem.roleCode === 8 ? '사원' :
-                                                    mem.roleCode === 9 ? '인턴' : '미정'
+                                                    mem.roleCode === 9 ? '인턴' : 
+                                                    mem.roleCode === 99 ? '미정' : '알수없음'
                                                 } 
                                             </td>
                                             <td className={styles.theadtd}>

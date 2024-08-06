@@ -17,7 +17,7 @@ function App() {
   // Sidebar toggle
   const [open, setOpen] = useState(true);
   // 팝업
-  const [showPopup, setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(true);
 
   useEffect(() => {
     /* Side-Bar toggle */
@@ -30,9 +30,6 @@ function App() {
     if (data !== null) {
       setSign(true);
       setSessionData(data);
-      
-      // 팝업 상태 초기화 (새 로그인 시 항상 팝업이 뜨도록 설정)
-      setShowPopup(true);  
     }
 
     if (adminCheck !== null && adminCheck === "true") {

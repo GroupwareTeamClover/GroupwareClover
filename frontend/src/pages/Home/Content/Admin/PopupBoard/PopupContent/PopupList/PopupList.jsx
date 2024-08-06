@@ -4,7 +4,7 @@ import axios from "axios";
 import { BaseUrl } from "../../../../../../../commons/config";
 import styles from './PopupList.module.css';
 import { Pagination } from "../../../../../../../components/Pagination/Pagination";
-import { FaSearch } from "react-icons/fa";
+import { FaLightbulb, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {format} from 'date-fns';
 
@@ -101,6 +101,7 @@ export const PopupList=()=>{
                                 <td className={styles.theadtd}>팝업공지제목</td>
                                 <td className={styles.theadtd}>작성자</td>
                                 <td className={styles.theadtd}>작성일</td>
+                                {/* <td className={styles.theadtd}>활성화</td> */}
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
@@ -114,17 +115,30 @@ export const PopupList=()=>{
                               
 
                                         <tr key={i}>
-                                        <td className={styles.theadtd} onClick={()=> { 
-                                            navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지글 목록 >  상세" } }); 
-                                        }}>
-                                          {mem.popTitle}
-                                        </td>
+                                       
+                                       {mem.popIsActive ==='true'  ? 
+                                             <td className={styles.theadtd_updated} onClick={()=> { 
+                                                navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지글 목록 >  상세" } }); 
+                                            }}>
+                                              <FaLightbulb className={styles.lightbulbIcon}/>{mem.popTitle}
+                                            </td>
+                                            :
+                                            <td className={styles.theadtd} onClick={()=> { 
+                                                navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지글 목록 >  상세" } }); 
+                                            }}>
+                                                {mem.popTitle}
+                                            </td>
+                                        }
+                                       
                                         <td className={styles.theadtd}>
                                             {mem.empName}
                                         </td>
                                         <td className={styles.theadtd}>
                                             {mem.popWriteDate ? format(new Date(mem.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}
                                         </td>
+                                        {/* <td className={styles.theadtd}>
+                                            {mem.popIsActive==='true' ? 'O' : 'X'}
+                                        </td> */}
                                         </tr>
                                     ))): (
                                        
