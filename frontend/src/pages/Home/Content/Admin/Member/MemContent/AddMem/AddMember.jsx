@@ -8,6 +8,7 @@ import { BaseUrl } from "../../../../../../../commons/config";
 import { useMemStore } from "../../../../../../../store/store";
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import {format} from 'date-fns';
+import { FaSearch } from "react-icons/fa";
 
 
 export const AddMember = ()=>{
@@ -176,9 +177,16 @@ export const AddMember = ()=>{
                         type="text"
                         placeholder=" 사원 이름 검색"
                         name="empName"
-                        onChange={handleSearch}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch(e);
+                            }
+                        }}
                         className={styles.searchInput}
                     />
+                    <button onClick={(e) => handleSearch(e)}>
+                        <FaSearch className={styles.searchLogo} />
+                    </button>
                 </div>
             </div>
         

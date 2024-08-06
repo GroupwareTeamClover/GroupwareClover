@@ -20,6 +20,13 @@ export const MemMain = () => {
     const [checkedMems, setCheckedMems] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
 
+    // select 4가지 useState("100")으로 설정해주기
+    const [deptCode, setDeptCode] = useState("100");
+    const [roleCode, setRoleCode] = useState("100");
+    const [workerStateCode, setWorkerStateCode] = useState("100");
+    const [empStateCode, setEmpStateCode] = useState("100");
+
+
     // 사원 수 출력 함수
     const processCountData = (data) => {
         const counts = { prev: 0, normal: 0, rest: 0, stop: 0, out: 0 };
@@ -162,6 +169,29 @@ export const MemMain = () => {
     // 이름 검색. 셀렉트 선택
     const handleSearch = (e) => {
         const { name, value } = e.target;
+
+        // 선택한 select의 상태를 업데이트하고, 다른 select는 초기화
+        if (name === 'deptCode') {
+            setDeptCode(value);
+            setRoleCode("100");
+            setWorkerStateCode("100");
+            setEmpStateCode("100");
+        } else if (name === 'roleCode') {
+            setRoleCode(value);
+            setDeptCode("100");
+            setWorkerStateCode("100");
+            setEmpStateCode("100");
+        } else if (name === 'workerStateCode') {
+            setWorkerStateCode(value);
+            setDeptCode("100");
+            setRoleCode("100");
+            setEmpStateCode("100");
+        } else if (name === 'empStateCode') {
+            setEmpStateCode(value);
+            setDeptCode("100");
+            setRoleCode("100");
+            setWorkerStateCode("100");
+        }
     
         if (value === "") {
             // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
@@ -226,13 +256,16 @@ export const MemMain = () => {
                     type="text"
                     placeholder=" 사원 이름 검색"
                     name="empName"
-                    onChange={handleSearch}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSearch(e);
+                        }
+                    }}
                     className={styles.searchInput}
                 />
-             
-{/*   <input type="text" id="keyword" name="keyword" autoComplete="off" onKeyDown={handleEnter} 
-                    onChange={handleKeywordChange} value={keyword} maxLength={maxSearchLength}></input> */}
-                <button onClick={handleSearch}><FaSearch className={styles.searchLogo} /></button>
+                <button onClick={(e) => handleSearch(e)}>
+                    <FaSearch className={styles.searchLogo} />
+                </button>
             </div>
         </div>
 
@@ -245,7 +278,7 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll} ref={allCheckRef}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
-                                    <select name='deptCode'  onChange={handleSearch}>
+                                    <select name='deptCode' value={deptCode} onChange={handleSearch}>
                                         <option value='100'>부서</option>
                                         <option value='1'>총무</option> 
                                         <option value='2'>인사</option> 
@@ -256,7 +289,7 @@ export const MemMain = () => {
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name='roleCode' onChange={handleSearch}>
+                                    <select name='roleCode' value={roleCode} onChange={handleSearch}>
                                         <option value='100'>직위</option>
                                         <option value='1'>사장</option> 
                                         <option value='2'>부사장</option> 
@@ -271,7 +304,7 @@ export const MemMain = () => {
                                     </select>   
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name="workerSateCode" onChange={handleSearch}>
+                                    <select name="workerStateCode" value={workerStateCode} onChange={handleSearch}>
                                         <option value='100'>사용자그룹</option>
                                         <option value='1'>정규직</option> 
                                         <option value='2'>비정규직</option> 
@@ -282,7 +315,7 @@ export const MemMain = () => {
                                 </td>
                                 <td className={styles.theadtd}>이메일</td>
                                 <td className={styles.theadtd}>
-                                    <select name='empStateCode'  onChange={handleSearch}>
+                                    <select name='empStateCode' value={empStateCode} onChange={handleSearch}>
                                         <option value='100'>계정상태</option>
                                         <option value='1'>재직중</option>
                                         <option value='2'>퇴사</option>

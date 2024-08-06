@@ -55,7 +55,13 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     });
   };
 
- 
+ // useEffect로 추가적인 드롭다운 상태 관리
+  useEffect(() => {
+    if (!open) {
+      // 사이드바가 닫혀 있으면 드롭다운을 모두 닫음
+      setDropdown({ member: false, popup: false });
+    }
+  }, [open]);
 
   const toggleDropdown = (menuType, firstSubmenu) => {
     if (!open) {

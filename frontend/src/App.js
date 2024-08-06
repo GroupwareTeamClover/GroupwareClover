@@ -7,7 +7,6 @@ import { useMemberStore } from "./store/store";
 import { useEffect, useState } from "react";
 import { AdminSideMenu } from './pages/SideMenu/AdminSideMenu';
 import { Admin } from './pages/Admin/Admin';
-import { PopupWindow } from './pages/Home/Content/Admin/PopupBoard/PopupContent/PopupWindow/PopupWindow';
 
 function App() {
   const userData = sessionStorage.getItem("sessionUser");
@@ -16,8 +15,6 @@ function App() {
 
   // Sidebar toggle
   const [open, setOpen] = useState(true);
-  // 팝업
-  const [showPopup, setShowPopup] = useState(true);
 
   useEffect(() => {
     /* Side-Bar toggle */
@@ -55,7 +52,6 @@ function App() {
               { (sign && admin) && <Admin /> }
             </>
         }
-        {showPopup && <PopupWindow showPopup={showPopup} setShowPopup={setShowPopup} />}
       </Router>
     </div>
   );

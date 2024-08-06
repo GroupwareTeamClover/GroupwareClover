@@ -101,7 +101,6 @@ export const PopupList=()=>{
                                 <td className={styles.theadtd}>팝업공지제목</td>
                                 <td className={styles.theadtd}>작성자</td>
                                 <td className={styles.theadtd}>작성일</td>
-                                {/* <td className={styles.theadtd}>활성화</td> */}
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
@@ -112,21 +111,19 @@ export const PopupList=()=>{
                             ) : (
                                 filtered.length > 0 ? (
                                     filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
-                              
-
                                         <tr key={i}>
                                        
                                        {mem.popIsActive ==='true'  ? 
                                              <td className={styles.theadtd_updated} onClick={()=> { 
                                                 navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지글 목록 >  상세" } }); 
                                             }}>
-                                              <FaLightbulb className={styles.lightbulbIcon}/>{mem.popTitle}
+                                              <FaLightbulb className={styles.on}/>{mem.popTitle}
                                             </td>
                                             :
                                             <td className={styles.theadtd} onClick={()=> { 
                                                 navi(`/popup/detail/${mem.popSeq}`, { state: { type: "팝업공지글 목록 >  상세" } }); 
                                             }}>
-                                                {mem.popTitle}
+                                                <FaLightbulb className={styles.off}/>{mem.popTitle}
                                             </td>
                                         }
                                        
@@ -136,13 +133,9 @@ export const PopupList=()=>{
                                         <td className={styles.theadtd}>
                                             {mem.popWriteDate ? format(new Date(mem.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}
                                         </td>
-                                        {/* <td className={styles.theadtd}>
-                                            {mem.popIsActive==='true' ? 'O' : 'X'}
-                                        </td> */}
                                         </tr>
                                     ))): (
                                        
-
                                         <tr>
                                             <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
                                         </tr>
