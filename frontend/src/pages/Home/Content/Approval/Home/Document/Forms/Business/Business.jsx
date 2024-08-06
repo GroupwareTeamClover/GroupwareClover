@@ -93,12 +93,17 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         }
     }, [isInsert, business, id]);
 
+
+
+    //********************************detail 시 코드******************************************/
     //select
+    const contentRef = useRef(null);
     useEffect(() => {
         if (id) {
             axios.get(`${BaseUrl()}/approval/document/${id}/${type}?table=business`, business).then((resp) => {
                 console.log(resp.data);
                 const writeDate = new Date(resp.data.BS_WRITE_DATE).toISOString().split('T')[0];
+                contentRef.current.innerHTML = resp.data.BS_CONTENT;
                 setDocData((prev) => ({
                     ...prev,
                     bsSeq: resp.data.BS_SEQ,
@@ -118,19 +123,19 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 <div className={styles.date}>
                     <div className={styles.name}>시행일자</div>
                     <div className={styles.value}>
-                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={date} ></input>
+                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={docData.bsWriteDate} disabled={isReadOnly}></input>
                     </div>
                 </div>
                 <div className={styles.title}>
                     <div className={styles.name}>제목</div>
                         <div className={styles.value}>
-                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange} value={title} ></input>
+                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange} value={docData.bsTitle} disabled={isReadOnly}></input>
                         </div>
                     </div>
                 </div>
             <div className={styles.editerContainer}>
                 {!id && <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent=""/>}
-                {/* {id && <textarea onChange={handleContentChange} value={content} ></textarea>} */}
+                {id && <div  ref={contentRef} ></div>}
             </div>                     
         </div>
     
