@@ -142,7 +142,8 @@ const DetilBoard = () => {
                 <div className={styles.commentLetter}>댓글 ({countComments})</div>
                 <div className={styles.commentList}>
                     {comments.map((comment, i) =>
-                        <Comment key={i} dto={comment} sessionWriter={sessionWriter} reples={reples.filter(reple => reple.boardCommentReplySeq === comment.boardCommentSeq)} setCountComments={setCountComments}/>
+                        <Comment key={i} dto={comment} sessionWriter={sessionWriter} reples={reples.filter(reple => reple.boardCommentReplySeq === comment.boardCommentSeq)} 
+                        setCountComments={setCountComments} admin={admin} setComments={setComments}/>
                     )}
                 </div>
             </div>

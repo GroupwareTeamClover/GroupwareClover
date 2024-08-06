@@ -31,11 +31,23 @@ public class CommentService {
 		return cDao.getComments(boardSeq);
 	}
 	
-	public CommentDTO getEachComment(int commentSeq) {
-		return cDao.getEachComment(commentSeq);
+	public CommentDTO getEachComment(int seq) {
+		return cDao.getEachComment(seq);
 	}
 	
-	public CommentDTO getEachReply(int replySeq) {
-		return cDao.getEachReply(replySeq);
+	public void deleteComment(int commentSeq) {
+		cDao.deleteComment(commentSeq);
+	}
+	
+	public void deleteDefendencyReples(int commentSeq) {
+		cDao.deleteDefendencyReples(commentSeq);
+	}
+	
+	public void deleteReply(int replySeq) {
+		cDao.deleteReply(replySeq);
+	}
+	
+	public void modifyComment(CommentDTO comment) {
+		cDao.modifyComment(comment);
 	}
 }
