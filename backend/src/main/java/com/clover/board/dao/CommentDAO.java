@@ -25,11 +25,23 @@ public class CommentDAO {
 		return mybatis.selectList("comment.selectAllComment", boardSeq);
 	}
 	
-	public CommentDTO getEachComment(int commentSeq) {
-		return mybatis.selectOne("comment.selectComment", commentSeq);
+	public CommentDTO getEachComment(int seq) {
+		return mybatis.selectOne("comment.selectComment", seq);
 	}
 	
-	public CommentDTO getEachReply(int replySeq) {
-		return mybatis.selectOne("comment.selectReply", replySeq);
+	public void deleteComment(int commentSeq) {
+		mybatis.delete("comment.deleteComment", commentSeq);
+	}
+	
+	public void deleteDefendencyReples(int commentSeq) {
+		mybatis.delete("comment.deleteDefendencyReples", commentSeq);
+	}
+	
+	public void deleteReply(int replySeq) {
+		mybatis.delete("comment.deleteReply", replySeq);
+	}
+	
+	public void modifyComment(CommentDTO comment) {
+		mybatis.update("comment.updateComment", comment);
 	}
 }

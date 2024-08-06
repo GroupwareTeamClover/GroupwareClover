@@ -48,6 +48,10 @@
     color : black;
 }
 
+.openRepleWriteButton:focus{
+	outline:none;
+}
+
 /* 답글쓰기창 */
 .replyWriteBox {
 	height: 130px;
@@ -85,4 +89,22 @@
 	height: 80px;
 	margin-left: 5px;
 	margin-bottom: 10px;
+}
+
+.modifyInput{
+	width : 100%;
+	background-color: transparent;
+	font-size: 16px;
+	resize: none;
+	border : 0;
+}
+
+.modifyInput:focus{
+	outline: none;
+}
+
+.modifyButtonBox{
+	width:95%;
+	display: flex;
+	justify-content: end;
 }

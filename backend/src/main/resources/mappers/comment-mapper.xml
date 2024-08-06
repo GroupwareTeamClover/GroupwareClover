@@ -22,11 +22,25 @@
 	</select>
 	
 	<select id="selectComment" resultType="com.clover.board.dto.CommentDTO">
-		select * from board_comment where board_comment_seq = #{commentSeq}
+		select * from board_comment where board_comment_seq = #{seq}
 	</select>
 	
-	<select id="selectReply" resultType="com.clover.board.dto.CommentDTO">
-		select * from board_comment where board_comment_seq = #{replySeq}
-	</select>
+	<delete id="deleteComment">
+		delete from board_comment where board_comment_seq = #{commentSeq}
+	</delete>
+	
+	<delete id="deleteDefendencyReples">
+		delete from board_comment where board_comment_reply_seq = #{commentSeq}
+	</delete>
+	
+	<delete id="deleteReply">
+		delete from board_comment where board_comment_seq = #{replySeq}
+	</delete>
+	
+	<update id="updateComment">
+		update board_comment set
+		board_comment_content = #{boardCommentContent}, board_comment_write_date = sysdate
+		where board_comment_seq = #{boardCommentSeq}
+	</update>
 	
 </mapper>
