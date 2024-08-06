@@ -4,12 +4,12 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Line">
 
-	<insert id="modalInsertApvLine">
+	<insert id="insertApvLine">
 	INSERT INTO apv_line 
 	VALUES(apv_line_sequence.nextval, #{apvStatusCode}, #{apverId}, null, #{lineOrder}, null, #{docSeq})
 	</insert>
 	
-	<insert id="modalInsertPartLine">
+	<insert id="insertPartLine">
 		INSERT INTO participants_line
 		VALUES(participants_line_sequence.nextval, #{empSeq}, #{pcpDivision}, #{readYN}, null, #{docSeq})
 	</insert>

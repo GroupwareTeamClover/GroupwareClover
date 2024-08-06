@@ -8,6 +8,8 @@ export const useMemberStore = create(set => ({
     empId: "",
     empName: "",
     empAvatar: "",
+    empDeptCode: "",
+    empRoleCode: ""
   },
   setSessionData: param => set({ sessionData : param}),
   admin: false,

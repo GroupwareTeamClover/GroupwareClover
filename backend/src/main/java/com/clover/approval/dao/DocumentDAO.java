@@ -1,6 +1,5 @@
 package com.clover.approval.dao;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.clover.approval.dto.ApvLineDTO;
+import com.clover.approval.dto.BusinessDTO;
 import com.clover.approval.dto.DocumentDTO;
 
 @Repository
@@ -22,9 +21,14 @@ public class DocumentDAO {
 		return mybatis.selectList("Document.selectDocCodeInfo");
 	}
 	
-	//모달정보로 insert
-	public void modalInsetDoc(DocumentDTO docdto) {
-		mybatis.insert("Document.modalInsertDoc",docdto);
+	//document정보 insert
+	public void insetDoc(DocumentDTO docdto) {
+		mybatis.insert("Document.insertDoc",docdto);
+	}
+	
+	//각 양식 table에 대한 insert
+	public void insertBusiness(BusinessDTO business) {
+		mybatis.insert("Document.insertBusiness", business);
 	}
 	
 	

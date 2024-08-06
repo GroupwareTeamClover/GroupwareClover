@@ -1,0 +1,187 @@
+.container {
+    flex: 7;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container textarea:focus {
+    outline:none;
+}
+
+.container button:hover {
+    cursor: pointer;
+}
+
+.header {
+    font-size: 32px;
+    font-weight: 500;
+    height: 8.8vh;
+    width: 67.7vw;
+    display: flex;
+    align-items: center;
+}
+
+.content {
+    position: relative;
+    width: 67.7vw;
+    min-height: 500px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow: auto;
+}
+
+.content .titleBox {
+    padding-left: 50px;
+    padding-right: 5px;
+    height: 120px;
+    border: 1px solid black;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.titleBox .star:hover {
+    cursor: pointer;
+}
+
+.titleBox .starIcon:hover {
+    fill: rgb(192, 192, 26);
+}
+
+.titleBox .title {
+    margin-left: 20px;
+}
+
+.content .infoBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 50px 0 30px;
+    height: 59px;
+    font-weight: 500;
+    border: 1px solid black;
+    border-top: 0;
+}
+
+.content .infoBox .infoRightBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.content .infoBox .name {
+    padding-left: 20px;
+}
+
+.content .infoBox .date {
+    margin-right: 50px;
+}
+
+.content .infoBox .view {
+    display: flex;
+    align-items: center;
+    padding-top: 0.11vh;
+}
+
+.content .viewCont {
+    padding: 45px 10px 150px 10px;
+    font-size: 18px;
+    line-height: 30px;
+    font-weight: 400;
+    word-break: break-all;
+}
+
+.buttonBox {
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonBox .goListBtn {
+    width: 120px;
+    height: 45px;
+    background: #444;
+    color: #fff;
+    border: 1px solid #555;
+    font-size: 13px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.buttonBox .corBtn {
+    width: 120px;
+    height: 45px;
+    background: gray;
+    color: #fff;
+    border: 0;
+    font-size: 13px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.buttonBox .delBtn {
+    width: 120px;
+    height: 45px;
+    background: gray;
+    color: #fff;
+    border: 0;
+    font-size: 13px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.commentBox{
+    margin: 20px 0 50px 0;
+    width: 67.7vw;
+}
+
+.commentBox .writeCommentBox {
+	height: 130px;
+	border: 1px solid gray;
+}
+
+.commentBox .writeCommentBox .commentWriter {
+	height: 30px;
+	padding: 5px 0 0 20px;
+	font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.commentBox .writeCommentBox .commentContentBox {
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.commentBox .writeCommentBox .commentContentBox .commentContent {
+	font-size: 15px;
+	padding-left: 10px;
+	padding-top: 10px;
+	width: 90%;
+    height: 80px;
+	resize: none;
+	margin-bottom: 10px;
+    border-color: lightgray;
+}
+
+.writeCommentButton {
+	width: 8%;
+	height: 80px;
+	margin-left: 5px;
+	margin-bottom: 10px;
+}
+
+.commentBox .commentLetter {
+	height: 36px;
+    width: 67.7vw;
+	position: relative;
+	margin-top : 40px;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 36px;
+    border-bottom: 1px solid black;
+}

@@ -13,7 +13,7 @@ CREATE TABLE employee(
     emp_avatar varchar2(1000) Default NULL,
     role_code NUMBER NOT NULL,
     dept_code NUMBER NOT NULL,
-    join_date TIMESTAMP DEFAULT sysdate NOT NULL,
+    join_date TIMESTAMP NULL,
     leave_date TIMESTAMP NULL,
     annual_leave_day NUMBER DEFAULT 0 NOT NULL
 );
@@ -157,7 +157,8 @@ create table board_comment(
     board_comment_writer varchar2(30 char) not null,
     board_comment_content varchar2(1000 char) not null,
     board_comment_write_date Timestamp default sysdate not null,
-    board_seq number not null
+    board_seq number not null,
+    board_comment_reply_seq number
 );
 
 create sequence board_comment_sequence start with 1 increment by 1 nomaxvalue nocache;
@@ -324,6 +325,17 @@ CREATE TABLE doc_code (
 	doc_code	number		NOT NULL,
 	doc_code_name	varchar(30)		NOT NULL
 );
+
+CREATE TABLE schedule (
+    schedule_seq NUMBER PRIMARY KEY,
+    schedule_content VARCHAR2(300) NOT NULL,
+    emp_seq NUMBER NOT NULL,
+    dept_code NUMBER NOT NULL,
+    start_date TIMESTAMP NOT NULL,
+    end_date TIMESTAMP NOT NULL
+);
+
+CREATE SEQUENCE schedule_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 
 --**************insert 데이트 문***************

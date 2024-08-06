@@ -35,8 +35,7 @@ CREATE TABLE dayoff (
 	end_date	timestamp		NOT NULL,
 	dayoff_half	char(1)		NULL,
 	half_type	char(1)		NULL,
-	doc_seq	number		NOT NULL,
-	Field	VARCHAR(255)		NULL
+	doc_seq	number		NOT NULL
 );
 
 CREATE sequence dayoff_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;

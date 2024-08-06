@@ -18,11 +18,23 @@ public class BoardDAO {
 		mybatis.insert("board.insertPost", post);
 	}
 	
+	public HashMap<String, String> getWriterInfo(String writer) {
+		return mybatis.selectOne("board.selectWriterInfo", writer);
+	}
+	
 	public List<BoardDTO> getPosts(int boardlistSeq){
 		return mybatis.selectList("board.selectAllPost", boardlistSeq);
 	}
 	
 	public List<BoardDTO> searchPosts(HashMap<String, Object> data){
 		return mybatis.selectList("board.selectSearchedPost", data);
+	}
+	
+	public BoardDTO getPostInfo(int boardSeq) {
+		return mybatis.selectOne("board.selectTargetPost", boardSeq);
+	}
+	
+	public void deletePost(int boardSeq) {
+		mybatis.delete("board.deletePost", boardSeq);
 	}
 }

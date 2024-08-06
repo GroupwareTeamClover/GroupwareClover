@@ -17,13 +17,18 @@
 		left outer join role r on e.role_code=r.role_code
 	</select>
 	
-	<insert id="modalInsertDoc">
+	<insert id="insertDoc">
 		insert into document 
 		values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
-		null, null, 0, 0, null)
+		null, null, #{currentApverSeq}, #{finalApverSeq}, null)
 		<selectKey keyProperty="docSeq" resultType="int" order="AFTER">
 	        select document_sequence.currval from dual
 	    </selectKey>
+	</insert>
+	
+	<insert id="insertBusiness">
+		insert into business
+		values(business_sequence.nextval, #{bsTitle}, #{bsContent}, #{bsWriteDate}, #{parentSeq})
 	</insert>
 	
 </mapper>

@@ -71,7 +71,7 @@
             #{empAvatar},
             99,
             99,
-            sysdate,
+            null,
             null,
             0,
             99

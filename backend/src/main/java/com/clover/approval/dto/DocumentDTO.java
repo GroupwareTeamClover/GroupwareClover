@@ -3,20 +3,22 @@ package com.clover.approval.dto;
 import java.sql.Timestamp;
 
 public class DocumentDTO {
-	private int docSeq;
-	private int docDetailCode;
-	private int docStateCode;
-	private int drafterSeq;
-	private String egcYn;
-	private Timestamp writeDate;
-	private Timestamp finishDate;
-	private int currentApverSeq;
-	private int finalApverSeq;
-	private String docComSeq;
+	protected  int docSeq;
+	protected  int docDetailCode;
+	protected  int docStateCode;
+	protected  int drafterSeq;
+	protected  String egcYn;
+	protected  Timestamp writeDate;
+	protected  Timestamp finishDate;
+	protected  int currentApverSeq;
+	protected  int finalApverSeq;
+	protected  String docComSeq;
+	
 	public DocumentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
 	public DocumentDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
 			Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq) {
 		super();
