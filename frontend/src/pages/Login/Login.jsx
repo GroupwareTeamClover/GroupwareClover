@@ -9,9 +9,11 @@ import {FindId} from "./FindId/FindId";
 import {BaseUrl} from "../../commons/config";
 import {useNavigate} from "react-router-dom";
 import {useMemberStore} from "../../store/store";
+import { connectWebSocket } from '../../commons/websocket';
+import { useChatStore } from '../../store/messengerStore';
 
 export const Login = ({ setSign, setAdmin }) => {
-
+  const { addMessage, setOnlineUsers, addChatRoom } = useChatStore();
   const navi = useNavigate();
 
   const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -39,21 +41,49 @@ export const Login = ({ setSign, setAdmin }) => {
     else localStorage.removeItem("saveId");
 
     const res = await axios.get(`${BaseUrl()}/sign`, { params });
-    if(res.status === 200 && res.data !== "") {
+    if(res.status === 200 && res.data.employeeInfo) {
 
+      // 응답 데이터에서 employeeInfo와 wsToken을 구조 분해 할당으로 추출
+      const {employeeInfo, wsToken} = res.data;
       console.log("res.data.empDeptCode ==== ", res.data.deptCode);
       console.log("res.data.empRoleCode ==== ", res.data.roleCode);
-
+      
       // 세션 데이터 제이슨 형식으로 저장
       const sessionData = {
-        empSeq: res.data.empSeq,
-        empId: res.data.empId,
-        empName: res.data.empName,
-        empAvatar: res.data.empAvatar,
-        empDeptCode: res.data.deptCode,
-        empRoleCode: res.data.roleCode,
+        empSeq: employeeInfo.empSeq,       
+        empId: employeeInfo.empId,        
+        empName: employeeInfo.empName,     
+        empAvatar: employeeInfo.empAvatar, 
+        empDeptCode: employeeInfo.deptCode, 
+        empRoleCode: employeeInfo.roleCode,
+        wsToken: wsToken                   // WebSocket 연결을 위한 토큰
       }
       setSessionData(sessionData);
+
+      // wsToken을 localStorage에 저장
+      localStorage.setItem("wsToken", wsToken);
+
+      console.log(sessionData);
+      console.log(wsToken);
+       // WebSocket 연결
+       connectWebSocket((payload) => {
+        const message = JSON.parse(payload.body);
+        console.log('메시지 수신:', message);
+
+        switch (message.type) {
+          case 'CHAT':
+            addMessage(message.roomSeq, message);
+            break;
+          case 'USER_STATUS':
+            setOnlineUsers(message.onlineUsers);
+            break;
+          case 'NEW_CHAT_ROOM':
+            addChatRoom(message.room);
+            break;
+          default:
+            console.log('알 수 없는 메시지 타입:', message.type);
+        }
+      });     
 
       // 가입 대기 막아야됨
       sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
