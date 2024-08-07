@@ -68,11 +68,36 @@ export const Attendance = () => {
         });
     }
 
+    const [myAttendance, setMyAttendance] = useState({
+        work_day: 0,
+        work_late: 0,
+        work_success: 0,
+        work_total_hour: 0,
+        work_total_minute: 0
+    })
+
     useEffect(() => {
         /** 금일 근태 정보 **/
-        axios.get(`${BaseUrl()}/attendance/${dateData}`).then(res => {
+        axios.get(`${BaseUrl()}/attendance/today/${dateData}`).then(res => {
             if(res.data !== "" && res.data !== null && res.data !== undefined) setArrive(res.data);
         });
+
+        /** 한달 근태 정보 **/
+        axios.get(`${BaseUrl()}/attendance/${year}-${month}`).then(res => {
+            if(res.data !== "" && res.data !== null && res.data !== undefined) {
+                const hour = Math.floor(res.data.work_total_time/60);
+                const minute = res.data.work_total_time%60;
+                const data = {
+                    work_day: res.data.work_day,
+                    work_late: res.data.work_late,
+                    work_success: res.data.work_success,
+                    work_total_hour: hour,
+                    work_total_minute: minute
+                }
+                setMyAttendance(data);
+            }
+        });
+
     }, []);
 
     return (
@@ -111,12 +136,39 @@ export const Attendance = () => {
             </div>
 
             <Modal isOpen={isModalOpen} onClose={closeModal}>
-                내 근무 Detail <br/>
-                한달 간 <br/>
-                출근 / 지각 / 연차 <br/>
-                근무시간 / 연장 근무 시간 / 총 근무시간 <br/>
-                <br/><br/>
-                회의, 외출, 외근 정보 남기기
+                <div className={ styles.detail }>
+                    <div className={ styles.detailTitle }>
+                        <h2>{year}-{month} 근무 현황</h2>
+                    </div>
+                    <div className={styles.detailContent}>
+                        <div className={styles.contentItems}>
+                            <div>
+                                <p>근무일</p>
+                                <span>{myAttendance.work_day}</span>
+                            </div>
+                            <div>
+                                <p>지각</p>
+                                <span>{myAttendance.work_late}</span>
+                            </div>
+                            <div>
+                                <p>결근</p>
+                                <span>{myAttendance.work_day - myAttendance.work_success}</span>
+                            </div>
+                            <div>
+                                <p>연차</p>
+                                <span>{myAttendance.work_day - myAttendance.work_success}</span>
+                            </div>
+                        </div>
+                        <div className={ styles.totalWorkTime }>
+                            총 근무시간 : {myAttendance.work_total_hour}시간 {myAttendance.work_total_minute}분
+                        </div>
+                    </div>
+                    <div className={ styles.outsideWork }>
+                        회의, 외출, 외근 정보 남기기
+                    </div>
+
+                </div>
+
             </Modal>
 
         </div>
