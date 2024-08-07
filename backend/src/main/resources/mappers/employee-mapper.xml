@@ -67,7 +67,6 @@
             #{empBirth},
             #{empGender},
             #{empTel},
-            #{empAddress},
             #{empAvatar},
             99,
             99,

@@ -12,6 +12,8 @@
 
 .icons:hover {
     cursor: pointer;
+    transition: all 300ms;
+    background-color: var(--hover-color);
 }
 
 .attForm {
@@ -95,6 +97,8 @@
 }
 .attBtn > button:hover {
     cursor: pointer;
+    transition: all 300ms;
+    background-color: var(--hover-color);
 }
 
 .detail {
