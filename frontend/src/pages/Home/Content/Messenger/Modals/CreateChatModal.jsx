@@ -3,7 +3,7 @@ import axios from 'axios';
 import styles from '../Messenger.module.css';
 import { BaseUrl } from '../../../../commons/config';
 
-// 추가해야함.
+// 로직 다 바뀌었으니 형태만 가져와서 후에 추가하는 것으로 변경
 const CreateChatModal = ({ onClose, onRoomCreated }) => {
   // 채팅방 이름을 저장하는 상태
   const [roomName, setRoomName] = useState('');

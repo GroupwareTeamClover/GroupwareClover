@@ -2,82 +2,86 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import styles from '../Messenger.module.css';
-import { formatDistanceToNow } from 'date-fns'; 
-import { ko } from 'date-fns/locale'; 
-import { useChatStore } from '../../../../../store/messengerStore'; 
+import { formatDistanceToNow } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import { useChatStore } from '../../../../../store/messengerStore';
+import { sendMessage } from '../../../../../commons/websocket';
 
 const ChatWindow = ({ chat }) => {
+  const { messages, setMessages, markMessageAsRead, unreadCounts, addMessage, setUnreadCounts } = useChatStore();
+  const [inputMessage, setInputMessage] = useState('');
 
-  const { messages, addMessage } = useChatStore(); // 스토어에서 필요한 상태와 액션을 가져옴
-  const [inputMessage, setInputMessage] = useState('');  // 입력 메시지를 관리하는 로컬 상태
-
-  // 채팅방이 변경될 때마다 메시지를 불러옵니다.
   useEffect(() => {
-    if (!messages[chat.roomSeq]) {
+    if (chat) {
+      markMessageAsRead(chat.roomSeq);
       fetchMessages();
     }
-  }, [chat.roomSeq, messages]);
+  }, [chat]);
 
-  // 서버에서 메시지를 불러오는 함수
+  const sendChatMessage = useCallback(() => {
+    if (inputMessage.trim()) {
+      const message = {
+        roomSeq: chat.roomSeq,
+        messageContent: inputMessage,
+        messageType: 'CHAT',
+        senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq, 
+        sendTime: new Date().toISOString() 
+      };
+
+      // 서버로 메시지 전송
+      sendMessage("/app/chat.sendMessage", message);
+
+      // 로컬 상태 즉시 업데이트
+      addMessage(chat.roomSeq, message);
+
+      setInputMessage('');
+    } else {
+      console.error('메시지가 비어 있습니다.');
+    }
+  }, [chat.roomSeq, inputMessage, addMessage]);
+
   const fetchMessages = useCallback(async () => {
     try {
       const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
-      // 받아온 메시지를 Zustand 스토어에 추가.
-      response.data.forEach(message => addMessage(chat.roomSeq, message));
+      setMessages(chat.roomSeq, response.data);
     } catch (error) {
       console.error('메시지를 가져오는 중 오류 발생:', error);
-
     }
-  }, [chat.roomSeq, addMessage]);
-
-  // 메시지를 전송하는 함수
-  const sendMessage = useCallback(async () => {
-    if (inputMessage.trim()) {
-      try {
-        const response = await axios.post(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`, {
-          messageContent: inputMessage,
-          messageType: 'CHAT'
-        });
-        // 전송한 메시지를 Zustand 스토어에 추가합니다.
-        addMessage(chat.roomSeq, response.data);
-        setInputMessage(''); // 입력 필드를 비웁니다.
-      } catch (error) {
-        console.error('메시지 전송 중 오류 발생:', error);
-
-      }
-    }
-  }, [chat.roomSeq, inputMessage, addMessage]);
+  }, [chat.roomSeq, setMessages]);
 
   return (
     <div className={styles.chatWindow}>
       <div className={styles.chatHeader}>
-        <img className={styles.avatar} src={chat.roomAvatar} ></img>
+        <img className={styles.avatar} src={chat.roomAvatar} alt="Room Avatar" />
         <h2>{chat.roomName}</h2>
         <span className={styles.status}>Active</span>
       </div>
+
       <div className={styles.messages}>
-        {/* 현재 채팅방의 메시지를 렌더링. */}
         {messages[chat.roomSeq]?.map((message, index) => (
-          <div key={index} className={`${styles.message} ${message.senderSeq === chat.empSeq ? styles.sent : ''}`}>
+          <div 
+            key={index} 
+            className={`${styles.message} ${message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq ? styles.sent : ''}`}
+          >
             <div className={styles.messageWrapper}>
               <div className={styles.messageContent}>{message.messageContent}</div>
               <span className={styles.messageTime}>
-                {/* 메시지 전송 시간을 상대적 시간으로 표시 */}
                 {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
               </span>
             </div>
           </div>
         ))}
       </div>
+
       <div className={styles.chatInput}>
         <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+          onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
           placeholder="메시지를 입력하세요..."
         />
-        <button onClick={sendMessage}>전송</button>
+        <button onClick={sendChatMessage}>전송</button>
       </div>
     </div>
   );
