@@ -25,7 +25,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
       ]
     },
     { name: "게시글관리", link: "/community", type: "community", icon: LiaClipboardListSolid },
-    { name: "보안관리", link: "/log", type: "log", icon: FaListAlt }
+    { name: "접속로그관리", link: "/log", type: "접속 로그 관리", icon: FaListAlt }
   ];
 
   const navi = useNavigate();

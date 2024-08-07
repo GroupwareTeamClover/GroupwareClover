@@ -8,6 +8,7 @@ import {ChatMain} from './Messenger/ChatMain';
 import {Approval} from './Approval/Approval';
 import {Member} from './Admin/Member/Member';
 import { Popup } from './Admin/PopupBoard/Popup';
+import { Log } from './Admin/Log/Log';
 
 export const Content = () => {
 
@@ -22,6 +23,7 @@ export const Content = () => {
           <Route path="/approval/*" element={<Approval/>}/>
           <Route path="/member/*" element={<Member/>}/>
           <Route path="/popup/*" element={<Popup/>}/>
+          <Route path="/log/*" element={<Log/>}/>
         </Routes>
     </div>
   );
