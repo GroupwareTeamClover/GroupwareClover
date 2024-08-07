@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Attachment">
+ 	<insert id="insert">
+ 		insert into attachment values(attachment_sequence.nextval, #{attachmentOriname}, 
+ 		#{attachmentSysname}, #{attachmentFrom}, #{attachmentParentSeq})
+ 	</insert>
+ 	
+ 	<select id="selectAllFile" resultType="com.clover.commons.dto.AttachmentDTO">
+ 		select * from attachment where attachment_from = #{from} and attachment_parent_seq = #{seq}
+ 	</select>
+</mapper>

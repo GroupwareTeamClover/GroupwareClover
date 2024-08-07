@@ -33,6 +33,13 @@ public class ScheduleController {
         return ResponseEntity.ok(list);
     }
 
+    @GetMapping("/week")
+    public ResponseEntity<List<ScheduleDTO>> getWeekSchedule(){
+        int seq = (int) session.getAttribute("cloverSeq");
+        List<ScheduleDTO> list = scheduleService.getMyScheduleList(seq);
+        return ResponseEntity.ok(list);
+    }
+
     @DeleteMapping("/{seq}")
     public ResponseEntity<String> deleteSchedule(@PathVariable int seq){
         String result = scheduleService.deleteSchedule(seq);
@@ -44,5 +51,4 @@ public class ScheduleController {
         String result = scheduleService.updateSchedule(dto);
         return ResponseEntity.ok(result);
     }
-
 }

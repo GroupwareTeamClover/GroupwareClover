@@ -35,9 +35,53 @@ export const useChatStore = create((set) => ({
     }
   })),
 
+  // 각 채팅창별 읽지 않은 메시지 수
+  unreadCounts: {},
+
+  // 읽지 않은 메시지 수를 업데이트하는 함수
+  setUnreadCounts : (counts) => set({ unreadCounts: counts }),
+
+  // 특정 채팅방의 읽지 않은 메시지 수를 업데이트하는 함수
+  updateUnreadCount: (roomSeq, count) => set((state) => ({
+    unreadCounts: {
+     ...state.unreadCounts,
+      [roomSeq]: count
+    }
+  })),
+
+  //메시지를 읽음 처리하는 함수
+  markMessageAsRead: (roomSeq) => set((state) => {
+    const updateMessages = state.messages[roomSeq]?.map(message => ({
+      ...message,
+      isRead:true
+    })) || [];
+
+    return {
+      messages: {
+       ...state.messages,
+        [roomSeq]: updateMessages
+      },
+      unreadCounts: {
+       ...state.unreadCounts,
+        [roomSeq]: 0
+      }
+    };
+  }),
+
+  // 특정 채팅방의 모든 메시지 설정 함수( 서버에서 메시지 목록을 받아올 때 사용)
+  setMessages: (roomSeq, messages) => set((state) => ({
+    messages: {
+     ...state.messages,
+      [roomSeq]: messages
+    }
+  })),
+
+
   // 현재 온라인 상태인 사용자 목록 (현재 비사용)
   onlineUsers: [],
   
   // 온라인 사용자 목록을 설정하는 함수 (현재 비사용)
   setOnlineUsers: (users) => set({ onlineUsers: users }),
+
+
 }));

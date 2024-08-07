@@ -14,34 +14,34 @@ public class CommentDAO {
 	SqlSession mybatis;
 	
 	public void postComment(CommentDTO comment) {
-		mybatis.insert("comment.insertComment", comment);
+		mybatis.insert("Comment.insertComment", comment);
 	}
 	
 	public void postReply(CommentDTO reply) {
-		mybatis.insert("comment.insertReply", reply);
+		mybatis.insert("Comment.insertReply", reply);
 	}
 	
 	public List<CommentDTO> getComments(int boardSeq){
-		return mybatis.selectList("comment.selectAllComment", boardSeq);
+		return mybatis.selectList("Comment.selectAllComment", boardSeq);
 	}
 	
 	public CommentDTO getEachComment(int seq) {
-		return mybatis.selectOne("comment.selectComment", seq);
+		return mybatis.selectOne("Comment.selectComment", seq);
 	}
 	
 	public void deleteComment(int commentSeq) {
-		mybatis.delete("comment.deleteComment", commentSeq);
+		mybatis.delete("Comment.deleteComment", commentSeq);
 	}
 	
 	public void deleteDefendencyReples(int commentSeq) {
-		mybatis.delete("comment.deleteDefendencyReples", commentSeq);
+		mybatis.delete("Comment.deleteDefendencyReples", commentSeq);
 	}
 	
 	public void deleteReply(int replySeq) {
-		mybatis.delete("comment.deleteReply", replySeq);
+		mybatis.delete("Comment.deleteReply", replySeq);
 	}
 	
 	public void modifyComment(CommentDTO comment) {
-		mybatis.update("comment.updateComment", comment);
+		mybatis.update("Comment.updateComment", comment);
 	}
 }

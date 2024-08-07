@@ -86,6 +86,19 @@
     padding-top: 0.11vh;
 }
 
+.content .fileBox{
+    height : 40px;
+    display: flex;
+    align-items: center;
+    padding-left : 10px;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.content .fileBox:hover{
+    cursor: pointer;
+}
+
 .content .viewCont {
     padding: 45px 10px 150px 10px;
     font-size: 18px;

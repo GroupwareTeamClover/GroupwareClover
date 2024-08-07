@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/sign")
 public class SignController {
@@ -18,7 +22,7 @@ public class SignController {
     private HttpSession session;
 
     @GetMapping
-    public ResponseEntity<EmployeeDTO> signIn(@RequestParam String id, @RequestParam String pw) {
+    public ResponseEntity<?> signIn(@RequestParam String id, @RequestParam String pw) {
         EmployeeDTO empInfo = employeeService.SignIn(id, pw);
         if(empInfo != null) {
             session.setAttribute("cloverSeq", empInfo.getEmpSeq());
@@ -28,9 +32,20 @@ public class SignController {
             session.setAttribute("cloverDeptCode", empInfo.getDeptCode());
             session.setAttribute("cloverRoleCode", empInfo.getRoleCode());
             if(empInfo.getEmpStateCode() == 0) session.setAttribute("cloverAdmin", empInfo.getEmpStateCode());
-            return ResponseEntity.ok(empInfo);
+            
+            // 조진혁 웹소켓 로그인
+            // WebSocket 연결을 위한 고유 식별자 생성
+            String wsToken = UUID.randomUUID().toString();
+            session.setAttribute("wsToken", wsToken);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("employeeInfo", empInfo);
+            response.put("wsToken", wsToken);
+
+            
+            return ResponseEntity.ok(response);
         }
-        return null;
+        return ResponseEntity.badRequest().body("로그인 실패");
     }
 
     @GetMapping("/{empId}")

@@ -86,7 +86,6 @@ export const dateYMD = (timestamp) => {
   return dateData;
 }
 
-
 // =============================== [ 부서, 직급 코드 이름으로 변환 ] ===============================
 
 export const roleName = (code) => {

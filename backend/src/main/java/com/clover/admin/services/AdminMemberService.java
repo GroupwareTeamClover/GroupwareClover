@@ -17,7 +17,7 @@ public class AdminMemberService {
 	@Autowired
 	private AdminMemberDAO adminmemberDAO;
 	
-	public List<HashMap<String, Object>> getAllData(){
+	public List<EmployeeDTO> getAllData(){
 		return adminmemberDAO.getAllData();
 	}
 	

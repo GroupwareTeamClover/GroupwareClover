@@ -8,6 +8,8 @@ import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import {roleName, deptName} from "../../../../commons/common";
+import axios from "axios";
+import {BaseUrl} from "../../../../commons/config";
 
 export const Main = () => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
@@ -27,6 +29,23 @@ export const Main = () => {
         openModal();
     }
 
+    /** 내 주간 일정에 들어갈 데이터 **/
+    const [mySchedule, setMySchedule] = useState({ scheduleSeq: "", start: "", end: "", title: "" });
+    useEffect(() => {
+        axios.get(`${BaseUrl()}/schedule/week`).then(res => {
+            const dataArr = res.data.map(item => {
+                return {
+                    scheduleSeq: item.scheduleSeq,
+                    start: item.startDate,
+                    end: item.endDate,
+                    title: item.scheduleContent,
+                    color: "darkgray"
+                };
+            })
+            setMySchedule(dataArr);
+        });
+    }, []);
+
     return (
       <div className={styles.container}>
           <div className={styles.form}>
@@ -42,9 +61,8 @@ export const Main = () => {
                       </div>
                       <div className={styles.empInfo}>
                           <p> Clover Portal</p>
-                          {deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode)+"부서"}
-
-                          <p> {sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
+                          <p> {deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서 "}
+                              {sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
                           <div className={styles.InfoBox}>
                               <button onClick={handleMyPageModal}>내 정보</button>
                           </div>
@@ -66,6 +84,7 @@ export const Main = () => {
                             locale="ko"
                             selectable={true}
                             height="auto"
+                            events={mySchedule}
                           />
                       </div>
                   </div>

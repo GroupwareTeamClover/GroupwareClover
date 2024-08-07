@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useMemStore } from '../../../../../../../../store/store';
 import styles from './ModalAdd.module.css';
+import axios from 'axios';
+import { BaseUrl } from '../../../../../../../../commons/config';
 
-export const ModalAdd = ({setIsModalOpen, checkedMems})=>{
+export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
     const {storemembers, setstoremembers} = useMemStore();
     const [members, setMembers]= useState([]);  
-    const [updatedStatus, setUpdatedStatus] = useState({});
+    const [updatedStatus, setUpdatedStatus] = useState({dept:0,role:0,worker_state:0});
     const closeModal = () => setIsModalOpen(false);
     const checkedCount = checkedMems.length;
 
@@ -17,21 +19,36 @@ export const ModalAdd = ({setIsModalOpen, checkedMems})=>{
         const {name, value} = e.target;
         setUpdatedStatus(prev=>({...prev, [name]:value}))
     }
-    console.log(updatedStatus)
-    console.log(members)
     
     const handleSave = () => {
-        const param ={
-            updatedStatus,
+      
+        console.log(updatedStatus)
+        console.log(members)
+        const { dept, role, worker_state } = updatedStatus;
+        const requestData = {
+            dept: updatedStatus.dept,
+            role: updatedStatus.role,
+            worker_state: updatedStatus.worker_state,
             empSeqList: members
-        }
-       
-        if(updatedStatus.dept ===''|| updatedStatus.role === '' || updatedStatus.worker_state === ''
-        ){
-            alert("모든 필드 선택해라")
-        }else{alert("귯.")}
+        };
 
+        if (!dept || !role || !worker_state) {
+            alert("선택하세요");
+        } else {
+            axios.put(`${BaseUrl()}/adminaddmem`, requestData)
+            .then((resp)=>{
+                console.log("수정 결과: "+resp.data)
+                alert("굿");
+                resetCheckboxes();
+                setstoremembers(true);
+                closeModal();
+            }
+            )
+        }
+        
     }
+
+
     return(
         <div className={styles.container}>
             <div className={styles.title}>
