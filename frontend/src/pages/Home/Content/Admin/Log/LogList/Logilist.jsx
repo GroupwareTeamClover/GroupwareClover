@@ -14,6 +14,15 @@ export const Loglist=()=>{
     const handleEnter =()=>{}
     const handleSearchType =()=>{}
     const handleKeywordChange =()=>{}
+
+    const handleToday=()=>{
+        setSpecificStartDate();
+        setSpecificEndDate();
+    }
+    const handleWeek=()=>{}
+    const handleMonth=()=>{}
+    const handleHalfYear =()=>{}
+
     const handleSearch =()=>{    }
     const handleReset=()=>{}
     return(
@@ -45,10 +54,10 @@ export const Loglist=()=>{
                             <input type="date" name="specificEndDate" placeholder="종료일"  value={specificEndDate} onChange={(e) => setSpecificEndDate(e.target.value)}/>
                         </div>
                         <div className={styles.dateBtn}>
-                            <button>오늘</button>
-                            <button>1주</button>
-                            <button>1개월</button>
-                            <button>6개월</button>
+                            <button onClick={handleToday}>오늘</button>
+                            <button onClick={handleWeek}>1주</button>
+                            <button onClick={handleMonth}>1개월</button>
+                            <button onClick={handleHalfYear}>6개월</button>
                         </div>
                     </div>
                 </div>
