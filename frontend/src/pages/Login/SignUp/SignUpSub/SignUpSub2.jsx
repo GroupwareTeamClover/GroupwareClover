@@ -56,7 +56,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
   const handleEmailCheck = () => {
     if(checkData.empEmail){
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
-      console.log("ranNumber ====== ", ranNumber);
       // 계정 조회 성공
       // const data = {
       //   to_name: exists.empName,
@@ -81,7 +80,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       let data = sendData;
       data.empGender = data.empGender%2 === 1 ? "M" : "F";
       delete data.pwCheck;
-      console.log(data);
 
       const res = await axios.post(`${BaseUrl()}/employee`, sendData);
 
