@@ -18,17 +18,57 @@
 	</select>
 	
 	<insert id="insertDoc">
-		insert into document 
-		values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
-		null, null, #{currentApverSeq}, #{finalApverSeq}, null)
-		<selectKey keyProperty="docSeq" resultType="int" order="AFTER">
-	        select document_sequence.currval from dual
-	    </selectKey>
-	</insert>
+    insert into document 
+    values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
+        <if test="writeDate == null">
+            SYSDATE
+        </if>
+        <if test="writeDate != null">
+            #{writeDate}
+        </if>,
+        null, #{currentApverSeq}, #{finalApverSeq}, null)
+    <selectKey keyProperty="docSeq" resultType="int" order="AFTER">
+        select document_sequence.currval from dual
+    </selectKey>
+</insert>
 	
 	<insert id="insertBusiness">
-		insert into business
-		values(business_sequence.nextval, #{bsTitle}, #{bsContent}, #{bsWriteDate}, #{parentSeq})
+	    insert into business
+	    values(business_sequence.nextval, #{bsTitle}, #{bsContent},
+	            <if test="bsWriteDate == null">
+	                SYSDATE
+	            </if>
+	            <if test="bsWriteDate != null">
+	                #{bsWriteDate}
+	            </if>,
+	            #{parentSeq})
 	</insert>
+	
+	<select id="selectDoc" resultType="com.clover.approval.dto.DocumentDTO">
+		select doc.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
+		from document doc
+		join employee e on doc.DRAFTER_SEQ=e.EMP_SEQ
+		join department d on e.DEPT_CODE=d.DEPT_CODE
+		join role r on e.ROLE_CODE=r.ROLE_CODE
+		where doc_seq=#{seq}
+	</select>
+	
+	
+	<select id="selectTypeDoc" resultType="java.util.Map">
+		select * from ${table}
+		where parent_seq=#{seq}
+	</select>
+	
+	
+	<select id="selectAllDoc" resultType="com.clover.approval.dto.DocumentDTO">
+		SELECT doc.*, 
+       		CASE 
+           		WHEN b.BS_TITLE IS NOT NULL THEN b.BS_TITLE
+           		WHEN d.parent_seq IS NOT NULL THEN '휴가신청서'
+       		END AS title
+		FROM document doc
+		LEFT JOIN business b ON doc.doc_seq = b.parent_seq
+		LEFT JOIN dayoff d ON doc.doc_seq = d.parent_seq
+	</select>
 	
 </mapper>

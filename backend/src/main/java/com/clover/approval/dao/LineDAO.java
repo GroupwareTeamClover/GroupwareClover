@@ -1,5 +1,6 @@
 package com.clover.approval.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,29 @@ public class LineDAO {
 		mybatis.insert("Line.insertPartLine", pdto);
 	}
 	
+	//결재 라인 select
+	public List<ApvLineDTO> selectLineBySeq(int seq){
+		return mybatis.selectList("Line.selectApvLine", seq);
+	}
 	
+	
+	//참조자, 열람자 select
+	public List<ParticipantsLineDTO> selectPartBySeq(int seq){
+		return mybatis.selectList("Line.selectPartLine", seq);
+	}
+	
+	//전체 출력
+	public List<ApvLineDTO> selectAllApv(){
+		return mybatis.selectList("Line.selectAllApv");
+	}
+	
+	
+	//참조자, 열람자 select
+	public List<ParticipantsLineDTO> selectAllPart(){
+		return mybatis.selectList("Line.selectAllPart");
+	}
+	
+
 
 }
 

@@ -1,5 +1,6 @@
 package com.clover.approval.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class DocumentDAO {
 	}
 	
 	//document정보 insert
-	public void insetDoc(DocumentDTO docdto) {
+	public void insertDoc(DocumentDTO docdto) {
 		mybatis.insert("Document.insertDoc",docdto);
 	}
 	
@@ -31,6 +32,24 @@ public class DocumentDAO {
 		mybatis.insert("Document.insertBusiness", business);
 	}
 	
+	
+	//document정보 select
+	public DocumentDTO selectDocBySeq(int seq) {
+		return mybatis.selectOne("Document.selectDoc", seq);
+	}
+	
+	//do타입별 정보 select
+	public Map<String,Object> selectDocTypeBySeq(int seq, String table) {
+		Map<String,Object> map=new HashMap<>();
+		map.put("seq", seq);
+		map.put("table", table);
+		return mybatis.selectOne("Document.selectTypeDoc", map);
+	}
+	
+	//전체 정보 출력
+	public List<DocumentDTO> selectAllDoc(){
+		return mybatis.selectList("Document.selectAllDoc");
+	}
 	
 	
 	
