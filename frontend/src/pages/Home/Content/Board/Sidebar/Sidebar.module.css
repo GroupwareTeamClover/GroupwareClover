@@ -1,6 +1,9 @@
-.bar{
+.container{
     flex:1;
     border-right: 2px dotted black;
+}
+
+.bar{
     width:12vw;
     height: 100%;
 }
