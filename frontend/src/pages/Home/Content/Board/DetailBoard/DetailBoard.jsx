@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './DetailBoard.module.css';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { IconContext } from 'react-icons';
@@ -9,7 +9,7 @@ import { LuEye } from 'react-icons/lu';
 import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
 import Comment from './Comment/Comment';
-import { Button, Popover, Whisper } from 'rsuite';
+import { Button, Loader, Popover, Whisper } from 'rsuite';
 import 'rsuite/Popover/styles/index.css';
 
 const DetilBoard = () => {
@@ -60,6 +60,12 @@ const DetilBoard = () => {
         })
     }, [boardSeq, boardlistSeq, sessionData.empId]);
 
+    //첨부파일 조회 및 다운로드
+    const [isFileBoxOpen, setIsFileBoxOpen] = useState(false);
+    const handleFileBox = () => {
+        setIsFileBoxOpen(prev => !prev);
+    }
+
     //게시글 삭제
     const handleDelete = () => {
         if (window.confirm("정말로 이 글을 삭제하시겠습니까?")) {
@@ -103,27 +109,6 @@ const DetilBoard = () => {
         }
     }
 
-    const DefaultPopover = forwardRef(({ content, ...props }, ref) => {
-        return (
-          <Popover ref={ref} title="Title" {...props}>
-            <p>This is a Popover </p>
-            <p>{content}</p>
-          </Popover>
-        );
-      });
-    const CustomComponent = ({ placement, children }) => (
-        <Whisper
-          trigger="click"
-          placement={placement}
-          controlId={`control-id-${placement}`}
-          speaker={
-              <DefaultPopover content={`I am positioned to the ${placement}`} />
-          }
-        >
-          <Button appearance="subtle">{children || placement}</Button>
-        </Whisper>
-      );      
-
     return (
         <div className={styles.container}>
             <div className={styles.header}>{boardlistName}</div>
@@ -145,8 +130,26 @@ const DetilBoard = () => {
                         <div className={styles.view}><LuEye />&nbsp;{post.boardViewCount}</div>
                     </div>
                 </div>
-                {files.length > 0 && <CustomComponent placement={`첨부파일(${files.length})`}/>}
-                
+                {files.length > 0 &&
+                    ((isFileBoxOpen) ? <div className={styles.fileHeader}>
+                        <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▲</div>
+                    </div> : <div className={styles.fileHeader}>
+                        <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▼</div>
+                    </div>)
+                }
+                <div className={styles.fileBox}>
+                    {isFileBoxOpen && files.map((file, i) => {
+                        return (
+                            <>
+                                <p className={styles.eachFile} key={i} onClick={()=>{
+                                    axios.get(`${BaseUrl()}/attachment/download`, { params : {fileUrl:file.attachmentSysname}})
+                                }}>{i + 1}. {file.attachmentOriname}</p>
+                                <br></br>
+                            </>
+                        );
+                    })
+                    }
+                </div>
                 <div className={styles.viewCont} ref={contentRef}></div>
                 <div className={styles.buttonBox}>
                     <div className={styles.leftBox}>
@@ -171,8 +174,8 @@ const DetilBoard = () => {
                 <div className={styles.commentLetter}>댓글 ({countComments})</div>
                 <div className={styles.commentList}>
                     {comments.map((comment, i) =>
-                        <Comment key={i} dto={comment} sessionWriter={sessionWriter} reples={reples.filter(reple => reple.boardCommentReplySeq === comment.boardCommentSeq)} 
-                        setCountComments={setCountComments} admin={admin} setComments={setComments}/>
+                        <Comment key={i} dto={comment} sessionWriter={sessionWriter} reples={reples.filter(reple => reple.boardCommentReplySeq === comment.boardCommentSeq)}
+                            setCountComments={setCountComments} admin={admin} setComments={setComments} />
                     )}
                 </div>
             </div>

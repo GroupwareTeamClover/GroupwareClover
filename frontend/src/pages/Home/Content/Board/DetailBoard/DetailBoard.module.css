@@ -86,16 +86,32 @@
     padding-top: 0.11vh;
 }
 
-.content .fileBox{
+.content .fileHeader{
     height : 40px;
     display: flex;
     align-items: center;
     padding-left : 10px;
     font-weight: bold;
-    border: 1px solid black;
 }
 
-.content .fileBox:hover{
+.content .fileHeader .fileLetter{
+    display: flex;
+    align-items: center;
+}
+
+.content .fileHeader .fileLetter:hover{
+    cursor: pointer;
+}
+
+.content .fileBox .eachFile{
+    background-color: whitesmoke;
+    padding-left: 10px;
+    margin-bottom : 5px;
+    display: inline-block;
+    color : rgb(66, 66, 241)
+}
+
+.content .fileBox .eachFile:hover{
     cursor: pointer;
 }
 

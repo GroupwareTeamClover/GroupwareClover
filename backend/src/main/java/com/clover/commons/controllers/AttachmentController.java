@@ -1,8 +1,11 @@
 package com.clover.commons.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +43,24 @@ public class AttachmentController {
 	@GetMapping("/{from}/{seq}")
 	public ResponseEntity<List<AttachmentDTO>> getList(@PathVariable String from ,@PathVariable int seq){
 		return ResponseEntity.ok(attServ.getList(from, seq));
+	}
+	
+	// 첨부파일 다운로드
+	@GetMapping("/download")
+	public ResponseEntity<byte[]> downloadFile(@RequestParam String fileUrl){
+		String fileName = null;
+		try {
+			URI uri = new URI(fileUrl);
+			String path = uri.getPath();
+			fileName = path.startsWith("/")? path.substring(1) : path;
+		}catch (Exception e) {}
+		
+		byte[] fileBytes = s3Serv.downloadFile(fileName);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+		
+		return new ResponseEntity<>(fileBytes, headers, HttpStatus.OK);
 	}
 }
 

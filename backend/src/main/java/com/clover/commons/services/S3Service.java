@@ -1,20 +1,24 @@
 package com.clover.commons.services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 
 @Service
 public class S3Service {
@@ -66,13 +70,25 @@ public class S3Service {
 	}
 	
 	// s3 파일 다운로드 함수
-	public void downloadFile(String fileUrl) {
-		String downloadFileName = null;
-		try {
-			URI uri = new URI(fileUrl);
-			String path = uri.getPath();
-			downloadFileName = path.startsWith("/")? path.substring(1) : path;
-		}catch (Exception e) {}
-		System.out.println(downloadFileName);
+	public byte[] downloadFile(String fileName) {
+		S3Object obj = s3Client.getObject(bucketName, fileName);
+		try (InputStream inputStream = obj.getObjectContent();
+	             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+	             
+	            byte[] buffer = new byte[8192];
+	            int length;
+	            while ((length = inputStream.read(buffer)) != -1) {
+	                outputStream.write(buffer, 0, length);
+	            }
+
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
+	            
+	            return outputStream.toByteArray();
+	        } catch (IOException e) {
+	            throw new RuntimeException("Failed to download file from S3", e);
+	        }
+		
+		
 	}
 }
