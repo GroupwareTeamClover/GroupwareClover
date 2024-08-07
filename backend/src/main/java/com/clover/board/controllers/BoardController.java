@@ -1,5 +1,6 @@
 package com.clover.board.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,19 +14,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.clover.board.dto.BoardDTO;
 import com.clover.board.services.BoardService;
+import com.clover.commons.dto.AttachmentDTO;
+import com.clover.commons.services.AttachmentService;
+import com.clover.commons.services.S3Service;
 
 @RestController
 @RequestMapping("/board")
 public class BoardController {
 	@Autowired
 	private BoardService bServ;
+	
+	@Autowired
+    private S3Service s3Serv;
+	
+	@Autowired
+	private AttachmentService attServ;
 
 	@PostMapping
-	public ResponseEntity<Integer> post(@RequestBody HashMap<String, Object> data){
+	public ResponseEntity<Void> post(@RequestBody HashMap<String, Object> data){
 		int boardlistSeq = (int)data.get("boardlistSeq");
 		String title = (String)data.get("title");
 		String writer = (String)data.get("writer");
@@ -33,12 +42,36 @@ public class BoardController {
 		String content = (String)data.get("content");
 		BoardDTO post = new BoardDTO(0, boardlistSeq, title, writerInfo, content, null, 0);
 		
+		// 글 등록
 		int newPostSeq = bServ.insertPost(post);
-
-//		파일 첨부(미구현)
-//		이미지 이동(임시 -> postSeq폴더) [미구현]
 		
-		return ResponseEntity.ok(newPostSeq);
+		//첨부파일명, 첨부파일URL, 이미지URL 데이터 받아오기
+		List<String> fileNames = (List<String>) data.getOrDefault("fileNames", new ArrayList<>());
+	    List<String> fileUrls = (List<String>) data.getOrDefault("fileUrls", new ArrayList<>());
+	    List<String> images = (List<String>) data.getOrDefault("images", new ArrayList<>());
+		
+	    //첨부파일이 있을 경우 
+	    if (fileNames.size() > 0) {
+			for (int i = 0; i < fileNames.size(); i ++) {
+				//파일 주소 변환 후 DB에 등록
+				String newFileUrl = s3Serv.moveFile(newPostSeq, fileNames.get(i), fileUrls.get(i), 1);
+				
+				attServ.insertFile(new AttachmentDTO(0, fileNames.get(i), newFileUrl, "board", newPostSeq));
+			}
+		}
+		//첨부 이미지가 있을 경우
+		if (images.size() > 0) {
+			for (int i = 0; i < images.size(); i ++) {
+				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
+				String newImageUrl = s3Serv.moveFile(newPostSeq, "image" + (i+1), images.get(i), 2);
+				//변환된 주소로 글 내용을 바꾸고 반환
+				content = attServ.updateImageUrl(images.get(i), newImageUrl, content);
+			}
+			// 최종적으로 업데이트된 글내용을 DB에 업데이트
+			attServ.updateContent(content, newPostSeq, "Board");
+		}
+		
+		return ResponseEntity.ok().build();
 	}
 	
 	@GetMapping("/writerInfo/{id}")

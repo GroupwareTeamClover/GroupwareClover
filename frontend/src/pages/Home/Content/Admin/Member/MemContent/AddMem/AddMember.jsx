@@ -7,17 +7,21 @@ import { ModalAdd } from "./ModalAdd/ModalAdd";
 import { BaseUrl } from "../../../../../../../commons/config";
 import { useMemStore } from "../../../../../../../store/store";
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
+import {format} from 'date-fns';
+import { FaSearch } from "react-icons/fa";
 
 
 export const AddMember = ()=>{
 
     const navi = useNavigate();
     const {storemembers, setstoremembers} = useMemStore();
-    const [newMem, setNewMem] = useState([{ }]);
-    const [filtered, setFiltered] = useState(newMem);
-    const [waitingNum, setWaitingNum] = useState([]);
+    const [waitingNum, setWaitingNum] = useState();
     const [finishNum, setFinishNum] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [newMem, setNewMem] = useState([{ }]);
+    const [filtered, setFiltered] = useState(newMem);
+    const [modalMems, setModalMems] = useState([]); // 모달에 전달할 props 설정.
+    const [checkedMems, setCheckedMems] = useState([]); // 체크박스 
 
 
     // axios로 출력받기 emp table - joindate가 이번달인 사람들....  
@@ -26,10 +30,11 @@ export const AddMember = ()=>{
             console.log(resp.data)
             setNewMem(resp.data);
             setFiltered(resp.data);
-            setstoremembers(false)
+            setstoremembers(false);
 
             // empStateCode가 1인 갯수(승인완료)
-            const countState1 = resp.data.filter(mem => mem.empStateCode === 1).length;
+            const countState1 = resp.data.filter(mem => mem.empStateCode !== 0).length;
+            console.log("승인완료된거 : "+countState1)
             setFinishNum(countState1);
             // empStateCode가 0인 갯수(승인대기)
             const countState0 = resp.data.filter(mem => mem.empStateCode === 0).length;
@@ -40,69 +45,149 @@ export const AddMember = ()=>{
     // Pagingation
     const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
     const pageCount = Math.ceil(filtered.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
-    console.log(pageCount + " 페이지 수 ")
-    const handlePageChange = ({selected}) =>{
-        setCurrentPage(selected);
-        window.scrollTo(0,320);     // 페이지 변경 시 스크롤 맨 위로 이동시키기. 
-    }
-
-   
-    // ----전체 체크박스 클릭
+    
     const checkboxRef = useRef([]);
-    const handleCheckAll = (e)=>{
-        const checked = e.target.checked;
-        const allValues = newMem.map(mem => mem.EMP_SEQ);
+    const allCheckRef = useRef(null);
+
+    const handlePageChange = ({selected}) => {
+        setCurrentPage(selected);
+        setCheckedMems([]); // 체크박스 상태 초기화
+        // 전체 체크박스 해제
+        if (allCheckRef.current) {
+            allCheckRef.current.checked = false;
+        }
         checkboxRef.current.forEach(checkbox => {
-            if(checkbox){
+            if (checkbox) {
+                checkbox.checked = false; // 체크박스 해제
+            }
+        });
+        window.scrollTo(0,320); // 페이지 변경 시 스크롤 맨 위로 이동
+    };
+
+    // 전체 체크박스 클릭 처리
+    const handleCheckAll = (e) => {
+        const checked = e.target.checked;
+    
+        const enabledValues = filtered
+            .slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
+            .map(mem => mem.EMP_SEQ);
+    
+        checkboxRef.current.forEach((checkbox, i) => {
+            const mem = filtered[i + currentPage * PER_PAGE];
+            if (checkbox && mem.EMP_STATE_NAME !== '가입대기') {
                 checkbox.checked = checked;
             }
-        })
-        setCheckedMems(checked ? allValues : [])
-    }
-    const [ checkedMems, setCheckedMems] = useState([]);
-    const handleCheckBox =(e)=>{
+        });
+    
+        setCheckedMems(checked ? enabledValues.filter((empSeq, i) => {
+            const mem = filtered[i + currentPage * PER_PAGE];
+            return mem.EMP_STATE_NAME !== '가입대기';
+        }) : []);
+    };
+
+    // 개별 체크박스 클릭 처리
+    const handleCheckBox = (e) => {
         const {value, checked} = e.target;
-        setCheckedMems(prev=> {
+        setCheckedMems(prev => {
             if(checked){
                 return [...prev, value];
-            }else{
-                return prev.filter(el => el !== value);
+            } else {
+                return prev.filter(prev => prev != value); 
             }
-        })
-    }
+        });
+    };
+
+    // 체크박스 리셋
+    const resetCheckboxes = () => {
+        setCheckedMems([]); // 선택된 체크박스 초기화
+        allCheckRef.current.checked = false; // 전체 선택 체크박스 해제
+        checkboxRef.current.forEach(checkbox => {
+            if (checkbox) {
+                checkbox.checked = false; // 개별 체크박스 해제
+            }
+        });
+    };
+   
+
 
     // 모달))----------------------------------------------------
-    const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-    // 승인버튼
-    // 모달) 변경 버튼 클릭시 
-    const handleModalChange = (e) => {
-        const clickEmp = e.target.value;
-        // setCheckedMems();
-        console.log(e.target.value);
-        console.log(clickEmp)
-        console.log("값 비교 " + newMem);
-        openModal();
-    }
-   
-   
 
+    // 승인버튼 클릭 (체크한 사원들 변경)
+    const handleModalChange = () => {
+        if (checkedMems.length !== 0) {
+            setModalMems(checkedMems);  // 선택된 사원들을 모달에 전달할 리스트에 저장
+            openModal();  // 모달 열기
+        } else {
+            alert("변경할 사원을 선택해주세요.");
+        }
+    };
+    // 대기중 버튼 클릭했을때 (사원 하나만 변경)
+    const handleModalSelect = (empSeq) => {
+        setModalMems([empSeq]);  // 선택된 사원만 모달에 전달할 리스트에 저장
+        openModal();  // 모달 열기
+        resetCheckboxes();
+    };
+   
+    // -----------------------------------------------------------
+    // 사원이름 검색
+    const handleSearch = (e) => {
+        const { name, value } = e.target;
+    
+        if (value === "") {
+            // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
+            setFiltered(newMem);
+        } else {
+            // 검색어가 있는 경우 필터링
+            let result;
+            if (name === "EMP_NAME") {
+                result = newMem.filter((data) => data[name].includes(value));
+            } else {
+                result = newMem.filter((data) => data[name].includes(value));
+            }
+            setFiltered(result);
+        }
+        setCurrentPage(0);
+        
+    };
     
     return(
         <div className={styles.container}>
             <div className={styles.member_info}>
                 {/* emp table에서 state가 0인 사람 갯수. select count(state) from emp where state=0; */}
-                    <div className={styles.member_info_box}>
-                        <div>승인대기중  : {waitingNum} 명 </div>
-                       <div> 이번 달 승인완료 : {finishNum} 명 </div>
+                <div className={styles.member_total}>
+                    <div className={styles.member_emoji}>
+                    👥
                     </div>
+                    <div className={styles.member_box}>
+                        승인대기중  : {waitingNum} 명
+                        <div className={styles.member_complete}>이번 달 승인완료 : {finishNum} 명 </div>
+                    </div>
+                </div>
             </div>
             <div className={styles.funcBtn}>
-                {/* <div className={styles.col_button}> */}
+                <div className={styles.col_button}>
                     <button className={styles.addBtn} onClick={handleModalChange} name='ModalForm' >승인</button>
-                {/* </div> */}
+                </div>
+                {/* 이름 검색 필드 */}
+                <div className={styles.searchWrapper}>
+                    <input
+                        type="text"
+                        placeholder=" 사원 이름 검색"
+                        name="empName"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSearch(e);
+                            }
+                        }}
+                        className={styles.searchInput}
+                    />
+                    <button onClick={(e) => handleSearch(e)}>
+                        <FaSearch className={styles.searchLogo} />
+                    </button>
+                </div>
             </div>
         
             <div className={styles.body}>
@@ -110,7 +195,7 @@ export const AddMember = ()=>{
                     <table className={styles.table}>
                         <thead className={styles.thead}>
                             <tr>
-                                <td className={styles.theadtd}><input type="checkbox" onClick={handleCheckAll}></input></td>
+                                <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll} ref={allCheckRef}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>부서</td>
                                 <td className={styles.theadtd}>직위</td>
@@ -152,7 +237,8 @@ export const AddMember = ()=>{
                                                     mem.roleCode === 6 ? '과장' :
                                                     mem.roleCode === 7 ? '대리' :
                                                     mem.roleCode === 8 ? '사원' :
-                                                    mem.roleCode === 9 ? '인턴' : '미정'
+                                                    mem.roleCode === 9 ? '인턴' : 
+                                                    mem.roleCode === 99 ? '미정' : '알수없음'
                                                 } 
                                             </td>
                                             <td className={styles.theadtd}>
@@ -163,10 +249,12 @@ export const AddMember = ()=>{
                                                     mem.workerStateCode === 3 ? '계약직' : '미정'
                                                 } 
                                             </td>
-                                            <td className={styles.theadtd}>{mem.joinDate} </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.joinDate ? format(new Date(mem.joinDate), 'yyyy.MM.dd') : '날짜 없음'}
+                                            </td>
                                             <td className={styles.theadtd}> 
                                                 {mem.empStateCode ===0  ? (
-                                                        <button className={styles.statusBtn} onClick={handleModalChange} value={mem.empSeq}> 대기중 </button> 
+                                                        <button className={styles.statusBtn} onClick={() => handleModalSelect(mem.empSeq)} > 대기중 </button> 
                                                     ) : (
                                                         <button className={styles.statusBtn2}> 승인완료 </button> 
                                                     )
@@ -194,7 +282,7 @@ export const AddMember = ()=>{
 
         <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
-                    <ModalAdd checkedMems={checkedMems}  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
+                    <ModalAdd checkedMems={modalMems}  resetCheckboxes={resetCheckboxes} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}/>
                 </div>
         </Modal>
       </div>

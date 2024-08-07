@@ -1,0 +1,27 @@
+.container{
+    width: 100%;
+    height: 100;
+    display: flex;
+}
+
+
+.menuspancenter{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14.5px;
+    padding-right: 10px;
+}
+
+.menuspancenter:hover{
+    cursor: pointer;
+}
+
+.menuright{
+    margin-right: 3px;
+}
+
+.inputcheck{
+    margin-left: 3px;
+    margin-top: 2px;
+}

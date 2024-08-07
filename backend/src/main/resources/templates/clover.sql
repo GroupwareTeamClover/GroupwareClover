@@ -86,33 +86,30 @@ CREATE TABLE dayoff_state (
 
 
 
---하윤
+--정하윤
 
-CREATE TABLE pop_board (
-    pop_seq NUMBER PRIMARY KEY, 
+create table popup_board (
+    pop_seq NUMBER PRIMARY KEY,
     pop_title varchar2(100) NOT NULL, 
-    emp_seq NUMBER NOT NULL, 
+    emp_id varchar2(50) NOT NULL, 
     pop_content long NOT NULL, 
-    pop_start_date TIMESTAMP NOT NULL, 
-    pop_end_date TIMESTAMP NOT NULL, 
-    pop_is_active CHAR(1) DEFAULT 'n' CHECK (pop_is_active IN ('y', 'n')) NOT NULL,
+    pop_is_active CHAR(1) CHECK (pop_is_active IN ('T', 'F')) NOT NULL,
     pop_write_date TIMESTAMP DEFAULT SYSDATE NOT NULL, 
-    pop_updated_date TIMESTAMP NULL,
-    pop_is_repeated CHAR(1) DEFAULT 'n' CHECK (pop_is_repeated IN ('y', 'n')) NOT NULL
+    pop_updated_date TIMESTAMP NULL
 );
 
-CREATE SEQUENCE pop_board_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
+create sequence popup_board_sequence start with 1 increment by 1 nomaxvalue nocache;
 
-CREATE TABLE pop_repeated (
-    pop_repeated_seq NUMBER PRIMARY KEY, 
-    pop_seq NUMBER NOT NULL,
-    month NUMBER NULL, 
-    day NUMBER NULL, 
-    week NUMBER NULL, 
-    weekday NUMBER NULL
+create table popup_period(
+    pop_period_seq NUMBER PRIMARY KEY, 
+    pop_seq NUMBER NOT NULL, --외래키
+    period_type VARCHAR2(15) CHECK (period_type IN ('specific', 'monthly', 'weekly')) NOT NULL,
+	start_date timestamp NULL, 
+	end_date timestamp NULL,
+	montly_day NUMBER NULL,
+	weekly_day VARCHAR2(15) CHECK (weekly_day IN ('sunday','monday','tuesday','wednesday','thursday','friday','saturday')) NULL
 );
-
-CREATE SEQUENCE pop_repeated_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
+create sequence popup_period_sequence start with 1 increment by 1 nomaxvalue nocache;
 
 CREATE TABLE log (
     log_seq number primary key, 
@@ -165,7 +162,16 @@ create sequence board_comment_sequence start with 1 increment by 1 nomaxvalue no
 create sequence board_sequence start with 1 increment by 1 nomaxvalue nocache;
 create sequence boardlist_sequence start with 1 increment by 1 nomaxvalue nocache;
 
+-- 첨부파일
+create table attachment (
+    attachment_seq number primary key,
+    attachment_oriname varchar2(300 char) not null,
+    attachment_sysname varchar2(300 char) not null,
+    attachment_from varchar2(20 char) not null,
+    attachment_parent_seq number not null
+);
 
+create sequence attachment_sequence start with 1 increment by 1 nomaxvalue nocache;
 
 --조진혁
 -- room_seq, emp_seq, message_seq 모두 외래키, emp_seq, room_seq는 기본키

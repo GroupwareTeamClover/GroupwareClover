@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="board">
+<mapper namespace="Board">
 	<insert id="insertPost"> insert into board values(board_sequence.nextval,
 		#{boardlistSeq}, #{boardTitle}, #{boardWriter}, #{boardContent},
 		sysdate, 0) <selectKey keyProperty="boardSeq" resultType="int"
@@ -45,5 +45,9 @@
 	<delete id="deletePost">
 		delete from board where board_seq = #{boardSeq}
 	</delete>
+	
+	<update id="updateContentWithUrl">
+		update board set board_content = #{content} where board_seq = #{seq}
+	</update>
 
 </mapper>

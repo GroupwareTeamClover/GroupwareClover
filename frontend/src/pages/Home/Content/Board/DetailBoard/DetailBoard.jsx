@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './DetailBoard.module.css';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { IconContext } from 'react-icons';
@@ -9,6 +9,8 @@ import { LuEye } from 'react-icons/lu';
 import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
 import Comment from './Comment/Comment';
+import { Button, Popover, Whisper } from 'rsuite';
+import 'rsuite/Popover/styles/index.css';
 
 const DetilBoard = () => {
     const { sessionData, admin } = useMemberStore();
@@ -22,6 +24,7 @@ const DetilBoard = () => {
     const [reples, setReples] = useState([]);
     const [scrollMove, setScrollMove] = useState(0);
     const [countComments, setCountComments] = useState(0);
+    const [files, setFiles] = useState([]);
 
     const navi = useNavigate();
 
@@ -51,6 +54,9 @@ const DetilBoard = () => {
             setComments(resp.data.filter(dto => dto.boardCommentReplySeq === 0));
             setReples(resp.data.filter(dto => dto.boardCommentReplySeq !== 0));
             setCountComments(resp.data.length);
+        });
+        axios.get(`${BaseUrl()}/attachment/${'board'}/${boardSeq}`).then(resp => {
+            setFiles(resp.data);
         })
     }, [boardSeq, boardlistSeq, sessionData.empId]);
 
@@ -97,6 +103,27 @@ const DetilBoard = () => {
         }
     }
 
+    const DefaultPopover = forwardRef(({ content, ...props }, ref) => {
+        return (
+          <Popover ref={ref} title="Title" {...props}>
+            <p>This is a Popover </p>
+            <p>{content}</p>
+          </Popover>
+        );
+      });
+    const CustomComponent = ({ placement, children }) => (
+        <Whisper
+          trigger="click"
+          placement={placement}
+          controlId={`control-id-${placement}`}
+          speaker={
+              <DefaultPopover content={`I am positioned to the ${placement}`} />
+          }
+        >
+          <Button appearance="subtle">{children || placement}</Button>
+        </Whisper>
+      );      
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>{boardlistName}</div>
@@ -118,6 +145,8 @@ const DetilBoard = () => {
                         <div className={styles.view}><LuEye />&nbsp;{post.boardViewCount}</div>
                     </div>
                 </div>
+                {files.length > 0 && <CustomComponent placement={`첨부파일(${files.length})`}/>}
+                
                 <div className={styles.viewCont} ref={contentRef}></div>
                 <div className={styles.buttonBox}>
                     <div className={styles.leftBox}>

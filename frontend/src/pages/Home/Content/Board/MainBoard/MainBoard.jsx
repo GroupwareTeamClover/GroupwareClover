@@ -6,6 +6,7 @@ import axios from 'axios';
 import { FaSearch } from "react-icons/fa";
 import Post from './Post/Post';
 import { Pagination } from '../../../../../components/Pagination/Pagination';
+import { Loader } from 'rsuite';
 
 const MainBoard = () => {
     const { boardlistSeq } = useParams();
@@ -106,7 +107,7 @@ const MainBoard = () => {
             </div>
             <div className={styles.postBox}>
                 {isLoading ? (
-                    <div className={styles.loading}>글 목록을 불러오는 중입니다..</div>
+                    <div className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></div>
                 ) : ((filtered.length === 0) ? (
                     <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
                 ) : (

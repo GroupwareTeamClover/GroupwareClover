@@ -19,3 +19,7 @@
 .content{
     flex: 8;
 }
+
+table, tr{
+    border: 1px solid black;
+}

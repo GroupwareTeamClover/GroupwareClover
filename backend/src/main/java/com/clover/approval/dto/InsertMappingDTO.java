@@ -11,10 +11,13 @@ public class InsertMappingDTO {
     private List<ParticipantsLineDTO> pline;
     private String docType;
     private Map<String, Object> docData;
+    
 	public InsertMappingDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	//insert용
 	public InsertMappingDTO(DocumentDTO document, List<ApvLineDTO> apvline, List<ParticipantsLineDTO> pline,
 			String docType, Map<String, Object> docData) {
 		super();
@@ -24,6 +27,16 @@ public class InsertMappingDTO {
 		this.docType = docType;
 		this.docData = docData;
 	}
+	
+	//select용
+	public InsertMappingDTO(DocumentDTO document, List<ApvLineDTO> apvline, List<ParticipantsLineDTO> pline) {
+		super();
+		this.document = document;
+		this.apvline = apvline;
+		this.pline = pline;
+	}
+
+	
 	public DocumentDTO getDocument() {
 		return document;
 	}

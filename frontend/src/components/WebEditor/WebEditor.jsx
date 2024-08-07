@@ -4,11 +4,29 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 import '@toast-ui/editor/dist/i18n/ko-kr';
+import axios from 'axios';
+import { BaseUrl } from '../../commons/config';
 
 const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) => {
+    const onUploadImage = async (blob, callback) => {
+        const url = await uploadImage(blob);
+        callback(url, 'alt text');
+        return false;
+    };
+
+    const uploadImage = (blob) => {
+        const formData = new FormData();
+        formData.append('file', blob);
+        return axios.post(`${BaseUrl()}/attachment/upload`, formData, {
+            headers: {'Content-Type': 'multipart/form-data'}
+          }).then(resp =>{
+            return resp.data;
+          })
+    }
+
     return (
         <Editor
-            initialValue = {defaultContent || ""}
+            initialValue={defaultContent || ""}
             placeholder="글내용을 입력해주세요"
             previewStyle="tab"
             height={height}
@@ -17,6 +35,9 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
             hideModeSwitch={true}
             plugins={[colorSyntax]}
             language="ko-KR"
+            hooks={{
+                addImageBlobHook: onUploadImage
+            }}
             // 상위 Component에서 useRef 추가하여 인자로 전달할것
             ref={editorRef}
             // 상위 Component에서 content onChange 함수 추가하여 인자로 전달할것

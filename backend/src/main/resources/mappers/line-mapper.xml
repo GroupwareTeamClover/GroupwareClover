@@ -14,6 +14,31 @@
 		VALUES(participants_line_sequence.nextval, #{empSeq}, #{pcpDivision}, #{readYN}, null, #{docSeq})
 	</insert>
 			
+			
+	<select id="selectApvLine" resultType="com.clover.approval.dto.ApvLineDTO">
+		select a.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
+		from  apv_line a
+		join employee e on a.APVER_ID=e.EMP_SEQ
+		join department d on e.DEPT_CODE=d.DEPT_CODE
+		join role r on e.ROLE_CODE=r.ROLE_CODE
+		where doc_seq=#{seq}
+	</select>
 	
+	<select id="selectPartLine" resultType="com.clover.approval.dto.ParticipantsLineDTO">
+		select p.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
+		from  participants_line p
+		join employee e on p.EMP_SEQ=e.EMP_SEQ
+		join department d on e.DEPT_CODE=d.DEPT_CODE
+		join role r on e.ROLE_CODE=r.ROLE_CODE
+		where doc_seq=#{seq}
+	</select>
+	
+	<select id="selectAllApv" resultType="com.clover.approval.dto.ApvLineDTO">
+		select * from apv_line
+	</select>
+	
+	<select id="selectAllPart" resultType="com.clover.approval.dto.ParticipantsLineDTO">
+		select * from participants_line
+	</select>
 	
 </mapper>

@@ -19,9 +19,9 @@
             SELECT room_sequence.nextval FROM DUAL
         </selectKey>
         INSERT INTO chatRoom (
-            room_seq, room_name, room_type, room_description, emp_seq
+            room_seq, room_name, room_type, room_description, emp_seq, room_avatar
         ) VALUES (
-            #{roomSeq}, #{roomName}, #{roomType}, #{roomDescription}, #{empSeq}
+            #{roomSeq}, #{roomName}, #{roomType}, #{roomDescription}, #{empSeq}, #{roomAvatar}
         )
     </insert>
     
@@ -52,7 +52,6 @@
         JOIN chatMembers cm ON cr.room_seq = cm.room_seq
         WHERE cr.room_seq = #{roomSeq}
         AND cm.emp_seq = #{empSeq}
-        LIMIT 1
     </select>
     
     <!-- 사용자가 채팅방에 속해 있는지 확인 -->

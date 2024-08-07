@@ -15,26 +15,26 @@ public class BoardDAO {
 	SqlSession mybatis;
 	
 	public void insertPost(BoardDTO post) {
-		mybatis.insert("board.insertPost", post);
+		mybatis.insert("Board.insertPost", post);
 	}
 	
 	public HashMap<String, String> getWriterInfo(String writer) {
-		return mybatis.selectOne("board.selectWriterInfo", writer);
+		return mybatis.selectOne("Board.selectWriterInfo", writer);
 	}
 	
 	public List<BoardDTO> getPosts(int boardlistSeq){
-		return mybatis.selectList("board.selectAllPost", boardlistSeq);
+		return mybatis.selectList("Board.selectAllPost", boardlistSeq);
 	}
 	
 	public List<BoardDTO> searchPosts(HashMap<String, Object> data){
-		return mybatis.selectList("board.selectSearchedPost", data);
+		return mybatis.selectList("Board.selectSearchedPost", data);
 	}
 	
 	public BoardDTO getPostInfo(int boardSeq) {
-		return mybatis.selectOne("board.selectTargetPost", boardSeq);
+		return mybatis.selectOne("Board.selectTargetPost", boardSeq);
 	}
 	
 	public void deletePost(int boardSeq) {
-		mybatis.delete("board.deletePost", boardSeq);
+		mybatis.delete("Board.deletePost", boardSeq);
 	}
 }
