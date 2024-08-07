@@ -9,10 +9,12 @@ public class ChatMessageDTO {
     private Timestamp sendTime;
     private int roomSeq;
     private int senderSeq;
+    private String roomType;  
+    private int receiverSeq;  
 
-    // Getters and setters
+
     public int getMessageSeq() {
-        return this.messageSeq;
+        return messageSeq;
     }
 
     public void setMessageSeq(int messageSeq) {
@@ -20,7 +22,7 @@ public class ChatMessageDTO {
     }
 
     public String getMessageContent() {
-        return this.messageContent;
+        return messageContent;
     }
 
     public void setMessageContent(String messageContent) {
@@ -28,15 +30,15 @@ public class ChatMessageDTO {
     }
 
     public String getMessageType() {
-        return this.messageType;
+        return messageType;
     }
 
     public void setMessageType(String messageType) {
-        this.messageType = messageType;
+        this.messageType = messageType != null ? messageType : "CHAT"; // 기본 값 설정, text/image 등등으로 받아야함
     }
 
     public Timestamp getSendTime() {
-        return this.sendTime;
+        return sendTime;
     }
 
     public void setSendTime(Timestamp sendTime) {
@@ -44,7 +46,7 @@ public class ChatMessageDTO {
     }
 
     public int getRoomSeq() {
-        return this.roomSeq;
+        return roomSeq;
     }
 
     public void setRoomSeq(int roomSeq) {
@@ -52,22 +54,55 @@ public class ChatMessageDTO {
     }
 
     public int getSenderSeq() {
-        return this.senderSeq;
+        return senderSeq;
     }
 
     public void setSenderSeq(int senderSeq) {
         this.senderSeq = senderSeq;
     }
 
-    // Constructors
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(String roomType) {
+        this.roomType = roomType;
+    }
+
+    public int getReceiverSeq() {
+        return receiverSeq;
+    }
+
+    public void setReceiverSeq(int receiverSeq) {
+        this.receiverSeq = receiverSeq;
+    }
+
+
     public ChatMessageDTO() {}
 
-    public ChatMessageDTO(int messageSeq, String messageContent, String messageType, Timestamp sendTime, int roomSeq, int senderSeq) {
+    public ChatMessageDTO(int messageSeq, String messageContent, String messageType, Timestamp sendTime, int roomSeq, int senderSeq, String roomType, int receiverSeq) {
         this.messageSeq = messageSeq;
         this.messageContent = messageContent;
-        this.messageType = messageType;
+        this.messageType = messageType != null ? messageType : "CHAT"; // 기본 값 설정
         this.sendTime = sendTime;
         this.roomSeq = roomSeq;
         this.senderSeq = senderSeq;
+        this.roomType = roomType;
+        this.receiverSeq = receiverSeq;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ChatMessageDTO{" +
+                "messageSeq=" + messageSeq +
+                ", messageContent='" + messageContent + '\'' +
+                ", messageType='" + messageType + '\'' +
+                ", sendTime=" + sendTime +
+                ", roomSeq=" + roomSeq +
+                ", senderSeq=" + senderSeq +
+                ", roomType='" + roomType + '\'' +
+                ", receiverSeq=" + receiverSeq +
+                '}';
     }
 }

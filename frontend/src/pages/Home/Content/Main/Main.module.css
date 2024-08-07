@@ -152,7 +152,7 @@
 }
 
 .empInfo {
-    min-width: 50%;
+    min-width: 65%;
     height: 95%;
     display: flex;
     flex-direction: column;

@@ -19,9 +19,18 @@
 
     <select id="getScheduleList" resultType="com.clover.schedule.dto.ScheduleDTO" >
         SELECT
-        *
+            *
         FROM
-        schedule
+            schedule
+    </select>
+
+    <select id="getMyScheduleList" resultType="com.clover.schedule.dto.ScheduleDTO">
+        SELECT
+            *
+        FROM
+            schedule
+        WHERE
+            emp_seq = #{seq}
     </select>
 
     <delete id="deleteSchedule">
