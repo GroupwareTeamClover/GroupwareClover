@@ -62,6 +62,7 @@ public class ChatService {
         room.setRoomType("private");
         room.setEmpSeq(empSeq);
         room.setRoomAvatar(employeeInfo.getEmpAvatar());
+        System.out.println("프로필사진" + room.getRoomAvatar());
         room.setRoomDescription("1:1 채팅방");
 
         chatDAO.createRoom(room);

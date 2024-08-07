@@ -33,7 +33,7 @@ export const Folder = ({ folder, level = 0 , onItemClick , selectedItem, setSele
   // 폴더가 열려야 하는지 확인합니다
   useEffect(() => {
     // 선택된 항목이 현재 폴더의 자식인지 확인
-    const isItemSelected = folder.children && folder.children.some(child => child.name === selectedItem.children.name);
+    const isItemSelected = folder.children && folder.children.some(child => child.seq === selectedItem.children.seq);
 
       if (isItemSelected) {
         setIsExpanded(true);

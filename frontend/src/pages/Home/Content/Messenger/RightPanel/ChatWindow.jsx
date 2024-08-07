@@ -30,6 +30,7 @@ const ChatWindow = ({ chat }) => {
 
       // 서버로 메시지 전송
       sendMessage("/app/chat.sendMessage", message);
+      console.log("메시지 확인", message);
 
       // 로컬 상태 즉시 업데이트
       addMessage(chat.roomSeq, message);
