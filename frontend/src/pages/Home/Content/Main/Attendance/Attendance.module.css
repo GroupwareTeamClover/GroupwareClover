@@ -90,7 +90,8 @@
     font-weight: 700;
     border : none;
     border-radius: 10px;
-    background-color: var(--bg-color)
+    background-color: var(--btn-color);
+    color: var(--font-color);
 }
 .attBtn > button:hover {
     cursor: pointer;

@@ -24,6 +24,7 @@ export const Attendance = () => {
         openModal();
     }
 
+    /**  출근 버튼 이벤트 **/
     const handleWorkStart = () => {
         if(arrive.attArrive === ""){
             today = new Date();
@@ -41,9 +42,9 @@ export const Attendance = () => {
         } else {
             alert("이미 출근버튼을 누르셨습니다.");
         }
-
     }
 
+    /**  퇴근 버튼 이벤트 **/
     const handleWorkEnd = () => {
         today = new Date();
         let hours = ('0' + today.getHours()).slice(-2);
@@ -68,6 +69,7 @@ export const Attendance = () => {
     }
 
     useEffect(() => {
+        /** 금일 근태 정보 **/
         axios.get(`${BaseUrl()}/attendance/${dateData}`).then(res => {
             if(res.data !== "" && res.data !== null && res.data !== undefined) setArrive(res.data);
         });

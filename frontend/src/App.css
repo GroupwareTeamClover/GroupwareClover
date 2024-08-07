@@ -1,5 +1,8 @@
 :root {
-  --bg-color: #F3F8FF;
+  --bg-color: #F6F5F5;
+  --side-color: #2F3645;
+  --btn-color: #2F3645;
+  --font-color: white;
 }
 
 * {

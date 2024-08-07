@@ -88,11 +88,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid darkgray;
     border-radius: 15px;
-    background-color: var(--bg-color);
+    background-color: var(--btn-color);
 }
-
 
 .reviewTitle {
     width: 95%;
@@ -101,6 +99,7 @@
     justify-content: center;
     align-items: flex-start;
     padding: 10px;
+    color: white;
 }
 
 .notice {
@@ -176,7 +175,8 @@
     border-radius: 10px;
     font-size: 15px;
     font-weight: 800;
-    background-color: var(--bg-color);
+    background-color: var(--btn-color);
+    color: var(--font-color);
 }
 
 .InfoBox > button:hover {
@@ -196,5 +196,5 @@
 }
 
 .notice::-webkit-scrollbar-track {
-    background: rgba(33, 122, 244, .1);  /*스크롤바 뒷 배경 색상*/
+    background: transparent;  /*스크롤바 뒷 배경 색상*/
 }

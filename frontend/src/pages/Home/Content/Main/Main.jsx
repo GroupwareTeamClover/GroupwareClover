@@ -31,9 +31,14 @@ export const Main = () => {
 
     /** 내 주간 일정에 들어갈 데이터 **/
     const [mySchedule, setMySchedule] = useState({ scheduleSeq: "", start: "", end: "", title: "" });
+
+    /** 회사 공지 데이터 **/
+    const [noticeList, setNoticeList] = useState([]);
     useEffect(() => {
+
+        /** 내 주간 일정 목록 **/
         axios.get(`${BaseUrl()}/schedule/week`).then(res => {
-            const dataArr = res.data.map(item => {
+            const myScheduleList = res.data.map(item => {
                 return {
                     scheduleSeq: item.scheduleSeq,
                     start: item.startDate,
@@ -42,8 +47,13 @@ export const Main = () => {
                     color: "darkgray"
                 };
             })
-            setMySchedule(dataArr);
+            setMySchedule(myScheduleList);
         });
+
+        /** 회사 공지 목록 **/
+
+
+
     }, []);
 
     return (
