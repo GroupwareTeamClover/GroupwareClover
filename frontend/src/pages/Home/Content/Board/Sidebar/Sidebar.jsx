@@ -40,45 +40,48 @@ const Sidebar = () => {
     }, []);
 
     return (
-        <div className={styles.bar}>
-            <div className={styles.buttonBox}>
-                <button className={styles.writeButton} onClick={() => { navi("writePost")}}>글쓰기</button>
-            </div>
-            <div className={styles.board} onClick={() => { navi(`board/0`) }}><FaStar />중요 게시물</div>
-            {
-                isAllBoardOpen ?
-                    <div className={styles.board} onClick={togleIsAllBoard}><FaChevronUp />전사 게시판</div>
-                    :
-                    <div className={styles.board} onClick={togleIsAllBoard}><FaChevronDown />전사 게시판</div>
-            }
-            <div className={styles.allBoard} >
-                {isAllBoardOpen && allBoardList.map((item, i) => {
-                    if (item.boardlistActive == 'T') {
-                        return (
-                            <div key={i} className={styles.eachBoard} onClick={() => { navi(`board/${item.boardlistSeq}`) }}>{item.boardlistName}</div>
-                        );
-                    }
-                })
+        <div className={styles.container}>
+            <div className={styles.bar}>
+                <div className={styles.buttonBox}>
+                    <button className={styles.writeButton} onClick={() => { navi("writePost") }}>글쓰기</button>
+                </div>
+                <div className={styles.board} onClick={() => { navi(`board/0`) }}><FaStar />중요 게시물</div>
+                {
+                    isAllBoardOpen ?
+                        <div className={styles.board} onClick={togleIsAllBoard}><FaChevronUp />전사 게시판</div>
+                        :
+                        <div className={styles.board} onClick={togleIsAllBoard}><FaChevronDown />전사 게시판</div>
                 }
-            </div>
-            {
-                isGroupBoardOpen ?
-                    <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronUp />그룹 게시판</div>
-                    :
-                    <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronDown />그룹 게시판</div>
-            }
-            <div className={styles.groupBoard}>
-                {isGroupBoardOpen && groupBoardList.map((item, i) => {
-                    if (item.boardlistActive == 'T') {
-                        return (
-                            <div key={i} className={styles.eachBoard} onClick={() => {checkValidateUser(item)}}>{item.boardlistName}</div>
-                        );
+                <div className={styles.allBoard} >
+                    {isAllBoardOpen && allBoardList.map((item, i) => {
+                        if (item.boardlistActive == 'T') {
+                            return (
+                                <div key={i} className={styles.eachBoard} onClick={() => { navi(`board/${item.boardlistSeq}`) }}>{item.boardlistName}</div>
+                            );
+                        }
+                    })
                     }
-                })
+                </div>
+                {
+                    isGroupBoardOpen ?
+                        <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronUp />그룹 게시판</div>
+                        :
+                        <div className={styles.board} onClick={togleIsGroupBoard}><FaChevronDown />그룹 게시판</div>
                 }
+                <div className={styles.groupBoard}>
+                    {isGroupBoardOpen && groupBoardList.map((item, i) => {
+                        if (item.boardlistActive == 'T') {
+                            return (
+                                <div key={i} className={styles.eachBoard} onClick={() => { checkValidateUser(item) }}>{item.boardlistName}</div>
+                            );
+                        }
+                    })
+                    }
+                </div>
+                {admin && <div className={styles.board} onClick={() => { navi("createBoard") }}><FaPlusCircle />게시판 만들기</div>}
+                {admin && <div className={styles.board} onClick={() => { navi("manageBoard") }}><FaHammer />게시판 관리</div>}
             </div>
-            {admin && <div className={styles.board} onClick={() => { navi("createBoard") }}><FaPlusCircle />게시판 만들기</div>}
-            {admin && <div className={styles.board} onClick={() => { navi("manageBoard") }}><FaHammer />게시판 관리</div>}
+
         </div>
     );
 }

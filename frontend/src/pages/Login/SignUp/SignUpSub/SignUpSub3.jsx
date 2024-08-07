@@ -63,7 +63,6 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData, se
         setSignUpState(false);
       }
 
-
     } else {
       //  checkData가 fales 인 부분으로 포커스 이동하는 로직 필요
       alert("회원가입 입력창을 확인해주세요");
@@ -100,10 +99,10 @@ export const SignUpSub3 = ({ sendData, checkData,  setSendData, setCheckData, se
             <input type="text" name="empTel" onChange={handleDataCheck} value={sendData.empTel} placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
           </div>
 
-          { /* Name empty check */
+          { /* Tel empty check */
             sendData.empTel !== "" ?
                 <div className={styles.row}>
-                  { /* ID Check */
+                  { /* Tel Check */
                     checkData.empTel ?
                         <p style={{color: "green"}}>확인되었습니다.</p>
                         :

@@ -4,9 +4,11 @@
     display: flex;
     flex-direction: column;
     padding-bottom: 80px;
+    align-items: center;
 }
 
 .header{
+    width : 650px;
     font-size: 40px;
     flex:2;
     display: flex;
@@ -16,9 +18,10 @@
 
 .titleBox{
     flex:1;
+    width : 650px;
     display: flex;
     align-items: center;
-    padding-left: 40px;
+    padding-left: 20px;
 }
 
 .titleBox .titleLetter{
@@ -37,10 +40,11 @@
 
 .typeBox{
     flex:1;
+    width:650px;
     display: flex;
     align-items: center;
     font-size: 20px;
-    padding-left: 40px;
+    padding-left: 20px;
 }
 
 .typeBox .typeLetter{
@@ -136,10 +140,11 @@
 
 .activeBox{
     flex:1;
+    width:650px;
     display: flex;
     align-items: center;
     font-size: 20px;
-    padding-left: 40px;
+    padding-left: 20px;
 }
 
 .activeBox .activeLetter{
@@ -194,6 +199,7 @@
 
 .mainButtonBox{
     height : 50px;
+    width : 680px;
     display: flex;
     align-items: center;
     justify-content: end;
@@ -214,7 +220,6 @@
     background-color: rgb(46, 46, 222);
     font-weight: 600;
     font-size: 16px;
-    margin-right: 50px;
     color : white;
 }
 

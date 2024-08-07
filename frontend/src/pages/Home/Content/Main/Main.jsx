@@ -31,9 +31,14 @@ export const Main = () => {
 
     /** 내 주간 일정에 들어갈 데이터 **/
     const [mySchedule, setMySchedule] = useState({ scheduleSeq: "", start: "", end: "", title: "" });
+
+    /** 회사 공지 데이터 **/
+    const [noticeList, setNoticeList] = useState([]);
     useEffect(() => {
+
+        /** 내 주간 일정 목록 **/
         axios.get(`${BaseUrl()}/schedule/week`).then(res => {
-            const dataArr = res.data.map(item => {
+            const myScheduleList = res.data.map(item => {
                 return {
                     scheduleSeq: item.scheduleSeq,
                     start: item.startDate,
@@ -42,8 +47,13 @@ export const Main = () => {
                     color: "darkgray"
                 };
             })
-            setMySchedule(dataArr);
+            setMySchedule(myScheduleList);
         });
+
+        /** 회사 공지 목록 **/
+
+
+
     }, []);
 
     return (
@@ -61,8 +71,8 @@ export const Main = () => {
                       </div>
                       <div className={styles.empInfo}>
                           <p> Clover Portal</p>
-                          <p> {deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서 "}
-                              {sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
+                          <p> [{deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서"}]
+                              {" "+sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
                           <div className={styles.InfoBox}>
                               <button onClick={handleMyPageModal}>내 정보</button>
                           </div>
