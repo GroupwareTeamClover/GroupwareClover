@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,8 @@ public class ChatController {
     @Autowired
     private HttpSession session;
 
-
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     /**
      * 채팅방 목록을 조회하는 API 엔드포인트
@@ -52,6 +54,9 @@ public class ChatController {
         int empSeq = (int) session.getAttribute("cloverSeq");        
         int targetEmpSeq = payload.get("targetEmpSeq");        
         ChatRoomDTO room = chatService.createOneToOneRoom(empSeq, targetEmpSeq);
+
+        messagingTemplate.convertAndSendToUser(String.valueOf(empSeq), "/queue/newChatRoom", room);
+        messagingTemplate.convertAndSendToUser(String.valueOf(targetEmpSeq), "/queue/newChatRoom", room);
         return ResponseEntity.ok(room);
     }
 
@@ -78,19 +83,6 @@ public class ChatController {
         ChatRoomDTO room = chatService.getRoomById(roomSeq, empSeq);
         return ResponseEntity.ok(room);
     }
-
-    /**
-     * 온라인 사용자 목록을 조회하는 API 엔드포인트
-     * @return 온라인 사용자 목록
-     */
-    // @GetMapping("/online-users")
-    // public ResponseEntity<List<EmployeeDTO>> getOnlineUsers() {
-    //     Object test = session.getAttribute("cloverSeq");
-    //     System.out.println("테스트" + test);
-    //     Integer empSeq = (Integer) session.getAttribute("cloverSeq");
-    //     List<EmployeeDTO> onlineUsers = chatService.getOnlineUsers(empSeq);
-    //     return ResponseEntity.ok(onlineUsers);
-    // }
 
     /**
      * 회사 내 조직도를 조회하는 API 앤드포인트

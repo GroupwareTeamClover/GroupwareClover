@@ -8,7 +8,26 @@ export const useChatStore = create((set) => ({
   setChatRooms: (rooms) => set({ chatRooms: rooms }),
   
   // 새로운 채팅방을 추가하는 함수
-  addChatRoom: (room) => set((state) => ({ chatRooms: [...state.chatRooms, room] })),
+  // addChatRoom: (newRoom) => set((state) => ({
+  //   chatRooms: [...state.chatRooms, newRoom]
+  // })),
+  addChatRoom: (newRoom) => set((state) => {
+    // 이미 존재하는 채팅방인지 확인
+    const existingRoom = state.chatRooms.find(room => room.roomSeq === newRoom.roomSeq);
+    if (existingRoom) {
+      // 이미 존재하는 경우, 채팅방 정보 업데이트
+      return {
+        chatRooms: state.chatRooms.map(room => 
+          room.roomSeq === newRoom.roomSeq ? { ...room, ...newRoom } : room
+        )
+      };
+    } else {
+      // 새로운 채팅방인 경우, 목록에 추가
+      return {
+        chatRooms: [...state.chatRooms, newRoom]
+      };
+    }
+  }),
   
   // 특정 채팅방 정보를 업데이트하는 함수
   updateChatRoom: (updatedRoom) => set((state) => ({
@@ -26,8 +45,6 @@ export const useChatStore = create((set) => ({
   // 각 채팅방별 메시지 목록
   // 구조: { roomSeq1: [messages], roomSeq2: [messages], ... }
   messages: {},
-  
-  // 특정 채팅방에 새 메시지를 추가하는 함수
   addMessage: (roomSeq, message) => set((state) => ({
     messages: {
       ...state.messages,

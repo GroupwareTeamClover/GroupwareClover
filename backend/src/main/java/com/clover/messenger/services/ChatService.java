@@ -21,9 +21,6 @@ public class ChatService {
     @Autowired
     private ChatDAO chatDAO;
 
-    @Autowired
-    private EmployeeDAO employeeDAO;
-
     /**
      * 특정 사용자의 모든 채팅방 목록을 조회하는 메서드
      * @param empSeq 사용자의 사원 번호
@@ -53,27 +50,46 @@ public class ChatService {
      * @return 생성된 채팅방 정보
      */
      // issue : ChatMembers의 데이터가 너무 커질 우려가 있다. 생각해봐야 함.
-    @Transactional
-    public ChatRoomDTO createOneToOneRoom(int empSeq, int targetEmpSeq) {
-        ChatRoomDTO room = new ChatRoomDTO();
-        EmployeeDTO employeeInfo = chatDAO.getEmployeeName(targetEmpSeq); // 억지로 이름만 가져옴. 나중에 수정필요.
-        room.setRoomSeq(0);
-        room.setRoomName(employeeInfo.getEmpName() + "님과의 대화방"); 
-        room.setRoomType("private");
-        room.setEmpSeq(empSeq);
-        room.setRoomAvatar(employeeInfo.getEmpAvatar());
-        System.out.println("프로필사진" + room.getRoomAvatar());
-        room.setRoomDescription("1:1 채팅방");
-
-        chatDAO.createRoom(room);
-        System.out.println("확인");
-        System.out.println("roomSeq: " + room.getRoomSeq());
-        chatDAO.addUserToRoom(empSeq, room.getRoomSeq()); 
-        chatDAO.addUserToRoom(targetEmpSeq, room.getRoomSeq()); 
-       
-        return room;
-    }
-
+     @Transactional
+     public ChatRoomDTO createOneToOneRoom(int empSeq, int targetEmpSeq) {
+         ChatRoomDTO existingRoom = chatDAO.getExistingOneToOneRoom(empSeq, targetEmpSeq);
+         if (existingRoom != null) {
+             return existingRoom;
+         }
+     
+         ChatRoomDTO room = new ChatRoomDTO();
+         EmployeeDTO creator = chatDAO.getEmployeeName(empSeq);
+         EmployeeDTO target = chatDAO.getEmployeeName(targetEmpSeq);
+     
+         room.setRoomType("private");
+         room.setEmpSeq(empSeq);
+         room.setRoomDescription("1:1 채팅방");
+         
+         // 임시로 방 이름 설정 (실제로는 사용되지 않을 것임)
+         room.setRoomName("1:1 Chat");
+         room.setRoomAvatar("default_avatar");
+     
+         // 채팅방 생성
+         chatDAO.createRoom(room);
+     
+         // 채팅방 멤버 추가
+         chatDAO.addUserToRoom(empSeq, room.getRoomSeq());
+         chatDAO.addUserToRoom(targetEmpSeq, room.getRoomSeq());
+     
+         // 사용자 A (creator)를 위한 채팅방 정보 설정
+         ChatRoomDTO roomForCreator = new ChatRoomDTO(room);
+         roomForCreator.setRoomName(target.getEmpName());
+         roomForCreator.setRoomAvatar(target.getEmpAvatar());
+         chatDAO.updateRoomInfo(room.getRoomSeq(), empSeq, roomForCreator);
+     
+         // 사용자 B (target)를 위한 채팅방 정보 설정
+         ChatRoomDTO roomForTarget = new ChatRoomDTO(room);
+         roomForTarget.setRoomName(creator.getEmpName());
+         roomForTarget.setRoomAvatar(creator.getEmpAvatar());
+         chatDAO.updateRoomInfo(room.getRoomSeq(), targetEmpSeq, roomForTarget);
+     
+         return roomForCreator; // creator의 시점에서의 채팅방 정보 반환
+     }
     /**
      * 특정 채팅방의 메시지 목록을 가져오는 메서드
      * @param roomSeq 조회할 채팅방 번호
