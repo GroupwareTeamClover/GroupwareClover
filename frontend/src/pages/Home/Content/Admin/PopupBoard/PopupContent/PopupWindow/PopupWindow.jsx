@@ -3,25 +3,26 @@ import axios from 'axios';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useMemberStore } from '../../../../../../../store/store';
 
-
 export const PopupWindow = ({ setShowPopup }) => {
     const { sessionData } = useMemberStore();
-    let popups = []; // 전역 변수로 팝업 상태 관리 - 여러 팝업 창 = 배열!
+    const openPopupIds = new Set(); // 열려 있는 팝업 ID를 저장할 Set
 
     const closePop = () => {
         setShowPopup(false);
-        popups.forEach(popup => {
-            if (popup) {
+        openPopupIds.forEach(popupId => {
+            const popup = window.open('', popupId); // 팝업 ID로 팝업을 찾기
+            if (popup && !popup.closed) {
                 popup.close(); // 모든 팝업 창 닫기
             }
         });
-        popups = []; // 배열 초기화
+        console.log('Closing all popups:', openPopupIds);
+        openPopupIds.clear(); // Set 초기화
     };
-    
+
     useEffect(() => {
         if (!sessionData || !sessionData.empId) return; // sessionData가 없으면 로직을 실행하지 않음
 
-        const todayDate = new Date().toISOString().split('T')[0]; // 오늘 날짜 (String값: '2024-08-05')
+        const todayDate = new Date().toISOString().split('T')[0]; // 오늘 날짜 (형식: '2024-08-05')
 
         axios.get(`${BaseUrl()}/adminpopup/today`)
             .then(resp => {
@@ -31,23 +32,33 @@ export const PopupWindow = ({ setShowPopup }) => {
                     announcements.forEach((announcement) => {
                         const userId = sessionData.empId;
                         const popupId = announcement.popSeq;
-                        // localStorage.setItem(`${userId}_${popupId}_dismissedToday`,null);  // 오늘 안보기 초기화
-                        // localStorage.setItem(`${userId}_${popupId}_dismissed`,false);       // 더이상 안보기 초기화
                         const popupDismissed = localStorage.getItem(`${userId}_${popupId}_dismissed`);
                         const popupDismissedToday = localStorage.getItem(`${userId}_${popupId}_dismissedToday`);
 
-                        
                         if (popupDismissed === 'true' || popupDismissedToday === todayDate) {
                             return; // 팝업 안나타나게 처리 ( 더이상 안보기 || 오늘 안보기 )
                         }
-                    
-                        const popup = window.open('', '_blank', 'width=600,height=400,scrollbars=yes');
-                        popups.push(popup); // 배열에 팝업 창 추가
 
+                        // 이미 열려 있는 팝업 확인
+                        if (openPopupIds.has(popupId)) {
+                            // 이미 열린 팝업이 있다면 해당 팝업으로 포커스 이동
+                            const popup = window.open('', popupId);
+                            if (popup && !popup.closed) {
+                                popup.focus();
+                                return;
+                            }
+                        }
+
+                        const popup = window.open('', popupId, 'width=600,height=400,scrollbars=yes');
                         if (!popup) {
                             alert('팝업 창을 열 수 없습니다. 팝업 차단을 확인하세요.');
                             return;
                         }
+
+                        // 팝업 상태 저장
+                        openPopupIds.add(popupId);
+                        localStorage.setItem(`${userId}_${popupId}_open`, 'true'); // 팝업이 열려 있음을 로컬 스토리지에 저장
+                        console.log('Current popups:', openPopupIds);
 
                         const content = `
                             <html>
@@ -113,7 +124,6 @@ export const PopupWindow = ({ setShowPopup }) => {
 
                         popup.document.write(content);
                         popup.document.close();
-                 
                     });
                 } else {
                     console.log("공지글 없을때 팝업창 닫기");
@@ -121,33 +131,32 @@ export const PopupWindow = ({ setShowPopup }) => {
                 }
             })
             .catch(error => {
-                console.error('API 호출 오류 뇸뇸:', error);
+                console.error('API 호출 오류:', error);
                 closePop();
             });
-         // 컴포넌트 언마운트 시 팝업창을 닫음 ??
-         return () => {
-            popups.forEach(popup => {
-                if (popup) {
-                    popup.close();
-                }
-            });
+
+        // 컴포넌트 언마운트 시 모든 팝업창을 닫음
+        return () => {
+            closePop();
         };
-           
     }, [sessionData]); // sessionData가 변경될 때마다 실행
 
-    // '오늘 하루 보지 않기' 
+    // '오늘 하루 보지 않기' 버튼 클릭 핸들러
     window.onTodayDismiss = (popupId) => {
         const todayDate = new Date().toISOString().split('T')[0];
         const userId = sessionData.empId;
         localStorage.setItem(`${userId}_${popupId}_dismissedToday`, todayDate);
+        localStorage.removeItem(`${userId}_${popupId}_open`); // 팝업 상태를 제거
+        openPopupIds.delete(popupId); // 팝업 ID 제거
         console.log(`${userId}_${popupId}_dismissedToday`);
-       
     };
 
-    // '더 이상 보지 않기' 
+    // '더 이상 보지 않기' 버튼 클릭 핸들러
     window.onPermanentDismiss = (popupId) => {
         const userId = sessionData.empId;
         localStorage.setItem(`${userId}_${popupId}_dismissed`, 'true');
+        localStorage.removeItem(`${userId}_${popupId}_open`); // 팝업 상태를 제거
+        openPopupIds.delete(popupId); // 팝업 ID 제거
         console.log(`${userId}_${popupId}_dismissed`);
     };
 };
