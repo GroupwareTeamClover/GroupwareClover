@@ -46,6 +46,10 @@ public class DocumentDAO {
 		return mybatis.selectOne("Document.selectTypeDoc", map);
 	}
 	
+	//전체 정보 출력
+	public List<DocumentDTO> selectAllDoc(){
+		return mybatis.selectList("Document.selectAllDoc");
+	}
 	
 	
 	

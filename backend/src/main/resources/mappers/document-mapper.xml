@@ -59,4 +59,16 @@
 		where parent_seq=#{seq}
 	</select>
 	
+	
+	<select id="selectAllDoc" resultType="com.clover.approval.dto.DocumentDTO">
+		SELECT doc.*, 
+       		CASE 
+           		WHEN b.BS_TITLE IS NOT NULL THEN b.BS_TITLE
+           		WHEN d.parent_seq IS NOT NULL THEN '휴가신청서'
+       		END AS title
+		FROM document doc
+		LEFT JOIN business b ON doc.doc_seq = b.parent_seq
+		LEFT JOIN dayoff d ON doc.doc_seq = d.parent_seq
+	</select>
+	
 </mapper>

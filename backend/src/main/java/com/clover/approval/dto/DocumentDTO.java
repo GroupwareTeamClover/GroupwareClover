@@ -18,6 +18,7 @@ public class DocumentDTO {
     private String empName;
     private String deptName;
     private String roleName;
+    private String title;
 
 
     public DocumentDTO() {
@@ -62,6 +63,25 @@ public class DocumentDTO {
   		this.deptName=deptName;
   		this.roleName=roleName;
   	}
+  	
+  	//list용 생성자
+  	 public DocumentDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
+             Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq,
+             String title) {
+		super();
+		this.docSeq = docSeq;
+		this.docDetailCode = docDetailCode;
+		this.docStateCode = docStateCode;
+		this.drafterSeq = drafterSeq;
+		this.egcYn = egcYn;
+		this.writeDate = writeDate;
+		this.finishDate = finishDate;
+		this.currentApverSeq = currentApverSeq;
+		this.finalApverSeq = finalApverSeq;
+		this.docComSeq = docComSeq;
+		this.title=title;
+  	 }
+  	
 
     // Getters and Setters
     public int getDocSeq() {
@@ -167,6 +187,16 @@ public class DocumentDTO {
 	public void setRoleName(String roleName) {
 		this.roleName = roleName;
 	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	
 
     
 }

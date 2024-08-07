@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.clover.approval.dao.LineDAO;
 import com.clover.approval.dto.ApvLineDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
-import com.clover.approval.dto.TotalLineEmpInfo;
 
 @Service
 public class LineService {
@@ -32,10 +31,15 @@ public class LineService {
 		return lineDAO.selectPartBySeq(seq);
 	}
 	
-//	//결재자, 참조자, 열람자 부서이름 직급 이름 
-//	public List<TotalLineEmpInfo> getTotalLineEmpInfo(Map<String, Object> totalmap){
-//			return lineDAO.selectTotalLineEmpInfo(totalmap);
-//	}
+	//리스트페이지에 결재라인 전체 정보출력하기
+	public List<ApvLineDTO> getAllApv(){
+		return lineDAO.selectAllApv();
+	}
+	
+	//리스트페이지에 참조,열람라인 전체 정보 출력하기
+	public List<ParticipantsLineDTO> getAllPart(){
+		return lineDAO.selectAllPart();
+	}
 		
 
 }

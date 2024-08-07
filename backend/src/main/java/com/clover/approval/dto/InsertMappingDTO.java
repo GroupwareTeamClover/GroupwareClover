@@ -35,6 +35,7 @@ public class InsertMappingDTO {
 		this.apvline = apvline;
 		this.pline = pline;
 	}
+
 	
 	public DocumentDTO getDocument() {
 		return document;

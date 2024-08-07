@@ -67,6 +67,10 @@ public class DocumentService {
 	public Map<String,Object> getDocTypeBySeq(int seq, String table) {
 		return documentDAO.selectDocTypeBySeq(seq, table);
 	}
-
+	
+	//리스트에서 전체 문서 출력하기
+	public List<DocumentDTO> getAllDoc(){
+		return documentDAO.selectAllDoc();
+	}
 
 }

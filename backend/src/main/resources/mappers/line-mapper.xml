@@ -33,5 +33,12 @@
 		where doc_seq=#{seq}
 	</select>
 	
+	<select id="selectAllApv" resultType="com.clover.approval.dto.ApvLineDTO">
+		select * from apv_line
+	</select>
+	
+	<select id="selectAllPart" resultType="com.clover.approval.dto.ParticipantsLineDTO">
+		select * from participants_line
+	</select>
 	
 </mapper>

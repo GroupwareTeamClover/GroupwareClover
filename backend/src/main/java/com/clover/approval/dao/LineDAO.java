@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import com.clover.approval.dto.ApvLineDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
-import com.clover.approval.dto.TotalLineEmpInfo;
 
 @Repository
 public class LineDAO {
@@ -45,11 +44,18 @@ public class LineDAO {
 		return mybatis.selectList("Line.selectPartLine", seq);
 	}
 	
-//	//결재자, 참조자, 열람자 부서이름 직급 이름 
-//	public List<TotalLineEmpInfo> selectTotalLineEmpInfo(Map<String, Object> totalmap){
-//		return mybatis.selectList("Line.selectTotalLineEmpInfo", totalmap);
-//	}
-//	
+	//전체 출력
+	public List<ApvLineDTO> selectAllApv(){
+		return mybatis.selectList("Line.selectAllApv");
+	}
+	
+	
+	//참조자, 열람자 select
+	public List<ParticipantsLineDTO> selectAllPart(){
+		return mybatis.selectList("Line.selectAllPart");
+	}
+	
+
 
 }
 

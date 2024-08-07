@@ -112,7 +112,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                     bsWriteDate: writeDate,
                     parentSeq: resp.data.PARENT_SEQ
                 }));
-                setIsReadOnly(true); // 데이터를 가져온 후 필드를 읽기 전용으로 설정
+                setIsReadOnly(true); // 데이터를 가져온 후 읽기로 설정
             });
         }
     }, [id]);
