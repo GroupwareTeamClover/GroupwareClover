@@ -19,13 +19,19 @@ public class DocumentDTO {
     private String deptName;
     private String roleName;
     private String title;
+    private String drafterName;
+    private String currentApverName;
+    private String finalApverName;
+    private String detailName;
+    private String stateName;
+    
 
 
     public DocumentDTO() {
         super();
-        this.empName = "";
-        this.deptName="";
-        this.roleName="";
+//        this.empName = "";
+//        this.deptName="";
+//        this.roleName="";
     }
 
     // insert용 생성자
@@ -67,7 +73,7 @@ public class DocumentDTO {
   	//list용 생성자
   	 public DocumentDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
              Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq,
-             String title) {
+             String title, String drafterName, String currentApverName, String finalApverName, String detailName, String stateName) {
 		super();
 		this.docSeq = docSeq;
 		this.docDetailCode = docDetailCode;
@@ -80,6 +86,11 @@ public class DocumentDTO {
 		this.finalApverSeq = finalApverSeq;
 		this.docComSeq = docComSeq;
 		this.title=title;
+		this.drafterName=drafterName;
+		this.currentApverName=currentApverName;
+		this.finalApverName=finalApverName;
+		this.detailName=detailName;
+		this.stateName=stateName;
   	 }
   	
 
@@ -163,7 +174,8 @@ public class DocumentDTO {
     public void setDocComSeq(String docComSeq) {
         this.docComSeq = docComSeq;
     }
-
+    
+    //추가사항
 	public String getEmpName() {
 		return empName;
 	}
@@ -195,6 +207,47 @@ public class DocumentDTO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
+	public String getDrafterName() {
+		return drafterName;
+	}
+
+	public void setDrafterName(String drafterName) {
+		this.drafterName = drafterName;
+	}
+
+	public String getCurrentApverName() {
+		return currentApverName;
+	}
+
+	public void setCurrentApverName(String currentApverName) {
+		this.currentApverName = currentApverName;
+	}
+
+	public String getFinalApverName() {
+		return finalApverName;
+	}
+
+	public void setFinalApverName(String finalApverName) {
+		this.finalApverName = finalApverName;
+	}
+
+	public String getDetailName() {
+		return detailName;
+	}
+
+	public void setDetailName(String detailName) {
+		this.detailName = detailName;
+	}
+
+	public String getStateName() {
+		return stateName;
+	}
+
+	public void setStateName(String stateName) {
+		this.stateName = stateName;
+	}
+	
 	
 	
 
