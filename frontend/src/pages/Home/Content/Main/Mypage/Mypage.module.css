@@ -5,10 +5,10 @@
 }
 
 .avatar {
-    width: 35%;
+    width: 45%;
     height: 95%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 

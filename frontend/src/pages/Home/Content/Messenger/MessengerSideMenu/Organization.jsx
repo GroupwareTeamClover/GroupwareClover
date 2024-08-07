@@ -60,14 +60,18 @@ const Organization = ({ onClose }) => {
     // 검색 필터링 로직
     useEffect(() => {
         const filterFolders = (data, query) => {
+            console.log("확인", data);
             if (!query) return data;
             return data
                 .map(folder => {
                     const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
                     const filteredChildren = folder.children.filter(child =>
+                        
                         child.name.toLowerCase().includes(query.toLowerCase()) ||
                         child.role.toLowerCase().includes(query.toLowerCase())
+                        
                     );
+                    
                     if (folderMatches || filteredChildren.length) {
                         return { ...folder, children: filteredChildren.length ? filteredChildren : folder.children, isOpen: true };
                     }
@@ -79,6 +83,7 @@ const Organization = ({ onClose }) => {
         setFilteredData(filterFolders(folderData, searchInput));
     }, [searchInput, folderData]);
 
+    
     // Folder 컴포넌트에 전달할 props 조정
     const adjustFolderProps = (folder) => {
         return {

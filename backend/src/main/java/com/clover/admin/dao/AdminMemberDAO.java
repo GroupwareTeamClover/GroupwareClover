@@ -18,7 +18,7 @@ public class AdminMemberDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
-	public List<HashMap<String, Object>> getAllData(){
+	public List<EmployeeDTO> getAllData(){
 		return mybatis.selectList("AdminMember.getAllData");
 	}
 	
@@ -46,7 +46,16 @@ public class AdminMemberDAO {
 	}
 	
 	public void addMem(AdminAddMemDTO adddto) {
-		
+		 Map<String, Object> params = new HashMap<>();
+	        params.put("dept", adddto.getDept());
+	        params.put("role", adddto.getRole());
+	        params.put("worker_state", adddto.getWorker_state());
+
+	        for (int empSeq : adddto.getEmpSeqList()) {
+	            params.put("empSeq", empSeq);
+	            System.out.println(params);
+	            mybatis.update("AdminMember.addMem", params);
+	        }
 	}
 	
 	

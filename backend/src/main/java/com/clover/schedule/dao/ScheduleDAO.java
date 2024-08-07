@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ScheduleDAO {
@@ -19,6 +20,10 @@ public class ScheduleDAO {
 
     public List<ScheduleDTO> getScheduleList(){
         return mybatis.selectList("Schedule.getScheduleList");
+    }
+
+    public List<ScheduleDTO> getMyScheduleList(int seq){
+        return mybatis.selectList("Schedule.getMyScheduleList", seq);
     }
 
     public int deleteSchedule(int seq) {

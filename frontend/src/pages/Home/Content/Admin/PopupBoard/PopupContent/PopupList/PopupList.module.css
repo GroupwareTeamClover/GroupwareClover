@@ -1,0 +1,163 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.funcBtn {
+    flex: 3;
+    display: flex;
+    width: 80%;
+    /* padding: 40px 20px 80px 20px; */
+    align-items: end;
+    justify-content: space-between;
+    /* background-color: pink; */
+}
+
+.searchBox {
+    /* background-color: #f0f4f8; */
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    gap: 10px;
+    padding-bottom: 20px;
+    padding-top:70px;
+}
+
+.searchBox select {
+    height: 35px;
+    width: 120px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.searchBox input {
+    height: 35px;
+    width: 220px;
+    padding: 0 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.searchBox button {
+    width: 100px;
+    height: 35px;
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchBox button:hover {
+    background-color: #8a9a5b;
+}
+
+.body {
+    flex: 7;
+    width: 85%;
+    padding: 0 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tableWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.table {
+    width: 95%;
+    height:100%; /* 화면 높이에 맞게 테이블 높이 조정 */
+    border-collapse: collapse;
+    overflow-y: auto; /* 스크롤 필요 시 스크롤바 표시 */
+}
+
+.table thead td {
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+.table thead td:nth-child(4){
+    width:5%;
+    background-color: #d3d3d3;
+}
+.table thead td:nth-child(1) {
+    width: 55%;
+    background-color: #f1f1f1;
+}
+
+.table thead td:nth-child(2) {
+    width: 20%;
+    background-color: #e7e7e7d5;
+}
+
+.table thead td:nth-child(3) {
+    width: 20%;
+    background-color: #d5f8e562;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.table tbody td {
+    padding: 10px;
+    text-align: center;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.table tbody td svg.on {
+    /* color:#a6c76c;
+    margin-right: 10px; */
+    color: #f39c12; /* 전구 색상 */
+    margin-right: 20px; /* 텍스트와의 간격 */
+    font-size: 1.2rem; /* 아이콘 크기 */
+    animation: blink 1s infinite; /* 빤짝이는 애니메이션 적용 */
+}
+.table tbody td svg.off{
+    /* color:black; */
+    /* color:#a6c76c;
+    margin-right: 10px; */
+    color: #a6a6a6; 
+    margin-right: 20px; /* 텍스트와의 간격 */
+    font-size: 1.2rem; /* 아이콘 크기 */
+}
+
+.table tbody td:nth-child(1) {
+    text-align: left;
+    padding-left: 90px;
+}
+
+.table tbody td:nth-child(1):hover {
+    background-color: #e3f8eed8;
+    cursor: pointer;
+}
+
+.pagination {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
