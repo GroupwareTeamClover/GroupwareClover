@@ -165,7 +165,16 @@ create sequence board_comment_sequence start with 1 increment by 1 nomaxvalue no
 create sequence board_sequence start with 1 increment by 1 nomaxvalue nocache;
 create sequence boardlist_sequence start with 1 increment by 1 nomaxvalue nocache;
 
+-- 첨부파일
+create table attachment (
+    attachment_seq number primary key,
+    attachment_oriname varchar2(300 char) not null,
+    attachment_sysname varchar2(300 char) not null,
+    attachment_from varchar2(20 char) not null,
+    attachment_parent_seq number not null
+);
 
+create sequence attachment_sequence start with 1 increment by 1 nomaxvalue nocache;
 
 --조진혁
 -- room_seq, emp_seq, message_seq 모두 외래키, emp_seq, room_seq는 기본키

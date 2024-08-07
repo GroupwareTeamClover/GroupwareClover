@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './WritePost.module.css';
-import { SelectPicker } from 'rsuite';
+import { SelectPicker, Uploader } from 'rsuite';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { useMemberStore } from '../../../../../store/store';
@@ -30,12 +30,6 @@ const WriteBoard = () => {
         }
     }
 
-    //첨부파일
-    const [files, setFiles] = useState([]);
-    const handleFileChange = (e) => {
-        setFiles([...e.target.files]);
-    }
-
     //게시글 내용
     const editorRef = useRef();
     const [content, setContent] = useState('');
@@ -52,7 +46,7 @@ const WriteBoard = () => {
                     return { ...item, boardlistType: "그룹게시판" }
                 }
             }));
-        })
+        });
     }, []);
 
     const handleSubmit = () => {
@@ -68,17 +62,26 @@ const WriteBoard = () => {
             if (textContent.trim() === "") {
                 alert("내용을 입력해주세요!");
             } else {
+                const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+                    const match = imgTag.match(/src="([^">]+)"/);
+                    return match ? match[1] : null;
+                }).filter(url => url !== null);
+
                 axios.post(`${BaseUrl()}/board`, {
                     boardlistSeq: category,
                     title: title,
                     writer: sessionData.empId,
-                    content: content
+                    content: content,
+                    fileNames: files.map(file => file.name),
+                    fileUrls: files.map(file => file.url),
+                    images : imageUrls
                 }).then(resp => {
                     if (resp.status === 200) {
                         alert("게시글이 등록되었습니다.");
                         navi(`/community/board/${category}`);
                     }
                 })
+                console.log(files);
             }
         }
     }
@@ -88,6 +91,21 @@ const WriteBoard = () => {
             (category === 0) ? navi("/community") : navi(`/community/board/${category}`)
         }
     }
+
+    //첨부파일
+    const [files, setFiles] = useState([]);
+    const handleFileChange = (fileList) => {
+        setFiles(fileList);
+    };
+    const handleUploadSuccess = (response, file) => {
+        const fileUrl = response;
+        // 파일 리스트에 업로드된 파일 추가
+        setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
+    };
+    const handleRemove = (file) => {
+        // 파일 리스트에서 해당 파일 제거
+        setFiles((prev) => prev.filter((f) => f.name !== file.name));
+    };
 
     return (
         <div className={styles.container}>
@@ -109,7 +127,10 @@ const WriteBoard = () => {
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
-                <input type="file" name="files" multiple onChange={handleFileChange} />
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload`} multiple draggable
+                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                    <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
+                </Uploader>
             </div>
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent="" />

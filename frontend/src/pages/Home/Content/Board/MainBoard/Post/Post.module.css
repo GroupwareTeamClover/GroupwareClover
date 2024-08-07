@@ -30,7 +30,7 @@
     fill: rgb(192, 192, 26);}
 
 .post .title {
-    width: 780px;
+    width: 40vw;
     height : 6.37vh;
     text-align: left;
     font-size: 15px;
@@ -47,7 +47,7 @@
     display: flex;
     align-items: center;
     font-size: 15px;
-    width: 10.42vw;
+    width: 15vw;
 }
 
 .post .writer .userAvatar {
