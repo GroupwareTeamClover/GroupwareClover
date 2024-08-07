@@ -4,6 +4,7 @@ import styles from './Member.module.css';
 import { MemMain } from './MemContent/MemMain/MemMain';
 import {Route, Routes} from "react-router-dom";
 import { AddMember } from './MemContent/AddMem/AddMember';
+import { Address } from '../../Address/Address';
 
 
 export const Member = () => {
@@ -25,7 +26,7 @@ export const Member = () => {
           <Routes>
             <Route path="/" element={ <MemMain /> } />
             <Route path="/addmem" element={<AddMember/>}/>
-            <Route path="/addmem" element={<AddMember/>}/>
+            <Route path="/address" element={<Address/>}/>
           </Routes>
         </div>
       </div>

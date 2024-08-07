@@ -153,29 +153,39 @@
     width: 85%; /* 테이블의 고정 너비를 설정 */
     height: 100%;
     table-layout: fixed; /* 테이블의 열 너비를 고정 */
+    border:none;
 }
 
 .table thead td:nth-child(1){
-    width:30px;    /* checkbox 너비 */
+    width:5%;    /* checkbox 너비 */
 }
 .table thead td:nth-child(2) {
-    width: 90px; /* 이름 열의 너비 */
+    width: 15%; /* 이름 열의 너비 */
 }
 
 .table thead td:nth-child(3) {
-    width: 90px; /* 부서 열의 너비 */
+    width: 10%; /* 부서 열의 너비 */
 }
 .table thead td:nth-child(4) {
-    width: 90px; /* 직위 열의 너비 */
+    width: 10%; /* 직위 열의 너비 */
 }
 .table thead td:nth-child(5) {
-    width: 90px; /* 사용자그룹 열의 너비 */
+    width: 10%; /* 사용자그룹 열의 너비 */
+}
+.table tbody td:nth-child(5){
+    /* background-color: #1a4f72; */
+    text-align: left;
+    padding-left: 30px;
 }
 .table thead td:nth-child(6) {
-    width: 110px; /* 이메일 열의 너비 */
+    width: 20%; /* 이메일 열의 너비 */
+}
+.table tbody td:nth-child(6){
+    text-align: left;
+    padding-left: 30px;
 }
 .table thead td:nth-child(7) {
-    width: 100px; /* 계정상태 열의 너비 */
+    width: 15%; /* 계정상태 열의 너비 */
 }
 
 

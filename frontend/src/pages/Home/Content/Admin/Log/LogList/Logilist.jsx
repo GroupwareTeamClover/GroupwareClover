@@ -16,12 +16,35 @@ export const Loglist=()=>{
     const handleKeywordChange =()=>{}
 
     const handleToday=()=>{
-        setSpecificStartDate();
-        setSpecificEndDate();
+        const today = new Date().toISOString().split('T')[0];
+        setSpecificStartDate(today);
+        setSpecificEndDate(today);
     }
-    const handleWeek=()=>{}
-    const handleMonth=()=>{}
-    const handleHalfYear =()=>{}
+    const handleWeek = () => {
+        const today = new Date();
+        const oneWeekAgo = new Date(today);
+        oneWeekAgo.setDate(today.getDate() - 7);
+
+        setSpecificStartDate(oneWeekAgo.toISOString().split('T')[0]);
+        setSpecificEndDate(today.toISOString().split('T')[0]);
+    }
+    const handleMonth = () => {
+        const today = new Date();
+        const oneMonthAgo = new Date(today);
+        oneMonthAgo.setMonth(today.getMonth() - 1);
+
+        setSpecificStartDate(oneMonthAgo.toISOString().split('T')[0]);
+        setSpecificEndDate(today.toISOString().split('T')[0]);
+    }
+
+    const handleHalfYear = () => {
+        const today = new Date();
+        const sixMonthsAgo = new Date(today);
+        sixMonthsAgo.setMonth(today.getMonth() - 6);
+
+        setSpecificStartDate(sixMonthsAgo.toISOString().split('T')[0]);
+        setSpecificEndDate(today.toISOString().split('T')[0]);
+    }
 
     const handleSearch =()=>{    }
     const handleReset=()=>{}

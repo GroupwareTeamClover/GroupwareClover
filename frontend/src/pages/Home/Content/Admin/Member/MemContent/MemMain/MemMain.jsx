@@ -76,7 +76,7 @@ export const MemMain = () => {
     const checkboxRef = useRef([]);
     
     // 페이지네이션 설정
-    const PER_PAGE = 10;
+    const PER_PAGE = 2;
     const pageCount = Math.ceil(filtered.length / PER_PAGE);
     
     const allCheckRef = useRef(null);

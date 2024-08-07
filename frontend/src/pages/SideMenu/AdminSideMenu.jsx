@@ -5,16 +5,20 @@ import { FaCalendarDays } from "react-icons/fa6";
 import { LiaClipboardListSolid } from "react-icons/lia";
 import { FaListAlt } from "react-icons/fa";
 import { HiMenuAlt3 } from "react-icons/hi";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 export const AdminSideMenu = ({ open, setOpen }) => {
-  const menus = [
+ // 메모이제이션 : 함수의 실행 결과를 캐시(cache)에 저장해두고, 동일한 입력값으로 함수가 다시 호출될때 캐시된 결과를 재사용하는 최적화 기법. 
+ //               함수의 계산 결과를 저장해두기 때문에, 불필요한 연산을 피할 수 있어 성능 향상!! 
+ //               useMemo, useCallback 훅을 사용해서 컴포넌트가 불필요하게 다시 렌더링되거나 함수가 재정의 되는 것을 방지한다. 
+  const menus = useMemo(() => [
     { name: "Home", link: "/", type: "Home", icon: IoHome },
     { 
       name: "조직관리", link: "/member", type: "통합사원목록", icon: FaCalendarDays, 
       submenus: [
         { name: "통합 사원 목록", link: "/member", type: "통합사원목록" },
-        { name: "가입 승인 목록", link: "/member/addmem", type: "가입승인목록" }
+        { name: "가입 승인 목록", link: "/member/addmem", type: "가입승인목록" },
+        { name: "사원 주소록", link: "/member/address", type: "사원 주소록"}
       ]
     },
     { 
@@ -26,7 +30,8 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     },
     { name: "게시글관리", link: "/community", type: "community", icon: LiaClipboardListSolid },
     { name: "접속로그관리", link: "/log", type: "접속 로그 관리", icon: FaListAlt }
-  ];
+  ], []);
+
 
   const navi = useNavigate();
   const location = useLocation();
