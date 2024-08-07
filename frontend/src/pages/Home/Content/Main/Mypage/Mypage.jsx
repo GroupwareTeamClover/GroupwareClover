@@ -51,14 +51,12 @@ export const Mypage = ({empSeq, closeModal}) => {
                     <p>생년월일 : </p>
                     <p>전화번호 : </p>
                     <p>이메일 : </p>
-                    <p>주소 : </p>
                     <p>연차 : </p>
                 </div>
                 <div className={styles.centerInfo}>
                     <p>{changeBirth(mypage.EMP_BIRTH)}</p>
                     <p>{changeTel(mypage.EMP_TEL)}</p>
                     <p>{mypage.EMP_EMAIL}</p>
-                    <p>{mypage.EMP_ADDRESS}</p>
                     <p>{mypage.ANNUAL_LEAVE_DAY}일</p>
 
                 </div>

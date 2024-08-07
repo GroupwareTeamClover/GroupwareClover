@@ -30,7 +30,6 @@
             e.emp_birth,
             e.emp_gender,
             e.emp_tel,
-            e.emp_address,
             e.emp_avatar,
             r.role_name,
             d.dept_name,

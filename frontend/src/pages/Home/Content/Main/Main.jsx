@@ -71,8 +71,8 @@ export const Main = () => {
                       </div>
                       <div className={styles.empInfo}>
                           <p> Clover Portal</p>
-                          <p> {deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서 "}
-                              {sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
+                          <p> [{deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서"}]
+                              {" "+sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
                           <div className={styles.InfoBox}>
                               <button onClick={handleMyPageModal}>내 정보</button>
                           </div>

@@ -40,7 +40,6 @@ export const Header = () => {
             <span>Clover Company</span>
           </div>
           <div className={styles.userInfo}>
-            <p className={styles.userName}>{sessionData.empName}</p>
             <div className={styles.userAvatar}>
               {sessionData.empAvatar === null ?
                 <img src={defaultImage} alt="기본 이미지"/>
