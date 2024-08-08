@@ -11,4 +11,12 @@
  	<select id="selectAllFile" resultType="com.clover.commons.dto.AttachmentDTO">
  		select * from attachment where attachment_from = #{from} and attachment_parent_seq = #{seq}
  	</select>
+ 	
+ 	<delete id="deleteFile">
+ 		delete from attachment where attachment_sysname = #{fileUrl}
+ 	</delete>
+ 	
+ 	<delete id="deleteAllFile">
+ 		delete from attachment where attachment_parent_seq = #{seq}
+ 	</delete>
 </mapper>

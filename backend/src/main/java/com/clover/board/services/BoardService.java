@@ -18,7 +18,7 @@ public class BoardService {
 		bDao.insertPost(post);
 		int newPostSeq = post.getBoardSeq();
 		
-		return newPostSeq; 
+		return newPostSeq;
 	}
 	
 	public String getWriterInfo(String writer) {
@@ -40,5 +40,13 @@ public class BoardService {
 	
 	public void deletePost(int boardSeq) {
 		bDao.deletePost(boardSeq);
+	}
+	
+	public void modifyPost(BoardDTO post) {
+		bDao.modifyPost(post);
+	}
+	
+	public void upView(int seq) {
+		bDao.upView(seq);
 	}
 }

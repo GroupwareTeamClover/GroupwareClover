@@ -6,7 +6,7 @@ import axios from 'axios';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useRef, useState } from 'react';
 
-const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength }) => {
+const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) => {
     //답글 삭제
     const handleDelete = () => {
         if (window.confirm("이 답글을 삭제하시겠습니까?")) {
@@ -71,7 +71,7 @@ const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength }) => {
                             <Button appearance="link" className={styles.modifyNoButton} onClick={handleModify}>완료</Button>
                         </div> :
                         <div className={styles.replyDate}>{format(new Date(Date.parse(dto.boardCommentWriteDate)), 'yy.MM.dd HH:mm')}
-                            {(dto.boardCommentWriter === sessionWriter || admin) && <>
+                            {(dto.boardCommentWriter.includes(empName) || admin) && <>
                                 <Button appearance="link" className={styles.replyModifyButton} onClick={handleIsModify}>수정</Button>
                                 <Button appearance="link" className={styles.replyDeleteButton} onClick={handleDelete}>삭제</Button>
                             </>}

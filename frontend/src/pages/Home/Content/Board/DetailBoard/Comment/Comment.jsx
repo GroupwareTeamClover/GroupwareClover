@@ -7,7 +7,7 @@ import Reply from './Reply/Reply';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
 
-const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComments }) => {
+const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComments, empName }) => {
     const [list, setList] = useState(reples);
 
     //답글작성창표시
@@ -112,7 +112,7 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
                         </div> :
                         <>
                             <div className={styles.commentDate}>{format(new Date(Date.parse(dto.boardCommentWriteDate)), 'yy.MM.dd HH:mm')}
-                                {(dto.boardCommentWriter === sessionWriter || admin) && <>
+                                {(dto.boardCommentWriter.includes(empName) || admin) && <>
                                     <Button appearance="link" className={styles.commentModifyButton} onClick={handleIsModify}>수정</Button>
                                     <Button appearance="link" className={styles.commentDeleteButton} onClick={handleDelete}>삭제</Button>
                                 </>}
@@ -137,7 +137,7 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
                 </div>
             }
             {list.map((reple, i) =>
-                <Reply key={i} dto={reple} sessionWriter={sessionWriter} admin={admin} setList={setList} maxReplyLength={maxReplyLength} />
+                <Reply key={i} dto={reple} sessionWriter={sessionWriter} admin={admin} setList={setList} maxReplyLength={maxReplyLength} empName={empName} />
             )}
         </div>
     );
