@@ -127,6 +127,7 @@
         WHERE e.emp_seq = #{empSeq}
     </select>
 
+
     <!-- 읽지 않은 메시지 수 조회 -->
     <select id="getUnreadMessageCount" resultType="int">
         SELECT COUNT(*)
@@ -177,5 +178,21 @@
         FROM EMPLOYEE
         WHERE emp_seq = #{empSeq}
     </select>
+
+    <!-- target 채팅방의 이름, 아바타 가져오기 -->
+    <!-- <select id="getEmployeeInfo" parameterType="map" resultType="java.util.HashMap">
+        SELECT *
+        FROM EMPLOYEE em 
+        JOIN CHATROOM rm ON em.emp_seq = rm.emp_seq 
+        WHERE rm.room_seq = #{roomSeq}
+        AND em.emp_seq = #{empSeq}
+    </select> -->
+
+    <select id="getEmployeeInfo" parameterType="map" resultType="java.util.HashMap">
+        SELECT *
+        FROM CHATMEMBERS
+        WHERE room_seq = #{roomSeq}
+        and emp_seq = #{empSeq}
+    </select>    
 
 </mapper>

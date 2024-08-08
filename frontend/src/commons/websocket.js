@@ -35,7 +35,7 @@ stompClient.connect(headers, () => {
 
     // 새 채팅방 생성 알림 구독
     stompClient.subscribe('/topic/newChatRoom', (payload) => {
-      console.log('New chat room notification received');
+      console.log('새 채팅방 생성완료');
       const message = JSON.parse(payload.body);
       onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
     });
@@ -51,7 +51,14 @@ stompClient.connect(headers, () => {
 
       // 개인 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newChatRoom`, (payload) => {
-        console.log('Personal new chat room notification received');
+        console.log('1:1 개인 채팅방 생성');
+        const message = JSON.parse(payload.body);
+        onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
+      });
+
+      // 타겟 새 채팅방 알림 구독
+      stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/targetNewChatRoom`, (payload) => {
+        console.log('타겟 1:1 개인 채팅방 생성');
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });

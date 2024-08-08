@@ -12,7 +12,7 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
   useEffect(() => {
     const handleMessage = (message) => {
       if (message.type === 'NEW_CHAT_ROOM') {
-        console.log("New chat room received:", message.room);
+        console.log("새로운 채팅방 생성:", message.room);
         addChatRoom(message.room);
       }
       // 다른 타입의 메시지 처리...
@@ -35,6 +35,7 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
       senderSeq: sessionUser.empSeq,
       senderName: sessionUser.empName
     };
+    
     sendMessage("/app/chat.addUser", message);
   };
 

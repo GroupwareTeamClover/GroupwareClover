@@ -163,6 +163,20 @@ public class ChatDAO {
     }
 
     /**
+     * 채팅방 번호와 타겟Seq로 채팅 상대방의 이름과 아바타를 가져오는 메서드
+     * @param roomSeq 사용자의 채팅방 번호
+     * @param empSeq 사용자의 사원 번호
+     * @return 사용자의 프로필 정보
+     */
+    public HashMap<String, Object> getOtherUserInRoom(int roomSeq, int empSeq) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("roomSeq", roomSeq); 
+        params.put("empSeq", empSeq);
+        System.out.println("다른 사용자" + roomSeq + empSeq);               
+        return mybatis.selectOne("Chat.getEmployeeInfo", params);
+    }    
+
+    /**
      * 마지막으로 읽은 메시지를 업데이트하는 메서드
      * @param empSeq 사용자의 사원 번호
      * @param roomSeq 채팅방 번호

@@ -49,16 +49,25 @@ public class ChatController {
      * @param targetEmpSeq 대화 상대방의 사원 번호
      * @return 생성된 채팅방 정보
      */
+
     @PostMapping("/rooms")
     public ResponseEntity<ChatRoomDTO> createOneToOneRoom(@RequestBody Map<String, Integer> payload) {
-        int empSeq = (int) session.getAttribute("cloverSeq");        
-        int targetEmpSeq = payload.get("targetEmpSeq");        
+        int empSeq = (int) session.getAttribute("cloverSeq");
+        int targetEmpSeq = payload.get("targetEmpSeq");
+        
         ChatRoomDTO room = chatService.createOneToOneRoom(empSeq, targetEmpSeq);
-
+        
+        // 생성자에게 채팅방 정보 전송
         messagingTemplate.convertAndSendToUser(String.valueOf(empSeq), "/queue/newChatRoom", room);
-        messagingTemplate.convertAndSendToUser(String.valueOf(targetEmpSeq), "/queue/newChatRoom", room);
+        
+        // 타겟 사용자를 위한 채팅방 정보 가져오기
+        ChatRoomDTO roomForTarget = chatService.getRoomInfoForUser(room.getRoomSeq(), targetEmpSeq);
+        
+        // 타겟 사용자에게 채팅방 정보 전송
+        messagingTemplate.convertAndSendToUser(String.valueOf(targetEmpSeq), "/queue/targetNewChatRoom", roomForTarget);
+        
         return ResponseEntity.ok(room);
-    }
+    }    
 
     /**
      * 특정 채팅방의 메시지 목록을 조회하는 API 엔드포인트

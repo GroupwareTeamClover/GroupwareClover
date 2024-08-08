@@ -1,6 +1,7 @@
 package com.clover.messenger.services;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.sql.Timestamp;
 
@@ -90,6 +91,35 @@ public class ChatService {
      
          return roomForCreator; // creator의 시점에서의 채팅방 정보 반환
      }
+
+    /**
+     * 타겟 사용자에 대해 생성된 채팅장 정보를 가져오는 메서드
+     * @param roomSeq 조회할 채팅방 번호
+     * @param empSeq 조회하는 사용자의 사원 번호
+     * @return 채팅 메시지 목록
+     */
+
+    public ChatRoomDTO getRoomInfoForUser(int roomSeq, int empSeq) {
+        // targetSeq가 속한 방의 정보가 들어온다.
+        ChatRoomDTO room = chatDAO.getRoomById(roomSeq, empSeq);
+        System.out.println("진행");
+
+
+        // target의 이름과 아바타를 가져온다.
+        HashMap<String, Object> otherUserInfo = chatDAO.getOtherUserInRoom(roomSeq, empSeq);
+        System.out.println(otherUserInfo);
+        String empName = (String) otherUserInfo.get("CUSTOM_ROOM_NAME");
+        String empAvatar = (String) otherUserInfo.get("CUSTOM_ROOM_AVATAR");
+        System.out.println(empName + empAvatar);
+        
+        ChatRoomDTO roomForUser = new ChatRoomDTO(room);
+        roomForUser.setRoomName(empName);
+        roomForUser.setRoomAvatar(empAvatar);
+        
+        return roomForUser;
+    }
+
+
     /**
      * 특정 채팅방의 메시지 목록을 가져오는 메서드
      * @param roomSeq 조회할 채팅방 번호
