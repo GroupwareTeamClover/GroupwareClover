@@ -46,7 +46,9 @@ export const AdminSideMenu = ({ open, setOpen }) => {
   const [selectedParentMenu, setSelectedParentMenu] = useState('');
   const handleMenuClick = (link, type, parentType) => {
     setSelectedMenu(type);
-    setSelectedParentMenu(parentType)
+    setSelectedParentMenu(parentType);
+    localStorage.setItem('selectedMenu', type);
+    localStorage.setItem('selectedParentMenu', parentType);
     navi(link, { state: { type } });
   };
 
@@ -114,6 +116,15 @@ export const AdminSideMenu = ({ open, setOpen }) => {
       setDropdown(newDropdownState);
     }
   }, [location.pathname, selectedMenu, menus]);
+
+  useEffect(() => {
+    const savedMenu = localStorage.getItem('selectedMenu');
+    const savedParentMenu = localStorage.getItem('selectedParentMenu');
+    if (savedMenu && savedParentMenu) {
+      setSelectedMenu(savedMenu);
+      setSelectedParentMenu(savedParentMenu);
+    }
+  }, []);
 
 
   return (
