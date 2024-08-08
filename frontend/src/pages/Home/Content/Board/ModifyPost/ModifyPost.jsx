@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import styles from './WritePost.module.css';
+import styles from './ModifyPost.module.css';
 import { SelectPicker, Uploader } from 'rsuite';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
@@ -7,9 +7,9 @@ import { useMemberStore } from '../../../../../store/store';
 import 'rsuite/SelectPicker/styles/index.css';
 import 'rsuite/Uploader/styles/index.css';
 import WebEditor from '../../../../../components/WebEditor/WebEditor';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-const WritePost = () => {
+const ModifyPost = () => {
 
     const navi = useNavigate();
 
@@ -32,7 +32,7 @@ const WritePost = () => {
 
     //게시글 내용
     const editorRef = useRef();
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState();
     const handleContentChange = () => {
         setContent(editorRef.current.getInstance().getHTML());
     }
@@ -47,56 +47,17 @@ const WritePost = () => {
                 }
             }));
         });
+        axios.get(`${BaseUrl()}/attachment/${'board'}/${loc.state.boardSeq}`).then(resp => {
+            const data = resp.data.map(file => ({ name: file.attachmentOriname, url: file.attachmentSysname }));
+            setOriginFiles(data);
+            setFiles(data);
+        });
     }, []);
-
-    const handleSubmit = () => {
-        if (category === null) {
-            alert("게시판을 선택해주세요!");
-        } else if (title.trim() === "") {
-            alert("제목을 입력해주세요!");
-        } else {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            const textContent = tempDiv.textContent || tempDiv.innerText || '';
-
-            if (textContent.trim() === "") {
-                alert("내용을 입력해주세요!");
-            } else {
-                const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
-                    const match = imgTag.match(/src="([^">]+)"/);
-                    return match ? match[1] : null;
-                });
-
-                axios.post(`${BaseUrl()}/board`, {
-                    boardlistSeq: category,
-                    title: title,
-                    writer: sessionData.empId,
-                    content: content,
-                    fileNames: files.map(file => file.name),
-                    fileUrls: files.map(file => file.url),
-                    images : imageUrls
-                }).then(resp => {
-                    if (resp.status === 200) {
-                        alert("게시글이 등록되었습니다.");
-                        navi(`/community/board/${category}`);
-                    }
-                })
-                console.log(files);
-            }
-        }
-    }
-
-    const handleCancel = () => {
-        if (window.confirm("작성중인 글은 사라집니다. 계속하시겠습니까?")) {
-            (category === 0) ? navi("/community") : navi(`/community/board/${category}`)
-        }
-    }
 
     //첨부파일
     const [files, setFiles] = useState([]);
-    const handleFileChange = (fileList) => {
-        setFiles(fileList);
-    };
+    //기존 첨부파일
+    const [originFiles, setOriginFiles] = useState([]);
     const handleUploadSuccess = (response, file) => {
         const fileUrl = response;
         // 파일 리스트에 업로드된 파일 추가
@@ -107,9 +68,74 @@ const WritePost = () => {
         setFiles((prev) => prev.filter((f) => f.name !== file.name));
     };
 
+    //기존 이미지 URL 리스트
+    const [originImageUrls, setOriginImageUrls] = useState([]);
+
+    //기존 게시글 정보 및 세팅
+    const loc = useLocation();
+    useEffect(() => {
+        setCategory(loc.state.boardlistSeq);
+        setTitle(loc.state.boardTitle);
+        setContent(editorRef.current.getInstance().getHTML());
+        setOriginImageUrls(loc.state.boardContent?.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+            const match = imgTag.match(/src="([^">]+)"/);
+            return match ? match[1] : null;
+        }));
+    },[]);
+
+    const handleModify = () => {
+        if (category === null) {
+            alert("게시판을 선택해주세요!");
+        } else if (title.trim() === "") {
+            alert("제목을 입력해주세요!");
+        } else {
+            const tempDiv = document.createElement('div');
+            console.log(content);
+            tempDiv.innerHTML = content;
+            const textContent = tempDiv.textContent || tempDiv.innerText || '';
+
+            if (textContent.trim() === "") {
+                alert("내용을 입력해주세요!");
+            } else {
+                const deletFiles = originFiles.filter(file => !files.some(newFile => newFile.name === file.name));
+                const addFiles = files.filter(file => !originFiles.some(originfile => originfile.name === file.name));
+
+                const newImageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+                    const match = imgTag.match(/src="([^">]+)"/);
+                    return match ? match[1] : null;
+                });
+                const deleteImageUrls = originImageUrls.filter(imageUrl => !newImageUrls.includes(imageUrl));
+                const addImageUrls = newImageUrls.filter(imageUrl => !originImageUrls.includes(imageUrl));
+
+                axios.put(`${BaseUrl()}/board`, {
+                    boardlistSeq : category,
+                    title: title,
+                    content: content,
+                    boardSeq : loc.state.boardSeq,
+                    deleteFileUrls: deletFiles.map(file => file.url),
+                    addFileNames: addFiles.map(file => file.name),
+                    addFileUrls: addFiles.map(file => file.url),
+                    deleteImageUrls: deleteImageUrls,
+                    addImageUrls: addImageUrls
+                }).then(resp => {
+                    if (resp.status === 200) {
+                        alert("게시글이 수정되었습니다.");
+                        navi(`/community/board/${category}/detail/${loc.state.boardSeq}`);
+                    }
+                })
+            }
+        }
+    }
+
+    const handleCancel = () => {
+        if (window.confirm("작성중인 글은 사라집니다. 계속하시겠습니까?")) {
+            (category === 0) ? navi("/community") : navi(`/community/board/${loc.state.boardlistSeq}`)
+        }
+    }
+
     return (
         <div className={styles.container}>
-            <h3>{sessionData.empName}님의 글</h3>
+            <h3>게시글 수정</h3>
             <div className={styles.categoryBox}>
                 <SelectPicker
                     data={categories}
@@ -129,18 +155,18 @@ const WritePost = () => {
             <div className={styles.fileBox}>
                 <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
-                    <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
+                    <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
             </div>
             <div className={styles.editorBox}>
-                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent="" />
+                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent={loc.state.boardContent} />
             </div>
             <div className={styles.btnBox}>
                 <button className={styles.cancelBtn} onClick={handleCancel}>취소</button>
-                <button className={styles.writeBtn} onClick={handleSubmit}>등록</button>
+                <button className={styles.writeBtn} onClick={handleModify}>수정</button>
             </div>
         </div>
     );
 }
 
-export default WritePost;
+export default ModifyPost;

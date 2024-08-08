@@ -9,7 +9,6 @@ import { LuEye } from 'react-icons/lu';
 import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
 import Comment from './Comment/Comment';
-import { Button, Loader, Popover, Whisper } from 'rsuite';
 import 'rsuite/Popover/styles/index.css';
 
 const DetilBoard = () => {
@@ -179,8 +178,12 @@ const DetilBoard = () => {
                         <button className={styles.goListBtn} onClick={() => { navi(`/community/board/${boardlistSeq}`) }}>목록</button>
                     </div>
                     <div className={styles.rightBox}>
-                        <button className={styles.corBtn}>수정</button>
-                        <button className={styles.delBtn} onClick={handleDelete}>삭제</button>
+                        {post.boardWriter.includes(sessionData.empName) &&
+                            <>
+                                <button className={styles.corBtn} onClick={() => { navi("/community/modifyPost", { state: { ...post } }) }}>수정</button>
+                                <button className={styles.delBtn} onClick={handleDelete}>삭제</button>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
@@ -198,7 +201,7 @@ const DetilBoard = () => {
                 <div className={styles.commentList}>
                     {comments.map((comment, i) =>
                         <Comment key={i} dto={comment} sessionWriter={sessionWriter} reples={reples.filter(reple => reple.boardCommentReplySeq === comment.boardCommentSeq)}
-                            setCountComments={setCountComments} admin={admin} setComments={setComments} />
+                            setCountComments={setCountComments} admin={admin} setComments={setComments} empName={sessionData.empName} />
                     )}
                 </div>
             </div>

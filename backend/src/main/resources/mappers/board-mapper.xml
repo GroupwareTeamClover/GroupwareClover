@@ -49,5 +49,10 @@
 	<update id="updateContentWithUrl">
 		update board set board_content = #{content} where board_seq = #{seq}
 	</update>
+	
+	<update id="updatePost">
+		update board set boardlist_seq = #{boardlistSeq}, board_title = #{boardTitle}, board_content = #{boardContent}, board_write_date = sysdate
+		where board_seq = #{boardSeq}
+	</update>
 
 </mapper>

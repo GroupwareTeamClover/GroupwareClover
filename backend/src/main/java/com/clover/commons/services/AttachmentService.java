@@ -33,5 +33,14 @@ public class AttachmentService {
 		return attDao.getList(from, seq);
 	}
 	
+	//[첨부파일]DB에서 해당URL을 가진 첨부파일 삭제
+	public void deleteFile(String fileUrl) {
+		attDao.deleteFile(fileUrl);
+	}
+	
+	//[첨부파일]DB에서 해당 글번호에 딸린 첨부파일 전부 삭제
+	public void deleteFiles(int seq) {
+		attDao.deleteFiles(seq);
+	}
 
 }
