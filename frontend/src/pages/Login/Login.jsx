@@ -43,18 +43,24 @@ export const Login = ({ setSign, setAdmin }) => {
     const res = await axios.get(`${BaseUrl()}/sign`, { params });
     if(res.status === 200 && res.data.employeeInfo) {
 
+      // 가입 대기 상태 로그인 차단
+      // if(res.data.employeeInfo.workerStateCode === 99) {
+      //   alert("가입 대기중입니다. 잠시만 기다려주세요.");
+      //   return false;
+      // }
+
       // 응답 데이터에서 employeeInfo와 wsToken을 구조 분해 할당으로 추출
       const {employeeInfo, wsToken} = res.data;
       console.log("res.data.empDeptCode ==== ", res.data.deptCode);
       console.log("res.data.empRoleCode ==== ", res.data.roleCode);
-      
+
       // 세션 데이터 제이슨 형식으로 저장
       const sessionData = {
-        empSeq: employeeInfo.empSeq,       
-        empId: employeeInfo.empId,        
-        empName: employeeInfo.empName,     
-        empAvatar: employeeInfo.empAvatar, 
-        empDeptCode: employeeInfo.deptCode, 
+        empSeq: employeeInfo.empSeq,
+        empId: employeeInfo.empId,
+        empName: employeeInfo.empName,
+        empAvatar: employeeInfo.empAvatar,
+        empDeptCode: employeeInfo.deptCode,
         empRoleCode: employeeInfo.roleCode,
         wsToken: wsToken                   // WebSocket 연결을 위한 토큰
       }
@@ -65,8 +71,8 @@ export const Login = ({ setSign, setAdmin }) => {
 
       console.log(sessionData);
       console.log(wsToken);
-       // WebSocket 연결
-       connectWebSocket((payload) => {
+      // WebSocket 연결
+      connectWebSocket((payload) => {
         const message = JSON.parse(payload.body);
         console.log('메시지 수신:', message);
 
@@ -83,7 +89,7 @@ export const Login = ({ setSign, setAdmin }) => {
           default:
             console.log('알 수 없는 메시지 타입:', message.type);
         }
-      });     
+      });
 
       // 가입 대기 막아야됨
       sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
@@ -129,36 +135,36 @@ export const Login = ({ setSign, setAdmin }) => {
   }, []);
 
   return (
-      <div className={ styles.container }>
-        { signUpState ?
-            <SignUp setSignUpState={setSignUpState}/>
-            :
-            <div className={ styles.signInBox }>
-              <img src={ logo } alt="logo"/>
-              <input type="text" name="id" onChange={handleData} onKeyDown={handleEnter} value={ params.id || "" } placeholder='ID' />
-              <input type="password" name="pw" onChange={handleData} onKeyDown={handleEnter} placeholder='Password' />
-              <div className={styles.checkBox}>
-                <div>
-                  <input type="checkbox" name="saveId" onChange={ handleCheckBox } checked={saveCheck} id="id_save"/>
-                  <label htmlFor="id_save"> 아이디 저장 </label>
-                </div>
-              </div>
-              <button onClick={handleSignIn}>로그인</button>
-              <div className={styles.signHref}>
-                <button name="SignUp" onClick={() => setSignUpState(true)}>회원가입</button>
-                <button name="FindId" onClick={handleModalChange}>아이디 찾기</button>
-                <button name="FindPw" onClick={handleModalChange}>비밀번호 찾기</button>
-              </div>
+    <div className={ styles.container }>
+      { signUpState ?
+        <SignUp setSignUpState={setSignUpState}/>
+        :
+        <div className={ styles.signInBox }>
+          <img src={ logo } alt="logo"/>
+          <input type="text" name="id" onChange={handleData} onKeyDown={handleEnter} value={ params.id || "" } placeholder='ID' />
+          <input type="password" name="pw" onChange={handleData} onKeyDown={handleEnter} placeholder='Password' />
+          <div className={styles.checkBox}>
+            <div>
+              <input type="checkbox" name="saveId" onChange={ handleCheckBox } checked={saveCheck} id="id_save"/>
+              <label htmlFor="id_save"> 아이디 저장 </label>
             </div>
-        }
-
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <div className={styles.modalForm}>
-            {modalState === "FindId" && <FindId/>}
-            {modalState === "FindPw" && <FindPw closeModal={closeModal}/>}
           </div>
-        </Modal>
+          <button onClick={handleSignIn}>로그인</button>
+          <div className={styles.signHref}>
+            <button name="SignUp" onClick={() => setSignUpState(true)}>회원가입</button>
+            <button name="FindId" onClick={handleModalChange}>아이디 찾기</button>
+            <button name="FindPw" onClick={handleModalChange}>비밀번호 찾기</button>
+          </div>
+        </div>
+      }
 
-      </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className={styles.modalForm}>
+          {modalState === "FindId" && <FindId/>}
+          {modalState === "FindPw" && <FindPw closeModal={closeModal}/>}
+        </div>
+      </Modal>
+
+    </div>
   );
 }

@@ -34,6 +34,7 @@ export const Main = () => {
 
     /** 회사 공지 데이터 **/
     const [noticeList, setNoticeList] = useState([]);
+
     useEffect(() => {
 
         /** 내 주간 일정 목록 **/
@@ -44,7 +45,7 @@ export const Main = () => {
                     start: item.startDate,
                     end: item.endDate,
                     title: item.scheduleContent,
-                    color: "darkgray"
+                    color: "#FF8225"
                 };
             })
             setMySchedule(myScheduleList);
