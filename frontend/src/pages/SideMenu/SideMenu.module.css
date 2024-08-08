@@ -4,14 +4,14 @@
 }
 
 .sideFull {
-    background-color: #0e0e0e;
+    background-color: var(--side-color);
     min-height: 100vh;
     width: 14rem;
     transition-duration: 500ms;
 }
 
 .sideShort {
-    background-color: #0e0e0e;
+    background-color: var(--side-color);
     min-height: 100vh;
     width: 3rem;
     transition-duration: 500ms;

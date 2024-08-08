@@ -37,7 +37,8 @@
 }
 
 .row > span {
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: 800;
     text-align: left;
     margin: 10px 0;
 }
@@ -50,7 +51,7 @@
     margin: 2px 0;
 }
 .row > input:focus {
-    background-color: floralwhite;
+    background-color: var(--bg-color);
 }
 
 .row > button {
@@ -60,7 +61,7 @@
     cursor: pointer;
     border: none;
     border-radius: 10px;
-    background-color: darkgray;
+    background-color: var(--btn-color);
     color: white;
     font-size: 16px;
     font-weight: 900;
@@ -81,7 +82,7 @@
 }
 
 .row > div > input:focus {
-    background-color: floralwhite;
+    background-color: var(--bg-color);
 }
 
 .row > div > input:nth-child(2) {
@@ -99,7 +100,7 @@
     border-radius: 5px;
     cursor: pointer;
     border: none;
-    background-color: darkgray;
+    background-color: var(--btn-color);
     color: white;
     font-size: 14px;
     font-weight: 900;
