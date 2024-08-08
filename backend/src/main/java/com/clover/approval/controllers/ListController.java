@@ -26,10 +26,9 @@ public class ListController {
 	@Autowired
 	public LineService lineService;
 	
-
 	@Autowired
 	private HttpSession session;
-	
+	//사이드바 리스트
 	@GetMapping
 	public ResponseEntity<ListMappingDTO> getListInfo(){
 		List<DocumentDTO> documentDTO = documentService.getAllDoc();
@@ -37,6 +36,14 @@ public class ListController {
 		List<ParticipantsLineDTO> plist=lineService.getAllPart();
 		ListMappingDTO listInfo=new ListMappingDTO(documentDTO, apvlist, plist);
 		return ResponseEntity.ok(listInfo);
+	}
+	
+	//메인리스트
+	@GetMapping("/main")
+	public ResponseEntity<List<DocumentDTO>> getMainListInfo(){
+		 int empSeq = (int) session.getAttribute("cloverSeq");
+		List<DocumentDTO> documentDTO = documentService.getMainDoc(empSeq);	
+		return ResponseEntity.ok(documentDTO);
 	}
 
 }
