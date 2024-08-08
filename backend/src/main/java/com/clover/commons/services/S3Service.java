@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URLEncoder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +20,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 @Service
 public class S3Service {
@@ -29,9 +31,9 @@ public class S3Service {
 	private String bucketName;
 
 	// s3 임시폴더 파일 업로드 함수 (임시폴더 업로드 후 파일 저장 경로 URL을 반환)
-	public String uploadFile(MultipartFile file) {
+	public String uploadFile(MultipartFile file, String folderName) {
 		File fileObj = convertMultiPartFileToFile(file);
-		String fileName = "temp/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		String fileName = folderName + "/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
 		s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
 		fileObj.delete();
 		return s3Client.getUrl(bucketName, fileName).toString();
@@ -72,23 +74,24 @@ public class S3Service {
 	// s3 파일 다운로드 함수
 	public byte[] downloadFile(String fileName) {
 		S3Object obj = s3Client.getObject(bucketName, fileName);
-		try (InputStream inputStream = obj.getObjectContent();
-	             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-	             
-	            byte[] buffer = new byte[8192];
-	            int length;
-	            while ((length = inputStream.read(buffer)) != -1) {
-	                outputStream.write(buffer, 0, length);
-	            }
-
-	            HttpHeaders headers = new HttpHeaders();
-	            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
-	            
-	            return outputStream.toByteArray();
-	        } catch (IOException e) {
-	            throw new RuntimeException("Failed to download file from S3", e);
-	        }
+		S3ObjectInputStream objectInputStream = obj.getObjectContent();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
-		
+		try {
+			int read;
+			byte[] buffer = new byte[4096];
+			while((read = objectInputStream.read(buffer, 0, buffer.length)) != -1) {
+				outputStream.write(buffer, 0, read);
+			}
+			
+			outputStream.flush();
+		}catch(IOException e) {}
+		finally {
+			try {
+				objectInputStream.close();
+				outputStream.close();
+			}catch(IOException e) {}
+		}
+		return outputStream.toByteArray();
 	}
 }

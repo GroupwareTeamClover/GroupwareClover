@@ -24,6 +24,23 @@ public class ChatDAO {
     @Autowired
     private SqlSession mybatis;
 
+    public ChatRoomDTO getExistingOneToOneRoom(int empSeq1, int empSeq2) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("empSeq1", empSeq1);
+        params.put("empSeq2", empSeq2);
+        return mybatis.selectOne("Chat.getExistingOneToOneRoom", params);
+    }
+
+    public void updateRoomInfo(int roomSeq, int empSeq, ChatRoomDTO roomInfo) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("roomSeq", roomSeq);
+        params.put("empSeq", empSeq);
+        params.put("roomName", roomInfo.getRoomName());
+        params.put("roomAvatar", roomInfo.getRoomAvatar());
+        mybatis.update("Chat.updateRoomInfo", params);
+    }
+    
+
     /**
      * 특정 사용자의 모든 채팅방 목록을 조회하는 메서드
      * @param empSeq 사용자의 사원 번호
@@ -144,6 +161,20 @@ public class ChatDAO {
     public HashMap<String, Object> getProfile(int empSeq) {
         return mybatis.selectOne("Chat.getProfile", empSeq);
     }
+
+    /**
+     * 채팅방 번호와 타겟Seq로 채팅 상대방의 이름과 아바타를 가져오는 메서드
+     * @param roomSeq 사용자의 채팅방 번호
+     * @param empSeq 사용자의 사원 번호
+     * @return 사용자의 프로필 정보
+     */
+    public HashMap<String, Object> getOtherUserInRoom(int roomSeq, int empSeq) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("roomSeq", roomSeq); 
+        params.put("empSeq", empSeq);
+        System.out.println("다른 사용자" + roomSeq + empSeq);               
+        return mybatis.selectOne("Chat.getEmployeeInfo", params);
+    }    
 
     /**
      * 마지막으로 읽은 메시지를 업데이트하는 메서드

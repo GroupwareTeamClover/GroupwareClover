@@ -109,6 +109,31 @@ const DetilBoard = () => {
         }
     }
 
+    //파일 다운로드
+    const handleDownload = async (fileUrl, fileName) => {
+        try {
+            const response = await axios.get(`${BaseUrl()}/attachment/download`, {
+                params: { fileUrl: fileUrl },
+                responseType: 'blob',
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                }
+            });
+
+            const blob = new Blob([response.data], { type: 'application/octet-stream' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('다운로드 중 에러 발생.');
+        }
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>{boardlistName}</div>
@@ -141,9 +166,7 @@ const DetilBoard = () => {
                     {isFileBoxOpen && files.map((file, i) => {
                         return (
                             <>
-                                <p className={styles.eachFile} key={i} onClick={()=>{
-                                    axios.get(`${BaseUrl()}/attachment/download`, { params : {fileUrl:file.attachmentSysname}})
-                                }}>{i + 1}. {file.attachmentOriname}</p>
+                                <p className={styles.eachFile} key={i} onClick={() => { handleDownload(file.attachmentSysname, file.attachmentOriname) }}>{i + 1}. {file.attachmentOriname}</p>
                                 <br></br>
                             </>
                         );
