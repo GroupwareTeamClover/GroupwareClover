@@ -198,3 +198,22 @@
 .notice::-webkit-scrollbar-track {
     background: transparent;  /*스크롤바 뒷 배경 색상*/
 }
+
+.weekDetail {
+    width: 450px;
+    height: 150px;
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.weekDetail > span {
+    font-size: 16px;
+}
+
+.weekDetail > p {
+    font-size: 18px;
+    font-weight: 800;
+}
