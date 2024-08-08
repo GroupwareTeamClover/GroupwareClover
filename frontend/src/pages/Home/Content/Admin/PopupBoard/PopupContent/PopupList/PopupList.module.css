@@ -99,11 +99,15 @@
 
 .table thead td:nth-child(2) {
     width: 20%;
-    background-color: #e7e7e7d5;
+    background-color: #d5f8e562;
 }
 
 .table thead td:nth-child(3) {
-    width: 20%;
+    width: 10%;
+    background-color: #e7e7e7d5;
+}
+.table thead td:nth-child(4) {
+    width: 10%;
     background-color: #d5f8e562;
 }
 
@@ -154,6 +158,11 @@
     background-color: #e3f8eed8;
     cursor: pointer;
 }
+
+.table tbody td:nth-child(2) {
+    text-align: left;
+}
+
 
 .pagination {
     flex: 2;

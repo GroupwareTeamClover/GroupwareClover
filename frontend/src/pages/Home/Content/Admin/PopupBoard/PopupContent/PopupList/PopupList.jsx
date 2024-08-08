@@ -99,6 +99,7 @@ export const PopupList=()=>{
                         <thead className={styles.thead}>
                             <tr>
                                 <td className={styles.theadtd}>팝업공지제목</td>
+                                <td className={styles.theadtd} >공지기간</td>
                                 <td className={styles.theadtd}>작성자</td>
                                 <td className={styles.theadtd}>작성일</td>
                             </tr>
@@ -127,6 +128,11 @@ export const PopupList=()=>{
                                             </td>
                                         }
                                        
+                                       <td className={styles.theadtd}>
+                                            {mem.monthlyDay ? '매월 ' + mem.monthlyDay+'일' :
+                                            mem.weeklyDay ? '매주 '+ mem.weeklyDay :
+                                        mem.specificStartDate +'~'+ mem.specificEndDate }
+                                       </td>
                                         <td className={styles.theadtd}>
                                             {mem.empName}
                                         </td>
@@ -146,27 +152,6 @@ export const PopupList=()=>{
                             </tbody>
 
 
-                           
-                        {/* {poplist.length > 0 ? (
-                                poplist.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
-                                    <tr key={i}>
-                                    <td className={styles.theadtd}>
-                                      {mem.popTitle}
-                                    </td>
-                                    <td className={styles.theadtd}>
-                                        {mem.empName}
-                                    </td>
-                                    <td className={styles.theadtd}>
-                                        {mem.popWriteDate}
-                                    </td>
-                                    </tr>
-                                ))): (
-                                    <tr>
-                                        <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
-                                    </tr>
-                                )} */}
-                            
-                        {/* </tbody> */}
                     </table>
                 </div>
             </div>

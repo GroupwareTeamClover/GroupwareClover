@@ -7,6 +7,7 @@ export const PopupWindow = ({ setShowPopup }) => {
     const { sessionData } = useMemberStore();
     const openPopupIds = new Set(); // 열려 있는 팝업 ID를 저장할 Set
 
+    console.log(sessionData.empId)
     const closePop = () => {
         setShowPopup(false);
         openPopupIds.forEach(popupId => {
@@ -27,9 +28,10 @@ export const PopupWindow = ({ setShowPopup }) => {
         axios.get(`${BaseUrl()}/adminpopup/today`)
             .then(resp => {
                 const announcements = resp.data;
+                let leftPosition = 10;
 
                 if (announcements.length > 0) {
-                    announcements.forEach((announcement) => {
+                    announcements.forEach((announcement, i) => {
                         const userId = sessionData.empId;
                         const popupId = announcement.popSeq;
                         const popupDismissed = localStorage.getItem(`${userId}_${popupId}_dismissed`);
@@ -49,7 +51,8 @@ export const PopupWindow = ({ setShowPopup }) => {
                             }
                         }
 
-                        const popup = window.open('', popupId, 'width=600,height=400,scrollbars=yes');
+                        const popup = window.open('', popupId, 'width=500,height=600,left=0, top='+ leftPosition+', scrollbars=yes');
+
                         if (!popup) {
                             alert('팝업 창을 열 수 없습니다. 팝업 차단을 확인하세요.');
                             return;
@@ -64,17 +67,26 @@ export const PopupWindow = ({ setShowPopup }) => {
                             <html>
                             <head>
                                 <style>
+                                    @font-face {
+                                        font-family: 'ONE-Mobile-Title';
+                                        src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-Title.woff') format('woff');
+                                        font-weight: normal;
+                                        font-style: normal;
+                                    }
                                     body {
-                                        font-family: Arial, sans-serif;
                                         margin: 20px;
                                         padding: 10px;
                                         background-color: #f0f0f0;
                                     }
                                     h1 {
-                                        color: #333;
+                                        font-family: 'ONE-Mobile-Title', sans-serif;
+                                        // color: #333;
+                                        color: black;
                                         height:15%;
+                                        text-align:center;
                                     }
                                     .content{
+                                        padding: 0 10px;
                                         margin-top: 20px;
                                         height:70%;
                                         overflow: auto;
@@ -85,7 +97,9 @@ export const PopupWindow = ({ setShowPopup }) => {
                                         justify-content:center;
                                     }
                                     button {
-                                        padding: 10px 20px;
+                                        padding-left: 15px;
+                                        padding-right: 15px;
+                                        height:25px;
                                         margin: 5px;
                                         border: none;
                                         background-color: #4CAF50;
@@ -121,10 +135,13 @@ export const PopupWindow = ({ setShowPopup }) => {
                             </body>
                             </html>
                         `;
-
+                        
                         popup.document.write(content);
                         popup.document.close();
+                        
+                    leftPosition +=50;
                     });
+                    
                 } else {
                     console.log("공지글 없을때 팝업창 닫기");
                     closePop(); 
@@ -134,6 +151,7 @@ export const PopupWindow = ({ setShowPopup }) => {
                 console.error('API 호출 오류:', error);
                 closePop();
             });
+            
 
         // 컴포넌트 언마운트 시 모든 팝업창을 닫음
         return () => {
