@@ -45,7 +45,7 @@ public class ChatController {
     }
 
     /**
-     * 1:1 채팅방을 생성하는 API 엔드포인트
+     * 1:1 채팅방을 생성하는 API 엔드포인트.
      * @param targetEmpSeq 대화 상대방의 사원 번호
      * @return 생성된 채팅방 정보
      */
