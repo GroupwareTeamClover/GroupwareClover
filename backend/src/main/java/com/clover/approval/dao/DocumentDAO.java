@@ -51,6 +51,11 @@ public class DocumentDAO {
 		return mybatis.selectList("Document.selectAllDoc");
 	}
 	
+	//메인에서 출력할 정보
+	public List<DocumentDTO> selectMainDoc(int empSeq){
+		return mybatis.selectList("Document.selectMainDoc",empSeq);
+	}
+	
 	
 	
 
