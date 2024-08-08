@@ -9,7 +9,8 @@
 .funcBtn {
     flex: 3;
     display: flex;
-    width: 80%;
+    width: 95%;
+   
     /* padding: 40px 20px 80px 20px; */
     align-items: end;
     justify-content: space-between;
@@ -23,7 +24,8 @@
     justify-content: end;
     gap: 10px;
     padding-bottom: 20px;
-    padding-top:70px;
+    padding-top:50px;
+    margin-right: 50px;
 }
 
 .searchBox select {
@@ -62,7 +64,7 @@
 
 .body {
     flex: 7;
-    width: 85%;
+    width: 95%;
     padding: 0 25px;
     display: flex;
     justify-content: center;
@@ -93,7 +95,7 @@
     background-color: #d3d3d3;
 }
 .table thead td:nth-child(1) {
-    width: 55%;
+    width: 45%;
     background-color: #f1f1f1;
 }
 

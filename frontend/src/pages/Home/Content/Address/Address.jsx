@@ -5,6 +5,7 @@ import { BaseUrl } from '../../../../commons/config';
 import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 import { Pagination } from '../../../../components/Pagination/Pagination';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const Address = () => {
 
@@ -24,6 +25,30 @@ export const Address = () => {
     const [empStateCode, setEmpStateCode] = useState("100");
 
  
+    // 사원 수 출력 함수
+    const processCountData = (data) => {
+        const counts = { prev: 0, normal: 0, rest: 0, stop: 0, out: 0 };
+        data.forEach(item => {
+            switch(item.EMP_STATE_CODE) {
+                case 0:  // 가입대기
+                    counts.prev = item['COUNT(*)'];
+                    break;
+                case 1:  // 재직중 (정상1)
+                    counts.normal = item['COUNT(*)'];
+                    break;
+                case 2:  // 퇴사
+                    counts.out = item['COUNT(*)'];
+                    break;
+                case 3:  // 휴직 (정상2)
+                    counts.rest = item['COUNT(*)'];
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        return counts;
+    };
     // 서버에서 데이터를 가져옴
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember`).then((resp)=>{
@@ -37,6 +62,8 @@ export const Address = () => {
     // 서버에서 사원 수 데이터를 가져옴
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
+            const processedData = processCountData(resp.data);
+            setCountMem(processedData);
             setstoremembers(false);
             console.log("카운트멤버"+resp.data)
         });
@@ -142,7 +169,153 @@ export const Address = () => {
     };
     
     
+    const location = useLocation();
     
+    const state = location.state;
+    console.log("headerTxt"+ state?.type)
+  
+    // 상태에 따라 header 내용 설정
+    const headerText = state?.type || '사원 주소록';
+  
+  
+      const navi = useNavigate();
+  
+      return (
+        <div className={styles.container}>
+          <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
+          <div className={styles.detail}>
+            <div className={styles.container_mini}>
+                <div className={styles.member_info}>
+                    <div className={styles.member_total}>
+                        전체 사원 수 : {countMem.normal} 명
+                    </div>
+                </div>
+                <div className={styles.funcBtn}>                    
+                    {/* 이름 검색 필드 */}
+                    <div className={styles.searchWrapper}>
+                        <input
+                            type="text"
+                            placeholder=" 사원 이름 검색"
+                            name="empName"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch(e);
+                                }
+                            }}
+                            className={styles.searchInput}
+                        />
+                        <button onClick={(e) => handleSearch(e)}>
+                            <FaSearch className={styles.searchLogo} />
+                        </button>
+                    </div>
+                </div>
+
+
+                <div className={styles.body}>
+                    <div className={styles.tableWrapper}>
+                            <table className={styles.table}>
+                                <thead className={styles.thead}>
+                                    <tr> 
+                                        <td className={styles.theadtd}>이름</td>
+                                        <td className={styles.theadtd}>
+                                            <select name='deptCode' value={deptCode} onChange={handleSearch}>
+                                                <option value='100'>부서</option>
+                                                <option value='1'>총무</option> 
+                                                <option value='2'>인사</option> 
+                                                <option value='3'>사무</option> 
+                                                <option value='4'>유통</option> 
+                                                <option value='5'>경영</option> 
+                                                <option value='99'>미정</option> 
+                                            </select>
+                                        </td>
+                                        <td className={styles.theadtd}>
+                                            <select name='roleCode' value={roleCode} onChange={handleSearch}>
+                                                <option value='100'>직위</option>
+                                                <option value='1'>사장</option> 
+                                                <option value='2'>부사장</option> 
+                                                <option value='3'>이사</option> 
+                                                <option value='4'>부장</option> 
+                                                <option value='5'>차장</option> 
+                                                <option value='6'>과장</option> 
+                                                <option value='7'>대리</option> 
+                                                <option value='8'>사원</option> 
+                                                <option value='9'>인턴</option> 
+                                                <option value='99'>미정</option> 
+                                            </select>   
+                                        </td>
+                                    
+                                        <td className={styles.theadtd}>이메일</td>
+                                        <td className={styles.theadtd}>전화번호</td>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody className={styles.tbody}>
+                                    {/* 페이지네이션 데이터 영역 */}
+                                    {filtered.length > 0 ? (
+                                        filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
+                                            <tr key={i}>
+                                            <td className={styles.theadtd}>
+                                                {mem.empName}
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                            {
+                                                        mem.deptCode === 1 ? '총무' : 
+                                                        mem.deptCode === 2 ? '인사' : 
+                                                        mem.deptCode === 3 ? '사무' : 
+                                                        mem.deptCode === 4 ? '유통' : 
+                                                        mem.deptCode === 5 ? '경영' : '미정'
+                                                    } 
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                            {
+                                                        mem.roleCode === 1 ? '사장' :
+                                                        mem.roleCode === 2 ? '부사장' :
+                                                        mem.roleCode === 3 ? '이사' :
+                                                        mem.roleCode === 4 ? '부장' :
+                                                        mem.roleCode === 5 ? '차장' :
+                                                        mem.roleCode === 6 ? '과장' :
+                                                        mem.roleCode === 7 ? '대리' :
+                                                        mem.roleCode === 8 ? '사원' :
+                                                        mem.roleCode === 9 ? '인턴' : '미정'
+                                                    } 
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.empEmail}
+                                            </td>
+                                            <td className={styles.theadtd}>
+                                                {
+                                                mem.empTel                                        
+                                                }
+                                            </td>
+                                        </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>           
+                </div>
+                <div className={styles.pagination}>
+                {/* 페이지네이션 */}
+                {pageCount > 0 && (
+                    <Pagination
+                        pageCount={pageCount}
+                        onPageChange={handlePageChange}
+                        currentPage={currentPage}
+                    />
+                    )}
+                </div>
+
+                
+            </div>
+
+
+                </div>
+        </div>
+      );
 
     return (
       <div className={styles.container}>

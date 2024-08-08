@@ -5,8 +5,20 @@
 /* table, tbody, thead, tr, th, td{
     border:1px solid black;
 } */
-
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Pretendard-Bold';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
 .container{
+    font-family: 'Pretendard-Regular';
     width: 100%;
     height: 100%;
     display: flex;
@@ -88,7 +100,7 @@
     margin-left: 20px;
     
 }
-.funcBtn button{
+.funcBtn button{  
     /* flex:0.1; */
     width: 100px;
     height: 35px;
@@ -164,6 +176,7 @@
 }
 
 .statusBtn{
+    
     margin-left: 10px;
     background-color: #a6c76c;
     border: none;
@@ -178,6 +191,7 @@
     box-shadow: 0px 0px 5px #cad1cb;
 }
 .statusBtn2{
+    
     margin-left: 10px;
     background-color: #12ac57;
     border: none;

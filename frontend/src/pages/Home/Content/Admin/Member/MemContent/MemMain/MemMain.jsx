@@ -222,7 +222,6 @@ export const MemMain = () => {
       <div className={styles.container}>
         <div className={styles.member_info}>
             <div className={styles.member_total}>
-               
                 전체 사원 수 : {members.length} 명
             </div>
             <div className={styles.member_detail}>
