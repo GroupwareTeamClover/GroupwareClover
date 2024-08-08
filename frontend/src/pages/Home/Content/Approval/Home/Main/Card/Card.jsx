@@ -1,12 +1,18 @@
 import styles from './Card.module.css'
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
-export const Card= ({stateName, title, drafterName, writeDate, egcYn}) =>{
+export const Card= ({stateName, title, drafterName, writeDate, egcYn, seq, detailName}) =>{
+    const navi = useNavigate();
     // 날짜 변환 함수
     const formatDate = (date) => {
         if (!date) return '-';
         return format(new Date(date), 'yyyy-MM-dd');
     };
+
+    const handleDetail=()=>{
+        navi(`/approval/document/${seq}?type=${detailName}`);
+    }
     
     return(
         <div className={styles.container}>
@@ -28,7 +34,7 @@ export const Card= ({stateName, title, drafterName, writeDate, egcYn}) =>{
                     </div>
 
                     <div className={styles.approvalBox}>
-                        <div className={styles.approvalBtn}>결재하기</div>
+                        <div className={styles.approvalBtn} onClick={handleDetail}>결재하기</div>
                     </div>
                 </div>
         </div>

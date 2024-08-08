@@ -6,12 +6,14 @@ import { useMemberStore } from '../../../../../../store/store'
 import { BaseUrl } from '../../../../../../commons/config'
 import { format } from 'date-fns';
 import { IoMdArrowDropleft,IoMdArrowDropright } from "react-icons/io";
-
+import { useNavigate } from 'react-router-dom';
 
 export const Main=()=>{
     
      //세션정보
      const {sessionData} = useMemberStore();
+
+     const navi = useNavigate();
 
         // 날짜 변환 함수
     const formatDate = (date) => {
@@ -104,14 +106,17 @@ export const Main=()=>{
             console.log("Filtered Main List:", filteredMainList);
         }, [filteredMainCard, filteredMainList]);
 
-
+    
+    const handleDetail=(seq, type)=>{
+        navi(`/approval/document/${seq}?type=${type}`)
+    }
     return(
         <div className={styles.container}>
             <div className={styles.header}><h3>전자결재</h3></div>
             <div className={styles.cardWrapper}>
                 <div className={styles.cardBox}>
                     {displayedCards.map((line, index) => (
-                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} egcYn={line.egcYn} />
+                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName}/>
                         ))}
                 </div>
                 <div className={styles.cardLine}>
@@ -139,7 +144,7 @@ export const Main=()=>{
                                             <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>
                                             <td className={`${styles.td3} ${styles.tablerow}`}>{line.egcYn}</td>
-                                            <td className={`${styles.td4} ${styles.tablerow}`}>{line.title}</td>
+                                            <td className={`${styles.td4} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
                                             <td className={`${styles.td5} ${styles.tablerow}`}>{line.drafterName}</td>
                                             <td className={`${styles.td6} ${styles.tablerow}`}>{line.currentApverName}</td>
                                             <td className={`${styles.td7} ${styles.tablerow}`}>{line.stateName}</td>
@@ -153,3 +158,4 @@ export const Main=()=>{
         </div>
     )
 }
+
