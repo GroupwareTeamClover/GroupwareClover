@@ -37,4 +37,8 @@ public class BoardDAO {
 	public void deletePost(int boardSeq) {
 		mybatis.delete("Board.deletePost", boardSeq);
 	}
+	
+	public void modifyPost(BoardDTO post) {
+		mybatis.update("Board.updatePost", post);
+	}
 }
