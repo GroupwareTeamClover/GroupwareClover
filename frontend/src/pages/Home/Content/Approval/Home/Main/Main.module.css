@@ -42,6 +42,13 @@
     flex:1;
 }
 
+.pagination{
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 /* 리스트목록 */
 .ingBox{
