@@ -23,7 +23,7 @@ public class AttachmentDAO {
 		data.put("content", content);
 		data.put("seq", seq);
 		
-		//해당 매퍼에 글 내용 업데이트문 추가 바람 (board-mapper의 updateContentWithUrl 참고.)
+		//해당 매퍼 파일에 글 내용 업데이트문 추가 바람 (board-mapper의 updateContentWithUrl 참고.)
 		mybatis.update(nameSpace + ".updateContentWithUrl", data);
 	}
 	
@@ -34,4 +34,13 @@ public class AttachmentDAO {
 		
 		return mybatis.selectList("Attachment.selectAllFile", data);
 	}
+	
+	public void deleteFile(String fileUrl) {
+		mybatis.delete("Attachment.deleteFile", fileUrl);
+	}
+	
+	public void deleteFiles(int seq) {
+		mybatis.delete("Attachment.deleteAllFile", seq);
+	}
+	
 }

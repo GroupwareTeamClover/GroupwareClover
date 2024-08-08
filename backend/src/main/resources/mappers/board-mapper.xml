@@ -49,5 +49,14 @@
 	<update id="updateContentWithUrl">
 		update board set board_content = #{content} where board_seq = #{seq}
 	</update>
+	
+	<update id="updatePost">
+		update board set boardlist_seq = #{boardlistSeq}, board_title = #{boardTitle}, board_content = #{boardContent}, board_write_date = sysdate
+		where board_seq = #{boardSeq}
+	</update>
+	
+	<update id="increaseViewCount">
+		update board set board_view_count = board_view_count + 1 where board_seq = #{seq}
+	</update>
 
 </mapper>

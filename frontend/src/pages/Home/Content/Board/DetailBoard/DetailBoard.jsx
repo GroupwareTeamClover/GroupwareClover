@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './DetailBoard.module.css';
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { IconContext } from 'react-icons';
@@ -9,7 +9,6 @@ import { LuEye } from 'react-icons/lu';
 import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
 import Comment from './Comment/Comment';
-import { Button, Loader, Popover, Whisper } from 'rsuite';
 import 'rsuite/Popover/styles/index.css';
 
 const DetilBoard = () => {
@@ -25,6 +24,7 @@ const DetilBoard = () => {
     const [scrollMove, setScrollMove] = useState(0);
     const [countComments, setCountComments] = useState(0);
     const [files, setFiles] = useState([]);
+    const [viewCount, setViewCount] = useState(0);
 
     const navi = useNavigate();
 
@@ -46,6 +46,19 @@ const DetilBoard = () => {
             setPost(prev => ({ ...prev, ...resp.data }));
             setWriteDate(format(new Date(Date.parse(resp.data.boardWriteDate)), 'yyyy.MM.dd HH:mm'));
             contentRef.current.innerHTML = resp.data.boardContent;
+            setViewCount(resp.data.boardViewCount);
+        }).then(() => {
+            //해당 글번호가 세션에 없으면 조회수 증가 후 세션에 추가
+            const viewPage = JSON.parse(sessionStorage.getItem('viewPage')) || [];
+            if (!viewPage.includes(boardSeq)) {
+                axios.put(`${BaseUrl()}/board/viewCount`, null, { params: { boardSeq: boardSeq } }).then(resp => {
+                    if (resp.status === 200) {
+                        viewPage.push(boardSeq);
+                        sessionStorage.setItem('viewPage', JSON.stringify(viewPage));
+                        setViewCount(prev => prev + 1);
+                    }
+                })
+            }
         });
         axios.get(`${BaseUrl()}/board/writerInfo/${sessionData.empId}`).then(resp => {
             setSessionWriter(resp.data);
@@ -57,7 +70,7 @@ const DetilBoard = () => {
         });
         axios.get(`${BaseUrl()}/attachment/${'board'}/${boardSeq}`).then(resp => {
             setFiles(resp.data);
-        })
+        });
     }, [boardSeq, boardlistSeq, sessionData.empId]);
 
     //첨부파일 조회 및 다운로드
@@ -152,7 +165,7 @@ const DetilBoard = () => {
                         <div className={styles.date}>
                             {writeDate}
                         </div>
-                        <div className={styles.view}><LuEye />&nbsp;{post.boardViewCount}</div>
+                        <div className={styles.view}><LuEye />&nbsp;{viewCount}</div>
                     </div>
                 </div>
                 {files.length > 0 &&
@@ -179,8 +192,12 @@ const DetilBoard = () => {
                         <button className={styles.goListBtn} onClick={() => { navi(`/community/board/${boardlistSeq}`) }}>목록</button>
                     </div>
                     <div className={styles.rightBox}>
-                        <button className={styles.corBtn}>수정</button>
-                        <button className={styles.delBtn} onClick={handleDelete}>삭제</button>
+                        {post.boardWriter.includes(sessionData.empName) &&
+                            <>
+                                <button className={styles.corBtn} onClick={() => { navi("/community/modifyPost", { state: { ...post } }) }}>수정</button>
+                                <button className={styles.delBtn} onClick={handleDelete}>삭제</button>
+                            </>
+                        }
                     </div>
                 </div>
             </div>
@@ -198,7 +215,7 @@ const DetilBoard = () => {
                 <div className={styles.commentList}>
                     {comments.map((comment, i) =>
                         <Comment key={i} dto={comment} sessionWriter={sessionWriter} reples={reples.filter(reple => reple.boardCommentReplySeq === comment.boardCommentSeq)}
-                            setCountComments={setCountComments} admin={admin} setComments={setComments} />
+                            setCountComments={setCountComments} admin={admin} setComments={setComments} empName={sessionData.empName} />
                     )}
                 </div>
             </div>

@@ -4,23 +4,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.net.URLEncoder;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
+import com.amazonaws.services.s3.model.ListObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 @Service
 public class S3Service {
@@ -93,5 +92,35 @@ public class S3Service {
 			}catch(IOException e) {}
 		}
 		return outputStream.toByteArray();
+	}
+	
+	// s3 파일 삭제 함수
+	public void deleteFile(String fileUrl) {
+		String fileName = null;
+		try {
+			URI uri = new URI(fileUrl);
+			String path = uri.getPath();
+			fileName = path.startsWith("/")? path.substring(1) : path;
+			s3Client.deleteObject(bucketName, fileName);
+		}catch (Exception e) {}
+	}
+	
+	// s3 폴더 안의 모든 파일 삭제 함수 ( path : 폴더 경로 )
+	public void deleteFiles(String path) {
+		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(path);
+		
+		ObjectListing objectListing;
+		
+		do {
+			objectListing = s3Client.listObjects(listObjectsRequest);
+			List<S3ObjectSummary> s3ObjectSummaries = objectListing.getObjectSummaries();
+			
+			for (S3ObjectSummary s3ObjectSummary : s3ObjectSummaries) {
+				s3Client.deleteObject(bucketName, s3ObjectSummary.getKey());
+			}
+			
+			listObjectsRequest.setMarker(objectListing.getNextMarker());
+			
+		}while(objectListing.isTruncated());
 	}
 }
