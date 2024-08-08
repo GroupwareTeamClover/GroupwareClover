@@ -2,6 +2,7 @@ package com.clover.messenger.dto;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.ArrayList;
 import com.clover.employee.dto.EmployeeDTO;
 
 public class ChatRoomDTO {
@@ -14,7 +15,8 @@ public class ChatRoomDTO {
     private int empSeq;
     private List<EmployeeDTO> participants;
     private String roomAvatar;
-    
+    private String customRoomName;
+    private String customRoomAvatar;
 
     public List<EmployeeDTO> getParticipants() {
         return participants;
@@ -22,7 +24,7 @@ public class ChatRoomDTO {
 
     public void setParticipants(List<EmployeeDTO> participants) {
         this.participants = participants;
-    }   
+    }
 
     public int getRoomSeq() {
         return this.roomSeq;
@@ -88,9 +90,26 @@ public class ChatRoomDTO {
         this.empSeq = empSeq;
     }
 
+    // 새로 추가된 필드에 대한 getter와 setter
+    public String getCustomRoomName() {
+        return this.customRoomName;
+    }
+
+    public void setCustomRoomName(String customRoomName) {
+        this.customRoomName = customRoomName;
+    }
+
+    public String getCustomRoomAvatar() {
+        return this.customRoomAvatar;
+    }
+
+    public void setCustomRoomAvatar(String customRoomAvatar) {
+        this.customRoomAvatar = customRoomAvatar;
+    }
+
     public ChatRoomDTO() {}
 
-    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq, String roomAvatar) {
+    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq, String roomAvatar, String customRoomName, String customRoomAvatar) {
         this.roomSeq = roomSeq;
         this.roomName = roomName;
         this.roomState = roomState;
@@ -99,5 +118,21 @@ public class ChatRoomDTO {
         this.roomDescription = roomDescription;
         this.empSeq = empSeq;
         this.roomAvatar = roomAvatar;
+        this.customRoomName = customRoomName;
+        this.customRoomAvatar = customRoomAvatar;
+    }
+
+    public ChatRoomDTO(ChatRoomDTO other) {
+        this.roomSeq = other.roomSeq;
+        this.roomName = other.roomName;
+        this.roomState = other.roomState;
+        this.roomCreateTime = other.roomCreateTime;
+        this.roomType = other.roomType;
+        this.roomDescription = other.roomDescription;
+        this.empSeq = other.empSeq;
+        this.participants = other.participants != null ? new ArrayList<>(other.participants) : null;
+        this.roomAvatar = other.roomAvatar;
+        this.customRoomName = other.customRoomName;
+        this.customRoomAvatar = other.customRoomAvatar;
     }
 }

@@ -1,22 +1,53 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import styles from '../Messenger.module.css';
 import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useChatStore } from '../../../../../store/messengerStore';
-import { sendMessage } from '../../../../../commons/websocket';
+import { sendMessage, subscribeToRoom } from '../../../../../commons/websocket';
 
 const ChatWindow = ({ chat }) => {
-  const { messages, setMessages, markMessageAsRead, unreadCounts, addMessage, setUnreadCounts } = useChatStore();
+  const { messages, setMessages, addMessage } = useChatStore();
   const [inputMessage, setInputMessage] = useState('');
+  const messagesEndRef = useRef(null);
+
+  const currentMessages = messages[chat.roomSeq] || [];
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    if (chat) {
-      markMessageAsRead(chat.roomSeq);
-      fetchMessages();
+    scrollToBottom();
+    console.log('Messages updated:', currentMessages);
+  }, [currentMessages]);
+
+  const fetchMessages = useCallback(async () => {
+    try {
+      const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
+      console.log('Fetched messages:', response.data);
+      setMessages(chat.roomSeq, response.data);
+    } catch (error) {
+      console.error('메시지를 가져오는 중 오류 발생:', error);
     }
-  }, [chat]);
+  }, [chat.roomSeq, setMessages]);
+
+  useEffect(() => {
+    if (chat.roomSeq) {
+      fetchMessages();
+      // 채팅방 구독
+      const unsubscribe = subscribeToRoom(chat.roomSeq, (message) => {
+        console.log('Received message:', message);
+        addMessage(chat.roomSeq, message);
+      });
+
+      // 컴포넌트 언마운트 시 구독 해제
+      return () => {
+        if (unsubscribe) unsubscribe();
+      };
+    }
+  }, [chat.roomSeq, fetchMessages, addMessage]);
 
   const sendChatMessage = useCallback(() => {
     if (inputMessage.trim()) {
@@ -24,31 +55,19 @@ const ChatWindow = ({ chat }) => {
         roomSeq: chat.roomSeq,
         messageContent: inputMessage,
         messageType: 'CHAT',
-        senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq, 
-        sendTime: new Date().toISOString() 
+        senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq,
+        sendTime: new Date().toISOString()
       };
 
-      // 서버로 메시지 전송
       sendMessage("/app/chat.sendMessage", message);
-      console.log("메시지 확인", message);
-
-      // 로컬 상태 즉시 업데이트
-      addMessage(chat.roomSeq, message);
+      console.log("Sending message:", message);
 
       setInputMessage('');
-    } else {
-      console.error('메시지가 비어 있습니다.');
     }
-  }, [chat.roomSeq, inputMessage, addMessage]);
+  }, [chat.roomSeq, inputMessage]);
 
-  const fetchMessages = useCallback(async () => {
-    try {
-      const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
-      setMessages(chat.roomSeq, response.data);
-    } catch (error) {
-      console.error('메시지를 가져오는 중 오류 발생:', error);
-    }
-  }, [chat.roomSeq, setMessages]);
+  console.log('Current chat room:', chat.roomSeq);
+  console.log('Message list:', currentMessages);
 
   return (
     <div className={styles.chatWindow}>
@@ -59,9 +78,9 @@ const ChatWindow = ({ chat }) => {
       </div>
 
       <div className={styles.messages}>
-        {messages[chat.roomSeq]?.map((message, index) => (
-          <div 
-            key={index} 
+        {currentMessages.map((message, index) => (
+          <div
+            key={message.messageSeq || index}
             className={`${styles.message} ${message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq ? styles.sent : ''}`}
           >
             <div className={styles.messageWrapper}>
@@ -72,6 +91,7 @@ const ChatWindow = ({ chat }) => {
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
       <div className={styles.chatInput}>
@@ -87,5 +107,4 @@ const ChatWindow = ({ chat }) => {
     </div>
   );
 };
-
-export default ChatWindow;
+export default React.memo(ChatWindow);

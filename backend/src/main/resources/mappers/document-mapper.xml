@@ -81,4 +81,27 @@
 		LEFT JOIN doc_state_code st on doc.DOC_STATE_CODE=st.DOC_STATE_CODE
 	</select>
 	
+	<select id="selectMainDoc" resultType="com.clover.approval.dto.DocumentDTO">
+		SELECT doc.*, 
+	       CASE 
+	           WHEN b.BS_TITLE IS NOT NULL THEN b.BS_TITLE
+	           WHEN d.parent_seq IS NOT NULL THEN '휴가신청서'
+	       END AS title,
+	       e1.emp_name as drafter_name,
+	       e2.emp_name as current_apver_name,
+	       e3.emp_name as final_apver_name,
+	       de.DOC_DETAIL_NAME as detail_name,
+	       st.DOC_STATE_NAME as state_name
+	FROM document doc
+	LEFT JOIN business b ON doc.doc_seq = b.parent_seq
+	LEFT JOIN dayoff d ON doc.doc_seq = d.parent_seq
+	LEFT JOIN employee e1 on doc.drafter_seq=e1.emp_seq
+	LEFT JOIN employee e2 on doc.CURRENT_APVER_SEQ=e2.emp_seq
+	LEFT JOIN employee e3 on doc.FINAL_APVER_SEQ=e3.emp_seq
+	LEFT JOIN doc_detail_code de on doc.DOC_DETAIL_CODE=de.DOC_DETAIL_CODE
+	LEFT JOIN doc_state_code st on doc.DOC_STATE_CODE=st.DOC_STATE_CODE
+	where st.DOC_STATE_NAME = '진행중' and (doc.drafter_seq = #{seq} or doc.CURRENT_APVER_SEQ = #{seq})
+	order by doc.WRITE_DATE desc
+	</select>
+	
 </mapper>

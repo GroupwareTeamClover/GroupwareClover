@@ -76,6 +76,8 @@ Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 Create table chatMembers (
     emp_seq number not null,
     room_seq number not null,
+    custom_room_name varchar2(100),
+    custom_room_avatar varchar2(1000),
     member_role VARCHAR2(20) DEFAULT 'MEMBER' 
         CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),
     join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    

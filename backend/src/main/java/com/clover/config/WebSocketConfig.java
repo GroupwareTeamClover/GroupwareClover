@@ -25,7 +25,7 @@ import com.clover.interceptors.HttpSessionInterceptor;
 @EnableWebSocketMessageBroker // WebSocket 메시지 브로커 활성화
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    // application.properties 또는 application.yml에서 허용된 오리진 설정을 가져옴
+    // application.properties에서 허용된 오리진 설정을 가져옴
     @Value("${properties.file.allowed.origins}")
     private String[] allowedOrigins;
 
