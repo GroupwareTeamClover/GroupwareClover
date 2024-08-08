@@ -4,13 +4,42 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="Chat">
+    <!-- 1:1 채팅방 조회 -->
+    <select id="getExistingOneToOneRoom" resultType="com.clover.messenger.dto.ChatRoomDTO">
+        SELECT cr.*
+        FROM chatRoom cr
+        JOIN chatMembers cm1 ON cr.room_seq = cm1.room_seq
+        JOIN chatMembers cm2 ON cr.room_seq = cm2.room_seq
+        WHERE cr.room_type = 'private'
+        AND ((cm1.emp_seq = #{empSeq1} AND cm2.emp_seq = #{empSeq2})
+             OR (cm1.emp_seq = #{empSeq2} AND cm2.emp_seq = #{empSeq1}))
+        AND (SELECT COUNT(*) FROM chatMembers WHERE room_seq = cr.room_seq) = 2
+    </select>
+
+    <!-- 채팅방 정보 업데이트 -->
+    <update id="updateRoomInfo">
+        MERGE INTO chatMembers cm
+        USING (SELECT #{roomSeq} as room_seq, #{empSeq} as emp_seq FROM DUAL) d
+        ON (cm.room_seq = d.room_seq AND cm.emp_seq = d.emp_seq)
+        WHEN MATCHED THEN
+            UPDATE SET
+                cm.custom_room_name = #{roomName},
+                cm.custom_room_avatar = #{roomAvatar}
+        WHEN NOT MATCHED THEN
+            INSERT (room_seq, emp_seq, custom_room_name, custom_room_avatar)
+            VALUES (#{roomSeq}, #{empSeq}, #{roomName}, #{roomAvatar})
+    </update>
     <!-- 채팅방 목록 조회 -->
     <select id="getChatRooms" resultType="com.clover.messenger.dto.ChatRoomDTO">
-        SELECT cr.*
+        SELECT cr.room_seq, 
+            NVL(cm.custom_room_name, cr.room_name) as room_name,
+            NVL(cm.custom_room_avatar, cr.room_avatar) as room_avatar,
+            cr.room_state, cr.room_create_time, cr.room_type, 
+            cr.room_description, cr.emp_seq
         FROM chatRoom cr
         JOIN chatMembers cm ON cr.room_seq = cm.room_seq
         WHERE cm.emp_seq = #{empSeq}
-        ORDER BY cr.room_create_time ASC
+        ORDER BY cr.room_create_time DESC
     </select>
     
     <!-- 채팅방 생성 -->
@@ -19,9 +48,9 @@
             SELECT room_sequence.nextval FROM DUAL
         </selectKey>
         INSERT INTO chatRoom (
-            room_seq, room_name, room_type, room_description, emp_seq, room_avatar
+            room_seq, room_name, room_state, room_type, room_description, emp_seq, room_avatar
         ) VALUES (
-            #{roomSeq}, #{roomName}, #{roomType}, #{roomDescription}, #{empSeq}, #{roomAvatar}
+            #{roomSeq}, #{roomName}, 'T', #{roomType}, #{roomDescription}, #{empSeq}, #{roomAvatar}
         )
     </insert>
     
@@ -98,6 +127,7 @@
         WHERE e.emp_seq = #{empSeq}
     </select>
 
+
     <!-- 읽지 않은 메시지 수 조회 -->
     <select id="getUnreadMessageCount" resultType="int">
         SELECT COUNT(*)
@@ -148,5 +178,21 @@
         FROM EMPLOYEE
         WHERE emp_seq = #{empSeq}
     </select>
+
+    <!-- target 채팅방의 이름, 아바타 가져오기 -->
+    <!-- <select id="getEmployeeInfo" parameterType="map" resultType="java.util.HashMap">
+        SELECT *
+        FROM EMPLOYEE em 
+        JOIN CHATROOM rm ON em.emp_seq = rm.emp_seq 
+        WHERE rm.room_seq = #{roomSeq}
+        AND em.emp_seq = #{empSeq}
+    </select> -->
+
+    <select id="getEmployeeInfo" parameterType="map" resultType="java.util.HashMap">
+        SELECT *
+        FROM CHATMEMBERS
+        WHERE room_seq = #{roomSeq}
+        and emp_seq = #{empSeq}
+    </select>    
 
 </mapper>
