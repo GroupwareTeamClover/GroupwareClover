@@ -103,6 +103,12 @@
 .list > ul > li {
     margin: 5px 2px;
 }
+.list > ul > li > span {
+    font-size: 16px;
+    font-weight: 800;
+    margin-right: 4px;
+}
+
 
 .list > ul > li:hover {
     background-color: lightgrey;
