@@ -41,4 +41,8 @@ public class BoardDAO {
 	public void modifyPost(BoardDTO post) {
 		mybatis.update("Board.updatePost", post);
 	}
+	
+	public void upView(int seq) {
+		mybatis.update("Board.increaseViewCount", seq);
+	}
 }

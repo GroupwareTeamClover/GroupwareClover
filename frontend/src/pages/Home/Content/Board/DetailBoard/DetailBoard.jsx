@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './DetailBoard.module.css';
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { IconContext } from 'react-icons';
@@ -24,6 +24,7 @@ const DetilBoard = () => {
     const [scrollMove, setScrollMove] = useState(0);
     const [countComments, setCountComments] = useState(0);
     const [files, setFiles] = useState([]);
+    const [viewCount, setViewCount] = useState(0);
 
     const navi = useNavigate();
 
@@ -45,6 +46,19 @@ const DetilBoard = () => {
             setPost(prev => ({ ...prev, ...resp.data }));
             setWriteDate(format(new Date(Date.parse(resp.data.boardWriteDate)), 'yyyy.MM.dd HH:mm'));
             contentRef.current.innerHTML = resp.data.boardContent;
+            setViewCount(resp.data.boardViewCount);
+        }).then(() => {
+            //해당 글번호가 세션에 없으면 조회수 증가 후 세션에 추가
+            const viewPage = JSON.parse(sessionStorage.getItem('viewPage')) || [];
+            if (!viewPage.includes(boardSeq)) {
+                axios.put(`${BaseUrl()}/board/viewCount`, null, { params: { boardSeq: boardSeq } }).then(resp => {
+                    if (resp.status === 200) {
+                        viewPage.push(boardSeq);
+                        sessionStorage.setItem('viewPage', JSON.stringify(viewPage));
+                        setViewCount(prev => prev + 1);
+                    }
+                })
+            }
         });
         axios.get(`${BaseUrl()}/board/writerInfo/${sessionData.empId}`).then(resp => {
             setSessionWriter(resp.data);
@@ -56,7 +70,7 @@ const DetilBoard = () => {
         });
         axios.get(`${BaseUrl()}/attachment/${'board'}/${boardSeq}`).then(resp => {
             setFiles(resp.data);
-        })
+        });
     }, [boardSeq, boardlistSeq, sessionData.empId]);
 
     //첨부파일 조회 및 다운로드
@@ -151,7 +165,7 @@ const DetilBoard = () => {
                         <div className={styles.date}>
                             {writeDate}
                         </div>
-                        <div className={styles.view}><LuEye />&nbsp;{post.boardViewCount}</div>
+                        <div className={styles.view}><LuEye />&nbsp;{viewCount}</div>
                     </div>
                 </div>
                 {files.length > 0 &&

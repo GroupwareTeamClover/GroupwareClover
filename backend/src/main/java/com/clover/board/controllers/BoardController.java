@@ -169,5 +169,12 @@ public class BoardController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@PutMapping("/viewCount")
+	public ResponseEntity<Void> upView(@RequestParam int boardSeq){
+		bServ.upView(boardSeq);
+		return ResponseEntity.ok().build();
+	}
+	
+	
 	
 }

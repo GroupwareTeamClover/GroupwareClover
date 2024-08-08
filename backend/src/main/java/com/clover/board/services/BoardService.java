@@ -45,4 +45,8 @@ public class BoardService {
 	public void modifyPost(BoardDTO post) {
 		bDao.modifyPost(post);
 	}
+	
+	public void upView(int seq) {
+		bDao.upView(seq);
+	}
 }
