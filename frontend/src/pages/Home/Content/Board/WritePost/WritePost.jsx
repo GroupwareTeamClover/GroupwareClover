@@ -127,7 +127,7 @@ const WriteBoard = () => {
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload`} multiple draggable
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>

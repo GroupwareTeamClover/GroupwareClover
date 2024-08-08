@@ -9,7 +9,7 @@ export const FindId = () => {
   const [emailCheck, setEmailCheck] = useState(false);
   const [invalidate, setInvalidate] = useState(false);
   const [accessNum, setAccessNum] = useState({ code: 0, input: 0});
-  const [exists, setExists] = useState({emp_id: "", empName: "", empEmail: ""});
+  const [exists, setExists] = useState({empId: "", empName: "", empEmail: ""});
 
   const handleDataCheck = (e) => {
     const { name, value } = e.target;

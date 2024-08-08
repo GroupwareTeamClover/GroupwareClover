@@ -1,10 +1,13 @@
 import styles from './SignUpSub.module.css'
-import { validateUserId, validatePassword } from '../../../../commons/common'
-import {useEffect} from "react";
+import {validateUserId, validatePassword, validateName, validateBirth, validateGender} from '../../../../commons/common'
+import React, {useEffect} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
+
+
 export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) => {
 
+  /** 입력 데이터 체크 **/
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
 
@@ -24,6 +27,36 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
       setSendData(prev =>  ({...prev, [name]: value}));
     }
 
+    if(name === "empName") {
+      setSendData( prev => {
+        const data = { ...prev, [name]: value};
+        if(validateName(value)) setCheckData(prev => ({ ...prev, [name]: true}));
+        else setCheckData(prev => ({ ...prev, [name]: false}));
+        return data;
+      });
+    }
+
+    if(name === "empBirth") {
+      if(parseInt(value.slice(2,4)) > 12) return false;
+      if(parseInt(value.slice(4,6)) > 31) return false;
+      setSendData( prev => {
+        const data = { ...prev, [name]: value };
+        if(validateBirth(value)) setCheckData(prev => ({ ...prev, [name]: true}));
+        else setCheckData(prev => ({ ...prev, [name]: false}));
+        return data;
+      });
+    }
+
+    if(name === "empGender") {
+      if(value > 4) return false;
+      setSendData( prev => {
+        const data = { ...prev, [name]: value };
+        if(validateGender(value)) setCheckData(prev => ({ ...prev, [name]: true}));
+        else setCheckData(prev => ({ ...prev, [name]: false}));
+        return data;
+      });
+    }
+
   }
 
   useEffect(() => {
@@ -41,26 +74,15 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
         </div>
         <div className={styles.joinForm}>
           <div className={styles.row}>
-            <span>아이디</span>
+            <span
+              style={sendData.empId !== "" ? (checkData.empId ? {color: "#15dcdd"} : {color: "red"}) : undefined}>ID </span>
             <input type="text" name="empId" maxLength="12" onChange={handleDataCheck} value={sendData.empId}
                    placeholder="6~12자리로 작성해주세요!"/>
           </div>
 
-          { /* ID empty check */
-            sendData.empId !== "" ?
-                <div className={styles.row}>
-                  { /* ID Check */
-                    checkData.empId ?
-                        <p style={{color: "green"}}>사용 가능한 아이디 입니다.</p>
-                        :
-                        <p style={{color: "red"}}>사용할 수 없는 아이디 입니다.</p>
-                  }
-                </div>
-                : <></>
-          }
-
           <div className={styles.row}>
-            <span>비밀번호</span>
+            <span
+              style={sendData.empPw !== "" ? (checkData.empPw ? {color: "#15dcdd"} : {color: "red"}) : undefined}>Password</span>
             <input type="password" name="empPw" maxLength="20" onChange={handleDataCheck} value={sendData.empPw}
                    placeholder="8~20자리로 입력하세요"/>
           </div>
@@ -71,19 +93,23 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
             <span className={styles.description}>각각 한개이상을 포함해야 합니다.</span>
           </div>
 
-          { /* Password empty check */
-            sendData.empPw !== "" ?
-                <div className={styles.row}>
-                  { /* Password check */
-                    checkData.empPw ?
-                        <p style={{color: "green"}}>비밀번호 일치</p>
-                        :
-                        <p style={{color: "red"}}>비밀번호 불일치 또는 형식 오류</p>
-                  }
-                </div>
-                :
-                <></>
-          }
+          <div className={styles.row}>
+            <span
+              style={sendData.empName !== "" ? (checkData.empName ? {color: "#15dcdd"} : {color: "red"}) : undefined}>Name</span>
+            <input type="text" name="empName" onChange={handleDataCheck} value={sendData.empName || ""}
+                   placeholder="이름을 입력하세요."/>
+          </div>
+
+          <div className={styles.row}>
+            <span
+              style={(sendData.empBirth !== "" && sendData.empGender !== "") ? ((checkData.empBirth && checkData.empGender) ? {color: "#15dcdd"} : {color: "red"}) : undefined}>Birth</span>
+            <div>
+              <input type="text" name="empBirth" maxLength="6" value={sendData.empBirth || ""}
+                     onChange={handleDataCheck} placeholder=""/>　-　
+              <input type="text" name="empGender" maxLength="1" value={sendData.empGender || ""}
+                     onChange={handleDataCheck}/> ******
+            </div>
+          </div>
 
         </div>
       </div>

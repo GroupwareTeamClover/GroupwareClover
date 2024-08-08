@@ -42,11 +42,16 @@
     margin-bottom: 10px;
     border: none;
     border-radius: 10px;
-    background-color: orange;
+    background-color: var(--btn-color);
     color: white;
     font-size: 16px;
     font-weight: 800;
     cursor: pointer;
+}
+
+.row > button:hover {
+    transition: all 300ms;
+    background-color: var(--hover-color);
 }
 
 .colorBox {
@@ -98,6 +103,12 @@
 .list > ul > li {
     margin: 5px 2px;
 }
+.list > ul > li > span {
+    font-size: 16px;
+    font-weight: 800;
+    margin-right: 4px;
+}
+
 
 .list > ul > li:hover {
     background-color: lightgrey;

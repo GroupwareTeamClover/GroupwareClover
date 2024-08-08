@@ -17,7 +17,7 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
     const uploadImage = (blob) => {
         const formData = new FormData();
         formData.append('file', blob);
-        return axios.post(`${BaseUrl()}/attachment/upload`, formData, {
+        return axios.post(`${BaseUrl()}/attachment/upload/temp`, formData, {
             headers: {'Content-Type': 'multipart/form-data'}
           }).then(resp =>{
             return resp.data;

@@ -13,6 +13,10 @@ public class AttendanceDAO {
     @Autowired
     private SqlSession mybatis;
 
+    public Map<String, Object> getMyAtt(Map<String, Object> map) {
+        return mybatis.selectOne("Attendance.getMyAtt", map);
+    }
+
     public AttendanceDTO todayAtt(Map<String, Object> map) {
         return mybatis.selectOne("Attendance.today", map);
     }

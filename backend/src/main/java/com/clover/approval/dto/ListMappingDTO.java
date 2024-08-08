@@ -10,6 +10,12 @@ public class ListMappingDTO {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	public ListMappingDTO(List<DocumentDTO> document, List<ApvLineDTO> apvline) {
+		super();
+		this.document = document;
+		this.apvline = apvline;
+	}
+	
 	public ListMappingDTO(List<DocumentDTO> document, List<ApvLineDTO> apvline, List<ParticipantsLineDTO> pline) {
 		super();
 		this.document = document;

@@ -15,10 +15,7 @@ export const SignUp = ({setSignUpState}) => {
     empGender: "",
     empTel: "",
     empAddress: "",
-    pwCheck: "",
-    postcode: "",
-    roadAddress: "",
-    detailAddress: "",
+    pwCheck: ""
   }
   const [sendData, setSendData] = useState(defaultData);
 
@@ -29,8 +26,7 @@ export const SignUp = ({setSignUpState}) => {
     empEmail: false,
     empBirth: false,
     empGender: false,
-    empTel: false,
-    empAddress: false
+    empTel: false
   }
   const [checkData, setCheckData] = useState(defaultCheckData);
 
@@ -42,7 +38,7 @@ export const SignUp = ({setSignUpState}) => {
         if(prev === 1) return 1;
         else return prev - 1;
       } else {
-        if(prev === 3) return 3;
+        if(prev === 2) return 2;
         else return prev + 1;
       }
     });
@@ -55,9 +51,7 @@ export const SignUp = ({setSignUpState}) => {
           {signUpPage === 1 && <SignUpSub1 sendData={sendData} checkData={checkData} setSendData={setSendData}
                                            setCheckData={setCheckData}/>}
           {signUpPage === 2 && <SignUpSub2 sendData={sendData} checkData={checkData} setSendData={setSendData}
-                                           setCheckData={setCheckData}/>}
-          {signUpPage === 3 && <SignUpSub3 sendData={sendData} checkData={checkData} setSendData={setSendData}
-                                           setCheckData={setCheckData} setSignUpState={setSignUpState}/>}
+                                           setCheckData={setCheckData} setSignUpState={setSignUpState} />}
           <div className={styles.btnBox}>
             <button onClick={() => setSignUpState(false)}>취소</button>
             <div className={styles.prevNext}>

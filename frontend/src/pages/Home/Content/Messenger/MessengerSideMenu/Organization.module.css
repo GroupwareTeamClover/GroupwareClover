@@ -20,6 +20,8 @@
 .content {
     flex: 1;
     overflow-y: auto;
+    min-height: 280px;
+    max-height: 280px;
 }
 
 .searchBox {
@@ -49,8 +51,8 @@
     color: #999;
 }
 
-.searchContent {
+/* .searchContent {
     max-height: calc(100vh - 150px);
     overflow-y: auto;
-}
+} */
 
