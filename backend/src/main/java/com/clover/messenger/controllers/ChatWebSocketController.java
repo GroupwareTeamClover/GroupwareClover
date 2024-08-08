@@ -43,7 +43,7 @@ public class ChatWebSocketController {
     
         // 읽지 않은 메시지 수 업데이트
         updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);
-    } // test
+    } // test11
 
     // @MessageMapping("/chat.sendMessage")
     // public void sendMessage(@Payload ChatMessageDTO chatMessage, SimpMessageHeaderAccessor headerAccessor) {
