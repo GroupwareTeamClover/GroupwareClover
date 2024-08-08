@@ -100,7 +100,8 @@
 	LEFT JOIN employee e3 on doc.FINAL_APVER_SEQ=e3.emp_seq
 	LEFT JOIN doc_detail_code de on doc.DOC_DETAIL_CODE=de.DOC_DETAIL_CODE
 	LEFT JOIN doc_state_code st on doc.DOC_STATE_CODE=st.DOC_STATE_CODE
-	where doc.drafter_seq = #{seq} and doc.CURRENT_APVER_SEQ = #{seq} and st.DOC_STATE_NAME = '진행중'
+	where st.DOC_STATE_NAME = '진행중' and (doc.drafter_seq = #{seq} or doc.CURRENT_APVER_SEQ = #{seq})
+	order by doc.WRITE_DATE desc
 	</select>
 	
 </mapper>
