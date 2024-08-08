@@ -1,20 +1,26 @@
 package com.clover.commons.services;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CopyObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 @Service
 public class S3Service {
@@ -25,9 +31,9 @@ public class S3Service {
 	private String bucketName;
 
 	// s3 임시폴더 파일 업로드 함수 (임시폴더 업로드 후 파일 저장 경로 URL을 반환)
-	public String uploadFile(MultipartFile file) {
+	public String uploadFile(MultipartFile file, String folderName) {
 		File fileObj = convertMultiPartFileToFile(file);
-		String fileName = "temp/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		String fileName = folderName + "/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
 		s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
 		fileObj.delete();
 		return s3Client.getUrl(bucketName, fileName).toString();
@@ -66,13 +72,26 @@ public class S3Service {
 	}
 	
 	// s3 파일 다운로드 함수
-	public void downloadFile(String fileUrl) {
-		String downloadFileName = null;
+	public byte[] downloadFile(String fileName) {
+		S3Object obj = s3Client.getObject(bucketName, fileName);
+		S3ObjectInputStream objectInputStream = obj.getObjectContent();
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		
 		try {
-			URI uri = new URI(fileUrl);
-			String path = uri.getPath();
-			downloadFileName = path.startsWith("/")? path.substring(1) : path;
-		}catch (Exception e) {}
-		System.out.println(downloadFileName);
+			int read;
+			byte[] buffer = new byte[4096];
+			while((read = objectInputStream.read(buffer, 0, buffer.length)) != -1) {
+				outputStream.write(buffer, 0, read);
+			}
+			
+			outputStream.flush();
+		}catch(IOException e) {}
+		finally {
+			try {
+				objectInputStream.close();
+				outputStream.close();
+			}catch(IOException e) {}
+		}
+		return outputStream.toByteArray();
 	}
 }

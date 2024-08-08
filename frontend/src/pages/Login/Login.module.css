@@ -14,7 +14,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid burlywood;
     border-radius: 10px;
     background-color: white;
 }
@@ -31,12 +30,12 @@
     height: 35px;
     padding: 4px;
     margin: 4px 8px;
-    border: 1px solid burlywood;
+    border: 1px solid var(--btn-color);
     border-radius: 5px;
 }
 
 .signInBox > input:focus {
-    background-color: floralwhite;
+    background-color: var(--bg-color);
 }
 
 .signInBox > button {
@@ -45,15 +44,17 @@
     padding: 4px;
     margin: 6px;
     border: none;
-    background-color: antiquewhite;
-    color: darkolivegreen;
+    background-color: var(--btn-color);
+    color: var(--font-color);
     font-size: 16px;
+    font-weight: 900;
     cursor: pointer;
     border-radius: 5px;
 }
 
 .signInBox > button:hover {
-    border: 2px solid burlywood;
+    transition: all 300ms;
+    background-color: var(--hover-color);
     font-weight: 700;
 }
 
@@ -75,6 +76,10 @@
     margin-left: 3px;
 }
 
+.checkBox > div > input {
+    accent-color: var(--hover-color);
+}
+
 .signHref {
     margin: 4px 0;
 }
@@ -89,6 +94,10 @@
     background-color: transparent;
     cursor: pointer;
     margin: 0 12px;
+}
+
+.signHref > button:hover {
+    color: var(--hover-color);
 }
 
 .modalForm {
@@ -118,5 +127,5 @@
 
 .btnBox > button:hover {
     cursor: pointer;
-    color: orange;
+    color: var(--hover-color);
 }

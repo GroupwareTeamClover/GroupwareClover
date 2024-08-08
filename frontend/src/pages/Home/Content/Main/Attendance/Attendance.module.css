@@ -12,6 +12,8 @@
 
 .icons:hover {
     cursor: pointer;
+    transition: all 300ms;
+    background-color: var(--hover-color);
 }
 
 .attForm {
@@ -90,8 +92,86 @@
     font-weight: 700;
     border : none;
     border-radius: 10px;
-    background-color: var(--bg-color)
+    background-color: var(--btn-color);
+    color: var(--font-color);
 }
 .attBtn > button:hover {
     cursor: pointer;
+    transition: all 300ms;
+    background-color: var(--hover-color);
+}
+
+.detail {
+    width: 450px;
+    height: 600px;
+    padding: 20px;
+}
+
+.detailTitle {
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.detailContent {
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+.contentItems {
+    width: 95%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.contentItems > div {
+    width: 130px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    border: 1px solid darkgray;
+}
+
+.contentItems > div > p {
+    font-size: 18px;
+    font-weight: 900;
+    border-bottom: 1px solid black;
+}
+
+.contentItems > div > span {
+    font-size: 16px;
+    font-weight: 900;
+    color: darkgray;
+}
+
+.totalWorkTime {
+    width: 90%;
+    height: 25%;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+}
+
+.outsideWork {
+    width: 100%;
+    height: 55%;
+    border: 1px solid darkgray;
+    border-radius: 15px;
+    padding: 10px;
 }
