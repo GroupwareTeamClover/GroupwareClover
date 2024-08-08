@@ -83,7 +83,7 @@ public class ChatService {
          roomForCreator.setRoomAvatar(target.getEmpAvatar());
          chatDAO.updateRoomInfo(room.getRoomSeq(), empSeq, roomForCreator);
      
-         // 사용자 B (target)를 위한 채팅방 정보 설정
+        //  사용자 B (target)를 위한 채팅방 정보 설정
          ChatRoomDTO roomForTarget = new ChatRoomDTO(room);
          roomForTarget.setRoomName(creator.getEmpName());
          roomForTarget.setRoomAvatar(creator.getEmpAvatar());

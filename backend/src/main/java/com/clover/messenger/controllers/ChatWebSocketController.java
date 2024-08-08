@@ -78,6 +78,7 @@ public class ChatWebSocketController {
 
     /**
      * 사용자가 채팅방에 입장할 때 호출되는 메소드
+     * 그룹채팅방 용
      * @param chatMessage 채팅방 입장 정보를 포함한 메시지 객체
      * @param headerAccessor WebSocket 세션 정보를 포함한 헤더 접근자
      */
