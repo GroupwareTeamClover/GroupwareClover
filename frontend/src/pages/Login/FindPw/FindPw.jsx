@@ -113,7 +113,7 @@ export const FindPw = ({closeModal}) => {
             :
             <div className={styles.joinForm}>
               <div className={styles.row}>
-                <span>새 비밀번호</span>
+                <span style={changePw.empPw !== "" ? (changePw.check ? {color: "#15dcdd"} : {color: "red"}) : undefined} >New Password</span>
                 <input type="password" name="empPw" maxLength="20" value={changePw.empPw || ""}
                        onChange={handleChangeDate} placeholder="8~20자리로 입력하세요"/>
             </div>
@@ -122,19 +122,7 @@ export const FindPw = ({closeModal}) => {
               <span className={styles.description}>비밀번호는 영문 대문자, 소문자, 숫자, 특수문자를</span>
               <span className={styles.description}>각각 한개이상을 포함해야 합니다.</span>
             </div>
-              { /* Password empty check */
-                (changePw.empPw !== "" || changePw.pwCheck !== "")?
-                    <div className={styles.row}>
-                      { /* Password check */
-                        changePw.check ?
-                            <p style={{color: "green"}}>비밀번호 일치</p>
-                            :
-                            <p style={{color: "red"}}>비밀번호 불일치 또는 형식 오류</p>
-                      }
-                    </div>
-                    :
-                    <></>
-              }
+
             <div className={styles.row}>
               <button onClick={handleSubmit}>비밀번호 변경</button>
             </div>

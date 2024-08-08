@@ -72,7 +72,7 @@ export const Calendar = () => {
       setSchedules(() => {
         return res.data.map(item => {
           let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
-          data.color = data.type === "individual" ? "green" : data.type === "department" ? "blue" : "red";
+          data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#36C2CE" : "#173B45";
           delete data.startDate;
           delete data.endDate;
           delete data.scheduleContent;
@@ -82,7 +82,7 @@ export const Calendar = () => {
       setCheckSchedule(() => {
         return res.data.map(item => {
           let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
-          data.color = data.type === "individual" ? "green" : data.type === "department" ? "blue" : "red";
+          data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#36C2CE" : "#173B45";
           delete data.startDate;
           delete data.endDate;
           delete data.scheduleContent;
@@ -176,7 +176,6 @@ export const Calendar = () => {
   /** 일정 수정 폼 변경 **/
   const [updateForm, setUpdateForm] = useState(false);
   const [updateData, setUpdateData] = useState(selectSchedule);
-  const [updateSeq, setUpdateSeq] = useState(0);
 
   /** 일정 수정 데이터 **/
   const handleUpdataData = (e) => {
@@ -192,8 +191,7 @@ export const Calendar = () => {
       empSeq : updateData.empSeq,
       startDate: updateData.start,
       endDate: updateData.end
-    };
-    setUpdateSeq(updateData.scheduleSeq);
+    }
 
     axios.put(`${BaseUrl()}/schedule`, data).then(res => {
       if(res.data === "ok"){
@@ -224,17 +222,17 @@ export const Calendar = () => {
             <input type="checkbox" id="individual" name="individual" onChange={handleCheckBox}
                    checked={select.individual}/>
             <label htmlFor="individual">개인 일정</label>
-            <div className={styles.colorBox} style={{backgroundColor: "green"}}></div>
+            <div className={styles.colorBox} style={{backgroundColor: "#FF8225"}}></div>
           </div>
           <div className={styles.row}>
             <input type="checkbox" id="department" name="department" onChange={handleCheckBox} checked={select.department}/>
             <label htmlFor="department">부서 일정</label>
-            <div className={styles.colorBox} style={{backgroundColor: "blue"}}></div>
+            <div className={styles.colorBox} style={{backgroundColor: "#36C2CE"}}></div>
           </div>
           <div className={styles.row}>
             <input type="checkbox" id="company" name="company" onChange={handleCheckBox} checked={select.company}/>
             <label htmlFor="company">회사 일정</label>
-            <div className={styles.colorBox} style={{backgroundColor: "red"}}></div>
+            <div className={styles.colorBox} style={{backgroundColor: "#173B45"}}></div>
           </div>
 
         </div>
@@ -262,7 +260,7 @@ export const Calendar = () => {
 
             dateClick={handleDaySelect} // 날짜가 선택 될 때
 
-            dayMaxEventRows={2} // 각 날짜 셀에 표시되는 이벤트를 5개로 제한
+            dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 3개로 제한
             moreLinkText="more" // "+n more" 링크에 표시되는 텍스트
 
           />
@@ -317,7 +315,7 @@ export const Calendar = () => {
                   detailSchedule.map((item, i) => {
                     return (
                       <li key={i} onClick={() => handleSelectDetail(item.scheduleSeq) }>
-                        [{ item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사" } 일정]
+                        <span style={item.type === "individual" ? { color : "#FF8225"} : item.type === "department" ? { color : "#36C2CE"} : { color : "#173B45"}}> [ { item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사" } 일정 ]</span>
                         {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
                       </li>
                     );

@@ -75,14 +75,14 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
         <div className={styles.joinForm}>
           <div className={styles.row}>
             <span
-              style={sendData.empId !== "" ? (checkData.empId ? {color: "#37B5B6"} : {color: "red"}) : undefined}>ID </span>
+              style={sendData.empId !== "" ? (checkData.empId ? {color: "#15dcdd"} : {color: "red"}) : undefined}>ID </span>
             <input type="text" name="empId" maxLength="12" onChange={handleDataCheck} value={sendData.empId}
                    placeholder="6~12자리로 작성해주세요!"/>
           </div>
 
           <div className={styles.row}>
             <span
-              style={sendData.empPw !== "" ? (checkData.empPw ? {color: "#37B5B6"} : {color: "red"}) : undefined}>비밀번호</span>
+              style={sendData.empPw !== "" ? (checkData.empPw ? {color: "#15dcdd"} : {color: "red"}) : undefined}>Password</span>
             <input type="password" name="empPw" maxLength="20" onChange={handleDataCheck} value={sendData.empPw}
                    placeholder="8~20자리로 입력하세요"/>
           </div>
@@ -95,14 +95,14 @@ export const SignUpSub1 = ({ sendData, checkData, setSendData, setCheckData }) =
 
           <div className={styles.row}>
             <span
-              style={sendData.empName !== "" ? (checkData.empName ? {color: "#37B5B6"} : {color: "red"}) : undefined}>이름</span>
+              style={sendData.empName !== "" ? (checkData.empName ? {color: "#15dcdd"} : {color: "red"}) : undefined}>Name</span>
             <input type="text" name="empName" onChange={handleDataCheck} value={sendData.empName || ""}
                    placeholder="이름을 입력하세요."/>
           </div>
 
           <div className={styles.row}>
             <span
-              style={(sendData.empBirth !== "" && sendData.empGender !== "") ? ((checkData.empBirth && checkData.empGender) ? {color: "#37B5B6"} : {color: "red"}) : undefined}>생년월일</span>
+              style={(sendData.empBirth !== "" && sendData.empGender !== "") ? ((checkData.empBirth && checkData.empGender) ? {color: "#15dcdd"} : {color: "red"}) : undefined}>Birth</span>
             <div>
               <input type="text" name="empBirth" maxLength="6" value={sendData.empBirth || ""}
                      onChange={handleDataCheck} placeholder=""/>　-　

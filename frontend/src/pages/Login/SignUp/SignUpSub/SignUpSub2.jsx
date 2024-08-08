@@ -56,6 +56,7 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
   const handleEmailCheck = () => {
     if(checkData.empEmail){
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
+      console.log("인증코드 ==== ", ranNumber);
       // 계정 조회 성공
       // const data = {
       //   to_name: exists.empName,
@@ -112,12 +113,12 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       <div className={styles.joinForm}>
 
         <div className={styles.row}>
-          <span style={sendData.empTel !== "" ? (checkData.empTel ? { color: "#37B5B6" } : { color: "red" }) : undefined} >전화번호</span>
+          <span style={sendData.empTel !== "" ? (checkData.empTel ? { color: "#15dcdd" } : { color: "red" }) : undefined} >Tel.</span>
           <input type="text" name="empTel" onChange={handleDataCheck} value={sendData.empTel} placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
         </div>
 
         <div className={styles.row}>
-          <span style={sendData.empEmail !== "" ? (checkData.empEmail ? { color: "#37B5B6" } : { color: "red" }) : undefined} >이메일</span>
+          <span style={sendData.empEmail !== "" ? (checkData.empEmail ? { color: "#15dcdd" } : { color: "red" }) : undefined} >E-Mail</span>
           <input type="text" name="empEmail" value={sendData.empEmail} onChange={handleDataCheck} placeholder="E-Mail을 입력하세요."/>
         </div>
       </div>
@@ -129,7 +130,7 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       {
         emailCheck &&
         <div className={styles.row}>
-          <span style={accessNum.input !== "" ? (invalidate ? { color: "#37B5B6" } : { color: "black" }) : undefined} >인증번호</span>
+          <span style={accessNum.input !== "" ? (invalidate ? { color: "#15dcdd" } : { color: "black" }) : undefined} >인증번호</span>
           <div>
             <input type="text" name="input" onChange={handleCodeDataCheck} value={accessNum.input || ""} placeholder="인증번호"/>
             <button onClick={handleCheckCode}>인증번호 입력</button>
