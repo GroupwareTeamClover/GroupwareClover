@@ -86,6 +86,14 @@ export const dateYMD = (timestamp) => {
   return dateData;
 }
 
+// =============================== [ 분 단위 시간으로 변환 ] ===============================
+
+export const workTime = (time) => {
+  const hour = Math.floor(time/60);
+  const minute = time%60;
+  return `${hour}시간 ${minute}분`
+}
+
 // =============================== [ 부서, 직급 코드 이름으로 변환 ] ===============================
 
 export const roleName = (code) => {

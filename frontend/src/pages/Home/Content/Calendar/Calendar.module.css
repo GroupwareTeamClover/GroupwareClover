@@ -111,7 +111,7 @@
 
 
 .list > ul > li:hover {
-    background-color: lightgrey;
+    background-color: var(--bg-color);
     cursor: pointer;
 }
 
@@ -186,8 +186,7 @@
 
 .btnBox > button:hover {
     cursor: pointer;
-    transition: all 300ms;
-    background-color: var(--hover-color);
+    color: var(--accent-color);
 }
 
 .insert {

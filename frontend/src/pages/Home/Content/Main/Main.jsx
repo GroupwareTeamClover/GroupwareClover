@@ -7,14 +7,18 @@ import {Mypage} from "./Mypage/Mypage";
 import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import {roleName, deptName} from "../../../../commons/common";
+import {roleName, deptName, dateYMD} from "../../../../commons/common";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
 
 export const Main = () => {
+    const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalState("");
+    }
 
     const {sessionData} = useMemberStore();
 
@@ -26,6 +30,7 @@ export const Main = () => {
 
 
     const handleMyPageModal = () => {
+        setModalState("mypage");
         openModal();
     }
 
@@ -56,6 +61,16 @@ export const Main = () => {
 
 
     }, []);
+
+    const [weekSchedule, setWeekSchedule] = useState({start: "", end: "", title: ""});
+    const eventClick = (data) => {
+        const start = dateYMD(data.event._instance.range.start);
+        const end = dateYMD(data.event._instance.range.end);
+        const title = data.event._def.title;
+        setWeekSchedule({start, end, title});
+        setModalState("week");
+        openModal();
+    }
 
     return (
       <div className={styles.container}>
@@ -96,6 +111,7 @@ export const Main = () => {
                             selectable={true}
                             height="auto"
                             events={mySchedule}
+                            eventClick={eventClick}
                           />
                       </div>
                   </div>
@@ -161,7 +177,13 @@ export const Main = () => {
           </div>
 
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-              <Mypage empSeq={sessionData.empSeq} closeModal={closeModal}/>
+              { modalState === "mypage" && <Mypage empSeq={sessionData.empSeq} closeModal={closeModal}/> }
+              { modalState === "week" &&
+                <div className={styles.weekDetail}>
+                    <span>{ weekSchedule.start } ~ { weekSchedule.end }</span>
+                    <p>{ weekSchedule.title }</p>
+                </div>
+              }
           </Modal>
       </div>
     );
