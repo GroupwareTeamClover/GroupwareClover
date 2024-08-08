@@ -45,7 +45,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
   /** 인증번호 체크 **/
   const handleCheckCode = () => {
     if(parseInt(accessNum.code) === parseInt(accessNum.input)) {
-      // 이메일 인증 후 인증 번호가 맞다면 아이디 요청하여 아이디 바인딩
       setInvalidate(true);
       alert("인증 완료");
     }
