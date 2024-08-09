@@ -43,12 +43,18 @@
     margin-top: 20px;
 }
 
-.titleBox .star:hover {
+.titleBox .starIcon:hover {
+    fill: rgb(192, 192, 26);
     cursor: pointer;
 }
 
-.titleBox .starIcon:hover {
-    fill: rgb(192, 192, 26);
+.titleBox .starFillIcon{
+    fill : rgb(214, 214, 2);
+}
+
+.titleBox .starFillIcon:hover{
+    fill:gray;
+    cursor: pointer;
 }
 
 .titleBox .title {
@@ -116,7 +122,7 @@
 }
 
 .content .viewCont {
-    padding: 45px 10px 150px 10px;
+    padding: 10px 10px 150px 10px;
     font-size: 18px;
     line-height: 30px;
     font-weight: 400;

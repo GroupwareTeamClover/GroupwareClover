@@ -40,7 +40,7 @@ public class ChatController {
     @GetMapping("/rooms")
     public ResponseEntity<List<ChatRoomDTO>> getChatRooms() {
         Integer empSeq = (Integer) session.getAttribute("cloverSeq");
-        List<ChatRoomDTO> rooms = chatService.getChatRooms(empSeq);
+        List<ChatRoomDTO> rooms = chatService.getChatRoomsWithDetails(empSeq);
         return ResponseEntity.ok(rooms);
     }
 

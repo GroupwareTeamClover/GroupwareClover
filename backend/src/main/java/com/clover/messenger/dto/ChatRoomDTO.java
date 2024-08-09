@@ -17,6 +17,9 @@ public class ChatRoomDTO {
     private String roomAvatar;
     private String customRoomName;
     private String customRoomAvatar;
+    private String lastMessage;
+    private Timestamp lastMessageTime;
+    private int unreadCount;
 
     public List<EmployeeDTO> getParticipants() {
         return participants;
@@ -107,9 +110,36 @@ public class ChatRoomDTO {
         this.customRoomAvatar = customRoomAvatar;
     }
 
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public Timestamp getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(Timestamp lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
+    }
+
     public ChatRoomDTO() {}
 
-    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, String roomType, String roomDescription, int empSeq, String roomAvatar, String customRoomName, String customRoomAvatar) {
+    public ChatRoomDTO(int roomSeq, String roomName, String roomState, Timestamp roomCreateTime, 
+    String roomType, String roomDescription, int empSeq, String roomAvatar, 
+    String customRoomName, String customRoomAvatar, String lastMessage, 
+    Timestamp lastMessageTime, int unreadCount) {
         this.roomSeq = roomSeq;
         this.roomName = roomName;
         this.roomState = roomState;
@@ -120,7 +150,10 @@ public class ChatRoomDTO {
         this.roomAvatar = roomAvatar;
         this.customRoomName = customRoomName;
         this.customRoomAvatar = customRoomAvatar;
-    }
+        this.lastMessage = lastMessage;
+        this.lastMessageTime = lastMessageTime;
+        this.unreadCount = unreadCount;
+        }
 
     public ChatRoomDTO(ChatRoomDTO other) {
         this.roomSeq = other.roomSeq;
@@ -134,5 +167,8 @@ public class ChatRoomDTO {
         this.roomAvatar = other.roomAvatar;
         this.customRoomName = other.customRoomName;
         this.customRoomAvatar = other.customRoomAvatar;
+        this.lastMessage = other.lastMessage;
+        this.lastMessageTime = other.lastMessageTime;
+        this.unreadCount = other.unreadCount;
     }
 }

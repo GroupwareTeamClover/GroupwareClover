@@ -30,9 +30,9 @@ export const useChatStore = create((set) => ({
   }),
   
   // 특정 채팅방 정보를 업데이트하는 함수
-  updateChatRoom: (updatedRoom) => set((state) => ({
-    chatRooms: state.chatRooms.map(room => 
-      room.roomSeq === updatedRoom.roomSeq ? updatedRoom : room
+  updateChatRoom: (roomSeq, updates) => set(state => ({
+    chatRooms: state.chatRooms.map(room =>
+      room.roomSeq === roomSeq ? { ...room, ...updates } : room
     )
   })),
 

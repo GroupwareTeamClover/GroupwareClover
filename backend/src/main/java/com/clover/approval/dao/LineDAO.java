@@ -19,8 +19,8 @@ public class LineDAO {
 	
 	
 	//모달에 직원정보 출력
-	public List<Map<String, ?>> selectMemberInfo(){
-		return mybatis.selectList("Document.selectMemberInfo");
+	public List<Map<String, ?>> selectMemberInfo(int seq){
+		return mybatis.selectList("Line.selectMemberInfo",seq);
 	}
 	
 	//결재라인 insert
@@ -55,7 +55,11 @@ public class LineDAO {
 		return mybatis.selectList("Line.selectAllPart");
 	}
 	
-
+	//결재상태업데이트 함수들
+	//대기->결재
+	public void updateWaitToApproval(int id) {
+		mybatis.update("Line.updateWaitToApproval", id);
+	}
 
 }
 
