@@ -62,5 +62,18 @@
 	<insert id="addImportant">
 		insert into board_important values(#{empSeq}, #{boardSeq})
 	</insert>
+	
+	<delete id="removeImportant">
+		delete from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
+	</delete>
+	
+	<select id="selectImportantPosts" resultType="com.clover.board.dto.BoardDTO">
+		select * from board where board_seq in (select board_seq from board_important where emp_seq = #{empSeq})
+		order by board_seq desc
+	</select>
+	
+	<select id="isImportant" resultType="boolean">
+		select count(*) from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
+	</select>
 
 </mapper>

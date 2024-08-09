@@ -191,6 +191,24 @@ public class BoardController {
 		return ResponseEntity.ok().build();
 	}
 	
+	@DeleteMapping("/important")
+	public ResponseEntity<Void> removeImportant(@RequestParam int empSeq, @RequestParam int boardSeq){
+		bServ.removeImportant(empSeq, boardSeq);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/posts/important/{empSeq}")
+	public ResponseEntity<List<BoardDTO>> getImportantPosts(@PathVariable int empSeq){
+		return ResponseEntity.ok(bServ.getImportantPosts(empSeq));
+	}
+	
+	@GetMapping("/status/important/{empSeq}/{boardSeq}")
+	public ResponseEntity<Boolean> isImportant(@PathVariable int empSeq, @PathVariable int boardSeq){
+		return ResponseEntity.ok(bServ.isImportant(empSeq, boardSeq));
+	}
+	
+	
 	
 	
 }

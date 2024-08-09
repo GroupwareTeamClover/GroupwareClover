@@ -37,8 +37,6 @@ const Sidebar = () => {
         axios.get(`${BaseUrl()}/boardlist/groupBoards`).then((resp) => {
             setGroupBoardList(resp.data);
         });
-        console.log(sessionData);
-        console.log(admin);
     }, []);
 
     return (

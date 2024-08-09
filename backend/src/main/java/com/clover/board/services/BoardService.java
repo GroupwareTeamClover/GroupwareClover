@@ -53,4 +53,16 @@ public class BoardService {
 	public void addImportant(int empSeq, int boardSeq) {
 		bDao.addImportant(empSeq, boardSeq);
 	}
+	
+	public void removeImportant(int empSeq, int boardSeq) {
+		bDao.removeImportant(empSeq, boardSeq);
+	}
+	
+	public List<BoardDTO> getImportantPosts(int empSeq){
+		return bDao.getImportantPosts(empSeq);
+	}
+	
+	public boolean isImportant(int empSeq, int boardSeq) {
+		return bDao.isImportant(empSeq, boardSeq);
+	}
 }

@@ -53,4 +53,24 @@ public class BoardDAO {
 		
 		mybatis.insert("Board.addImportant", data);
 	}
+	
+	public void removeImportant(int empSeq, int boardSeq) {
+		HashMap<String, Integer> data = new HashMap<>();
+		data.put("empSeq", empSeq);
+		data.put("boardSeq", boardSeq);
+		
+		mybatis.insert("Board.removeImportant", data);
+	}
+	
+	public List<BoardDTO> getImportantPosts(int empSeq){
+		return mybatis.selectList("Board.selectImportantPosts", empSeq);
+	}
+	
+	public boolean isImportant(int empSeq, int boardSeq) {
+		HashMap<String, Integer> data = new HashMap<>();
+		data.put("empSeq", empSeq);
+		data.put("boardSeq", boardSeq);
+		
+		return mybatis.selectOne("Board.isImportant", data);
+	}
 }

@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { IconContext } from 'react-icons';
-import { GoStar } from 'react-icons/go';
+import { GoStar, GoStarFill } from 'react-icons/go';
 import { LuEye } from 'react-icons/lu';
 import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
@@ -25,6 +25,7 @@ const DetilBoard = () => {
     const [countComments, setCountComments] = useState(0);
     const [files, setFiles] = useState([]);
     const [viewCount, setViewCount] = useState(0);
+    const [isImportant, setIsImportant] = useState();
 
     const navi = useNavigate();
 
@@ -71,6 +72,9 @@ const DetilBoard = () => {
         axios.get(`${BaseUrl()}/attachment/${'board'}/${boardSeq}`).then(resp => {
             setFiles(resp.data);
         });
+        axios.get(`${BaseUrl()}/board/status/important/${sessionData.empSeq}/${boardSeq}`).then(resp => {
+            (resp.data) ? setIsImportant(true) : setIsImportant(false);
+        })
     }, [boardSeq, boardlistSeq, sessionData.empId]);
 
     //첨부파일 조회 및 다운로드
@@ -147,16 +151,39 @@ const DetilBoard = () => {
         }
     }
 
+    // 중요게시글 추가
+    const handleAddImportant = async () => {
+        await axios.post(`${BaseUrl()}/board/important`, {
+            empSeq: sessionData.empSeq,
+            boardSeq: boardSeq
+        }).then(resp => {
+            { resp.status === 200 && alert("중요 게시글에 추가되었습니다!"); setIsImportant(true); }
+        })
+    }
+    // 중요게시글 삭제
+    const handleRemoveImportant = async () => {
+        await axios.delete(`${BaseUrl()}/board/important`, { params: { empSeq: sessionData.empSeq, boardSeq: boardSeq } }).then(resp => {
+            { resp.status === 200 && alert("중요 게시글에서 삭제되었습니다!"); setIsImportant(false); }
+        })
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>{boardlistName}</div>
             <div className={styles.content}>
                 <div className={styles.titleBox}>
-                    <div className={styles.star}>
-                        <IconContext.Provider value={{ color: "#000000", className: styles.starIcon }}>
-                            <GoStar size="20" />
-                        </IconContext.Provider>
-                    </div>
+                    {isImportant ?
+                        <div className={styles.star}>
+                            <IconContext.Provider value={{ color: "#000000", className: styles.starFillIcon }}>
+                                <GoStarFill size="20" onClick={handleRemoveImportant} />
+                            </IconContext.Provider>
+                        </div> :
+                        <div className={styles.star}>
+                            <IconContext.Provider value={{ color: "#000000", className: styles.starIcon }}>
+                                <GoStar size="20" onClick={handleAddImportant} />
+                            </IconContext.Provider>
+                        </div>
+                    }
                     <p className={styles.title}>{post.boardTitle}</p>
                 </div>
                 <div className={styles.infoBox}>
