@@ -8,8 +8,10 @@ import { ModalDelete } from './ModalDelete/ModalDelete';
 import { useMemStore } from '../../../../../../../store/store';
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import { FaSearch } from 'react-icons/fa';
+import { Loader } from 'rsuite';
 
 export const MemMain = () => {
+    // 8/8(목)
 
     const {storemembers, setstoremembers} = useMemStore();
 
@@ -19,6 +21,7 @@ export const MemMain = () => {
     const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
     const [checkedMems, setCheckedMems] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     // select 4가지 useState("100")으로 설정해주기
     const [deptCode, setDeptCode] = useState("100");
@@ -59,6 +62,7 @@ export const MemMain = () => {
             setMembers(resp.data);
             setFiltered(resp.data);
             setstoremembers(false);
+            setIsLoading(false);
             console.log(resp.data)
         });
     },[storemembers]);
@@ -222,7 +226,6 @@ export const MemMain = () => {
       <div className={styles.container}>
         <div className={styles.member_info}>
             <div className={styles.member_total}>
-               
                 전체 사원 수 : {members.length} 명
             </div>
             <div className={styles.member_detail}>
@@ -326,8 +329,14 @@ export const MemMain = () => {
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
-                            {/* 페이지네이션 데이터 영역 */}
-                            {filtered.length > 0 ? (
+                     
+                {isLoading ? (
+                    <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
+                ) : ((filtered.length === 0) ? (
+                    <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
+                ) : (
+                          
+                            filtered.length > 0 ? (
                                 filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
                                     <tr key={i}>
                                     <td className={styles.theadtd}>
@@ -388,7 +397,10 @@ export const MemMain = () => {
                                 <tr>
                                     <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
                                 </tr>
-                            )}
+                            )
+                        )
+                    )
+                    }
                         </tbody>
                     </table>
                 </div>           

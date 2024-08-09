@@ -5,13 +5,16 @@ import { Card } from './Card/Card'
 import { useMemberStore } from '../../../../../../store/store'
 import { BaseUrl } from '../../../../../../commons/config'
 import { format } from 'date-fns';
-import { IoMdArrowDropleft,IoMdArrowDropright } from "react-icons/io";
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos  } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 
 
 export const Main=()=>{
     
      //세션정보
      const {sessionData} = useMemberStore();
+
+     const navi = useNavigate();
 
         // 날짜 변환 함수
     const formatDate = (date) => {
@@ -104,20 +107,37 @@ export const Main=()=>{
             console.log("Filtered Main List:", filteredMainList);
         }, [filteredMainCard, filteredMainList]);
 
-
+    
+    const handleDetail=(seq, type)=>{
+        navi(`/approval/document/${seq}?type=${type}`)
+    }
     return(
         <div className={styles.container}>
             <div className={styles.header}><h3>전자결재</h3></div>
             <div className={styles.cardWrapper}>
                 <div className={styles.cardBox}>
                     {displayedCards.map((line, index) => (
-                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} egcYn={line.egcYn} />
+                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName}/>
                         ))}
                 </div>
                 <div className={styles.cardLine}>
                     <div className={styles.pagination}>
-                        <span onClick={handlePrevPage} disabled={currentPage === 0}><IoMdArrowDropleft  size={25}/></span>
-                        <span onClick={handleNextPage} disabled={currentPage === Math.ceil(filteredMainCard.length / 5) - 1}><IoMdArrowDropright  size={25}/></span>
+                    <div className={styles.pagination}>
+                        <span 
+                            className={styles.paginationSpan}
+                            onClick={handlePrevPage} 
+                            disabled={currentPage === 0}
+                        >
+                            <MdOutlineArrowBackIos size={20}/>
+                        </span>
+                        <span 
+                            className={styles.paginationSpan}
+                            onClick={handleNextPage} 
+                            disabled={currentPage === Math.ceil(filteredMainCard.length / 5) - 1}
+                        >
+                            <MdOutlineArrowForwardIos size={20}/>
+                        </span>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -128,18 +148,18 @@ export const Main=()=>{
                         <thead className={styles.thead}>
                             <tr>
                                 {['기안일', '결재양식', '긴급', '제목', '기안자', '현재결재자', '문서상태'].map((item, index) => (
-                                    <td key={index} className={`${styles['td' + (index + 1)]} ${styles['theadtd' + (index + 1)]} ${styles.theadtd}`}>{item}</td>
+                                    <td key={index} className={` ${styles['theadtd' + (index + 1)]} ${styles.theadtd}`}>{item}</td>
                                 ))}
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
                             {
                                        (filteredMainList || []).map((line, index) => (
-                                        <tr key={index}>
+                                        <tr key={index} className={styles.tbodytr}>
                                             <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>
                                             <td className={`${styles.td3} ${styles.tablerow}`}>{line.egcYn}</td>
-                                            <td className={`${styles.td4} ${styles.tablerow}`}>{line.title}</td>
+                                            <td className={`${styles.td4} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
                                             <td className={`${styles.td5} ${styles.tablerow}`}>{line.drafterName}</td>
                                             <td className={`${styles.td6} ${styles.tablerow}`}>{line.currentApverName}</td>
                                             <td className={`${styles.td7} ${styles.tablerow}`}>{line.stateName}</td>
@@ -153,3 +173,4 @@ export const Main=()=>{
         </div>
     )
 }
+

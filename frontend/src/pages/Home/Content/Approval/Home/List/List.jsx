@@ -5,6 +5,7 @@ import axios from "axios";
 import { useMemberStore } from '../../../../../../store/store';
 import { set } from 'date-fns';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 export const List=({type})=>{
     //type==기안진행,...사이드바 메뉴들...
@@ -13,7 +14,7 @@ export const List=({type})=>{
 
     // 로딩 상태 관리
     const [loading, setLoading] = useState(true);
-
+    const navi = useNavigate();
 
      //세션정보
      const {sessionData} = useMemberStore();
@@ -160,7 +161,11 @@ export const List=({type})=>{
 
     }, [list])
     
-    console.log(list);
+    // console.log(list);
+
+    const handleDetail=(seq, type)=>{
+        navi(`/approval/document/${seq}?type=${type}`)
+    }
 
 
     return (
@@ -198,7 +203,7 @@ export const List=({type})=>{
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{formatDate(line.finishDate)}</td>
                                             <td className={`${styles.td3} ${styles.tablerow}`}>{line.detailName}</td>
                                             <td className={`${styles.td4} ${styles.tablerow}`}>{line.egcYn}</td>
-                                            <td className={`${styles.td5} ${styles.tablerow}`}>{line.title}</td>
+                                            <td className={`${styles.td5} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
                                             <td className={`${styles.td6} ${styles.tablerow}`}>{line.drafterName}</td>
                                             <td className={`${styles.td7} ${styles.tablerow}`}>{line.currentApverName}</td>
                                             <td className={`${styles.td8} ${styles.tablerow}`}>{line.finalApverName}</td>

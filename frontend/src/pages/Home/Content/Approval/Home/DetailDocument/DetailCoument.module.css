@@ -10,6 +10,7 @@
     flex:1;
     display: flex;
     align-items: center;
+    min-height: 30px;
 }
 
 .headerText{
@@ -23,6 +24,7 @@
     padding-left: 24px;
     display: flex;
     align-items: center;
+    min-height: 30px;
 }
 
 
@@ -44,7 +46,7 @@
     flex-direction: column;
     padding: 15px;
    overflow-y: scroll;
-   max-height: 600px;
+   max-height: 620px;
 }
 
 
@@ -165,6 +167,7 @@
     align-items: center;
     justify-content: center;
     border-bottom: 1px solid black;
+    flex-direction: column;
 }
 
 
@@ -173,7 +176,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
+.imgSize{
+    width: 50px;
+    height: 50px;
 }
 
 

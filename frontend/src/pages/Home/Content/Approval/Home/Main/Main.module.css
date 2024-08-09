@@ -49,6 +49,16 @@
     align-items: center;
 }
 
+.pagination span {
+    margin: 0 10px; 
+    cursor: pointer; 
+}
+
+.pagination span:disabled {
+    opacity: 0.5; 
+    cursor: not-allowed; 
+}
+
 
 /* 리스트목록 */
 .ingBox{
@@ -63,7 +73,7 @@
 
 .headerText{
     margin-left: 24px;
-    letter-spacing: -1px;
+    letter-spacing: -2px;
 }
 
 .tableWrapper{
@@ -72,8 +82,6 @@
 
 .table{
     width: 100%;
-    height: 100%;
-    max-height: 290px;
 }
 
 
@@ -86,8 +94,10 @@
     padding-bottom: 5px;
 }
 
-tbody{
-    overflow-y: scroll;
+
+.tbodytr{
+    max-height: 15px;
+
 }
 
 /* 열설정 */
@@ -114,3 +124,8 @@ tbody{
     width: 12%;
 }
 
+
+.td1,.td2,.td3,.td4,.td5,.td6,.td7{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
