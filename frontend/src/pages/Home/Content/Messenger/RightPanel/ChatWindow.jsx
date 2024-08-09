@@ -66,8 +66,8 @@ const ChatWindow = ({ chat }) => {
   return (
     <div className={styles.chatWindow}>
       <div className={styles.chatHeader}>
-        <img className={styles.avatar} src={chat.roomAvatar} alt="Room Avatar" />
-        <h2>{chat.roomName}</h2>
+        <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
+        <h2>{chat.customRoomName || chat.roomName}</h2>
         <span className={styles.status}>Active</span>
       </div>
 
