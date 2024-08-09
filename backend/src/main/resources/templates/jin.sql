@@ -83,6 +83,13 @@ Create table chatMembers (
     join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    
 );
 
+Create table userSession (
+    session_id varchar(255) PRIMARY KEY,
+    emp_seq int,
+    login_time TIMESTAMP default sysdate,
+    is_online BOOLEAN DEFAULT true
+);
+
 -- 인덱스 추가
 CREATE INDEX idx_chatmessage_room_time ON ChatMessage(room_seq, send_time);
 CREATE INDEX idx_chatmembers_room ON chatMembers(room_seq);
