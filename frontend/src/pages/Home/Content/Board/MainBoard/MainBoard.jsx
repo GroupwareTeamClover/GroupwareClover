@@ -7,6 +7,7 @@ import { FaSearch } from "react-icons/fa";
 import Post from './Post/Post';
 import { Pagination } from '../../../../../components/Pagination/Pagination';
 import { Loader } from 'rsuite';
+import { useMemberStore } from '../../../../../store/store';
 
 const MainBoard = () => {
     const { boardlistSeq } = useParams();
@@ -15,6 +16,7 @@ const MainBoard = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [filtered, setFiltered] = useState(posts);
+    const { sessionData } = useMemberStore();
 
     //페이지네이션
     const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
@@ -59,8 +61,24 @@ const MainBoard = () => {
             }
         };
 
+        const fetchImportantPosts = async () => {
+            setIsLoading(true);
+            try {
+                const response = await axios.get(`${BaseUrl()}/board/posts/important`);
+                setPosts(response.data);
+                setFiltered(response.data);
+            } catch (error) {
+                console.error('포스트 로딩 실패.', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        // 일반게시글인 경우 fetchPosts 호출 | 중요게시글인 경우 fetchImportantPosts 호출
         if (boardInfo.boardlistSeq !== 0) {
             fetchPosts();
+        } else {
+            fetchImportantPosts();
         }
     }, [boardInfo]);
 
@@ -113,7 +131,8 @@ const MainBoard = () => {
                 ) : (
                     filtered.slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
                         .map((post, i) => (
-                            <Post key={i} boardlistSeq={boardInfo.boardlistSeq} boardSeq={post.boardSeq} title={post.boardTitle} writer={post.boardWriter} data={post.boardWriteDate} view={post.boardViewCount} />
+                            <Post key={i} boardlistSeq={boardInfo.boardlistSeq} boardSeq={post.boardSeq} title={post.boardTitle}
+                                writer={post.boardWriter} data={post.boardWriteDate} view={post.boardViewCount} sessionSeq={sessionData.empSeq} />
                         ))
                 )
                 )}

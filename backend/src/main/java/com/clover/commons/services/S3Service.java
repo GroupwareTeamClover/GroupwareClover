@@ -30,12 +30,12 @@ public class S3Service {
 	private String bucketName;
 
 	// s3 임시폴더 파일 업로드 함수 (임시폴더 업로드 후 파일 저장 경로 URL을 반환)
-	public String uploadFile(MultipartFile file, String folderName) {
+	public String uploadFile(MultipartFile file, String folderPath) {
 		File fileObj = convertMultiPartFileToFile(file);
-		String fileName = folderName + "/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-		s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
+		String filePath = folderPath + "/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		s3Client.putObject(new PutObjectRequest(bucketName, filePath, fileObj));
 		fileObj.delete();
-		return s3Client.getUrl(bucketName, fileName).toString();
+		return s3Client.getUrl(bucketName, filePath).toString();
 	}
 
 	// 멀티파트파일 -> 파일 변환 함수 (별도 조작 필요 x)
@@ -50,29 +50,23 @@ public class S3Service {
 	}
 
 	// s3 최종폴더 파일 이동 함수 (임시폴더에서 최종폴더로 파일 복사 후 바뀐 저장 경로 URL을 반환). useCase로 파일이동위치 제어.
-	public String moveFile(int seq, String fileName, String tempFileUrl, int useCase) {
-		String newFileName = null;
-		switch (useCase) {
-		case 1: newFileName = "posts/" + seq + "/" + System.currentTimeMillis() + "_" + fileName; break;
-		case 2: newFileName = "images/posts/" + seq + "/" + System.currentTimeMillis() + "_" + fileName; break;
-		}
-		
-		String oldFileName = null;
+	public String moveFile(String newFilePath, String tempFileUrl) {
+		String oldFilePath = null;
 		try {
 			URI uri = new URI(tempFileUrl);
 			String path = uri.getPath();
-			oldFileName = path.startsWith("/")? path.substring(1) : path;
+			oldFilePath = path.startsWith("/")? path.substring(1) : path;
 		}catch (Exception e) {}
 
-		CopyObjectRequest copyObjectRequest = new CopyObjectRequest(bucketName, oldFileName, bucketName, newFileName);
+		CopyObjectRequest copyObjectRequest = new CopyObjectRequest(bucketName, oldFilePath, bucketName, newFilePath);
 		s3Client.copyObject(copyObjectRequest);
 
-		return s3Client.getUrl(bucketName, newFileName).toString();
+		return s3Client.getUrl(bucketName, newFilePath).toString();
 	}
 	
 	// s3 파일 다운로드 함수
-	public byte[] downloadFile(String fileName) {
-		S3Object obj = s3Client.getObject(bucketName, fileName);
+	public byte[] downloadFile(String filePath) {
+		S3Object obj = s3Client.getObject(bucketName, filePath);
 		S3ObjectInputStream objectInputStream = obj.getObjectContent();
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		
@@ -96,18 +90,18 @@ public class S3Service {
 	
 	// s3 파일 삭제 함수
 	public void deleteFile(String fileUrl) {
-		String fileName = null;
+		String filePath = null;
 		try {
 			URI uri = new URI(fileUrl);
 			String path = uri.getPath();
-			fileName = path.startsWith("/")? path.substring(1) : path;
-			s3Client.deleteObject(bucketName, fileName);
+			filePath = path.startsWith("/")? path.substring(1) : path;
+			s3Client.deleteObject(bucketName, filePath);
 		}catch (Exception e) {}
 	}
 	
-	// s3 폴더 안의 모든 파일 삭제 함수 ( path : 폴더 경로 )
-	public void deleteFiles(String path) {
-		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(path);
+	// s3 폴더 안의 모든 파일 삭제 함수 ( folderPath : 폴더 경로 )
+	public void deleteFiles(String folderPath) {
+		ListObjectsRequest listObjectsRequest = new ListObjectsRequest().withBucketName(bucketName).withPrefix(folderPath);
 		
 		ObjectListing objectListing;
 		

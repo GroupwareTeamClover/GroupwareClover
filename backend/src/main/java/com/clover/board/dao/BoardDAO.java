@@ -42,7 +42,15 @@ public class BoardDAO {
 		mybatis.update("Board.updatePost", post);
 	}
 	
-	public void upView(int seq) {
-		mybatis.update("Board.increaseViewCount", seq);
+	public void upView(int boardSeq) {
+		mybatis.update("Board.increaseViewCount", boardSeq);
+	}
+	
+	public void addImportant(int empSeq, int boardSeq) {
+		HashMap<String, Integer> data = new HashMap<>();
+		data.put("empSeq", empSeq);
+		data.put("boardSeq", boardSeq);
+		
+		mybatis.insert("Board.addImportant", data);
 	}
 }

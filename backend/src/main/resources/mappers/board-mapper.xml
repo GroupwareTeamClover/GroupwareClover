@@ -58,5 +58,9 @@
 	<update id="increaseViewCount">
 		update board set board_view_count = board_view_count + 1 where board_seq = #{seq}
 	</update>
+	
+	<insert id="addImportant">
+		insert into board_important values(#{empSeq}, #{boardSeq})
+	</insert>
 
 </mapper>
