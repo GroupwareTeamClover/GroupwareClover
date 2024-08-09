@@ -1,5 +1,7 @@
 package com.clover.admin.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,5 +16,9 @@ public class AdminLogDAO {
 	
 	public void insertLog(AdminLogDTO logdto) {
 		mybatis.insert("AdminLog.insertLog", logdto);
+	}
+	
+	public List<AdminLogDTO> getAllLog(){
+		mybatis.selectList("AdminLog.getAllLog");
 	}
 }
