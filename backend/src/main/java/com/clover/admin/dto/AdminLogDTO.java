@@ -20,6 +20,7 @@ public class AdminLogDTO {
 		this.logSeq = logSeq;
 		this.empSeq = empSeq;
 		this.empName = empName;
+		this.empId = empId;
 		this.deptCode = deptCode;
 		this.clientIp = clientIp;
 		this.localLogTime = localLogTime;
