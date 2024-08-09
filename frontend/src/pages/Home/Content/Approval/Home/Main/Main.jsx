@@ -148,14 +148,14 @@ export const Main=()=>{
                         <thead className={styles.thead}>
                             <tr>
                                 {['기안일', '결재양식', '긴급', '제목', '기안자', '현재결재자', '문서상태'].map((item, index) => (
-                                    <td key={index} className={`${styles['td' + (index + 1)]} ${styles['theadtd' + (index + 1)]} ${styles.theadtd}`}>{item}</td>
+                                    <td key={index} className={` ${styles['theadtd' + (index + 1)]} ${styles.theadtd}`}>{item}</td>
                                 ))}
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
                             {
                                        (filteredMainList || []).map((line, index) => (
-                                        <tr key={index}>
+                                        <tr key={index} className={styles.tbodytr}>
                                             <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>
                                             <td className={`${styles.td3} ${styles.tablerow}`}>{line.egcYn}</td>
