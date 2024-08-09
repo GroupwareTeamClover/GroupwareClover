@@ -12,7 +12,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import com.clover.messenger.services.ChatService;
-import com.clover.messenger.services.UserSessionService;
+
 
 import jakarta.servlet.http.HttpSession;
 
