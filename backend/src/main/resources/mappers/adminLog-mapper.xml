@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AdminLog">
+
+<insert id="insertLog" parameterType="com.clover.admin.dto.AdminLogDTO">
+    INSERT INTO log (log_seq, client_ip, local_logtime, log_status, emp_seq, emp_name, emp_id, dept_code)
+    VALUES (log_sequence.nextval, #{clientIp}, #{localLogTime}, #{logStatus},
+        <choose>
+            <when test="empSeq != 0">#{empSeq}</when>
+            <otherwise>0</otherwise>
+        </choose>,
+        <choose>
+            <when test="empName != null">#{empName}</when>
+            <otherwise>NULL</otherwise>
+        </choose>,
+        <choose>
+            <when test="empId != null">#{empId}</when>
+            <otherwise>NULL</otherwise>
+        </choose>,
+        <choose>
+            <when test="deptCode != 0">#{deptCode}</when>
+            <otherwise>0</otherwise>
+        </choose>)
+</insert>
+
+</mapper>

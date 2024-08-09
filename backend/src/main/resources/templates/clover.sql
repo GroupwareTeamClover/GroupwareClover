@@ -107,17 +107,20 @@ weekly_day VARCHAR2(15) NULL
 );
 CREATE SEQUENCE POPUP_PERIOD_SEQUENCE START WITH 1 INCREMENT BY 1 NOMAXVALUE NOCACHE;
 
-CREATE TABLE log (
-    log_seq number primary key, 
-    log_date Timestamp not null, 
-    emp_seq number not null, 
-    emp_state_seq number not null,
-    log_ip varchar2(20) not null, 
-    log_state number null,
-    dept_seq number not null
-    );
 
-CREATE SEQUENCE log_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
+create table log (
+    log_seq number PRIMARY KEY,
+    emp_seq varchar2(100) NULL, 
+    emp_name varchar2(50) NULL,
+    emp_id varchar2(20) NULL,
+    dept_code number NULL,
+    client_ip varchar2(20) NOT NULL,
+    local_logtime timestamp NOT NULL, 
+    log_status varchar2(100) NOT NULL
+);
+create sequence log_sequence start with 1 increment by 1 nomaxvalue nocache;
+
+
 
 --정경호
 create table boardlist(
