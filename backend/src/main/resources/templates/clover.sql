@@ -86,29 +86,26 @@ CREATE TABLE dayoff_state (
 
 
 --정하윤
-
 create table popup_board (
-    pop_seq NUMBER PRIMARY KEY,
-    pop_title varchar2(100) NOT NULL, 
-    emp_id varchar2(50) NOT NULL, 
-    pop_content long NOT NULL, 
-    pop_is_active CHAR(1) CHECK (pop_is_active IN ('T', 'F')) NOT NULL,
-    pop_write_date TIMESTAMP DEFAULT SYSDATE NOT NULL, 
-    pop_updated_date TIMESTAMP NULL
+pop_seq integer PRIMARY KEY,
+pop_title varchar2(100) NOT NULL,
+emp_id varchar2(50) NOT NULL,
+pop_content long NOT NULL,
+pop_is_active varchar2(10) CHECK (pop_is_active IN ('true', 'false')) NOT NULL,
+pop_write_date TIMESTAMP DEFAULT SYSDATE NOT NULL,
+pop_updated_date TIMESTAMP NULL
 );
-
 create sequence popup_board_sequence start with 1 increment by 1 nomaxvalue nocache;
-
 create table popup_period(
-    pop_period_seq NUMBER PRIMARY KEY, 
-    pop_seq NUMBER NOT NULL, --외래키
-    period_type VARCHAR2(15) CHECK (period_type IN ('specific', 'monthly', 'weekly')) NOT NULL,
-	start_date timestamp NULL, 
-	end_date timestamp NULL,
-	montly_day NUMBER NULL,
-	weekly_day VARCHAR2(15) CHECK (weekly_day IN ('sunday','monday','tuesday','wednesday','thursday','friday','saturday')) NULL
+pop_period_seq integer PRIMARY KEY,
+pop_seq integer NOT NULL, --외래키
+period_type VARCHAR2(15) CHECK (period_type IN ('specific', 'monthly', 'weekly')) NOT NULL,
+start_date VARCHAR2(30)  NULL,
+end_date VARCHAR2(30) NULL,
+monthly_day VARCHAR2(15) NULL,
+weekly_day VARCHAR2(15) NULL
 );
-create sequence popup_period_sequence start with 1 increment by 1 nomaxvalue nocache;
+CREATE SEQUENCE POPUP_PERIOD_SEQUENCE START WITH 1 INCREMENT BY 1 NOMAXVALUE NOCACHE;
 
 CREATE TABLE log (
     log_seq number primary key, 

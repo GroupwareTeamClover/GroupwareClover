@@ -54,9 +54,7 @@ export const PopupWrite = () => {
         setTitle(e.target.value);
     }
 
-    //첨부파일
-    const [files, setFiles] = useState([]);
-
+  
     //게시글 내용
     const editorRef = useRef();
     const [content, setContent] = useState('');
@@ -144,23 +142,38 @@ export const PopupWrite = () => {
         }
     }
 
+     //첨부파일
+     const [files, setFiles] = useState([]);
+     const handleFileChange = (fileList) => {
+         setFiles(fileList);
+     };
+     const handleUploadSuccess = (response, file) => {
+         const fileUrl = response;
+         // 파일 리스트에 업로드된 파일 추가
+         setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
+     };
+     const handleRemove = (file) => {
+         // 파일 리스트에서 해당 파일 제거
+         setFiles((prev) => prev.filter((f) => f.name !== file.name));
+     };
+
     return (
         <div className={styles.container}>
             <h3>{sessionData.empName} 관리자님의 팝업공지글</h3>
             <div className={styles.title}>
-                <input type="text" placeholder="공지 제목을 입력해 주세요 (최대 30자까지 입력 가능)"
+                <input type="text" placeholder="팝업공지 제목을 입력해 주세요 (최대 30자까지 입력 가능)"
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px" defaultContent="" />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={false} draggable multiple onChange={setFiles} fileList={files}>
-                    <div style={{ height: 100, width: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span>클릭하거나 드래그하여 파일 첨부</span>
-                    </div>
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
+                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                    <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
             </div>
+            
             {/* 공지기간 옵션 */}
             <div className={styles.activeBox}>
                 <div className={styles.activeLetter}>공지기간</div>

@@ -37,4 +37,20 @@ public class BoardDAO {
 	public void deletePost(int boardSeq) {
 		mybatis.delete("Board.deletePost", boardSeq);
 	}
+	
+	public void modifyPost(BoardDTO post) {
+		mybatis.update("Board.updatePost", post);
+	}
+	
+	public void upView(int boardSeq) {
+		mybatis.update("Board.increaseViewCount", boardSeq);
+	}
+	
+	public void addImportant(int empSeq, int boardSeq) {
+		HashMap<String, Integer> data = new HashMap<>();
+		data.put("empSeq", empSeq);
+		data.put("boardSeq", boardSeq);
+		
+		mybatis.insert("Board.addImportant", data);
+	}
 }

@@ -35,8 +35,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    gap: 12px;
-    padding-left: 14px;
+    gap: 15px;
+    padding-left: 20px;
     font-size: 18px;
     font-weight: 800;
 }
@@ -49,30 +49,38 @@
     align-items: center;
 }
 
-.centerLabel {
-    width: 30%;
-    height: 95%;
+
+.content {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    align-items: flex-end;
-    gap: 20px;
-    padding-left: 14px;
-    font-size: 16px;
-    font-weight: 800;
+    align-items: center;
+    padding: 10px;
 }
 
-.centerInfo {
-    width: 70%;
-    height: 95%;
+.contentLabel {
+    width: 100%;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
     gap: 20px;
     padding-left: 14px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 800;
+}
+
+.contentLabel > p > input {
+    width: 250px;
+    height: 30px;
+    border-radius: 5px;
+    margin: 2px 0;
+    padding: 0 5px;
+    border: 1px solid burlywood;
+}
+
+.contentLabel > input:focus {
+    background-color: floralwhite;
 }
 
 .bottom {
@@ -90,10 +98,109 @@
     border-radius: 10px;
     font-size: 16px;
     font-weight: 800;
-    background-color: var(--bg-color);
+    background-color: var(--btn-color);
+    color: var(--font-color);
 }
 .bottom > button:hover {
     cursor: pointer;
-    background-color: orange;
+    transition: all 300ms;
+    background-color: var(--hover-color);
     color: white;
+}
+
+.row {
+    width: 300px;
+    font-size: 18px;
+    font-weight: 800;
+    margin: 8px;
+}
+
+.row > span {
+    font-size: 16px;
+    font-weight: 800;
+    text-align: left;
+    margin: 10px 0;
+}
+
+.row > input {
+    width: 300px;
+    height: 35px;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 2px 0;
+    border: 1px solid var(--btn-color);
+}
+.row > input:focus {
+    background-color: var(--bg-color);
+}
+
+.row > button {
+    width: 100%;
+    height: 30px;
+    margin: 10px auto;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: var(--btn-color);
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+}
+.row > button:hover {
+    transition: all 300ms;
+    background-color: var(--hover-color);
+}
+
+.row > div {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.row > div > input:nth-child(1) {
+    width: 120px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--btn-color);
+    margin: 2px 0;
+}
+
+.row > div > input:focus {
+    background-color: var(--bg-color);
+}
+
+.row > div > input:nth-child(2) {
+    width: 30px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--btn-color);
+    margin: 2px 2px;
+}
+
+.row > div > button {
+    width: 120px;
+    height: 40px;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--btn-color);
+    color: white;
+    font-size: 14px;
+    font-weight: 900;
+    margin-left: 20px;
+}
+
+.row > div > button:hover {
+    transition: all 300ms;
+    background-color: var(--hover-color);
+}
+
+.row > .description {
+    font-size: 12px;
+    color: darkgray;
+    display: flex;
+    justify-content: center;
 }

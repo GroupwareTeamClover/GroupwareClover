@@ -72,7 +72,7 @@ export const Calendar = () => {
       setSchedules(() => {
         return res.data.map(item => {
           let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
-          data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#36C2CE" : "#173B45";
+          data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#478CCF" : "#173B45";
           delete data.startDate;
           delete data.endDate;
           delete data.scheduleContent;
@@ -82,7 +82,7 @@ export const Calendar = () => {
       setCheckSchedule(() => {
         return res.data.map(item => {
           let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
-          data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#36C2CE" : "#173B45";
+          data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#478CCF" : "#173B45";
           delete data.startDate;
           delete data.endDate;
           delete data.scheduleContent;
@@ -94,6 +94,11 @@ export const Calendar = () => {
 
   /** 캘린더 디테일 모달에 표시될 목록 **/
   const [ detailSchedule, setDetailSchedule ] = useState(schedules);
+
+  /** 이벤트 클릭 **/
+  // const eventClick = (data) => {
+  //   const eventDate = data.event.start; // 이벤트의 시작 날짜
+  // }
 
   /** 선택된 날짜를 모달에 표시 **/
   const [selectDay, setSelectDay] = useState("");
@@ -227,7 +232,7 @@ export const Calendar = () => {
           <div className={styles.row}>
             <input type="checkbox" id="department" name="department" onChange={handleCheckBox} checked={select.department}/>
             <label htmlFor="department">부서 일정</label>
-            <div className={styles.colorBox} style={{backgroundColor: "#36C2CE"}}></div>
+            <div className={styles.colorBox} style={{backgroundColor: "#478CCF"}}></div>
           </div>
           <div className={styles.row}>
             <input type="checkbox" id="company" name="company" onChange={handleCheckBox} checked={select.company}/>
@@ -257,10 +262,11 @@ export const Calendar = () => {
             }}
 
             events={checkSchedule}
+            // eventClick={eventClick}
 
             dateClick={handleDaySelect} // 날짜가 선택 될 때
 
-            dayMaxEventRows={3} // 각 날짜 셀에 표시되는 이벤트를 3개로 제한
+            dayMaxEventRows={2} // 각 날짜 셀에 표시되는 이벤트를 3개로 제한
             moreLinkText="more" // "+n more" 링크에 표시되는 텍스트
 
           />
@@ -315,7 +321,7 @@ export const Calendar = () => {
                   detailSchedule.map((item, i) => {
                     return (
                       <li key={i} onClick={() => handleSelectDetail(item.scheduleSeq) }>
-                        <span style={item.type === "individual" ? { color : "#FF8225"} : item.type === "department" ? { color : "#36C2CE"} : { color : "#173B45"}}> [ { item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사" } 일정 ]</span>
+                        <span style={item.type === "individual" ? { color : "#FF8225"} : item.type === "department" ? { color : "#478CCF"} : { color : "#173B45"}}> [ { item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사" } 일정 ]</span>
                         {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
                       </li>
                     );
@@ -352,7 +358,7 @@ export const Calendar = () => {
                   {
                     updateData.empSeq === sessionData.empSeq &&
                     <>
-                    {!updateForm ?
+                      {!updateForm ?
                         <div className={styles.btnBox}>
                           <button onClick={() => handleScheduleDelete(selectSchedule.scheduleSeq)}>일정 삭제</button>
                           <button onClick={() => setUpdateForm(true)}>일정 수정</button>

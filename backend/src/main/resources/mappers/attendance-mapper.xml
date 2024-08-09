@@ -18,6 +18,17 @@
             TRUNC(att_date) between #{start} AND #{end}
     </select>
 
+    <select id="attendanceList" resultType="com.clover.attendance.dto.AttendanceDTO">
+        SELECT
+            *
+        FROM
+            attendance
+        WHERE
+            emp_seq = 27
+        AND
+            TRUNC(att_date) between #{start} AND #{end}
+    </select>
+
     <select id="today" resultType="com.clover.attendance.dto.AttendanceDTO">
         SELECT
             *

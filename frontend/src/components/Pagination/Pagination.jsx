@@ -14,6 +14,8 @@ export const Pagination = ({ pageCount, onPageChange, currentPage }) => {
         pageLinkClassName={styles.pagination__link}
         activeLinkClassName={styles.pagination__link__active}
         forcePage={currentPage} // 현재 페이지를 외부 상태로 설정
+        pageRangeDisplayed={5} // 화면에 표시할 페이지 범위
+        marginPagesDisplayed={1} // 시작과 끝에 표시할 페이지 번호 수
       />
     );
   };

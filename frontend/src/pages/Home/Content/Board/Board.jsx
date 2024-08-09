@@ -7,6 +7,7 @@ import ModifyBoard from './ModifyBoard/ModifyBoard';
 import MainBoard from './MainBoard/MainBoard';
 import WritePost from './WritePost/WritePost';
 import DetilBoard from './DetailBoard/DetailBoard';
+import ModifyPost from './ModifyPost/ModifyPost';
 
 const Board = () => {
     return (
@@ -20,6 +21,7 @@ const Board = () => {
                 <Route path="/manageBoard/modifyBoard" element={<ModifyBoard />} />
                 <Route path="/writePost" element={<WritePost />}/>
                 <Route path="/board/:boardlistSeq/detail/:boardSeq" element={<DetilBoard/>}/>
+                <Route path="/modifyPost" element={<ModifyPost/>}/>
             </Routes>
         </div>
     );

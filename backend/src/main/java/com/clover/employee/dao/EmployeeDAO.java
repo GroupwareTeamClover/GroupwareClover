@@ -34,8 +34,8 @@ public class EmployeeDAO {
     }
 
     /** 사원 정보 업데이트 **/
-    public void updateEmployee(EmployeeDTO dto) {
-        mybatis.update("Employee.update", dto);
+    public int updateEmployee(EmployeeDTO dto) {
+        return mybatis.update("Employee.update", dto);
     }
     
     /** 사원 비밀번호 변경 **/

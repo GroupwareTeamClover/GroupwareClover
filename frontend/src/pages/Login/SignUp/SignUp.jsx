@@ -2,7 +2,6 @@ import {useState} from "react";
 import styles from "./SignUp.module.css";
 import {SignUpSub1} from "./SignUpSub/SignUpSub1";
 import {SignUpSub2} from "./SignUpSub/SignUpSub2";
-import {SignUpSub3} from "./SignUpSub/SignUpSub3";
 
 export const SignUp = ({setSignUpState}) => {
 
@@ -46,21 +45,21 @@ export const SignUp = ({setSignUpState}) => {
 
 
   return (
-      <div className={styles.container}>
-        <div className={styles.form}>
-          {signUpPage === 1 && <SignUpSub1 sendData={sendData} checkData={checkData} setSendData={setSendData}
-                                           setCheckData={setCheckData}/>}
-          {signUpPage === 2 && <SignUpSub2 sendData={sendData} checkData={checkData} setSendData={setSendData}
-                                           setCheckData={setCheckData} setSignUpState={setSignUpState} />}
-          <div className={styles.btnBox}>
-            <button onClick={() => setSignUpState(false)}>취소</button>
-            <div className={styles.prevNext}>
-              <button name="prev" onClick={handlePageChange}>이전</button>
-              <button name="next" onClick={handlePageChange}>다음</button>
-            </div>
+    <div className={styles.container}>
+      <div className={styles.form}>
+        {signUpPage === 1 && <SignUpSub1 sendData={sendData} checkData={checkData} setSendData={setSendData}
+                                         setCheckData={setCheckData}/>}
+        {signUpPage === 2 && <SignUpSub2 sendData={sendData} checkData={checkData} setSendData={setSendData}
+                                         setCheckData={setCheckData} setSignUpState={setSignUpState} />}
+        <div className={styles.btnBox}>
+          <button onClick={() => setSignUpState(false)}>취소</button>
+          <div className={styles.prevNext}>
+            <button name="prev" onClick={handlePageChange}>이전</button>
+            <button name="next" onClick={handlePageChange}>다음</button>
           </div>
-
         </div>
+
       </div>
+    </div>
   );
 };

@@ -81,8 +81,7 @@
             employee
         SET
             emp_email = #{empEmail},
-            emp_tel = #{empTel},
-            emp_address = #{empAddress}
+            emp_tel = #{empTel}
         WHERE
             emp_seq = #{empSeq}
     </update>
