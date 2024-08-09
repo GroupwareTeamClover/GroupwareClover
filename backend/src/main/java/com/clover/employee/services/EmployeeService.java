@@ -47,8 +47,10 @@ public class EmployeeService {
     }
 
     /** 사원 정보 업데이트 **/
-    public void updateEmployee(EmployeeDTO dto) {
-        employeeDAO.updateEmployee(dto);
+    public String updateEmployee(EmployeeDTO dto) {
+        int result = employeeDAO.updateEmployee(dto);
+        if(result > 0) return "ok";
+        else return "fail";
     }
 
     /** 사원 비밀번호 변경 **/

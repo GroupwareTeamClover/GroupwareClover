@@ -1,8 +1,8 @@
 package com.clover.employee.controllers;
 
-import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,11 +24,13 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private HttpSession session;
+
 
     @GetMapping("/{empSeq}")
     public ResponseEntity<Map<String, Object>> getMyInfo(@PathVariable int empSeq) {
         Map<String, Object> map = employeeService.getMyInfo(empSeq);
-        System.out.println(map.get("EMP_AVATAR"));
         return ResponseEntity.ok(map);
     }
 
@@ -39,12 +41,15 @@ public class EmployeeController {
     }
 
     @PutMapping
-    public void updateEmployee(@RequestBody EmployeeDTO dto) {
-        employeeService.updateEmployee(dto);
+    public ResponseEntity<String> updateEmployee(@RequestBody EmployeeDTO dto) {
+        dto.setEmpSeq((int)session.getAttribute("cloverSeq"));
+        String result = employeeService.updateEmployee(dto);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{empSeq}")
-    public ResponseEntity<String> updateEmployee(@PathVariable int empSeq, @RequestBody EmployeeDTO dto) {
+    public ResponseEntity<String> updatePwEmployee(@PathVariable int empSeq, @RequestBody EmployeeDTO dto) {
+        dto.setEmpSeq((int)session.getAttribute("cloverSeq"));
         String result = employeeService.updatePwEmployee(dto);
         return ResponseEntity.ok(result);
     }

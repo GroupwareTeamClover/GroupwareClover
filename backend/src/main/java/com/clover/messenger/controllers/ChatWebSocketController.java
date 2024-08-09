@@ -45,39 +45,9 @@ public class ChatWebSocketController {
         updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);
     }
 
-    // @MessageMapping("/chat.sendMessage")
-    // public void sendMessage(@Payload ChatMessageDTO chatMessage, SimpMessageHeaderAccessor headerAccessor) {
-    //     // WebSocket 세션에서 사용자 ID를 추출
-    //     Integer senderSeq = Integer.parseInt(headerAccessor.getUser().getName());
-    //     chatMessage.setSenderSeq(senderSeq);
-
-    //     // 메시지를 저장하고 저장된 메시지 객체를 받아옴
-    //     ChatMessageDTO savedMessage = chatService.saveMessage(chatMessage);
-
-    //     // 채팅 유형에 따라 메시지 전송 방식을 다르게 처리
-    //     if ("private".equals(chatMessage.getRoomType())) {
-    //         // 개인 채팅인 경우, 발신자와 수신자에게 각각 메시지 전송
-    //         messagingTemplate.convertAndSendToUser(
-    //             String.valueOf(chatMessage.getReceiverSeq()),
-    //             "/queue/messages",
-    //             savedMessage
-    //         );
-    //         messagingTemplate.convertAndSendToUser(
-    //             String.valueOf(senderSeq),
-    //             "/queue/messages",
-    //             savedMessage
-    //         );
-    //     } else {
-    //         // 그룹 채팅인 경우, 해당 채팅방의 모든 사용자에게 메시지 브로드캐스트
-    //         messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getRoomSeq(), savedMessage);
-    //     }
-
-    //     // 읽지 않은 메시지 수 업데이트
-    //     updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);
-    // }
-
     /**
      * 사용자가 채팅방에 입장할 때 호출되는 메소드
+     * 그룹채팅방 용
      * @param chatMessage 채팅방 입장 정보를 포함한 메시지 객체
      * @param headerAccessor WebSocket 세션 정보를 포함한 헤더 접근자
      */

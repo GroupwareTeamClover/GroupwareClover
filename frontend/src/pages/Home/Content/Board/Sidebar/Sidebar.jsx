@@ -23,7 +23,7 @@ const Sidebar = () => {
 
     const checkValidateUser = (item) => {
         axios.get(`${BaseUrl()}/boardlist/whitelist/${item.boardlistSeq}`).then((resp) => {
-            (resp.data.includes(sessionData.empSeq)) ? navi(`board/${item.boardlistSeq}`) : alert("접근이 제한된 게시판입니다!")
+            (resp.data.includes(sessionData.empSeq) || admin) ? navi(`board/${item.boardlistSeq}`) : alert("접근이 제한된 게시판입니다!")
         });
 
     }

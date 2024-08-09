@@ -12,19 +12,54 @@ export const Loglist=()=>{
     const [specificEndDate, setSpecificEndDate] = useState('');      // specific
   
     const handleEnter =()=>{}
-    const handleSearchType =()=>{}
-    const handleKeywordChange =()=>{}
+    const handleSearchType =(e)=>{  setSearchType(e.target.value);}
+    const handleKeywordChange =(e)=>{ setKeyword(e.target.value)}
 
     const handleToday=()=>{
-        setSpecificStartDate();
-        setSpecificEndDate();
+        const today = new Date().toISOString().split('T')[0];
+        setSpecificStartDate(today);
+        setSpecificEndDate(today);
+        console.log(specificStartDate,specificEndDate )
     }
-    const handleWeek=()=>{}
-    const handleMonth=()=>{}
-    const handleHalfYear =()=>{}
+    const handleWeek = () => {
+        const today = new Date();
+        const oneWeekAgo = new Date(today);
+        oneWeekAgo.setDate(today.getDate() - 7);
+
+        setSpecificStartDate(oneWeekAgo.toISOString().split('T')[0]);
+        setSpecificEndDate(today.toISOString().split('T')[0]);
+        console.log(specificStartDate,specificEndDate )
+
+    }
+    const handleMonth = () => {
+        const today = new Date();
+        const oneMonthAgo = new Date(today);
+        oneMonthAgo.setMonth(today.getMonth() - 1);
+
+        setSpecificStartDate(oneMonthAgo.toISOString().split('T')[0]);
+        setSpecificEndDate(today.toISOString().split('T')[0]);
+        console.log(specificStartDate,specificEndDate )
+
+    }
+
+    const handleHalfYear = () => {
+        const today = new Date();
+        const sixMonthsAgo = new Date(today);
+        sixMonthsAgo.setMonth(today.getMonth() - 6);
+
+        setSpecificStartDate(sixMonthsAgo.toISOString().split('T')[0]);
+        setSpecificEndDate(today.toISOString().split('T')[0]);
+        console.log(specificStartDate,specificEndDate )
+
+    }
 
     const handleSearch =()=>{    }
-    const handleReset=()=>{}
+    const handleReset=()=>{
+        setSearchType("");
+        setKeyword("");
+        setSpecificStartDate("");
+        setSpecificEndDate("");
+    }
     return(
 
     <div className={styles.container}>
@@ -42,7 +77,7 @@ export const Loglist=()=>{
                             <option value="title">ID</option>
                             <option value="writer">이름</option>
                         </select>
-                        <input className={styles.typeInput} type="text" id="keyword" name="keyword" autoComplete="off" onKeyDown={handleEnter} onChange={handleKeywordChange} value={keyword} maxLength={maxSearchLength}></input>
+                        <input className={styles.typeInput} type="text" id="keyword" name="keyword" autoComplete="off" onKeyDown={handleEnter} onChange={handleKeywordChange} value={keyword}></input>
                     </div>
                 </div>
                 

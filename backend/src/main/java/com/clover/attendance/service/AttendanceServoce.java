@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,7 +25,21 @@ public class AttendanceServoce {
         map.put("empSeq", empSeq);
         map.put("start", range[0]);
         map.put("end", range[1]);
-        return attendanceDAO.getMyAtt(map);
+
+        // 총 카운트 정보
+        Map<String, Object> attCount = attendanceDAO.getMyAtt(map);
+
+        // 리스트 정보
+        List<AttendanceDTO> attList = attendanceDAO.AttendanceList(map);
+        for(AttendanceDTO att : attList){
+            System.out.println("seq ==== " + att.getAttSeq());
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("count", attCount);
+        result.put("list", attList);
+
+        return result;
     }
 
     public AttendanceDTO todayAtt(String today, int empSeq) {

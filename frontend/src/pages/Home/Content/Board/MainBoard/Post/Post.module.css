@@ -1,7 +1,7 @@
 .post {
     display: flex;
     align-items: center;
-    height : 6.37vh;
+    height: 6.37vh;
     border-bottom: 1px solid #5a5a64;
     margin-bottom: 0;
 }
@@ -14,7 +14,7 @@
 .post .star {
     margin: 0;
     width: 3.125vw;
-    height : 6.37vh;
+    height: 6.37vh;
     font-weight: 500;
     text-align: center;
     display: flex;
@@ -22,16 +22,23 @@
     align-items: center;
 }
 
-.post .star:hover {
+.starIcon:hover {
+    fill: rgb(192, 192, 26);
     cursor: pointer;
 }
 
-.starIcon:hover {
-    fill: rgb(192, 192, 26);}
+.starFillIcon{
+    fill : rgb(214, 214, 2);
+}
+
+.starFillIcon:hover{
+    fill:gray;
+    cursor: pointer;
+}
 
 .post .title {
     width: 40vw;
-    height : 6.37vh;
+    height: 6.37vh;
     text-align: left;
     font-size: 15px;
     padding-left: 0.52vw;
@@ -39,7 +46,7 @@
     align-items: center;
 }
 
-.post .title:hover{
+.post .title:hover {
     cursor: pointer;
 }
 
@@ -75,7 +82,7 @@
 }
 
 .view {
-    width : 5.2vw;
+    width: 5.2vw;
     display: flex;
     align-items: center;
     padding-left: 1.04vw;

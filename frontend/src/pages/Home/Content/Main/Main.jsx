@@ -7,14 +7,18 @@ import {Mypage} from "./Mypage/Mypage";
 import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import {roleName, deptName} from "../../../../commons/common";
+import {roleName, deptName, dateYMD} from "../../../../commons/common";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
 
 export const Main = () => {
+    const [ modalState, setModalState ] = useState("");
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalState("");
+    }
 
     const {sessionData} = useMemberStore();
 
@@ -26,6 +30,7 @@ export const Main = () => {
 
 
     const handleMyPageModal = () => {
+        setModalState("mypage");
         openModal();
     }
 
@@ -34,6 +39,7 @@ export const Main = () => {
 
     /** 회사 공지 데이터 **/
     const [noticeList, setNoticeList] = useState([]);
+
     useEffect(() => {
 
         /** 내 주간 일정 목록 **/
@@ -44,7 +50,7 @@ export const Main = () => {
                     start: item.startDate,
                     end: item.endDate,
                     title: item.scheduleContent,
-                    color: "darkgray"
+                    color: "#FF8225"
                 };
             })
             setMySchedule(myScheduleList);
@@ -55,6 +61,16 @@ export const Main = () => {
 
 
     }, []);
+
+    const [weekSchedule, setWeekSchedule] = useState({start: "", end: "", title: ""});
+    const eventClick = (data) => {
+        const start = dateYMD(data.event._instance.range.start);
+        const end = dateYMD(data.event._instance.range.end);
+        const title = data.event._def.title;
+        setWeekSchedule({start, end, title});
+        setModalState("week");
+        openModal();
+    }
 
     return (
       <div className={styles.container}>
@@ -71,8 +87,8 @@ export const Main = () => {
                       </div>
                       <div className={styles.empInfo}>
                           <p> Clover Portal</p>
-                          <p> [{deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서"}]
-                              {" "+sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}님 안녕하세요.</p>
+                          <p> [ {deptName(sessionData.empDeptCode) === "미정" ? "현재 소속된 부서 없음" : deptName(sessionData.empDeptCode) + "부서"} ]
+                              {" "+sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}</p>
                           <div className={styles.InfoBox}>
                               <button onClick={handleMyPageModal}>내 정보</button>
                           </div>
@@ -95,6 +111,7 @@ export const Main = () => {
                             selectable={true}
                             height="auto"
                             events={mySchedule}
+                            eventClick={eventClick}
                           />
                       </div>
                   </div>
@@ -160,7 +177,13 @@ export const Main = () => {
           </div>
 
           <Modal isOpen={isModalOpen} onClose={closeModal}>
-              <Mypage empSeq={sessionData.empSeq} closeModal={closeModal}/>
+              { modalState === "mypage" && <Mypage empSeq={sessionData.empSeq} closeModal={closeModal}/> }
+              { modalState === "week" &&
+                <div className={styles.weekDetail}>
+                    <span>{ weekSchedule.start } ~ { weekSchedule.end }</span>
+                    <p>{ weekSchedule.title }</p>
+                </div>
+              }
           </Modal>
       </div>
     );

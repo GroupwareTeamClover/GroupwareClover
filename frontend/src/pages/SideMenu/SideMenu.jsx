@@ -15,7 +15,7 @@ export const SideMenu = ({ open, setOpen }) => {
   const menus = [
     { name: "Home", link: "/", icon: IoHome },
     { name: "Calendar", link: "calendar", icon: FaCalendarDays },
-    { name: "Address", link: "address", icon: FaAddressBook },
+    { name: "Address", link: "address", type:"사원 주소록", icon: FaAddressBook },
     { name: "Approval", link: "approval", icon: LiaClipboardListSolid },
     { name: "Community", link: "community", icon: FaListAlt },
     { name: "Messenger", link: "chat", icon: GiTalk },
@@ -40,7 +40,7 @@ export const SideMenu = ({ open, setOpen }) => {
           {
             menus.map((menu, i) => {
               return (
-                <Link to={menu?.link} key={i} className={styles.menuLink}>
+                <Link to={menu?.link} state={{type:menu?.type}} key={i} className={styles.menuLink}>
                   <div>
                     {React.createElement(menu?.icon, { size: "30", color: "white" })}
                   </div>

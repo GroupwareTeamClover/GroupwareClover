@@ -108,7 +108,13 @@ export const PopupDetail =()=>{
         setContent(editorRef.current.getInstance().getHTML());
     }
 
-
+    const handleCancel=()=>{
+        const confirm = window.confirm("취소?");
+        if(confirm){navi(-1)}
+        else{return false}
+        
+    }
+    
     const handleSubmit = () => {
         if (title.trim() === "") {
             alert("제목을 입력해주세요!");
@@ -175,7 +181,7 @@ export const PopupDetail =()=>{
                     console.log(resp.data)
                     if(resp.status ===200){
                         alert("공지팝업이 수정되었습니다.");
-                        navi('/popup'); 
+                        navi('/popup', {state:{type: '팝업공지글 목록'}}); 
                     }else {
                         alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
                     }
@@ -274,7 +280,10 @@ export const PopupDetail =()=>{
                 </div>
             </div>
             <div className={styles.btnBox}>
-                <button className={styles.cancelBtn} onClick={() => navi(-1)}>취소</button>
+                <button className={styles.cancelBtn} 
+                // onClick={() => {  navi(-1)}}
+                onClick={handleCancel}
+                >취소</button>
                 <button className={styles.writeBtn} onClick={handleSubmit}>수정</button>
             </div>
             <div className={styles.footer}>

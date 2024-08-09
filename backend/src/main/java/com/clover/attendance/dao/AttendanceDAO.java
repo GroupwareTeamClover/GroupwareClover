@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -15,6 +16,10 @@ public class AttendanceDAO {
 
     public Map<String, Object> getMyAtt(Map<String, Object> map) {
         return mybatis.selectOne("Attendance.getMyAtt", map);
+    }
+
+    public List<AttendanceDTO> AttendanceList(Map<String, Object> map) {
+        return mybatis.selectList("Attendance.attendanceList", map);
     }
 
     public AttendanceDTO todayAtt(Map<String, Object> map) {
