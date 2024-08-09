@@ -6,11 +6,11 @@ import { LuEye } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const Post = ({ title, writer, date, view, boardlistSeq, boardSeq, sessionSeq, important }) => {
+const Post = ({ title, writer, date, view, boardlistSeq, boardSeq, sessionSeq, importants }) => {
     const navi = useNavigate();
-    const [isImportant, setIsImportant] = useState(important);
+    const [isImportant, setIsImportant] = useState(importants.includes(boardSeq));
 
     const handleAddImportant = async () => {
         await axios.post(`${BaseUrl()}/board/important`, {

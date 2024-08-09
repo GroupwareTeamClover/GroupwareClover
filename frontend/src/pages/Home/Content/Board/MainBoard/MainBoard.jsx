@@ -137,7 +137,7 @@ const MainBoard = () => {
                         .map((post, i) => (
                             <Post key={i} boardlistSeq={boardInfo.boardlistSeq} boardSeq={post.boardSeq} title={post.boardTitle}
                                 writer={post.boardWriter} data={post.boardWriteDate} view={post.boardViewCount} sessionSeq={sessionData.empSeq}
-                                important={importants.includes(post.boardSeq)}/>
+                                importants={importants}/>
                         ))
                 )
                 )}
