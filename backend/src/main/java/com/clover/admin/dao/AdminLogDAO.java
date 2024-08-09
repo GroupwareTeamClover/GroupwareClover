@@ -19,6 +19,6 @@ public class AdminLogDAO {
 	}
 	
 	public List<AdminLogDTO> getAllLog(){
-		mybatis.selectList("AdminLog.getAllLog");
+		return mybatis.selectList("AdminLog.getAllLog");
 	}
 }

@@ -24,7 +24,7 @@ public class AdminLogService {
 	}
 	
 	public List<AdminLogDTO> getAllLog(){
-		adminlogDAO.getAllLog();
+		return adminlogDAO.getAllLog();
 	}
 }
 

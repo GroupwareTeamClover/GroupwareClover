@@ -76,6 +76,8 @@
 		    popup_period pp ON pb.pop_seq = pp.pop_seq
 		LEFT JOIN
 		    employee e ON pb.emp_id = e.emp_id
+	 	ORDER BY pop_seq desc
+	 	
     	
     </select>
     
