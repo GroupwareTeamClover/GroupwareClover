@@ -16,12 +16,13 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
 
     const uploadImage = (blob) => {
         const formData = new FormData();
+        const path = encodeURIComponent("temp");
         formData.append('file', blob);
-        return axios.post(`${BaseUrl()}/attachment/upload/temp`, formData, {
-            headers: {'Content-Type': 'multipart/form-data'}
-          }).then(resp =>{
+        return axios.post(`${BaseUrl()}/attachment/upload/${path}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        }).then(resp => {
             return resp.data;
-          })
+        })
     }
 
     return (
