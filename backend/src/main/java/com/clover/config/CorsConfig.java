@@ -22,7 +22,7 @@ public class CorsConfig implements WebMvcConfigurer {
 	}
 
     
-
+// test
 
     // 아dd이피 허용 부분. allowedOrigins("*")과 credentials은 함께 허용해 줄 수 없음. 다른 방법 필요
     // @Value("${allowed.origins}")
