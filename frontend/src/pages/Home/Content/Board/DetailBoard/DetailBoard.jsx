@@ -41,7 +41,7 @@ const DetilBoard = () => {
 
     useEffect(() => {
         axios.get(`${BaseUrl()}/boardlist/boardInfo`, { params: { boardlistSeq: boardlistSeq } }).then(resp => {
-            setBoardlistName(resp.data.boardlistName);
+            (resp.data.boardlistName !== undefined) ? setBoardlistName(resp.data.boardlistName) : setBoardlistName("중요 게시물");
         });
         axios.get(`${BaseUrl()}/board/postInfo/${boardSeq}`).then(resp => {
             setPost(prev => ({ ...prev, ...resp.data }));
