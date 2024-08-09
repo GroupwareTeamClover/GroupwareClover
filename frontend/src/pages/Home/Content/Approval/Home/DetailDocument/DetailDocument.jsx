@@ -14,7 +14,8 @@ import { DragFolder } from "../../Side/ChoiceLine/DragFolder/DragFolder";
 import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./../Document/Menus/DrafterMenu/DrafterMenu";
 import {ApprovalMenu} from "./../Document/Menus/ApprovalMenu/ApprovalMenu";
-
+import signImage from './../../../../../../images/sign2.PNG';
+import { format } from 'date-fns';
 
 export const DetailDocument = ({type}) => {
 
@@ -44,6 +45,12 @@ export const DetailDocument = ({type}) => {
 
     //ApprovalMenu에서 보류 클릭시-메뉴컴포넌트에 전달
     const [isHoldoff, setIsHoldoff]=useState(false);
+
+    // 날짜 변환 함수
+    const formatDate = (date) => {
+        if (!date) return '-';
+        return format(new Date(date), 'yyyy-MM-dd');
+    };
     
 
     /*********************detail에서 사용할 정보******************** */
@@ -95,7 +102,8 @@ export const DetailDocument = ({type}) => {
                     order: item.lineOrder,
                     lineSeq: item.lineSeq,
                     apverId: item.apverId,
-                    apvStatusCode: item.apvStatusCode
+                    apvStatusCode: item.apvStatusCode,
+                    lineApvDate: item.lineApvDate
                   })) : [];
         
                   const plineData = resp.data.pline ? resp.data.pline.map(item => ({
@@ -162,7 +170,6 @@ export const DetailDocument = ({type}) => {
     //결재클릭시 DB업데이트 
     useEffect(()=>{
         if(isApproval){
-            handleGetAll();
             //내 결재라인 구분 번호
             const apvLineSeq=getApvLineSeq();
             const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
@@ -174,8 +181,9 @@ export const DetailDocument = ({type}) => {
             }).catch(()=>{
                 alert("결재 실패");
             })
-            //내가 이 문서의 마지막 결재자이고 결재하기로 한다면 문서 상태를 승인으로 변경
-
+            //내가 이 문서의 마지막 결재자이고 결재하기로 한다면 문서 상태를 승인으로 업데이트
+            
+            handleGetAll();
         }
     },[isApproval])
 
@@ -233,8 +241,11 @@ export const DetailDocument = ({type}) => {
                                                 line.type === 'apvline' && (
                                                     <div key={index} className={styles.tablelbox2}>
                                                         <div className={styles.role}><span className={styles.roleText}>{line.roleName}</span></div>
-                                                        <div className={styles.name}><span className={styles.nameText}>{line.empName}</span></div>
-                                                        <div className={styles.docNumber}></div>
+                                                        <div className={styles.name}>
+                                                            {line.apvStatusCode===3 && (<div><img src={signImage} alt="Sign" className={styles.imgSize}/></div>)}
+                                                            <div><span className={styles.nameText}>{line.empName}</span></div>
+                                                        </div>
+                                                        <div className={styles.docNumber}>{formatDate(line.lineApvDate)}</div>
                                                     </div>
                                                 )
                                             ))}
