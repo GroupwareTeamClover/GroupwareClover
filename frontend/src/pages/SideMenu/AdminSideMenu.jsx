@@ -47,8 +47,6 @@ export const AdminSideMenu = ({ open, setOpen }) => {
   const handleMenuClick = (link, type, parentType) => {
     setSelectedMenu(type);
     setSelectedParentMenu(parentType);
-    localStorage.setItem('selectedMenu', type);
-    localStorage.setItem('selectedParentMenu', parentType);
     navi(link, { state: { type } });
   };
 
@@ -117,14 +115,7 @@ export const AdminSideMenu = ({ open, setOpen }) => {
     }
   }, [location.pathname, selectedMenu, menus]);
 
-  useEffect(() => {
-    const savedMenu = localStorage.getItem('selectedMenu');
-    const savedParentMenu = localStorage.getItem('selectedParentMenu');
-    if (savedMenu && savedParentMenu) {
-      setSelectedMenu(savedMenu);
-      setSelectedParentMenu(savedParentMenu);
-    }
-  }, []);
+ 
 
 
   return (
@@ -138,8 +129,8 @@ export const AdminSideMenu = ({ open, setOpen }) => {
             <div key={i}>
               <div className={styles.menuLink} onClick={() => menu.submenus ? toggleDropdown(menu.type, menu.submenus[0]) : handleMenuClick(menu.link, menu.type, menu.type)}
                 style={{ color: selectedMenu === menu.type ? 'orange' : 'black' }} >
-                    <div>{React.createElement(menu.icon, { size: "30", color: selectedParentMenu === menu.type ? "orange":"white" })}</div>
-                    {open && <h3 className={styles.menuTitle}>{menu.name}</h3>}
+                    <div>{React.createElement(menu.icon, { size: "30", color: "white" })}</div>
+                    {open && <h3 className={styles.menuTitle} style={{ color: selectedMenu === menu.type ? 'orange' : 'white' }}>{menu.name}</h3>}
               </div>
               {menu.submenus && dropdown[menu.type] && (
                 <div className={styles.dropdown}>
