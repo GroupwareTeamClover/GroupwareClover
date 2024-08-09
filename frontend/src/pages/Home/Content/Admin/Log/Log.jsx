@@ -11,7 +11,7 @@ export const Log = () => {
     console.log("headerTxt"+ state?.type)
   
     // 상태에 따라 header 내용 설정
-    const headerText = state?.type || '전자결재';
+    const headerText = state?.type || '접속 로그 관리';
   
   
       const navi = useNavigate();

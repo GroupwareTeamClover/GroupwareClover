@@ -3,6 +3,7 @@ package com.clover.board.controllers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.clover.board.services.BoardService;
 import com.clover.commons.dto.AttachmentDTO;
 import com.clover.commons.services.AttachmentService;
 import com.clover.commons.services.S3Service;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
 
 @RestController
 @RequestMapping("/board")
@@ -51,11 +53,12 @@ public class BoardController {
 	    List<String> fileUrls = (List<String>) data.getOrDefault("fileUrls", new ArrayList<>());
 	    List<String> images = (List<String>) data.getOrDefault("images", new ArrayList<>());
 		
-	    //첨부파일이 있을 경우 
+	    //첨부파일이 있을 경우
 	    if (fileNames.size() > 0) {
 			for (int i = 0; i < fileNames.size(); i ++) {
 				//파일 주소 변환 후 DB에 등록
-				String newFileUrl = s3Serv.moveFile(newBoardSeq, fileNames.get(i), fileUrls.get(i), 1);
+				String newFilePath = "posts/" + newBoardSeq + "/" + UUID.randomUUID() + "_" + fileNames.get(i);
+				String newFileUrl = s3Serv.moveFile(newFilePath, fileUrls.get(i));
 				
 				attServ.insertFile(new AttachmentDTO(0, fileNames.get(i), newFileUrl, "board", newBoardSeq));
 			}
@@ -63,8 +66,9 @@ public class BoardController {
 		//첨부 이미지가 있을 경우
 		if (images.size() > 0) {
 			for (int i = 0; i < images.size(); i ++) {
+				String newImagePath = "images/posts/" + newBoardSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
 				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
-				String newImageUrl = s3Serv.moveFile(newBoardSeq, "image" + (i+1), images.get(i), 2);
+				String newImageUrl = s3Serv.moveFile(newImagePath, images.get(i));
 				//변환된 주소로 글 내용을 바꾸고 반환
 				content = attServ.updateImageUrl(images.get(i), newImageUrl, content);
 			}
@@ -106,7 +110,7 @@ public class BoardController {
 		//해당 게시글의 첨부파일 삭제 (DB)
 		attServ.deleteFiles(boardSeq);
 		//해당 게시글의 첨부된 이미지, 파일 삭제(S3)
-		s3Serv.deleteFiles("board/" + boardSeq + "/");
+		s3Serv.deleteFiles("posts/" + boardSeq + "/");
 		s3Serv.deleteFiles("images/posts/" + boardSeq + "/");
 		//해당 게시글의 댓글 목록 삭제 (외래키 걸 예정)
 		return ResponseEntity.ok().build();
@@ -148,8 +152,9 @@ public class BoardController {
 	    // 추가된 첨부파일이 있을 경우 
 	    if (addFileNames.size() > 0) {
 			for (int i = 0; i < addFileNames.size(); i ++) {
+				String newFilePath = "posts/" + boardSeq + "/" + UUID.randomUUID() + "_" + addFileNames.get(i);
 				//파일 주소 변환 후 DB에 등록
-				String newFileUrl = s3Serv.moveFile(boardSeq, addFileNames.get(i), addFileUrls.get(i), 1);
+				String newFileUrl = s3Serv.moveFile(newFilePath, addFileUrls.get(i));
 				
 				attServ.insertFile(new AttachmentDTO(0, addFileNames.get(i), newFileUrl, "board", boardSeq));
 			}
@@ -157,8 +162,9 @@ public class BoardController {
 		// 추가된 첨부 이미지가 있을 경우
 		if (addImageUrls.size() > 0) {
 			for (int i = 0; i < addImageUrls.size(); i ++) {
+				String newImagePath = "images/posts/" + boardSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
 				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
-				String newImageUrl = s3Serv.moveFile(boardSeq, "image" + (i+1), addImageUrls.get(i), 2);
+				String newImageUrl = s3Serv.moveFile(newImagePath, addImageUrls.get(i));
 				//변환된 주소로 글 내용을 바꾸고 반환
 				content = attServ.updateImageUrl(addImageUrls.get(i), newImageUrl, content);
 			}
@@ -168,6 +174,41 @@ public class BoardController {
 		
 		return ResponseEntity.ok().build();
 	}
+	
+	@PutMapping("/viewCount")
+	public ResponseEntity<Void> upView(@RequestParam int boardSeq){
+		bServ.upView(boardSeq);
+		return ResponseEntity.ok().build();
+	}
+	
+	@PostMapping("/important")
+	public ResponseEntity<Void> addImportant(@RequestBody HashMap<String, Integer> data){
+		int empSeq = data.get("empSeq");
+		int boardSeq =  data.get("boardSeq");
+		
+		bServ.addImportant(empSeq, boardSeq);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	@DeleteMapping("/important")
+	public ResponseEntity<Void> removeImportant(@RequestParam int empSeq, @RequestParam int boardSeq){
+		bServ.removeImportant(empSeq, boardSeq);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/posts/important/{empSeq}")
+	public ResponseEntity<List<BoardDTO>> getImportantPosts(@PathVariable int empSeq){
+		return ResponseEntity.ok(bServ.getImportantPosts(empSeq));
+	}
+	
+	@GetMapping("/status/important/{empSeq}/{boardSeq}")
+	public ResponseEntity<Boolean> isImportant(@PathVariable int empSeq, @PathVariable int boardSeq){
+		return ResponseEntity.ok(bServ.isImportant(empSeq, boardSeq));
+	}
+	
+	
 	
 	
 }

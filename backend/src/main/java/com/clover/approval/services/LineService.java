@@ -17,8 +17,8 @@ public class LineService {
 	private LineDAO lineDAO;
 	
 	//모달에서 결재라인 선택 시 라인정보 받아오기
-	public List<Map<String,?>> getMemberInfo(){
-		return lineDAO.selectMemberInfo();
+	public List<Map<String,?>> getMemberInfo(int seq){
+		return lineDAO.selectMemberInfo(seq);
 	}
 	
 	//디테일페이지에 결재라인정보출력하기
@@ -40,6 +40,11 @@ public class LineService {
 	public List<ParticipantsLineDTO> getAllPart(){
 		return lineDAO.selectAllPart();
 	}
-		
+	
+	//결재상태업데이트 함수들
+	//대기->결재
+	public void updateWaitToApproval(int id) {
+		lineDAO.updateWaitToApproval(id);
+	}
 
 }

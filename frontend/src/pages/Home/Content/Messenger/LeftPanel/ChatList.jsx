@@ -1,21 +1,24 @@
 import React, { useEffect } from 'react';
 import styles from '../Messenger.module.css';
 import { useChatStore } from '../../../../../store/messengerStore';
-import { sendMessage, subscribeToRoom } from '../../../../../commons/websocket';
-import axios from 'axios';
-import { BaseUrl } from '../../../../../commons/config';
-import { connectWebSocket } from '../../../../../commons/websocket';
+import { sendMessage, connectWebSocket } from '../../../../../commons/websocket';
+import { format } from 'date-fns';
 
 const ChatList = ({ chatRooms, onChatSelect }) => {
-  const { setSelectedChat, addChatRoom } = useChatStore();
+  const { setSelectedChat, addChatRoom, updateChatRoom } = useChatStore();
 
   useEffect(() => {
     const handleMessage = (message) => {
       if (message.type === 'NEW_CHAT_ROOM') {
-        console.log("새로운 채팅방 생성:", message.room);
+        console.log("New chat room received:", message.room);
         addChatRoom(message.room);
+      } else if (message.type === 'CHAT') {
+        updateChatRoom(message.roomSeq, {
+          lastMessage: message.messageContent,
+          lastMessageTime: message.sendTime,
+          unreadCount: (chatRooms.find(room => room.roomSeq === message.roomSeq)?.unreadCount || 0) + 1
+        });
       }
-      // 다른 타입의 메시지 처리...
     };
 
     const disconnect = connectWebSocket(handleMessage);
@@ -23,23 +26,32 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
     return () => {
       if (disconnect) disconnect();
     };
-  }, [addChatRoom]);
+  }, [addChatRoom, updateChatRoom]);
 
   const handleChatSelect = (chat) => {
     setSelectedChat(chat);
-
+    onChatSelect(chat);
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
-    const message = {
+    sendMessage("/app/chat.addUser", {
       roomSeq: chat.roomSeq,
       messageType: 'JOIN',
       senderSeq: sessionUser.empSeq,
       senderName: sessionUser.empName
-    };
-    
-    sendMessage("/app/chat.addUser", message);
+    });
+    // 읽음 처리
+    updateChatRoom(chat.roomSeq, { unreadCount: 0 });
   };
 
-  console.log(chatRooms);
+  const formatMessageTime = (time) => {
+    if (!time) return '';
+    const messageDate = new Date(time);
+    const now = new Date();
+    if (messageDate.toDateString() === now.toDateString()) {
+      return format(messageDate, 'HH:mm');
+    } else {
+      return format(messageDate, 'MM/dd');
+    }
+  };
 
   return (
     <div className={styles.chatList}>
@@ -49,12 +61,18 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
           className={styles.chatItem}
           onClick={() => handleChatSelect(chat)}
         >
-          <div className={styles.avatar}> 
-            <img className={styles.avatar} src={chat.roomAvatar} alt="Avatar" />
+          <div className={styles.avatar}>
+          <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
           </div>
           <div className={styles.chatInfo}>
-            <h4>{chat.roomName}</h4>
+            <h4>{chat.customRoomName || chat.roomName}</h4>
             <p>{chat.lastMessage}</p>
+          </div>
+          <div className={styles.chatMeta}>
+            <span className={styles.time}>{formatMessageTime(chat.lastMessageTime)}</span>
+            {chat.unreadCount > 0 && (
+              <span className={styles.unreadCount}>{chat.unreadCount}</span>
+            )}
           </div>
         </div>
       ))}

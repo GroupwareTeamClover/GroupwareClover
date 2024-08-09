@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import styles from './DetailBoard.module.css';
-import React, { forwardRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import { IconContext } from 'react-icons';
-import { GoStar } from 'react-icons/go';
+import { GoStar, GoStarFill } from 'react-icons/go';
 import { LuEye } from 'react-icons/lu';
 import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
@@ -24,6 +24,8 @@ const DetilBoard = () => {
     const [scrollMove, setScrollMove] = useState(0);
     const [countComments, setCountComments] = useState(0);
     const [files, setFiles] = useState([]);
+    const [viewCount, setViewCount] = useState(0);
+    const [isImportant, setIsImportant] = useState();
 
     const navi = useNavigate();
 
@@ -39,12 +41,25 @@ const DetilBoard = () => {
 
     useEffect(() => {
         axios.get(`${BaseUrl()}/boardlist/boardInfo`, { params: { boardlistSeq: boardlistSeq } }).then(resp => {
-            setBoardlistName(resp.data.boardlistName);
+            (resp.data.boardlistName !== undefined) ? setBoardlistName(resp.data.boardlistName) : setBoardlistName("중요 게시물");
         });
         axios.get(`${BaseUrl()}/board/postInfo/${boardSeq}`).then(resp => {
             setPost(prev => ({ ...prev, ...resp.data }));
             setWriteDate(format(new Date(Date.parse(resp.data.boardWriteDate)), 'yyyy.MM.dd HH:mm'));
             contentRef.current.innerHTML = resp.data.boardContent;
+            setViewCount(resp.data.boardViewCount);
+        }).then(() => {
+            //해당 글번호가 세션에 없으면 조회수 증가 후 세션에 추가
+            const viewPage = JSON.parse(sessionStorage.getItem('viewPage')) || [];
+            if (!viewPage.includes(boardSeq)) {
+                axios.put(`${BaseUrl()}/board/viewCount`, null, { params: { boardSeq: boardSeq } }).then(resp => {
+                    if (resp.status === 200) {
+                        viewPage.push(boardSeq);
+                        sessionStorage.setItem('viewPage', JSON.stringify(viewPage));
+                        setViewCount(prev => prev + 1);
+                    }
+                })
+            }
         });
         axios.get(`${BaseUrl()}/board/writerInfo/${sessionData.empId}`).then(resp => {
             setSessionWriter(resp.data);
@@ -56,6 +71,9 @@ const DetilBoard = () => {
         });
         axios.get(`${BaseUrl()}/attachment/${'board'}/${boardSeq}`).then(resp => {
             setFiles(resp.data);
+        });
+        axios.get(`${BaseUrl()}/board/status/important/${sessionData.empSeq}/${boardSeq}`).then(resp => {
+            (resp.data) ? setIsImportant(true) : setIsImportant(false);
         })
     }, [boardSeq, boardlistSeq, sessionData.empId]);
 
@@ -133,16 +151,39 @@ const DetilBoard = () => {
         }
     }
 
+    // 중요게시글 추가
+    const handleAddImportant = async () => {
+        await axios.post(`${BaseUrl()}/board/important`, {
+            empSeq: sessionData.empSeq,
+            boardSeq: boardSeq
+        }).then(resp => {
+            { resp.status === 200 && alert("중요 게시글에 추가되었습니다!"); setIsImportant(true); }
+        })
+    }
+    // 중요게시글 삭제
+    const handleRemoveImportant = async () => {
+        await axios.delete(`${BaseUrl()}/board/important`, { params: { empSeq: sessionData.empSeq, boardSeq: boardSeq } }).then(resp => {
+            { resp.status === 200 && alert("중요 게시글에서 삭제되었습니다!"); setIsImportant(false); }
+        })
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>{boardlistName}</div>
             <div className={styles.content}>
                 <div className={styles.titleBox}>
-                    <div className={styles.star}>
-                        <IconContext.Provider value={{ color: "#000000", className: styles.starIcon }}>
-                            <GoStar size="20" />
-                        </IconContext.Provider>
-                    </div>
+                    {isImportant ?
+                        <div className={styles.star}>
+                            <IconContext.Provider value={{ color: "#000000", className: styles.starFillIcon }}>
+                                <GoStarFill size="20" onClick={handleRemoveImportant} />
+                            </IconContext.Provider>
+                        </div> :
+                        <div className={styles.star}>
+                            <IconContext.Provider value={{ color: "#000000", className: styles.starIcon }}>
+                                <GoStar size="20" onClick={handleAddImportant} />
+                            </IconContext.Provider>
+                        </div>
+                    }
                     <p className={styles.title}>{post.boardTitle}</p>
                 </div>
                 <div className={styles.infoBox}>
@@ -151,7 +192,7 @@ const DetilBoard = () => {
                         <div className={styles.date}>
                             {writeDate}
                         </div>
-                        <div className={styles.view}><LuEye />&nbsp;{post.boardViewCount}</div>
+                        <div className={styles.view}><LuEye />&nbsp;{viewCount}</div>
                     </div>
                 </div>
                 {files.length > 0 &&

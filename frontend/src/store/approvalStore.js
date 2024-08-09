@@ -34,8 +34,13 @@ export const useApprovalStore = create((set) => ({
     cloneDocCode: {},
     setCloneDocCode: (param)=>{ set({cloneDocCode: param })},
     cloneEmpInfo: [],
-    setCloneEmpInfo: (param)=>{ set({cloneEmpInfo: param})}
+    setCloneEmpInfo: (param)=>{ set({cloneEmpInfo: param})},
+
+    //모달에서 확인을 클릭했을때
+    isModalComplete:false,
+    setIsModalComplete:(modalStatus)=>{set({isModalComplete: modalStatus})},
     
+
 
 
 }))

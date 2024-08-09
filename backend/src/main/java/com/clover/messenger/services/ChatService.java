@@ -19,6 +19,7 @@ import com.clover.employee.dao.EmployeeDAO;
 
 @Service
 public class ChatService {
+    
     @Autowired
     private ChatDAO chatDAO;
 
@@ -27,8 +28,16 @@ public class ChatService {
      * @param empSeq 사용자의 사원 번호
      * @return 채팅방 목록
      */
-    public List<ChatRoomDTO> getChatRooms(int empSeq) {
-        return chatDAO.getChatRooms(empSeq);
+    public List<ChatRoomDTO> getChatRoomsWithDetails(int empSeq) {
+        List<ChatRoomDTO> rooms = chatDAO.getChatRooms(empSeq);
+        for (ChatRoomDTO room : rooms) {
+            ChatMessageDTO lastMessage = chatDAO.getLastMessage(room.getRoomSeq());
+            int unreadCount = chatDAO.getUnreadMessageCount(room.getRoomSeq(), empSeq);
+            room.setLastMessage(lastMessage != null ? lastMessage.getMessageContent() : null);
+            room.setLastMessageTime(lastMessage != null ? lastMessage.getSendTime() : null);
+            room.setUnreadCount(unreadCount);
+        }
+        return rooms;
     }
 
     @Transactional

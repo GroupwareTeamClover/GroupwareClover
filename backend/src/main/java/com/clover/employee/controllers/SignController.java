@@ -1,15 +1,27 @@
 package com.clover.employee.controllers;
 
-import com.clover.employee.dto.EmployeeDTO;
-import com.clover.employee.services.EmployeeService;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.clover.admin.dto.AdminLogDTO;
+import com.clover.admin.services.AdminLogService;
+import com.clover.employee.dto.EmployeeDTO;
+import com.clover.employee.services.EmployeeService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/sign")
@@ -17,13 +29,22 @@ public class SignController {
 
     @Autowired
     private EmployeeService employeeService;
+    
+    @Autowired
+    private AdminLogService adminlogService;
 
     @Autowired
     private HttpSession session;
 
     @GetMapping
-    public ResponseEntity<?> signIn(@RequestParam String id, @RequestParam String pw) {
+    public ResponseEntity<?> signIn(@RequestParam String id, @RequestParam String pw, HttpServletRequest request) {
         EmployeeDTO empInfo = employeeService.SignIn(id, pw);
+        String logintryId = id;
+        System.out.println(id);
+        // 정하윤 로그아이피
+        String clientIp = getClientIp(request);	// ip주소 가져오기 
+        LocalDateTime localLogTime = LocalDateTime.now(); // 접속시간
+        
         if(empInfo != null) {
             session.setAttribute("cloverSeq", empInfo.getEmpSeq());
             session.setAttribute("cloverId", empInfo.getEmpId());
@@ -42,9 +63,20 @@ public class SignController {
             response.put("employeeInfo", empInfo);
             response.put("wsToken", wsToken);
 
+            // 정하윤 로그 아이피 AdminLogService로 보내기 : 로그 기록 테이블에 insert하게. 
+            System.out.println("확인: "+ logintryId);
+            AdminLogDTO adminlogdto = new AdminLogDTO(0, empInfo.getEmpSeq(), empInfo.getEmpName(), logintryId,
+            		empInfo.getDeptCode(), clientIp, localLogTime, "로그인 성공");
+            adminlogService.insertLog(adminlogdto);
+           
             
             return ResponseEntity.ok(response);
         }
+        // 정하윤 : 로그인 실패한 로그 기록 테이블에 insert. 
+        AdminLogDTO adminlogdto = new AdminLogDTO(0, 0, "", logintryId, 0, clientIp, localLogTime, "로그인 실패");
+        System.out.println("제발 "+adminlogdto.getEmpId());
+        adminlogService.insertLog(adminlogdto);
+        
         return ResponseEntity.badRequest().body("로그인 실패");
     }
 
@@ -62,6 +94,34 @@ public class SignController {
         } catch (Exception e){
             return ResponseEntity.ok("fail");
         }
+    }
+
+   
+    // 정하윤 - ip주소 가져오는 메서드
+    // 네트워크 환경과 설정에 따라 ip주소 헤더가 달라질 수 있기때문에 분리. 보통 x-forwarded-for가 붙어있음. 
+    
+    private String getClientIp(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp != null && !clientIp.isEmpty() && !"unknown".equalsIgnoreCase(clientIp)) {
+            return clientIp.split(",")[0].trim(); // 첫 번째 IP 주소 반환
+        }
+
+        clientIp = request.getHeader("X-Real-IP");
+        if (clientIp != null && !clientIp.isEmpty() && !"unknown".equalsIgnoreCase(clientIp)) {
+            return clientIp;
+        }
+
+        clientIp = request.getHeader("Forwarded");
+        if (clientIp != null && !clientIp.isEmpty() && clientIp.startsWith("for=")) {
+            return clientIp.substring(4).split(";")[0]; // "for=" 뒤의 IP 주소 반환
+        }
+
+        clientIp = request.getHeader("X-Cluster-Client-IP");
+        if (clientIp != null && !clientIp.isEmpty() && !"unknown".equalsIgnoreCase(clientIp)) {
+            return clientIp;
+        }
+
+        return request.getRemoteAddr(); // 위의 헤더가 없으면 기본 IP 주소 반환
     }
 
 

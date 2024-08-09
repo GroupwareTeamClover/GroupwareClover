@@ -54,5 +54,26 @@
 		update board set boardlist_seq = #{boardlistSeq}, board_title = #{boardTitle}, board_content = #{boardContent}, board_write_date = sysdate
 		where board_seq = #{boardSeq}
 	</update>
+	
+	<update id="increaseViewCount">
+		update board set board_view_count = board_view_count + 1 where board_seq = #{seq}
+	</update>
+	
+	<insert id="addImportant">
+		insert into board_important values(#{empSeq}, #{boardSeq})
+	</insert>
+	
+	<delete id="removeImportant">
+		delete from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
+	</delete>
+	
+	<select id="selectImportantPosts" resultType="com.clover.board.dto.BoardDTO">
+		select * from board where board_seq in (select board_seq from board_important where emp_seq = #{empSeq})
+		order by board_seq desc
+	</select>
+	
+	<select id="isImportant" resultType="boolean">
+		select count(*) from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
+	</select>
 
 </mapper>
