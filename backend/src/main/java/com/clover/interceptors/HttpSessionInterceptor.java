@@ -1,16 +1,29 @@
 package com.clover.interceptors;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import com.clover.messenger.services.ChatService;
+import com.clover.messenger.services.UserSessionService;
+
 import jakarta.servlet.http.HttpSession;
 
+@Component
 public class HttpSessionInterceptor implements HandshakeInterceptor {
+
+    // @Autowired
+    // private UserSessionService userSessionService;  
+
+    // @Autowired
+    // private ChatService chatService;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
@@ -24,6 +37,23 @@ public class HttpSessionInterceptor implements HandshakeInterceptor {
             if (session.getAttribute("cloverSeq") == null) {
                 return false; // 로그인되지 않은 경우 연결 거부
             }
+
+           
+
+        //     String sessionId = session.getId();
+        //     System.out.println(sessionId);
+        //     int empSeq = (int) session.getAttribute("cloverSeq");
+
+        //     HashMap<String, Object> profile = chatService.getProfile(empSeq);
+        //     System.out.println(profile);
+
+        //     String cloverName = (String) session.getAttribute("cloverName");
+        //     String cloverAvatar = (String) session.getAttribute("cloverAvatar");
+        //     int deptCode = (int) session.getAttribute("cloverDeptCode");
+        //     System.out.println(empSeq + cloverName + cloverAvatar);
+
+        //     // 세션 정보를 UserSession 테이블에 저장하는 로직 추가
+        //     userSessionService.saveUserSession(sessionId, empSeq, cloverName, cloverAvatar, deptCode);
         }
         return true;
     }
@@ -32,5 +62,8 @@ public class HttpSessionInterceptor implements HandshakeInterceptor {
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
                                WebSocketHandler wsHandler, Exception exception) {
         // 핸드셰이크 후 추가 작업이 필요한 경우 여기에 구현
+
+
+        
     }
 }
