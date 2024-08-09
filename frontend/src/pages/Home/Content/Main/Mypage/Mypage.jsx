@@ -112,7 +112,8 @@ export const Mypage = ({empSeq, closeModal}) => {
       <div className={styles.bottom}>
         {!updateForm ?
           <>
-            <button onClick={handleUpdateForm}>수정</button>
+            <button onClick={handleUpdateForm}>정보 수정</button>
+            <button onClick={handleUpdateForm}>비밀번호 변경</button>
             <button onClick={() => closeModal()}>닫기</button>
           </>
           :
