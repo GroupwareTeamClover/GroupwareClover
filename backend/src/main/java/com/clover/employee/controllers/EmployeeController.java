@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clover.approval.services.LineService;
 import com.clover.employee.dto.EmployeeDTO;
 import com.clover.employee.services.EmployeeService;
 
@@ -25,8 +24,6 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
-    @Autowired
-	private LineService lineService;
 
     @GetMapping("/{empSeq}")
     public ResponseEntity<Map<String, Object>> getMyInfo(@PathVariable int empSeq) {
@@ -57,11 +54,6 @@ public class EmployeeController {
         employeeService.leaveEmployee(empSeq);
     }
 
-    /* 전자결재 결재자 라인 선택시 임직원 정보 가져오기 */
-    @GetMapping
-	public ResponseEntity<List<Map<String,?>>> get(){
-		return ResponseEntity.ok(lineService.getMemberInfo());
-	}
 
     @GetMapping("/exists")
     public ResponseEntity<EmployeeDTO> existsEmployee(String empName, String empId, String empEmail) {

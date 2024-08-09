@@ -20,7 +20,7 @@ export const ChoiceLine= () =>{
     const [folderData, setFolderData] = useState([]);
 
     useEffect(() => {
-        axios.get(`${BaseUrl()}/employee`).then((resp) => {
+        axios.get(`${BaseUrl()}/approval/line`).then((resp) => {
             const data = resp.data;
             // 부서별로 데이터를 그룹화
             const departmentMap = data.reduce((acc, current) => {

@@ -19,7 +19,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const navi = useNavigate();
 
     //********************************write 시 코드******************************************/
-    const {cloneDocCode, cloneEmpInfo} =useApprovalStore();
+    const {cloneDocCode, cloneEmpInfo, isModalComplete, setIsModalComplete} =useApprovalStore();
     //세션정보
     const {sessionData} = useMemberStore();
     const [isReadOnly, setIsReadOnly] = useState(false); // 추가된 상태
@@ -69,14 +69,28 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             "docType" : 'business', // 문서 타입
             "docData" : docData
         })
-        console.log(documentDTO);
-        console.log(apvLineDTOs);
-        console.log(participantsLineDTOs);
-        console.log(docData);
+        // console.log(documentDTO);
+        // console.log(apvLineDTOs);
+        // console.log(participantsLineDTOs);
+        // console.log(docData);
 
     }, [date, title, content, isEmergency, docData]);
    
 
+    // id 값이 없는 경우 상태 초기화
+    useEffect(() => {
+        if (isModalComplete) {
+            setDate('');
+            setTitle('');
+            setContent('');
+            if (editorRef.current) {
+                editorRef.current.getInstance().setHTML(''); // 에디터 내용 초기화
+            }
+        }
+        setIsModalComplete(false);
+    }, [isModalComplete]);
+
+        
     //insert
     useEffect(() => {
         if (isInsert && !id) {  // id가 없는 경우에만 실행
@@ -95,6 +109,8 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
 
 
+
+
     //********************************detail 시 코드******************************************/
     //select
     const contentRef = useRef(null);
@@ -103,7 +119,9 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             axios.get(`${BaseUrl()}/approval/document/${id}/${type}?table=business`, business).then((resp) => {
                 console.log(resp.data);
                 const writeDate = new Date(resp.data.BS_WRITE_DATE).toISOString().split('T')[0];
-                contentRef.current.innerHTML = resp.data.BS_CONTENT;
+                if (contentRef.current) {  // contentRef.current가 null이 아닌지 확인
+                    contentRef.current.innerHTML = resp.data.BS_CONTENT;
+                }
                 setDocData((prev) => ({
                     ...prev,
                     bsSeq: resp.data.BS_SEQ,

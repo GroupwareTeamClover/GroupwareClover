@@ -5,8 +5,9 @@ import { Card } from './Card/Card'
 import { useMemberStore } from '../../../../../../store/store'
 import { BaseUrl } from '../../../../../../commons/config'
 import { format } from 'date-fns';
-import { IoMdArrowDropleft,IoMdArrowDropright } from "react-icons/io";
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos  } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
+
 
 export const Main=()=>{
     
@@ -121,8 +122,22 @@ export const Main=()=>{
                 </div>
                 <div className={styles.cardLine}>
                     <div className={styles.pagination}>
-                        <span onClick={handlePrevPage} disabled={currentPage === 0}><IoMdArrowDropleft  size={25}/></span>
-                        <span onClick={handleNextPage} disabled={currentPage === Math.ceil(filteredMainCard.length / 5) - 1}><IoMdArrowDropright  size={25}/></span>
+                    <div className={styles.pagination}>
+                        <span 
+                            className={styles.paginationSpan}
+                            onClick={handlePrevPage} 
+                            disabled={currentPage === 0}
+                        >
+                            <MdOutlineArrowBackIos size={20}/>
+                        </span>
+                        <span 
+                            className={styles.paginationSpan}
+                            onClick={handleNextPage} 
+                            disabled={currentPage === Math.ceil(filteredMainCard.length / 5) - 1}
+                        >
+                            <MdOutlineArrowForwardIos size={20}/>
+                        </span>
+                    </div>
                     </div>
                 </div>
             </div>

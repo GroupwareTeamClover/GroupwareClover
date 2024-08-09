@@ -1,9 +1,11 @@
 import styles from './Card.module.css'
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
+import { useApprovalStore } from '../../../../../../../store/approvalStore'; 
 
 export const Card= ({stateName, title, drafterName, writeDate, egcYn, seq, detailName}) =>{
     const navi = useNavigate();
+
     // 날짜 변환 함수
     const formatDate = (date) => {
         if (!date) return '-';

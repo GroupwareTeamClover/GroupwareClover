@@ -49,6 +49,16 @@
     align-items: center;
 }
 
+.pagination span {
+    margin: 0 10px; 
+    cursor: pointer; 
+}
+
+.pagination span:disabled {
+    opacity: 0.5; 
+    cursor: not-allowed; 
+}
+
 
 /* 리스트목록 */
 .ingBox{
