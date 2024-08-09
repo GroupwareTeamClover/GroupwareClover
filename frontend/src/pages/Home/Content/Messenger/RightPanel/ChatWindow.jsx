@@ -20,13 +20,11 @@ const ChatWindow = ({ chat }) => {
 
   useEffect(() => {
     scrollToBottom();
-    console.log('Messages updated:', currentMessages);
   }, [currentMessages]);
 
   const fetchMessages = useCallback(async () => {
     try {
       const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
-      console.log('Fetched messages:', response.data);
       setMessages(chat.roomSeq, response.data);
     } catch (error) {
       console.error('메시지를 가져오는 중 오류 발생:', error);
@@ -38,7 +36,6 @@ const ChatWindow = ({ chat }) => {
       fetchMessages();
       // 채팅방 구독
       const unsubscribe = subscribeToRoom(chat.roomSeq, (message) => {
-        console.log('Received message:', message);
         addMessage(chat.roomSeq, message);
       });
 
@@ -60,14 +57,11 @@ const ChatWindow = ({ chat }) => {
       };
 
       sendMessage("/app/chat.sendMessage", message);
-      console.log("Sending message:", message);
 
       setInputMessage('');
     }
   }, [chat.roomSeq, inputMessage]);
 
-  console.log('Current chat room:', chat.roomSeq);
-  console.log('Message list:', currentMessages);
 
   return (
     <div className={styles.chatWindow}>

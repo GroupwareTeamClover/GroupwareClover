@@ -117,8 +117,16 @@ public class ChatDAO {
      * @param empSeq 사용자의 사원 번호
      * @return 사용자가 참여중인 채팅방 목록
      */
+    // public List<ChatRoomDTO> getChatRooms(int empSeq) {
+    //     return mybatis.selectList("Chat.getChatRooms", empSeq);
+    // }
+
     public List<ChatRoomDTO> getChatRooms(int empSeq) {
-        return mybatis.selectList("Chat.getChatRooms", empSeq);
+        return mybatis.selectList("Chat.getChatRoomsWithCustomInfo", empSeq);
+    }
+
+    public ChatMessageDTO getLastMessage(int roomSeq) {
+        return mybatis.selectOne("Chat.getLastMessage", roomSeq);
     }
    
     /**
