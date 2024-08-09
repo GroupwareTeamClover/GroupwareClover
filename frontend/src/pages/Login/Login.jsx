@@ -93,7 +93,7 @@ export const Login = ({ setSign, setAdmin }) => {
 
       // 가입 대기 막아야됨
       sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
-      if(res.data.workerStateCode === 0) {
+      if(res.data.employeeInfo.workerStateCode === 0) {
         sessionStorage.setItem("sessionAdmin", "true");
         setAdmin(true);
       }

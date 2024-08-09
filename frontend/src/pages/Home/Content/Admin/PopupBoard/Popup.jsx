@@ -13,7 +13,7 @@ export const Popup = () => {
   console.log("headerTxt"+ state?.type)
 
   // 상태에 따라 header 내용 설정
-  const headerText = state?.type || '전자결재';
+  const headerText = state?.type || '팝업공지글 목록';
 
 
     const navi = useNavigate();
