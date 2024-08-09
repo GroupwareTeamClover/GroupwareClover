@@ -31,14 +31,9 @@ public class AttendanceServoce {
 
         // 리스트 정보
         List<AttendanceDTO> attList = attendanceDAO.AttendanceList(map);
-        for(AttendanceDTO att : attList){
-            System.out.println("seq ==== " + att.getAttSeq());
-        }
-
         Map<String, Object> result = new HashMap<>();
         result.put("count", attCount);
         result.put("list", attList);
-
         return result;
     }
 
