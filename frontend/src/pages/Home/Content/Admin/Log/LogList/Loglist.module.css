@@ -232,29 +232,9 @@
     padding-bottom: 5px;
 }
 
-.statusBtn{
-    margin-left: 10px;
-    background-color: #a6c76c;
-    border: none;
-    color: white;
-    font-size: 13px;
-    padding: 3.5px;
-    border-radius: 3px;
-    letter-spacing: -1px;
-}
-.statusBtn:hover{
+.table tbody tr:hover {
+    background-color: #e3f8eed8;
     cursor: pointer;
-    box-shadow: 0px 0px 5px #cad1cb;
-}
-.statusBtn2{
-    margin-left: 10px;
-    background-color: #12ac57;
-    border: none;
-    color: white;
-    font-size: 13px;
-    padding: 3.5px;
-    border-radius: 3px;
-    letter-spacing: -1px;
 }
 
 
@@ -268,5 +248,6 @@
 }
 
 .pagination{
-    flex:2;
+    flex:4;
+    padding-bottom: 80px;
 }

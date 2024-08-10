@@ -1,19 +1,28 @@
 import styles from './AdminSideMenu.module.css';
 import { useNavigate, useLocation } from "react-router-dom";
 import { IoHome } from "react-icons/io5";
-import { FaExclamationCircle } from 'react-icons/fa';
-import { FaUserTie } from 'react-icons/fa';
+import { FaExclamationCircle, FaUserTie } from 'react-icons/fa';
 import { LiaClipboardListSolid } from "react-icons/lia";
-import { FaListAlt } from "react-icons/fa";
 import { FaHistory } from 'react-icons/fa';
-
 import { HiMenuAlt3 } from "react-icons/hi";
 import React, { useEffect, useMemo, useState } from 'react';
+import { GiTalk } from 'react-icons/gi';
 
-export const AdminSideMenu = ({ open, setOpen }) => {
- // 메모이제이션 : 함수의 실행 결과를 캐시(cache)에 저장해두고, 동일한 입력값으로 함수가 다시 호출될때 캐시된 결과를 재사용하는 최적화 기법. 
- //               함수의 계산 결과를 저장해두기 때문에, 불필요한 연산을 피할 수 있어 성능 향상!! 
- //               useMemo, useCallback 훅을 사용해서 컴포넌트가 불필요하게 다시 렌더링되거나 함수가 재정의 되는 것을 방지한다. 
+export const AdminSideMenu = () => {
+  // 사이드바 상태 초기화
+  const [open, setOpen] = useState(() => {
+    return localStorage.getItem("sidebar") === "true";
+  });
+
+  // 드롭다운 상태 초기화
+  const [dropdown, setDropdown] = useState(() => {
+    const savedDropdown = localStorage.getItem("dropdown");
+    return savedDropdown ? JSON.parse(savedDropdown) : { member: false, popup: false };
+  });
+
+  const [selectedMenu, setSelectedMenu] = useState('');
+  const [selectedParentMenu, setSelectedParentMenu] = useState('');
+
   const menus = useMemo(() => [
     { name: "Home", link: "/", type: "Home", icon: IoHome },
     { 
@@ -31,63 +40,47 @@ export const AdminSideMenu = ({ open, setOpen }) => {
       ]
     },
     { name: "게시글관리", link: "/community", type: "community", icon: LiaClipboardListSolid },
-    { name: "접속로그관리", link: "/log", type: "접속 로그 관리", icon: FaHistory }
+    { name: "접속로그관리", link: "/log", type: "접속 로그 관리", icon: FaHistory },
+    { name: "Messenger", link: "/chat", type: "Messenger", icon: GiTalk },
   ], []);
-
 
   const navi = useNavigate();
   const location = useLocation();
 
-  const [dropdown, setDropdown] = useState({
-    member: false,
-    popup: false
-  });
-  const [selectedMenu, setSelectedMenu] = useState('');
-  const [selectedParentMenu, setSelectedParentMenu] = useState('');
   const handleMenuClick = (link, type, parentType) => {
     setSelectedMenu(type);
     setSelectedParentMenu(parentType);
     navi(link, { state: { type } });
   };
 
-
   const handleSideToggle = () => {
     setOpen(prev => {
-      const sideState = !prev;
-
-      if (!sideState) {
-        setDropdown({ member: false, popup: false });
-      }
-
-      localStorage.setItem("sidebar", sideState ? "true" : "false");
-      return sideState;
+      const newState = !prev;
+      localStorage.setItem("sidebar", newState ? "true" : "false");
+      return newState;
     });
   };
 
- // useEffect로 추가적인 드롭다운 상태 관리
-  useEffect(() => {
-    if (!open) {
-      // 사이드바가 닫혀 있으면 드롭다운을 모두 닫음
-      setDropdown({ member: false, popup: false });
-    }
-  }, [open]);
-
-  const toggleDropdown = (menuType, firstSubmenu) => {
-    if (!open) {
-      setOpen(true);
-      //handleMenuClick(firstSubmenu.link, firstSubmenu.type);
-      setDropdown(prev => ({ ...prev, [menuType]: true }));
-    } else {
-      setDropdown(prevState => ({
-        ...prevState,
-        [menuType]: !prevState[menuType]
-      }));
-    }
+  const toggleDropdown = (menuType) => {
+    setDropdown(prevState => {
+      const newState = { ...prevState, [menuType]: !prevState[menuType] };
+      localStorage.setItem("dropdown", JSON.stringify(newState));
+      return newState;
+    });
   };
 
   useEffect(() => {
-    const path = location.pathname;
+    if (!open) {
+      setDropdown(prev => {
+        const newState = { ...prev, member: false, popup: false };
+        localStorage.setItem("dropdown", JSON.stringify(newState));
+        return newState;
+      });
+    }
+  }, [open]);
 
+  useEffect(() => {
+    const path = location.pathname;
     let newSelectedMenu = '';
     let newDropdownState = { member: false, popup: false };
 
@@ -95,28 +88,30 @@ export const AdminSideMenu = ({ open, setOpen }) => {
       if (path.startsWith(menu.link)) {
         newSelectedMenu = menu.type;
         if (menu.submenus) {
-          // 드롭다운이 열려야 할 메뉴의 서브 메뉴를 확인
           const matchedSubmenu = menu.submenus.find(submenu => path === submenu.link);
           if (matchedSubmenu) {
             newSelectedMenu = matchedSubmenu.type;
           }
-
           newDropdownState = {
             ...newDropdownState,
             [menu.type]: true
           };
         }
       }
-    },[]);
+    });
 
     if (newSelectedMenu !== selectedMenu) {
       setSelectedMenu(newSelectedMenu);
-      setDropdown(newDropdownState);
+      setDropdown(prev => ({
+        ...prev,
+        ...newDropdownState
+      }));
+      localStorage.setItem("dropdown", JSON.stringify({
+        ...dropdown,
+        ...newDropdownState
+      }));
     }
   }, [location.pathname, selectedMenu, menus]);
-
- 
-
 
   return (
     <div className={styles.container}>
@@ -127,10 +122,12 @@ export const AdminSideMenu = ({ open, setOpen }) => {
         <div className={styles.menus}>
           {menus.map((menu, i) => (
             <div key={i}>
-              <div className={styles.menuLink} onClick={() => menu.submenus ? toggleDropdown(menu.type, menu.submenus[0]) : handleMenuClick(menu.link, menu.type, menu.type)}
-                style={{ color: selectedMenu === menu.type ? 'orange' : 'black' }} >
-                    <div>{React.createElement(menu.icon, { size: "30", color: "white" })}</div>
-                    {open && <h3 className={styles.menuTitle} style={{ color: selectedMenu === menu.type ? 'orange' : 'white' }}>{menu.name}</h3>}
+              <div 
+                className={styles.menuLink} 
+                onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type, menu.type)} 
+              >
+                <div>{React.createElement(menu.icon, { size: "30" })}</div>
+                {open && <h3 className={styles.menuTitle}>{menu.name}</h3>}
               </div>
               {menu.submenus && dropdown[menu.type] && (
                 <div className={styles.dropdown}>

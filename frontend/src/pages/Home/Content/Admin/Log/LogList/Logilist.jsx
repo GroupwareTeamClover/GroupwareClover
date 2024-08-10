@@ -1,28 +1,43 @@
-import { Pagination } from 'rsuite';
+import { Loader } from 'rsuite';
 import styles from './Loglist.module.css';
 import { FaSearch } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMemStore } from '../../../../../../store/store';
+import axios from 'axios';
+import { BaseUrl } from '../../../../../../commons/config';
+import { deptName } from '../../../../../../commons/common';
+import { Pagination } from '../../../../../../components/Pagination/Pagination';
+import {format} from 'date-fns';
 
 export const Loglist=()=>{
 
     const {storemembers, setstoremembers} = useMemStore();
     const [loglist, setLoglist] = useState([]);
     const [filtered, setFiltered] = useState(loglist);
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
 
-    // // 서버에서 팝업공지글들 가져옴
-    // useEffect(()=>{
-    //     axios.get(`${BaseUrl()}/adminpopup`).then((resp)=>{
-    //         setPoplist(resp.data);
-    //         setFiltered(resp.data);
-    //         setstoremembers(false);
-    //         setIsLoading(false);
-    //         console.log(resp.data)
-    //     });
 
+    // 서버에서 팝업공지글들 가져옴
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminlog`).then((resp)=>{
+            setLoglist(resp.data);   // loglist에 담기
+            setFiltered(resp.data);  // filtered에도 담기 (검색)
+            setstoremembers(false);
+            setIsLoading(false);     // 로딩할때
+            console.log(resp.data)
+        }); 
+    },[storemembers]);
+
+     // 페이지네이션 설정
+     const PER_PAGE = 10;
+     const pageCount = Math.ceil(filtered.length / PER_PAGE);
+ 
+     const handlePageChange = ({selected}) => {
+         setCurrentPage(selected);
         
-    // },[storemembers]);
-
+         window.scrollTo(0,320); // 페이지 변경 시 스크롤 맨 위로 이동
+     };
     
     //검색
     const maxSearchLength = 30;
@@ -73,7 +88,10 @@ export const Loglist=()=>{
 
     }
 
-    const handleSearch =()=>{    }
+    const handleSearch =()=>{    
+
+    }
+
     const handleReset=()=>{
         setSearchType("");
         setKeyword("");
@@ -147,30 +165,50 @@ export const Loglist=()=>{
                             <td className={styles.theadtd}>접속IP</td>
                         </tr>
                     </thead>
-                    <tbody className={styles.tbody}>
-                        <tr>
-                            <td className={styles.theadtd}>접속시간</td>
-                            <td className={styles.theadtd}>아이디</td>
-                            <td className={styles.theadtd}>이름</td>
-                            <td className={styles.theadtd}>부서 </td>
-                            <td className={styles.theadtd}>로그정보</td>
-                            <td className={styles.theadtd}>접속IP</td>
-                        </tr>
+                    <tbody className={styles.tbody}>               
+                        {isLoading ? (
+                            <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
+                        ) : ((filtered.length === 0) ? (
+                            <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
+                        ) : (
+                                filtered.length > 0 ? (
+                                    filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((log, i) => (
+                                        <tr key={i}>
+                                            <td className={styles.theadtd}>{log.localLogTime ? format(new Date(log.localLogTime), 'yyyy.MM.dd HH:mm:ss') : '날짜 없음'}</td>
+                                            
+                                            <td className={styles.theadtd}>{log.empId}</td>
+                                            <td className={styles.theadtd}>{log.empName === null ? "알 수 없음" : log.empName}</td>
+                                            <td className={styles.theadtd}>{deptName(log.deptCode)=== "미정" ? "알 수 없음":deptName(log.deptCode) } </td>
+                                            <td className={styles.theadtd} style={{color: log.logStatus === "로그인 성공" ? 'green' : 'red'}}>{log.logStatus}</td>
+                                            <td className={styles.theadtd}>{log.clientIp}</td>
+                                        </tr>
+                                    )
+                                )
+                            )
+                            : (
+                                <tr>
+                                    <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
+                                </tr>
+                            )
+                        )
+                    )
+                    }
                     </tbody>
                 </table>
             </div>            
 
-    </div>
-    {/* <div className={styles.pagination}>
-     {/* 페이지네이션 */}
-     {/* {pageCount > 0 && (
-        <Pagination
-        pageCount={pageCount}
-        onPageChange={handlePageChange}
-        currentPage={currentPage}
-        />
-        )}
-    </div> */}
+        </div>
+
+        <div className={styles.pagination}>
+            {/* 페이지네이션 */}
+            {pageCount > 0 && (
+                <Pagination
+                pageCount={pageCount}
+                onPageChange={handlePageChange}
+                currentPage={currentPage}
+                />
+                )}
+        </div>
 
     {/* <Modal isOpen={isModalOpen} onClose={closeModal}>
             <div className={styles.modalForm}>
