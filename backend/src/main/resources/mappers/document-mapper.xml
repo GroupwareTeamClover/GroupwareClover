@@ -129,5 +129,31 @@
 		WHERE d.doc_seq = #{id}
 	</update>
 	
+	<update id="updateDocToReject">
+		UPDATE document d
+		SET 
+		   final_apver_seq = (
+		        SELECT a.apver_id
+		        FROM apv_line a
+		        WHERE a.doc_seq = d.doc_seq
+		          AND a.apv_status_code = 4
+		          AND a.doc_seq = #{id}),
+		    finish_date = CASE 
+		                    WHEN (SELECT COUNT(*) 
+		                          FROM apv_line a 
+		                          WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code = 4) >= 1 
+		                    THEN SYSDATE 
+		                    ELSE finish_date 
+		                 END,
+		    doc_state_code = CASE 
+		                       WHEN (SELECT COUNT(*) 
+		                             FROM apv_line a 
+		                              WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code = 4) >= 1 
+		                       THEN 4
+		                     END
+		WHERE d.doc_seq = #{id}
+	
+	</update>
+	
 
 </mapper>

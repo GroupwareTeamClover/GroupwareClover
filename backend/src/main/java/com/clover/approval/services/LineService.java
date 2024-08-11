@@ -53,5 +53,12 @@ public class LineService {
 		lineDAO.updateWaitToApproval(cleanApvLineSeq);
 		documentDAO.updateDocToApproval(id);
 	}
+	
+	
+	@Transactional
+	public void updateWaitToReject(int id, int lineSeq, String reasonForRejection) {
+		lineDAO.updateWaitToReject(lineSeq, reasonForRejection);
+		documentDAO.updateDocToReject(id);
+	}
 
 }

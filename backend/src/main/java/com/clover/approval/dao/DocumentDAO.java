@@ -56,11 +56,15 @@ public class DocumentDAO {
 		return mybatis.selectList("Document.selectMainDoc",empSeq);
 	}
 	
-	//결재라인업데이트에 따른 문서정보 업데이트
+	//승인업데이트에 따른 문서정보 업데이트
 	public void updateDocToApproval(int docSeq) {
 		mybatis.update("Document.updateDocToApproval",docSeq);
 	}
-	 
+	
+	//반려업데이트에 따른 문서정보 업데이트
+	public void updateDocToReject(int docSeq) {
+		mybatis.update("Document.updateDocToReject",docSeq);
+	}
 	
 	
 

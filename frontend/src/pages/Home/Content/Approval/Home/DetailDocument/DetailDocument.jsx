@@ -14,8 +14,10 @@ import { DragFolder } from "../../Side/ChoiceLine/DragFolder/DragFolder";
 import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./../Document/Menus/DrafterMenu/DrafterMenu";
 import {ApprovalMenu} from "./../Document/Menus/ApprovalMenu/ApprovalMenu";
-import signImage from './../../../../../../images/sign2.PNG';
+import signImage from './../../../../../../images/sign.PNG';
+import rejectImage from './../../../../../../images/reject.PNG';
 import { format } from 'date-fns';
+import { Modal } from "../../../../../../components/Modal/Modal";
 
 export const DetailDocument = ({type}) => {
 
@@ -188,9 +190,11 @@ export const DetailDocument = ({type}) => {
                 cleanApvLineSeq:cleanApvLineSeq,
                 id: id
             }).then(()=>{
+                setIsApproval(false);
                 alert("결재 완료");
                 handleGetAll();
             }).catch(()=>{
+                setIsApproval(false);
                 alert("결재 실패");
             })
 
@@ -202,11 +206,57 @@ export const DetailDocument = ({type}) => {
     },[isApproval])
 
     //반려클릭시 DB업데이트
-    // useEffect(()=>{
-    //     if(isReject){
+    //반려 모달
+    const [ modalState, setModalState ] = useState("");
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isRejectModalComplete, setIsRejectModalComplete]=useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal=()=>{
+        setIsModalOpen(false);
+        setModalState("");
+        setIsReject(false);
+    }
+    const [Page, setPage] = useState(1);
+    //모달내용
+    const [reasonForRejection, setReasonForRejection]=useState();
+    const handleModalInput=(e)=>{
+        setReasonForRejection(e.target.value)
+    }
 
-    //     }
-    // },[isReject])
+    //모달 확인 클릭시
+     const handleRejectComplete=()=>{
+        setIsRejectModalComplete(true);
+    }   
+
+    //모달 취소 클릭시
+    const handleRejectCancle=()=>{
+        closeModal();
+    }
+
+    
+
+    useEffect(()=>{
+            if(isRejectModalComplete){
+                console.log(reasonForRejection);
+                const apvLineSeq=getApvLineSeq();
+                const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
+                //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
+                axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/reject`, {
+                    cleanApvLineSeq:cleanApvLineSeq,
+                    id: id,
+                    reasonForRejection: reasonForRejection
+                }).then(()=>{
+                    setIsRejectModalComplete(false);
+                    setIsReject(false);
+                    alert("반려 완료");
+                    handleGetAll();
+                }).catch(()=>{
+                    setIsRejectModalComplete(false);
+                    setIsReject(false);
+                    alert("반려 실패");
+                })
+            }
+    },[isRejectModalComplete])
 
     //보류클릭시 DB업데이트
     // useEffect(()=>{
@@ -224,7 +274,8 @@ export const DetailDocument = ({type}) => {
             </div>
             <div className={styles.menu}>
               {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
-              {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff}/>}
+              {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} 
+              setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
             </div>
             <div className={styles.detail}>
                 {/* 왼쪽 */}
@@ -257,6 +308,7 @@ export const DetailDocument = ({type}) => {
                                                         <div className={styles.role}><span className={styles.roleText}>{line.roleName}</span></div>
                                                         <div className={styles.name}>
                                                             {line.apvStatusCode===3 && (<div><img src={signImage} alt="Sign" className={styles.imgSize}/></div>)}
+                                                            {line.apvStatusCode===4 && (<div><img src={rejectImage} alt="Sign" className={styles.imgSize}/></div>)}
                                                             <div><span className={styles.nameText}>{line.empName}</span></div>
                                                         </div>
                                                         <div className={styles.docNumber}>{formatDate(line.lineApvDate)}</div>
@@ -276,6 +328,29 @@ export const DetailDocument = ({type}) => {
                 {/* 오른쪽 */}
                 <div className={styles.side}></div>
             </div>
+
+                   
+            {/* 모달창 */}
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <div className={styles.modalForm}>
+                    {modalState === "ModalForm" && (
+                                <> 
+                                    {Page===1 &&(
+                                        <>
+                                            <div className={styles.header}>반려 사유</div>
+                                            <div className={styles.inputBox}>
+                                                <input type="text" placeholder="반려 사유를 입력해주세요." className={styles.inputcss} onChange={handleModalInput}></input>
+                                            </div>
+                                            <div className={styles.modalbtnBox}>
+                                                <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
+                                                <button name="next" onClick={handleRejectCancle} className={styles.btn} > 취소</button>
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                </div>
+            </Modal>
         </div>
     );
 };
