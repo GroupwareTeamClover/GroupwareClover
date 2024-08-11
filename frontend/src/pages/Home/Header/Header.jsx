@@ -6,29 +6,30 @@ import axios from "axios";
 import {BaseUrl} from "../../../commons/config";
 import {useNavigate} from "react-router-dom";
 import {ImExit} from "react-icons/im";
+import {confirmAlert, failAlert, successAlert, timeAlert} from "../../../commons/common";
 
 export const Header = () => {
   const navi = useNavigate();
 
   const {sessionData, setSign, setAdmin} = useMemberStore();
   const handleSignOut = () => {
-    if(window.confirm("로그아웃 할거임?")){
-      axios.delete(`${BaseUrl()}/sign`).then(resp => {
-        console.log(resp.data);
-        if(resp.data === "ok"){
-          sessionStorage.removeItem("sessionUser");
-          sessionStorage.removeItem("sessionAdmin");
-          setSign(false);
-          setAdmin(false);
-          alert("로그아웃 성공");
-          navi("/");
-        } else {
-          alert("로그아웃 실패")
+    confirmAlert("로그아웃 하시겠습니까?").then((result) => {
+        if (result.isConfirmed) {
+          axios.delete(`${BaseUrl()}/sign`).then(resp => {
+            if(resp.data === "ok"){
+              sessionStorage.removeItem("sessionUser");
+              sessionStorage.removeItem("sessionAdmin");
+              setSign(false);
+              setAdmin(false);
+              timeAlert("로그아웃 성공")
+              // successAlert("Sign-Out", "로그아웃 성공");
+              navi("/");
+            } else {
+              failAlert("Sign-Out", "로그아웃 실패");
+            }
+          });
         }
       });
-    } else {
-      alert("ㅇㅋ 안함");
-    }
 
   }
 
@@ -37,7 +38,7 @@ export const Header = () => {
         <div className={styles.form}>
           <div className={styles.companyLogo}>
             <img src={logo} alt=""/>
-            <span>Clover Company</span>
+            <span>Clover Office</span>
           </div>
           <div className={styles.userInfo}>
             <div className={styles.userAvatar}>

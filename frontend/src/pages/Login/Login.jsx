@@ -11,6 +11,8 @@ import {useNavigate} from "react-router-dom";
 import {useMemberStore} from "../../store/store";
 import { connectWebSocket } from '../../commons/websocket';
 import { useChatStore } from '../../store/messengerStore';
+import {failAlert, successAlert, timeAlert} from "../../commons/common";
+
 
 export const Login = ({ setSign, setAdmin }) => {
   const { addMessage, setOnlineUsers, addChatRoom } = useChatStore();
@@ -41,8 +43,8 @@ export const Login = ({ setSign, setAdmin }) => {
     else localStorage.removeItem("saveId");
 
     const res = await axios.post(`${BaseUrl()}/sign`,params);
+    console.log("res.data ==== ", res.data);
     if(res.status === 200 && res.data.employeeInfo) {
-
       // 가입 대기 상태 로그인 차단
       // if(res.data.employeeInfo.workerStateCode === 99) {
       //   alert("가입 대기중입니다. 잠시만 기다려주세요.");
@@ -91,17 +93,16 @@ export const Login = ({ setSign, setAdmin }) => {
         }
       });
 
-      // 가입 대기 막아야됨
       sessionStorage.setItem("sessionUser", JSON.stringify(sessionData));
       if(res.data.employeeInfo.workerStateCode === 0) {
         sessionStorage.setItem("sessionAdmin", "true");
         setAdmin(true);
       }
       setSign(true);
+      timeAlert("로그인 성공")
       navi("/");
-      alert("로그인 성공")
     } else {
-      alert("로그인 실패")
+      failAlert("Sgin-In", "로그인 실패");
     }
 
   }
