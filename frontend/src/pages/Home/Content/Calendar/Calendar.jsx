@@ -50,7 +50,8 @@ export const Calendar = () => {
 
   /** 캘린더에 표시될 아이템들의 속성 셋팅 **/
   const itemAttribute = (items) => {
-    return items.map(item => {
+    const filter = items.filter(item => item.deptCode === sessionData.empDeptCode || item.deptCode === 0);
+    return filter.map(item => {
       let data = { ...item, type: scheduleType(item.deptCode, item.empSeq, sessionData), title: item.scheduleContent, start: item.startDate, end: item.endDate };
       data.color = data.type === "individual" ? "#FF8225" : data.type === "department" ? "#478CCF" : "#173B45";
       delete data.startDate;
