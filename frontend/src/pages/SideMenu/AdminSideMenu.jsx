@@ -9,20 +9,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { GiTalk } from 'react-icons/gi';
 
 export const AdminSideMenu = () => {
-  // 사이드바 상태 초기화
-  const [open, setOpen] = useState(() => {
-    return localStorage.getItem("sidebar") === "true";
-  });
-
-  // 드롭다운 상태 초기화
-  const [dropdown, setDropdown] = useState(() => {
-    const savedDropdown = localStorage.getItem("dropdown");
-    return savedDropdown ? JSON.parse(savedDropdown) : { member: false, popup: false };
-  });
-
-  const [selectedMenu, setSelectedMenu] = useState('');
-  const [selectedParentMenu, setSelectedParentMenu] = useState('');
-
   const menus = useMemo(() => [
     { name: "Home", link: "/", type: "Home", icon: IoHome },
     { 
@@ -47,35 +33,51 @@ export const AdminSideMenu = () => {
   const navi = useNavigate();
   const location = useLocation();
 
-  const handleMenuClick = (link, type, parentType) => {
+  const [open, setOpen] = useState(() => {
+    const savedState = localStorage.getItem('sidebarOpen');
+    return savedState === null ? true : JSON.parse(savedState);
+  });
+
+  const [dropdown, setDropdown] = useState(() => {
+    const savedDropdownState = localStorage.getItem('dropdownState');
+    return savedDropdownState ? JSON.parse(savedDropdownState) : { member: false, popup: false };
+  });
+
+  const [selectedMenu, setSelectedMenu] = useState('');
+
+  const handleMenuClick = (link, type) => {
     setSelectedMenu(type);
-    setSelectedParentMenu(parentType);
     navi(link, { state: { type } });
   };
 
   const handleSideToggle = () => {
     setOpen(prev => {
       const newState = !prev;
-      localStorage.setItem("sidebar", newState ? "true" : "false");
-      return newState;
-    });
-  };
-
-  const toggleDropdown = (menuType) => {
-    setDropdown(prevState => {
-      const newState = { ...prevState, [menuType]: !prevState[menuType] };
-      localStorage.setItem("dropdown", JSON.stringify(newState));
+      if (!newState) {
+        setDropdown({ member: false, popup: false }); // 사이드바가 닫히면 드롭다운도 닫음
+      }
       return newState;
     });
   };
 
   useEffect(() => {
+    localStorage.setItem('sidebarOpen', open);
+  }, [open]);
+
+  useEffect(() => {
+    localStorage.setItem('dropdownState', JSON.stringify(dropdown));
+  }, [dropdown]);
+
+  const toggleDropdown = (menuType) => {
     if (!open) {
-      setDropdown(prev => {
-        const newState = { ...prev, member: false, popup: false };
-        localStorage.setItem("dropdown", JSON.stringify(newState));
-        return newState;
-      });
+      setOpen(true); // 사이드바가 닫혀있으면 열기
+    }
+    setDropdown(prev => ({ ...prev, [menuType]: !prev[menuType] }));
+  };
+
+  useEffect(() => {
+    if (!open) {
+      setDropdown({ member: false, popup: false }); // 사이드바가 닫히면 드롭다운도 닫음
     }
   }, [open]);
 
@@ -106,10 +108,6 @@ export const AdminSideMenu = () => {
         ...prev,
         ...newDropdownState
       }));
-      localStorage.setItem("dropdown", JSON.stringify({
-        ...dropdown,
-        ...newDropdownState
-      }));
     }
   }, [location.pathname, selectedMenu, menus]);
 
@@ -124,18 +122,18 @@ export const AdminSideMenu = () => {
             <div key={i}>
               <div 
                 className={styles.menuLink} 
-                onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type, menu.type)} 
+                onClick={() => menu.submenus ? toggleDropdown(menu.type) : handleMenuClick(menu.link, menu.type)} 
               >
                 <div>{React.createElement(menu.icon, { size: "30" })}</div>
                 {open && <h3 className={styles.menuTitle}>{menu.name}</h3>}
               </div>
-              {menu.submenus && dropdown[menu.type] && (
-                <div className={styles.dropdown}>
+              {menu.submenus && (open ? dropdown[menu.type] : false) && (
+                <div className={open ? styles.dropdown : styles.dropdownHidden}>
                   {menu.submenus.map((submenu, j) => (
                     <div 
                       key={j} 
                       className={styles.menuLink} 
-                      onClick={() => handleMenuClick(submenu.link, submenu.type, menu.type)}
+                      onClick={() => handleMenuClick(submenu.link, submenu.type)}
                       style={{ color: selectedMenu === submenu.type ? 'orange' : 'white' }}
                     >
                       <div className={styles.submenuTitle}>{submenu.name}</div>

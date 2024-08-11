@@ -8,6 +8,7 @@ import WebEditor from '../../../../../../../components/WebEditor/WebEditor';
 import { Uploader } from 'rsuite';
 import { useParams } from 'react-router-dom';
 import {format} from 'date-fns';
+import { confirmAlert } from '../../../../../../../commons/common';
 
 
 
@@ -69,13 +70,13 @@ export const PopupDetail =()=>{
     }, [popSeq]);
 
 
-    // 유효성 검사: 시작일이 오늘보다 이전일 경우
-    useEffect(() => {
-        if (specificStartDate && specificStartDate < today) {
-            alert("시작일은 오늘보다 이전일 수 없습니다.");
-            setSpecificStartDate(''); // 시작일을 초기화
-        }
-    }, [specificStartDate, today]);
+    // // 유효성 검사: 시작일이 오늘보다 이전일 경우
+    // useEffect(() => {
+    //     if (specificStartDate && specificStartDate < today) {
+    //         alert("시작일은 오늘보다 이전일 수 없습니다.");
+    //         setSpecificStartDate(''); // 시작일을 초기화
+    //     }
+    // }, [specificStartDate, today]);
     // 시작일과 종료일 유효성 검사
     useEffect(() => {
         if (specificStartDate && specificEndDate && specificEndDate < specificStartDate) {
@@ -109,7 +110,7 @@ export const PopupDetail =()=>{
     }
 
     const handleCancel=()=>{
-        const confirm = window.confirm("취소?");
+        const confirm = window.confirm("글 수정을 취소하시겠습니까?");
         if(confirm){navi(-1)}
         else{return false}
         
