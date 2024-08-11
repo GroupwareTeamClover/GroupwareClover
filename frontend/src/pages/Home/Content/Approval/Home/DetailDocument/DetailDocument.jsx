@@ -77,9 +77,16 @@ export const DetailDocument = ({type}) => {
                 // console.log(`detail접근확인`);
                 console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
 
-
-                if(resp.data.document.drafterSeq===sessionData.empSeq)  setIsDrafterMenu(true)
+                //상신취소메뉴 on 대기또는 예정 누군가 승인또는반려를 한명이라도 시작되었다면 상신취소할 수 없음.
+                const allLinesMeetCondition = resp.data.apvline.every(line => 
+                    line.apvStatusCode === 1 || line.apvStatusCode === 2
+                );
                 
+                if (allLinesMeetCondition && resp.data.document.drafterSeq === sessionData.empSeq) {
+                    setIsDrafterMenu(true);
+                }
+                
+                //결정메뉴들 on(결재, 반려, 보류)
                 resp.data.apvline.map((line, index)=>{
                     if(line.apverId===sessionData.empSeq && line.apvStatusCode===1)  setIsApprovalMenu(true)
                 })
@@ -90,7 +97,8 @@ export const DetailDocument = ({type}) => {
                     deptName: resp.data.document.deptName,
                     roleName: resp.data.document.roleName,
                     order: '',
-                    drafterSeq: resp.data.document.drafterSeq
+                    drafterSeq: resp.data.document.drafterSeq,
+                    docSeq:resp.data.document.docSeq
                   }] : [];
 
         
@@ -176,14 +184,20 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${apvLineSeq}`)
             console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/approval`, cleanApvLineSeq).then(()=>{
+            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/approval`, {
+                cleanApvLineSeq:cleanApvLineSeq,
+                id: id
+            }).then(()=>{
                 alert("결재 완료");
+                handleGetAll();
             }).catch(()=>{
                 alert("결재 실패");
             })
+
             //내가 이 문서의 마지막 결재자이고 결재하기로 한다면 문서 상태를 승인으로 업데이트
-            
-            handleGetAll();
+            //결재자들이 모두 승인이면 문서상태 완료로 변경
+            //id는 docSeq
+
         }
     },[isApproval])
 

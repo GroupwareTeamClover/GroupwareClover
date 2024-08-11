@@ -96,4 +96,38 @@
 	order by doc.WRITE_DATE desc
 	</select>
 	
+	<update id="updateDocToApproval">
+		UPDATE document d
+		SET 
+		    current_apver_seq = (
+		        SELECT a.apver_id
+		        FROM apv_line a
+		        WHERE a.doc_seq = d.doc_seq
+		          AND a.apv_status_code = 1
+		          AND a.doc_seq = #{id}),
+		    finish_date = CASE 
+		                    WHEN (SELECT COUNT(*) 
+		                          FROM apv_line a 
+		                          WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code != 3) = 0 
+		                    THEN SYSDATE 
+		                    ELSE finish_date 
+		                 END,
+		    doc_com_seq = CASE 
+		                    WHEN (SELECT COUNT(*) 
+		                          FROM apv_line a 
+		                          WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code != 3) = 0 
+		                    THEN 'clover-' || TO_CHAR(SYSDATE, 'YYYY') || '-' || TO_CHAR(d.doc_seq)
+		                    ELSE doc_com_seq 
+		                 END,
+		    doc_state_code = CASE 
+		                       WHEN (SELECT COUNT(*) 
+		                             FROM apv_line a 
+		                             WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code != 3) = 0 
+		                       THEN 3
+		                       ELSE doc_state_code 
+		                     END
+		WHERE d.doc_seq = #{id}
+	</update>
+	
+
 </mapper>

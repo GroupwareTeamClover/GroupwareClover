@@ -1,12 +1,13 @@
 package com.clover.approval.services;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.clover.approval.dao.DocumentDAO;
 import com.clover.approval.dao.LineDAO;
 import com.clover.approval.dto.ApvLineDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
@@ -15,6 +16,9 @@ import com.clover.approval.dto.ParticipantsLineDTO;
 public class LineService {
 	@Autowired
 	private LineDAO lineDAO;
+	
+	@Autowired
+	private DocumentDAO documentDAO;
 	
 	//모달에서 결재라인 선택 시 라인정보 받아오기
 	public List<Map<String,?>> getMemberInfo(int seq){
@@ -43,8 +47,11 @@ public class LineService {
 	
 	//결재상태업데이트 함수들
 	//대기->결재
-	public void updateWaitToApproval(int id) {
-		lineDAO.updateWaitToApproval(id);
+	//트랜잭션처리를 하면서 순서를 주는 방법?
+	@Transactional
+	public void updateWaitToApproval(int cleanApvLineSeq, int id) {
+		lineDAO.updateWaitToApproval(cleanApvLineSeq);
+		documentDAO.updateDocToApproval(id);
 	}
 
 }

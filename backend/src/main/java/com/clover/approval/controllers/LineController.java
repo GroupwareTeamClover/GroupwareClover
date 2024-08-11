@@ -32,11 +32,11 @@ public class LineController {
 		return ResponseEntity.ok(lineService.getMemberInfo(empSeq));
 	}
     
-    //대기상태에서 -> 결재로 결재상태업데이트    
-    @PutMapping("/{id}/approval")
-	public ResponseEntity<Void> put(@PathVariable int id){
-    	lineService.updateWaitToApproval(id);
-		return ResponseEntity.ok().build();
+    //대기상태에서 -> 결재로 결재상태업데이트, apvline변화에 따라 문서상태로 변화  
+    @PutMapping("/{cleanApvLineSeq}/{id}/approval")
+	public ResponseEntity<Void> put( @PathVariable("cleanApvLineSeq") int cleanApvLineSeq, @PathVariable("id") int id){
+    	lineService.updateWaitToApproval(cleanApvLineSeq, id);
+    	return ResponseEntity.ok().build();
 	}
 
 }
