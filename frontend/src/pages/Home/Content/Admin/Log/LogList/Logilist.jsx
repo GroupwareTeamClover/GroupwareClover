@@ -7,7 +7,8 @@ import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
 import { deptName } from '../../../../../../commons/common';
 import { Pagination } from '../../../../../../components/Pagination/Pagination';
-import {format} from 'date-fns';
+import { format, startOfDay, subDays, subMonths, parseISO, isBefore, isAfter } from 'date-fns';
+
 
 export const Loglist=()=>{
 
@@ -53,43 +54,42 @@ export const Loglist=()=>{
   
   
 
-    const handleToday=()=>{
-        const today = new Date().toISOString().split('T')[0];
-        setSpecificStartDate(today);
-        setSpecificEndDate(today);
-        console.log(specificStartDate,specificEndDate )
-    }
+   
+    const handleToday = () => {
+        const today = new Date();
+        const startOfDayDate = startOfDay(today);
+        const formattedDate = format(startOfDayDate, 'yyyy-MM-dd');
+        setSpecificStartDate(formattedDate);
+        setSpecificEndDate(formattedDate);
+        console.log(specificStartDate, specificEndDate);
+    };
+    
     const handleWeek = () => {
         const today = new Date();
-        const oneWeekAgo = new Date(today);
-        oneWeekAgo.setDate(today.getDate() - 7);
-
-        setSpecificStartDate(oneWeekAgo.toISOString().split('T')[0]);
-        setSpecificEndDate(today.toISOString().split('T')[0]);
-        console.log(specificStartDate,specificEndDate )
-
+        const oneWeekAgo = subDays(today, 7);
+        setSpecificStartDate(format(startOfDay(oneWeekAgo), 'yyyy-MM-dd'));
+        setSpecificEndDate(format(startOfDay(today), 'yyyy-MM-dd'));
+        console.log(format(startOfDay(oneWeekAgo), 'yyyy-MM-dd'), format(startOfDay(today), 'yyyy-MM-dd'));
     }
+
+
     const handleMonth = () => {
         const today = new Date();
-        const oneMonthAgo = new Date(today);
-        oneMonthAgo.setMonth(today.getMonth() - 1);
-
-        setSpecificStartDate(oneMonthAgo.toISOString().split('T')[0]);
-        setSpecificEndDate(today.toISOString().split('T')[0]);
-        console.log(specificStartDate,specificEndDate )
-
+        const oneMonthAgo = subMonths(today, 1);
+        setSpecificStartDate(format(startOfDay(oneMonthAgo), 'yyyy-MM-dd'));
+        setSpecificEndDate(format(startOfDay(today), 'yyyy-MM-dd'));
+        console.log(format(startOfDay(oneMonthAgo), 'yyyy-MM-dd'), format(startOfDay(today), 'yyyy-MM-dd'));
     }
 
     const handleHalfYear = () => {
         const today = new Date();
-        const sixMonthsAgo = new Date(today);
-        sixMonthsAgo.setMonth(today.getMonth() - 6);
-
-        setSpecificStartDate(sixMonthsAgo.toISOString().split('T')[0]);
-        setSpecificEndDate(today.toISOString().split('T')[0]);
-        console.log(specificStartDate,specificEndDate )
-
+        const sixMonthsAgo = subMonths(today, 6);
+        setSpecificStartDate(format(startOfDay(sixMonthsAgo), 'yyyy-MM-dd'));
+        setSpecificEndDate(format(startOfDay(today), 'yyyy-MM-dd'));
+        console.log(format(startOfDay(sixMonthsAgo), 'yyyy-MM-dd'), format(startOfDay(today), 'yyyy-MM-dd'));
     }
+
+
 
     const handleSelectStatus =(e)=>{ 
         setSelectStatus(e.target.value); 
@@ -110,55 +110,57 @@ export const Loglist=()=>{
     }
 
     const handleDateChange = (e, setDate, isStartDate) => {
-        const today = new Date().toISOString().split('T')[0];
-        const newDate = e.target.value;
-    
-        if(newDate === ''){
-            setDate(newDate);
+        const today = startOfDay(new Date());
+        const newDate = parseISO(e.target.value);
+
+        if (isNaN(newDate.getTime())) {
+            setDate('');
             return;
         }
 
-        if (newDate > today) {
+        if (isAfter(newDate, today)) {
             alert("날짜는 오늘 이후로 설정할 수 없습니다.");
             return;
         }
-    
-        if (isStartDate && newDate > specificEndDate && specificEndDate !== '') {
+
+        if (isStartDate && isAfter(newDate, parseISO(specificEndDate))) {
             alert("시작일은 종료일보다 이후일 수 없습니다.");
             return;
         }
-    
-        if (!isStartDate && newDate < specificStartDate && specificStartDate !== '') {
+
+        if (!isStartDate && isBefore(newDate, parseISO(specificStartDate))) {
             alert("종료일은 시작일보다 이전일 수 없습니다.");
             return;
         }
-    
-        setDate(newDate);
+
+        setDate(format(newDate, 'yyyy-MM-dd'));
     };
 
+
+
     const handleSearch = () => {
-        const today = new Date().toISOString().split('T')[0];
+        const today = format(startOfDay(new Date()), 'yyyy-MM-dd');
     
         if ((specificStartDate === '' || specificEndDate === '') && (searchType === '' && selectStatus === '')) {
-            alert("적어도 하나의 검색 조건을 설정하세요!");
-            return;
-        }
-        if (searchType !== '' && keyword === '' && selectStatus==='' && specificStartDate === '' && specificEndDate === '') {
-            alert("검색어를 입력하세요");
-            return;
-        }
-        if ((specificStartDate !== '' && specificEndDate === '') || (specificStartDate === '' && specificEndDate !== '')) {
-            alert("검색기간을 확인하세요.");
-            return;
-        }
-        if (specificEndDate > today) {
-            alert("종료일은 오늘 날짜를 초과할 수 없습니다.");
-            return;
-        }
-        if (specificStartDate > specificEndDate) {
-            alert("시작일은 종료일보다 이후일 수 없습니다.");
-            return;
-        }
+                    alert("적어도 하나의 검색 조건을 설정하세요!");
+                    return;
+                }
+                if (searchType !== '' && keyword === '' && selectStatus==='' && specificStartDate === '' && specificEndDate === '') {
+                    alert("검색어를 입력하세요");
+                    return;
+                }
+                if ((specificStartDate !== '' && specificEndDate === '') || (specificStartDate === '' && specificEndDate !== '')) {
+                    alert("검색기간을 확인하세요.");
+                    return;
+                }
+                if (specificEndDate > today) {
+                    alert("종료일은 오늘 날짜를 초과할 수 없습니다.");
+                    return;
+                }
+                if (specificStartDate > specificEndDate) {
+                    alert("시작일은 종료일보다 이후일 수 없습니다.");
+                    return;
+                }
     
         // 검색 
         const params = {};
@@ -183,8 +185,57 @@ export const Loglist=()=>{
                 console.error('검색 오류:', error);
                 setIsLoading(false);
             });
-        
+            setCurrentPage(0);
     };
+    // const handleSearch = () => {
+    //     const today = new Date().toISOString().split('T')[0];
+    
+    //     if ((specificStartDate === '' || specificEndDate === '') && (searchType === '' && selectStatus === '')) {
+    //         alert("적어도 하나의 검색 조건을 설정하세요!");
+    //         return;
+    //     }
+    //     if (searchType !== '' && keyword === '' && selectStatus==='' && specificStartDate === '' && specificEndDate === '') {
+    //         alert("검색어를 입력하세요");
+    //         return;
+    //     }
+    //     if ((specificStartDate !== '' && specificEndDate === '') || (specificStartDate === '' && specificEndDate !== '')) {
+    //         alert("검색기간을 확인하세요.");
+    //         return;
+    //     }
+    //     if (specificEndDate > today) {
+    //         alert("종료일은 오늘 날짜를 초과할 수 없습니다.");
+    //         return;
+    //     }
+    //     if (specificStartDate > specificEndDate) {
+    //         alert("시작일은 종료일보다 이후일 수 없습니다.");
+    //         return;
+    //     }
+    
+    //     // 검색 
+    //     const params = {};
+
+    //     if (searchType && keyword) {
+    //         params[searchType] = keyword;
+    //     }
+    //     if (selectStatus) {
+    //         params.logStatus = selectStatus;
+    //     }
+    //     if (specificStartDate && specificEndDate) {
+    //         params.specificStartDate = specificStartDate;
+    //         params.specificEndDate = specificEndDate;
+    //     }
+    
+    //     axios.get(`${BaseUrl()}/adminlog/search`, { params })
+    //         .then((resp) => {
+    //             setFiltered(resp.data);
+    //             setIsLoading(false);
+    //         })
+    //         .catch((error) => {
+    //             console.error('검색 오류:', error);
+    //             setIsLoading(false);
+    //         });
+        
+    // };
 
     const handleReset=()=>{
         setSearchType("");
