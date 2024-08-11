@@ -30,7 +30,7 @@ public class DocumentService {
 		return documentDAO.selectDocCodeInfo();
 	}
 	
-	//insert
+	//insert && temp
 	@Transactional
 	public void insertDoc(DocumentDTO docDTO, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist, DocumentDTO typeDocDTO) {
 		documentDAO.insertDoc(docDTO);
@@ -76,6 +76,11 @@ public class DocumentService {
 	//홈에서 출력할 문서
 	public List<DocumentDTO> getMainDoc(int empSeq){
 		return documentDAO.selectMainDoc(empSeq);
+	}
+	
+	//상신취소
+	public void deleteBySeq(int seq) {
+		documentDAO.deleteBySeq(seq);
 	}
 	
 

@@ -87,4 +87,8 @@
 		       AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}))
 	</update>
 	
+	<update id="updateWaitToHoldoff">
+		update apv_line SET apv_status_code = 8 WHERE line_seq = #{seq}
+	</update>
+	
 </mapper>

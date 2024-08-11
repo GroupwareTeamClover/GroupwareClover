@@ -68,6 +68,11 @@ public class LineDAO {
 		map.put("reasonForRejection", reasonForRejection);
 		mybatis.update("Line.updateWaitToReject", map);
 	}
+	
+	//대기->보류
+	public void updateWaitToHoldoff(int id) {
+		mybatis.update("Line.updateWaitToHoldoff",id);
+	}
 
 }
 

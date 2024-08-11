@@ -14,7 +14,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     documentDTO, setDocumentDTO, 
     apvLineDTOs, setApvLineDTOs, 
     participantsLineDTOs, setParticipantsLineDTOs,
-    id 
+    id, setIsTemp, isTemp
 })=>{  
     const navi = useNavigate();
 
@@ -61,21 +61,25 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
      
  
     useEffect(() => {
-        // DTO 상태 업데이트
-        setBusiness({
-            "document" : documentDTO,
-            "apvline" : apvLineDTOs,
-            "pline" : participantsLineDTOs,
-            "docType" : 'business', // 문서 타입
-            "docData" : docData
-        })
-        // console.log(documentDTO);
-        // console.log(apvLineDTOs);
-        // console.log(participantsLineDTOs);
-        // console.log(docData);
-
-    }, [date, title, content, isEmergency, docData]);
-   
+        // 의존성 배열에 필요한 상태만 포함
+        setBusiness((prevBusiness) => {
+            if (
+                prevBusiness.document !== documentDTO ||
+                prevBusiness.docData !== docData ||
+                prevBusiness.apvline !== apvLineDTOs ||
+                prevBusiness.pline !== participantsLineDTOs
+            ) {
+                return {
+                    "document": documentDTO,
+                    "apvline": apvLineDTOs,
+                    "pline": participantsLineDTOs,
+                    "docType": 'business', // 문서 타입
+                    "docData": docData
+                };
+            }
+            return prevBusiness;
+        });
+    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData, isEmergency]);
 
     // id 값이 없는 경우 상태 초기화
     useEffect(() => {
@@ -100,15 +104,37 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 setIsInsert(false);
             }).catch((error) => {
                 alert('문서 생성 실패');
-                console.log(error);
                 setIsInsert(false);
             });
             
         }
     }, [isInsert, business, id]);
 
+    //임시저장
+    useEffect(() => {
+        if (isTemp && !id) {  // id가 없는 경우에만 실행
+            // 기존 값에 임시저장 상태로 업데이트
+            setDocumentDTO((prev) => ({
+                ...prev, 
+                docStateCode: 2
+            }));
+        }
+    }, [isTemp, id]);
 
-
+    useEffect(() => {
+        if (isTemp && !id) {
+            axios.post(`${BaseUrl()}/approval/document`, business)
+                .then((resp) => {
+                    alert("임시 저장 성공");
+                    navi(`/approval/document/${resp.data}?type=${type}`);
+                    setIsTemp(false);
+                })
+                .catch((error) => {
+                    alert('임시 저장 실패');
+                    setIsTemp(false);
+                });
+        }
+    }, [business]);
 
 
     //********************************detail 시 코드******************************************/

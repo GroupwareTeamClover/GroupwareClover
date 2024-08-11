@@ -18,8 +18,10 @@ import signImage from './../../../../../../images/sign.PNG';
 import rejectImage from './../../../../../../images/reject.PNG';
 import { format } from 'date-fns';
 import { Modal } from "../../../../../../components/Modal/Modal";
+import { useNavigate } from 'react-router-dom';
 
 export const DetailDocument = ({type}) => {
+    const navi = useNavigate();
 
     //세션정보
     const {sessionData} = useMemberStore();
@@ -164,18 +166,22 @@ export const DetailDocument = ({type}) => {
     };
     
     //상신취소클릭시 DB업데이트
-    // useEffect(()=>{
-    //     if(isCancle){
-    //        const apvLineSeq=getApvLineSeq();
-    //         console.log(apvLineSeq);
-    //         // totalLineInfo.map((line,index)=>{
-    //         //     line.type=='apvline' ? 
-    //         // })
-    //         // axios.put(`${BaseUrl()}/approval/line/${id}/`, line).then(()=>{
-    //         //     handleGetAll();
-    //         //   })
-    //     }
-    // },[isCancle])
+    //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
+    useEffect(()=>{
+        if(isCancle){
+            const apvLineSeq=getApvLineSeq();
+            const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
+            axios.delete(`${BaseUrl()}/approval/document/${id}/cancle`, id)
+            .then(()=>{
+                setIsCancle(false);
+                alert("상신취소하시겠습니까? 모든 내용은 사라집니다.");
+                navi(`/approval`); // 절대 경로 사용
+            }).catch(()=>{
+                setIsCancle(false);
+                alert("취소 실패");
+            })
+        }
+    },[isCancle])
 
     //결재클릭시 DB업데이트 
     useEffect(()=>{
@@ -227,14 +233,6 @@ export const DetailDocument = ({type}) => {
      const handleRejectComplete=()=>{
         setIsRejectModalComplete(true);
     }   
-
-    //모달 취소 클릭시
-    const handleRejectCancle=()=>{
-        closeModal();
-    }
-
-    
-
     useEffect(()=>{
             if(isRejectModalComplete){
                 console.log(reasonForRejection);
@@ -246,24 +244,45 @@ export const DetailDocument = ({type}) => {
                     id: id,
                     reasonForRejection: reasonForRejection
                 }).then(()=>{
-                    setIsRejectModalComplete(false);
-                    setIsReject(false);
+                    setIsRejectModalComplete(false); //모달창 반려버튼
+                    setIsReject(false); //반려버튼
                     alert("반려 완료");
                     handleGetAll();
+                    closeModal();
                 }).catch(()=>{
                     setIsRejectModalComplete(false);
                     setIsReject(false);
                     alert("반려 실패");
+                    closeModal();
                 })
             }
     },[isRejectModalComplete])
 
-    //보류클릭시 DB업데이트
-    // useEffect(()=>{
-    //     if(isHoldoff){
+    //모달 취소 클릭시
+    const handleRejectCancle=()=>{
+        closeModal();
+    }
 
-    //     }
-    // },[isHoldoff])
+    //보류클릭시 DB업데이트
+    useEffect(()=>{
+        if(isHoldoff){
+            const apvLineSeq=getApvLineSeq();
+            const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
+            console.log(`결재번호 ${apvLineSeq}`)
+            console.log(`클린결재번호 ${cleanApvLineSeq}`)
+            //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
+            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/holdoff`, {
+                cleanApvLineSeq:cleanApvLineSeq,
+            }).then(()=>{
+                setIsHoldoff(false);
+                alert("보류 완료");
+                handleGetAll();
+            }).catch(()=>{
+                setIsHoldoff(false);
+                alert("보류 실패");
+            })
+        }
+    },[isHoldoff])
 
   
    

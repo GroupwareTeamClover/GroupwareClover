@@ -22,10 +22,11 @@ public class DocumentDAO {
 		return mybatis.selectList("Document.selectDocCodeInfo");
 	}
 	
-	//document정보 insert
+	//document정보 insert && temp
 	public void insertDoc(DocumentDTO docdto) {
 		mybatis.insert("Document.insertDoc",docdto);
 	}
+	
 	
 	//각 양식 table에 대한 insert
 	public void insertBusiness(BusinessDTO business) {
@@ -64,6 +65,11 @@ public class DocumentDAO {
 	//반려업데이트에 따른 문서정보 업데이트
 	public void updateDocToReject(int docSeq) {
 		mybatis.update("Document.updateDocToReject",docSeq);
+	}
+	
+	//상신취소
+	public void deleteBySeq(int seq) {
+			mybatis.delete("Document.deleteBySeq", seq);
 	}
 	
 	
