@@ -16,5 +16,4 @@ export const useScheduleStore = create(set => ({
   // 선택된 날짜
   scheduleDay: "",
   setScheduleDay: params => set({ scheduleDay: params })
-
 }));

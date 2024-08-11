@@ -60,6 +60,14 @@ public class LineDAO {
 	public void updateWaitToApproval(int id) {
 		mybatis.update("Line.updateWaitToApproval", id);
 	}
+	
+	//대기->반려
+	public void updateWaitToReject(int id, String reasonForRejection) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("seq", id);
+		map.put("reasonForRejection", reasonForRejection);
+		mybatis.update("Line.updateWaitToReject", map);
+	}
 
 }
 

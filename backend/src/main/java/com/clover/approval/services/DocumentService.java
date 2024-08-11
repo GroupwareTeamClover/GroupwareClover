@@ -77,5 +77,7 @@ public class DocumentService {
 	public List<DocumentDTO> getMainDoc(int empSeq){
 		return documentDAO.selectMainDoc(empSeq);
 	}
+	
+
 
 }

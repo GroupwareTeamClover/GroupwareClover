@@ -68,4 +68,23 @@
 		       AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}))
 	</update>
 	
+	<update id="updateWaitToReject">
+        UPDATE apv_line
+			SET apv_status_code = CASE
+			                            WHEN line_seq = #{seq} THEN 4
+			                            WHEN doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+			                                 AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}) THEN 9
+			                        END,
+			   line_apv_date= CASE
+                                WHEN line_seq=#{seq} THEN sysdate
+                                else line_apv_date
+                            END,
+            line_apver_cmt = CASE
+                                    WHEN line_seq = #{seq} THEN #{reasonForRejection}
+                             END
+		WHERE line_seq = #{seq}
+		   OR (doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+		       AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}))
+	</update>
+	
 </mapper>
