@@ -107,3 +107,4 @@ insert into apv_state_code values(3, '승인');
 insert into apv_state_code values(4, '반려');
 insert into apv_state_code values(5, '전결');
 insert into apv_state_code values(6, '후결');
+insert into apv_state_code values(9, '중지');
