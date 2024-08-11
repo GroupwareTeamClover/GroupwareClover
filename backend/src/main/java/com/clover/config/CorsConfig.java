@@ -21,6 +21,7 @@ public class CorsConfig implements WebMvcConfigurer {
 		registry.addMapping("/**").allowedOrigins(allowedOrigins).allowedMethods("*").allowedHeaders("*").allowCredentials(true);
 	}
 
+    
 
 
     // 아이피 허용 부분. allowedOrigins("*")과 credentials은 함께 허용해 줄 수 없음. 다른 방법 필요

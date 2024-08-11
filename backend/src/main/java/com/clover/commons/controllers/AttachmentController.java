@@ -1,7 +1,9 @@
 package com.clover.commons.controllers;
 
 import java.net.URI;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,11 @@ public class AttachmentController {
 	private AttachmentService attServ;
 
 	// S3 임시파일 파일 업로드 후 resp.data에 파일URL 반환
-	@PostMapping("/upload/{folderName}")
-	public ResponseEntity<String> post(@RequestParam("file") MultipartFile file, @PathVariable String folderName){
+	@PostMapping("/upload/{path}")
+	public ResponseEntity<String> post(@RequestParam("file") MultipartFile file, @PathVariable String path){
 		 try {
-	            String fileUrl = s3Serv.uploadFile(file, folderName);
+			 String decodedPath = URLDecoder.decode(path, StandardCharsets.UTF_8);
+	            String fileUrl = s3Serv.uploadFile(file, decodedPath);
 	            return ResponseEntity.ok(fileUrl);
 	        } catch (Exception e) {
 	            return ResponseEntity.status(500).body("File upload failed: " + e.getMessage());
