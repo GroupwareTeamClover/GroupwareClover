@@ -2,6 +2,7 @@
     padding: 20px 0 5px 30px;
 	border-top: 1px solid #d3d3d3;
     margin-top:10px;
+	font-family: monospace;
 }
 
 .reply {
@@ -11,11 +12,13 @@
 
 .reply .replyWriter {
 	font-weight: bold;
+	font-size: 16px;
 }
 
 .reply .replyContent {
 	padding-top: 20px;
-	padding-right : 40px;
+	padding-right : 80px;
+	font-size: 16px;
 	word-break: break-all;
 	white-space: pre-wrap;
 }
@@ -33,12 +36,10 @@
 
 .replyModifyButton{
     margin : 0 0 4px 10px;
-    color : black;
 }
 
 .replyDeleteButton{
     margin : 0 0 4px 0;
-    color : black;
 }
 
 .modifyInput{

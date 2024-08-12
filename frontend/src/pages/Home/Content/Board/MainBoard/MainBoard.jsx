@@ -7,17 +7,16 @@ import { FaSearch } from "react-icons/fa";
 import Post from './Post/Post';
 import { Pagination } from '../../../../../components/Pagination/Pagination';
 import { Loader } from 'rsuite';
-import { useMemberStore } from '../../../../../store/store';
+import { useBoardStore, useMemberStore } from '../../../../../store/store';
 
 const MainBoard = () => {
     const { boardlistSeq } = useParams();
-    const [boardInfo, setBoardInfo] = useState({ boardlistSeq: 0, boardlistName: '', boardlistType: '', boardlistActive: '' });
+    const [boardInfo, setBoardInfo] = useState({ boardlistSeq: -1, boardlistName: '', boardlistType: '', boardlistActive: '' });
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [posts, setPosts] = useState([]);
     const [filtered, setFiltered] = useState(posts);
     const { sessionData } = useMemberStore();
-    const [importants, setImportants] = useState([]);
 
     //페이지네이션
     const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
@@ -52,9 +51,6 @@ const MainBoard = () => {
         const fetchPosts = async () => {
             setIsLoading(true);
             try {
-                const importantResp = await axios.get(`${BaseUrl()}/board/posts/important/${sessionData.empSeq}`);
-                setImportants(importantResp.data.map(post => post.boardSeq));
-
                 const response = await axios.get(`${BaseUrl()}/board/posts/${boardInfo.boardlistSeq}`);
                 setPosts(response.data);
                 setFiltered(response.data);
@@ -68,7 +64,6 @@ const MainBoard = () => {
             setIsLoading(true);
             try {
                 const response = await axios.get(`${BaseUrl()}/board/posts/important/${sessionData.empSeq}`);
-                setImportants(response.data.map(post => post.boardSeq));
                 setPosts(response.data);
                 setFiltered(response.data);
             } catch (error) {
@@ -79,17 +74,17 @@ const MainBoard = () => {
         };
 
         // 일반게시글인 경우 fetchPosts 호출 | 중요게시글인 경우 fetchImportantPosts 호출
-        if (boardInfo.boardlistSeq !== 0) {
-            fetchPosts();
-        } else {
+        if (boardInfo.boardlistSeq === 0 ) {
             fetchImportantPosts();
+        } else {
+            fetchPosts();
         }
     }, [boardInfo]);
 
     //검색
     const maxSearchLength = 30;
     const [keyword, setKeyword] = useState('');
-    const [searchType, setSearchType] = useState('');
+    const [searchType, setSearchType] = useState('title');
     const handleKeywordChange = (e) => {
         if (e.target.value.length > maxSearchLength) {
             e.preventDefault();
@@ -104,14 +99,10 @@ const MainBoard = () => {
         setSearchType(e.target.value);
     }
     const handleSearch = () => {
-        if (searchType === '') {
-            alert("검색 유형을 선택하세요!");
+        if (searchType === 'title') {
+            setFiltered(posts.filter(post => (post.boardTitle == keyword || post.boardTitle.includes(keyword))));
         } else {
-            if (searchType === 'title') {
-                setFiltered(posts.filter(post => (post.boardTitle == keyword || post.boardTitle.includes(keyword))));
-            } else {
-                setFiltered(posts.filter(post => (post.boardWriter == keyword || post.boardWriter.includes(keyword))));
-            }
+            setFiltered(posts.filter(post => (post.boardWriter == keyword || post.boardWriter.includes(keyword))));
         }
     }
 
@@ -120,7 +111,6 @@ const MainBoard = () => {
             <div className={styles.header}>{boardInfo.boardlistName}</div>
             <div className={styles.searchBox}>
                 <select name="searchType" className={styles.typeBox} id="searchType" onChange={handleSearchType} value={searchType}>
-                    <option value="">검색 유형</option>
                     <option value="title">제목</option>
                     <option value="writer">작성자</option>
                 </select>
@@ -135,9 +125,7 @@ const MainBoard = () => {
                 ) : (
                     filtered.slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
                         .map((post, i) => (
-                            <Post key={i} boardlistSeq={boardInfo.boardlistSeq} boardSeq={post.boardSeq} title={post.boardTitle}
-                                writer={post.boardWriter} data={post.boardWriteDate} view={post.boardViewCount} sessionSeq={sessionData.empSeq}
-                                importants={importants}/>
+                            <Post key={i} boardlistSeq={boardInfo.boardlistSeq} data={post}/>
                         ))
                 )
                 )}

@@ -60,7 +60,7 @@ const WritePost = () => {
             const textContent = tempDiv.textContent || tempDiv.innerText || '';
 
             if (textContent.trim() === "") {
-                alert("내용을 입력해주세요!");
+                alert("한 글자 이상의 내용을 입력해야합니다!");
             } else {
                 const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
                     const match = imgTag.match(/src="([^">]+)"/);

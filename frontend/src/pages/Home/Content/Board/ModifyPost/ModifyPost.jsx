@@ -97,15 +97,15 @@ const ModifyPost = () => {
             if (textContent.trim() === "") {
                 alert("내용을 입력해주세요!");
             } else {
-                const deletFiles = originFiles.filter(file => !files.some(newFile => newFile.name === file.name));
-                const addFiles = files.filter(file => !originFiles.some(originfile => originfile.name === file.name));
+                const deletFiles = originFiles?.filter(file => !files.some(newFile => newFile.name === file.name));
+                const addFiles = files?.filter(file => !originFiles.some(originfile => originfile.name === file.name));
 
                 const newImageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
                     const match = imgTag.match(/src="([^">]+)"/);
                     return match ? match[1] : null;
                 });
-                const deleteImageUrls = originImageUrls.filter(imageUrl => !newImageUrls.includes(imageUrl));
-                const addImageUrls = newImageUrls.filter(imageUrl => !originImageUrls.includes(imageUrl));
+                const deleteImageUrls = originImageUrls?.filter(imageUrl => !newImageUrls.includes(imageUrl));
+                const addImageUrls = newImageUrls?.filter(imageUrl => !originImageUrls.includes(imageUrl));
 
                 axios.put(`${BaseUrl()}/board`, {
                     boardlistSeq : category,
