@@ -79,8 +79,13 @@ public class DocumentService {
 	}
 	
 	//상신취소
-	public void deleteBySeq(int seq) {
+	@Transactional
+	public void deleteBySeq(int seq, String table) {
 		documentDAO.deleteBySeq(seq);
+		documentDAO.deleteByDocTypeSeq(seq, table);
+		lineDAO.deleteApvLineBySeq(seq);
+		lineDAO.deletePartLineBySeq(seq);
+		
 	}
 	
 

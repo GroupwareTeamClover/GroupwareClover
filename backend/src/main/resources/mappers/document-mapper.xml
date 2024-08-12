@@ -152,5 +152,9 @@
 		delete from document where doc_seq=#{seq}
 	</delete>
 	
+	<delete id="deleteByDocTypeSeq">
+		delete from ${table} where parent_seq=#{seq}
+	</delete>
+	
 
 </mapper>

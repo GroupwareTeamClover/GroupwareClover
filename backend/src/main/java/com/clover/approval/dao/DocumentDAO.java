@@ -72,6 +72,13 @@ public class DocumentDAO {
 			mybatis.delete("Document.deleteBySeq", seq);
 	}
 	
+	public void deleteByDocTypeSeq(int seq, String table) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("seq", seq);
+		map.put("table", table);
+		mybatis.delete("Document.deleteByDocTypeSeq", map);
+	}
+	
 	
 
 }

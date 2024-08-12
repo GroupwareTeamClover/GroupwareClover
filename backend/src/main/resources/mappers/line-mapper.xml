@@ -91,4 +91,12 @@
 		update apv_line SET apv_status_code = 8 WHERE line_seq = #{seq}
 	</update>
 	
+	<delete id="deleteApvLineBySeq">
+		delete from apv_line where doc_seq=#{seq}
+	</delete>
+	
+	<delete id="deletePartLineBySeq">
+				delete from apv_line where doc_seq=#{seq}
+	</delete>
+	
 </mapper>

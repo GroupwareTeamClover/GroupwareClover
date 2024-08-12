@@ -73,6 +73,17 @@ public class LineDAO {
 	public void updateWaitToHoldoff(int id) {
 		mybatis.update("Line.updateWaitToHoldoff",id);
 	}
-
+	
+	//상신취소
+	public void deleteApvLineBySeq(int seq) {
+		mybatis.delete("Line.deleteApvLineBySeq", seq);
+	}
+	
+	//상신취소
+	public void deletePartLineBySeq(int seq) {
+		mybatis.delete("Line.deletePartLineBySeq", seq);
+	}
+	
+	
 }
 

@@ -169,9 +169,7 @@ export const DetailDocument = ({type}) => {
     //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
     useEffect(()=>{
         if(isCancle){
-            const apvLineSeq=getApvLineSeq();
-            const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
-            axios.delete(`${BaseUrl()}/approval/document/${id}/cancle`, id)
+            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
             .then(()=>{
                 setIsCancle(false);
                 alert("상신취소하시겠습니까? 모든 내용은 사라집니다.");

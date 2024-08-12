@@ -105,9 +105,10 @@ public class DocumentController {
 	}
 	
 	//상신취소 
-	@DeleteMapping("/{id}/cancle")
-	public ResponseEntity<Void> delete(@PathVariable int id){
-		documentService.deleteBySeq(id);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable int id, @RequestParam String table){
+		System.out.println(table);
+		documentService.deleteBySeq(id, table);
 		return ResponseEntity.ok().build();
 	}
 
