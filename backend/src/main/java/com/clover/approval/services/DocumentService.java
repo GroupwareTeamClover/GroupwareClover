@@ -88,6 +88,17 @@ public class DocumentService {
 		
 	}
 	
+	//임시저장에서 결재요청시 문서상태 업데이트
+	@Transactional
+	public void updateDocState(int seq, String table, Map<String,Object> docData) {
+		documentDAO.updateDocState(seq);
+		documentDAO.updateDocTypeData(table, docData);
+	}
+	
+	//임시저장에서 임시저장시
+	public void updateTemptoTemp(String table, Map<String,Object> docData) {
+		documentDAO.updateDocTypeData(table, docData);
+	}
 
 
 }

@@ -79,6 +79,16 @@ public class DocumentDAO {
 		mybatis.delete("Document.deleteByDocTypeSeq", map);
 	}
 	
+	//임시저장에서 결재요청시 문서상태 업데이트
+	public void updateDocState(int seq) {
+		mybatis.update("Document.updateDocState", seq);
+	}
+	
+	public void updateDocTypeData(String table, Map<String,Object> docData) {
+		docData.put("table", table);
+		mybatis.update("Document.updateDocTypeData", docData);
+	}
+	
 	
 
 }
