@@ -24,7 +24,7 @@ export const Mypage = ({empSeq, closeModal}) => {
     return tel;
   }
 
-  /** 내 정보 업데이트 **/
+  /** 내 정보 업데이트 폼 변경 **/
   const [updateForm, setUpdateForm] = useState(false)
   const handleUpdateForm = () => {
     setUpdateForm(true);
@@ -85,16 +85,15 @@ export const Mypage = ({empSeq, closeModal}) => {
       </div>
       <div className={styles.center}>
         <div className={styles.content}>
-          {!updateForm ?
+
+          { !updateForm ?
             <div className={styles.contentLabel}>
               <p>생년월일 : {changeBirth(mypage.EMP_BIRTH)}</p>
               <p>전화번호 : {changeTel(mypage.EMP_TEL)}</p>
               <p>이메일 : {mypage.EMP_EMAIL} </p>
               <p>연차 : {mypage.ANNUAL_LEAVE_DAY}일</p>
             </div>
-
             :
-
             <div>
               <div className={styles.row}>
                 <span>Tel.</span>
@@ -105,15 +104,14 @@ export const Mypage = ({empSeq, closeModal}) => {
                 <input type="text" name="empEmail" value={updateData.empEmail} onChange={handleUpdateData} placeholder="E-Mail을 입력하세요."/>
               </div>
             </div>
-
           }
+
         </div>
       </div>
       <div className={styles.bottom}>
         {!updateForm ?
           <>
             <button onClick={handleUpdateForm}>정보 수정</button>
-            <button onClick={handleUpdateForm}>비밀번호 변경</button>
             <button onClick={() => closeModal()}>닫기</button>
           </>
           :
