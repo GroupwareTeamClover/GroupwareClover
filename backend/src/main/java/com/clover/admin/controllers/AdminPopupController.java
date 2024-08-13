@@ -164,7 +164,7 @@ public class AdminPopupController {
 				popContent = attServ.updateImageUrl(addImageUrls.get(i), newImageUrl, popContent);
 			}
 			// 최종적으로 업데이트된 글내용을 DB에 업데이트
-			attServ.updateContent(popContent, popSeq, "Popup");
+			attServ.updateContent(popContent, popSeq, "AdminPopup");
 		}
 		
 		return ResponseEntity.ok().build();

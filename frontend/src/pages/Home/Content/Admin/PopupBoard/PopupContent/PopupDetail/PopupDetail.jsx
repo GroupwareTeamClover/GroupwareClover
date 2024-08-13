@@ -161,7 +161,7 @@ export const PopupDetail = () => {
             payload.specificStartDate = specificStartDate;
             payload.specificEndDate = specificEndDate;
         } else if (periodType === 'monthly') {
-            payload.monthlyDay = monthlyDay;
+            payload.monthlyDay =  monthlyDay.toString();
         } else if (periodType === 'weekly') {
             payload.weeklyDay = weeklyDay;
         }
