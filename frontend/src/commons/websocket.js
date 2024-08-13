@@ -62,6 +62,12 @@ stompClient.connect(headers, () => {
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
+
+    // 온라인 사용자 상태 업데이트 구독 추가
+    stompClient.subscribe('/topic/userStatus', (payload) => {
+      const message = JSON.parse(payload.body);
+      onMessageReceived({ type: 'USER_STATUS', onlineUsers: message });
+    });
     }
   }, (error) => {
     console.error('WebSocket 연결 에러:', error);

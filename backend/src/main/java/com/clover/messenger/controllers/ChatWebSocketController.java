@@ -14,6 +14,7 @@ import com.clover.messenger.dto.ChatMessageDTO;
 import com.clover.messenger.dto.ChatRoomDTO;
 import com.clover.messenger.dto.ReadMessageDTO;
 import com.clover.messenger.services.ChatService;
+import com.clover.messenger.services.UserSessionService;
 
 @Controller
 public class ChatWebSocketController {
@@ -23,6 +24,9 @@ public class ChatWebSocketController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private UserSessionService userSessionService;    
 
     /**
      * 채팅 메시지 전송을 처리하는 메소드
@@ -73,6 +77,22 @@ public class ChatWebSocketController {
         // 채팅방의 모든 사용자에게 새 사용자 입장 메시지와 업데이트된 채팅방 정보를 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getRoomSeq(), 
             Map.of("joinMessage", joinMessage, "updatedRoom", updatedRoom));
+    }
+
+    /**
+     * 사용자의 온라인 상태를 업데이트하고 브로드캐스트하는 메소드
+     */
+    @MessageMapping("/chat.updateUserStatus")
+    public void updateUserStatus(SimpMessageHeaderAccessor headerAccessor) {
+        Integer empSeq = Integer.parseInt(headerAccessor.getUser().getName());
+        Integer deptCode = (Integer) headerAccessor.getSessionAttributes().get("cloverDeptCode");
+        
+        if (deptCode != null) {
+            List<Map<String, Object>> onlineUsers = userSessionService.getOnlineUsersByDeptCode(deptCode);
+            
+            // 같은 부서의 모든 클라이언트에게 업데이트된 온라인 사용자 목록을 브로드캐스트
+            messagingTemplate.convertAndSend("/topic/userStatus/" + deptCode, onlineUsers);
+        }
     }
 
     /**

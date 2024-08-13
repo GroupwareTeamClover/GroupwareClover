@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../commons/config';
 import styles from './Messenger.module.css';
@@ -9,9 +9,7 @@ import SearchBar from './LeftPanel/SearchBar';
 import { useChatStore } from '../../../../store/messengerStore';
 import MessengerSideMenu from './MessengerSideMenu/MessengerSideMenu';
 import ProfilePanel from './ProfilePanel/ProfilePanel';
-import { sendMessage } from '../../../../commons/websocket';
-import { connectWebSocket } from '../../../../commons/websocket';
-
+import { sendMessage, connectWebSocket, disconnectWebSocket } from '../../../../commons/websocket';
 
 // axios 전역 설정
 axios.defaults.withCredentials = true; // CORS 요청 시 쿠키 포함
@@ -22,17 +20,31 @@ export const ChatMain = () => {
   const {
     chatRooms, setChatRooms, addChatRoom, updateChatRoom,
     selectedChat, setSelectedChat,
-    addMessage, setOnlineUsers, setUnreadCounts
+    addMessage, setOnlineUsers, setUnreadCounts, onlineUsers
   } = useChatStore();
 
-  // 메시지 처리
-  // chatmain이 메신저 기능의 최상위 컴포넌트. 여기서 메시지 관리 처리해야 모든 하위 컴포넌트에서 일관된 데이터 처리해야 처리
-  // 상태 업데이트의 중앙화
-  // 생명주기 관리 : 컴포넌트가 마운트 될 때 websocket 연결을 설정하고, 언마운트될 때 연결을 정리
-  // 메시지 수신, 처리 로직을 chatmain에서 처리하면 chatwindow는 메시지 표시에만 집중가능
-  // chatmain에서 메시지 처리하면 현재 열려있지 않은 채팅방의 메시지도 백그라운드에서 처리가능
-  // 중앙에서 메시지를 처리하고 상태를 업데이트하면, 불필요한 리렌더링을 줄이고 전체적인 성능 향상
+  // 선택된 프로필 상태 관리
+  const [selectedProfile, setSelectedProfile] = useState(null);
+
+  // 프로필 선택 핸들러
+  const handleProfileSelect = useCallback((user) => {
+    setSelectedProfile(user);
+  }, []);
+
   useEffect(() => {
+    // 초기 온라인 사용자 목록 가져오기
+    const fetchInitialOnlineUsers = async () => {
+      try {
+        const response = await axios.get(`${BaseUrl()}/chat/online-users`);
+        setOnlineUsers(response.data);
+      } catch (error) {
+        console.error('온라인 사용자 목록 조회 오류:', error);
+      }
+    };
+
+    fetchInitialOnlineUsers();
+
+    // WebSocket 메시지 핸들러
     const handleReceivedMessage = (message) => {
       console.log('메시지 수신:', message);
       switch (message.type) {
@@ -50,7 +62,13 @@ export const ChatMain = () => {
       }
     };
 
+    // WebSocket 연결
     connectWebSocket(handleReceivedMessage);
+
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제
+    return () => {
+      disconnectWebSocket();
+    };
   }, [addMessage, setOnlineUsers, addChatRoom]);
 
   // 채팅방 목록을 서버로부터 가져오는 함수
@@ -62,7 +80,7 @@ export const ChatMain = () => {
     } catch (error) {
       console.error('채팅방 목록 조회 오류:', error);
     }
-  }, [setChatRooms]);
+  }, [setChatRooms, setSelectedChat]);
 
   // 컴포넌트 마운트 시 채팅방 목록 가져오기
   useEffect(() => {
@@ -84,6 +102,10 @@ export const ChatMain = () => {
     sendMessage("/app/chat.readMessages", { roomSeq: roomSeq });
   }, []);
 
+  useEffect(() => {
+    console.log('Selected Profile:', selectedProfile);  // 디버깅을 위해 추가
+}, [selectedProfile]);
+
   return (
     <div className={styles.container}>
       {/* 메신저 사이드 메뉴 */}
@@ -93,7 +115,10 @@ export const ChatMain = () => {
       {/* 왼쪽 패널: 검색, 온라인 사용자, 채팅방 목록 */}
       <div className={styles.leftPanel}>
         <SearchBar />
-        <OnlineUsers />
+        <OnlineUsers 
+          onlineUsers={onlineUsers} 
+          onProfileSelect={handleProfileSelect}
+        />
         <ChatList
           chatRooms={chatRooms}
           onChatSelect={setSelectedChat}
@@ -115,7 +140,7 @@ export const ChatMain = () => {
       </div>
       {/* 프로필 패널 */}
       <div className={styles.profilePanel}>
-        <ProfilePanel/>
+        <ProfilePanel selectedProfile={selectedProfile}/>
       </div>
     </div>
   );

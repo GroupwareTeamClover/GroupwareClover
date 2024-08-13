@@ -2,6 +2,7 @@ package com.clover.messenger.dao;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,8 @@ public class UserSessionDAO {
         mybatis.update("UserSession.updateLastActivityTime", sessionId);
     }
 
+    public List<Map<String, Object>> getOnlineUsersByDeptCode(int deptCode) {
+        return mybatis.selectList("UserSession.getOnlineUsersByDeptCode", deptCode);
+    }
     
 }

@@ -36,7 +36,14 @@
         UPDATE userSession
         SET last_activity_time = sysdate
         WHERE session_id = #{sessionId}
-    </update>    
+    </update>
+
+    <select id="getOnlineUsersByDeptCode" resultType="java.util.HashMap">
+        SELECT us.emp_seq, us.emp_name, us.emp_avatar
+        FROM userSession us
+        WHERE us.dept_code = #{deptCode}
+        AND us.last_activity_time <![CDATA[>]]> sysdate - INTERVAL '5' MINUTE
+    </select>    
  	
  	
 </mapper>

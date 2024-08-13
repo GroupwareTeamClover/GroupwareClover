@@ -1,5 +1,8 @@
 package com.clover.messenger.services;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,10 @@ public class UserSessionService {
 
     public void updateLastActivityTime(String sessionId) {
         userSessionDAO.updateLastActivityTime(sessionId);
+    }
+
+    public List<Map<String, Object>> getOnlineUsersByDeptCode(int deptCode) {
+        return userSessionDAO.getOnlineUsersByDeptCode(deptCode);
     }
     
 }
