@@ -36,6 +36,7 @@ public class UserSessionService {
         userSessionDAO.deleteInactiveSessions(1);
     }
 
+    // 현재 활동 시간 갱신해주는 메소드, 어디서 호출 더 해줄 지 고민 필요함
     public void updateLastActivityTime(String sessionId) {
         userSessionDAO.updateLastActivityTime(sessionId);
     }

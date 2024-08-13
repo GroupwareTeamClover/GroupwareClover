@@ -1,8 +1,11 @@
 package com.clover.messenger.dto;
 
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.lang.Nullable;
+
 import com.clover.employee.dto.EmployeeDTO;
 
 public class ChatRoomDTO {
@@ -14,6 +17,7 @@ public class ChatRoomDTO {
     private String roomDescription;
     private int empSeq;
     private List<EmployeeDTO> participants;
+    @Nullable
     private String roomAvatar;
     private String customRoomName;
     private String customRoomAvatar;

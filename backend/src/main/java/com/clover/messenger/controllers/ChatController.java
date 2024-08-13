@@ -72,7 +72,31 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(String.valueOf(targetEmpSeq), "/queue/targetNewChatRoom", roomForTarget);
         
         return ResponseEntity.ok(room);
-    }    
+    }
+    
+    @PostMapping("/rooms/group")
+    public ResponseEntity<ChatRoomDTO> createGroupRoom(@RequestBody Map<String, Object> payload, HttpSession session) {
+        String roomName = (String) payload.get("roomName");
+        List<Integer> participantSeqs = (List<Integer>) payload.get("participants");
+        Integer creatorSeq = (Integer) session.getAttribute("cloverSeq");
+        
+        if (creatorSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        ChatRoomDTO room = chatService.createGroupRoom(roomName, creatorSeq, participantSeqs);
+        
+        // WebSocket을 통해 참가자들에게 새 그룹 채팅방 생성 알림
+        for (int participantSeq : participantSeqs) {
+            messagingTemplate.convertAndSendToUser(
+                String.valueOf(participantSeq),
+                "/queue/newGroupChatRoom",
+                room
+            );
+        }
+        
+        return ResponseEntity.ok(room);
+    }
 
     /**
      * 특정 채팅방의 메시지 목록을 조회하는 API 엔드포인트

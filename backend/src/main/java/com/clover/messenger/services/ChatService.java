@@ -128,6 +128,34 @@ public class ChatService {
         return roomForUser;
     }
 
+    @Transactional
+    public ChatRoomDTO createGroupRoom(String roomName, int creatorSeq, List<Integer> participantSeqs) {
+        System.out.println("그룹채팅 생성 시작");
+        System.out.println("방 이름: " + roomName);
+        System.out.println("생성자 seq: " + creatorSeq);
+        System.out.println("초기 참가자 목록: " + participantSeqs);
+
+        ChatRoomDTO room = new ChatRoomDTO();
+        room.setRoomName(roomName);
+        room.setRoomType("group");
+        room.setEmpSeq(creatorSeq);
+        room.setRoomDescription("그룹 채팅방");
+        
+        chatDAO.createGroupRoom(room);
+        
+        // 생성자를 참가자 목록에 추가
+        if (!participantSeqs.contains(creatorSeq)) {
+            participantSeqs.add(creatorSeq);
+        }
+        
+        for (int empSeq : participantSeqs) {
+            String role = (empSeq == creatorSeq) ? "ADMIN" : "MEMBER";
+            chatDAO.addGroupMember(room.getRoomSeq(), empSeq, role);
+        }
+        
+        return room;
+    }
+
 
     /**
      * 특정 채팅방의 메시지 목록을 가져오는 메서드
