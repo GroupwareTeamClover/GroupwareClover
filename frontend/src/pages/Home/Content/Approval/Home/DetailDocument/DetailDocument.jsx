@@ -55,11 +55,14 @@ export const DetailDocument = ({type}) => {
     //TempMenu에서 결재요청 클릭시 - 메뉴컴포넌트에 전달
     const [isTempInsert, setIsTempInsert] = useState(false);
 
+    //TempMenu에서 임시저장 클릭시
+    const [isTempTemp, setIsTempTemp] =useState(false);
+
     //TempMenu에서 긴급여부
     const [isTempEmergency, setIsTempEmergency]=useState(false);
 
-    //TempMenu에서 임시저장 클릭시
-    const [isTempTemp, setIsTempTemp] =useState(false);
+    //TempMenu에서 취소 클릭시
+    const [isTempCancle, setIsTempCancle]=useState(false);
 
     // 날짜 변환 함수
     const formatDate = (date) => {
@@ -296,6 +299,33 @@ export const DetailDocument = ({type}) => {
             })
         }
     },[isHoldoff])
+
+     //임시저장에서 취소 시 DB삭제
+     useEffect(()=>{
+        if(isTempCancle && id){
+            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+            .then(()=>{
+                setIsTempCancle(false);
+                alert("삭제 성공");
+                navi(`/approval`); // 절대 경로 사용
+            }).catch(()=>{
+                setIsTempCancle(false);
+                alert("삭제 실패");
+            })
+        }
+    },[isTempCancle, id])
+
+    //wirte시에는 business내용까지 insert해야해서 긴급처리를 business에서 했지만
+    //임시저장 후 긴급여부 같은 경우에는 엄연히 따지면 update처리이기 때문에 이곳에 한다.
+    //임시저장에서 긴급여부 선택시 문서 정보 변경
+    useEffect(()=>{
+        if(isTempEmergency && id){
+            console.log(isTempEmergency)
+            axios.put(`${BaseUrl()}/approval/document/temp/emergency/${id}`,  { isTempEmergency: isTempEmergency } ).then((resp)=>{
+            })
+        }
+    },[isTempEmergency, id])
+
   
    
     return (
@@ -307,7 +337,7 @@ export const DetailDocument = ({type}) => {
               {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
               {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} 
               setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
-              {isTempMenu && <TempMenu setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} />}
+              {isTempMenu && <TempMenu setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
             </div>
             <div className={styles.detail}>
                 {/* 왼쪽 */}
@@ -354,7 +384,8 @@ export const DetailDocument = ({type}) => {
                             <FormComponent type={type} id={id} isTempMenu={isTempMenu} 
                             isTempInsert={isTempInsert} setIsTempInsert={setIsTempInsert} 
                             isTempEmergency={isTempEmergency} setIsTempEmergency={setIsTempEmergency}
-                            isTempTemp={isTempTemp} setIsTempTemp={setIsTempTemp}/> 
+                            isTempTemp={isTempTemp} setIsTempTemp={setIsTempTemp}
+                            isTempCancle={isTempCancle} setIsTempCancle={setIsTempCancle}/> 
                         </div>
                     </div> 
                     </div>

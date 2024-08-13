@@ -17,7 +17,8 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     id, setIsTemp, isTemp, isTempMenu,
     isTempInsert, setIsTempInsert,
     isTempEmergency, setIsTempEmergency,
-    isTempTemp, setIsTempTemp
+    isTempTemp, setIsTempTemp,
+    isTempCancle, setIsTempCancle
 })=>{  
     const navi = useNavigate();
 
@@ -206,8 +207,9 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             });
         }
 
-    },[isTempTemp, , docData, business, id])
+    },[isTempTemp,docData, business, id])
 
+   
     return(
         <div className={styles.container}>
             <div className={styles.datatitle}>

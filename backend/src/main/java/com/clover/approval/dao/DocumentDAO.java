@@ -89,6 +89,14 @@ public class DocumentDAO {
 		mybatis.update("Document.updateDocTypeData", docData);
 	}
 	
+	//임시저장에서 긴급여부 처리
+	public void updateTempDocEmergency(int id, String emg) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("seq", id);
+		map.put("emg", emg);
+		mybatis.update("Document.updateTempDocEmergency", map);
+	}
+	
 	
 
 }
