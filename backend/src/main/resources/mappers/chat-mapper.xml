@@ -166,7 +166,7 @@
         FROM ChatMessage cm
         LEFT JOIN LastReadMessage lrm ON cm.room_seq = lrm.room_seq AND lrm.emp_seq = #{empSeq}
         WHERE cm.room_seq = #{roomSeq}
-        AND (lrm.last_read_message_seq IS NULL OR cm.message_seq > lrm.last_read_message_seq)
+        AND (lrm.last_read_message_seq IS NULL OR cm.message_seq <![CDATA[>]]> lrm.last_read_message_seq)
     </select>
 
     <select id="getLastMessage" resultType="com.clover.messenger.dto.ChatMessageDTO">

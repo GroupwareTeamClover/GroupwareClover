@@ -3,14 +3,40 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserSession">
- 	<insert id="insertUserSession">
- 		INSERT INTO userSession (
-            session_id, emp_seq, emp_name, emp_avatar, dept_code
-        )
-        VALUES(
-            #{sessionId}, #{empSeq}, #{emp_name}, #{emp_avatar}, #{dept_code}
-        )
- 	</insert>
+    <insert id="insertOrUpdateUserSession">
+        MERGE INTO userSession
+        USING DUAL ON (session_id = #{sessionId})
+        WHEN MATCHED THEN
+            UPDATE SET
+                emp_seq = #{empSeq},
+                emp_name = #{empName},
+                emp_avatar = #{empAvatar},
+                dept_code = #{deptCode},
+                last_activity_time = sysdate
+        WHEN NOT MATCHED THEN
+            INSERT (session_id, emp_seq, emp_name, emp_avatar, dept_code, login_time, last_activity_time)
+            VALUES (#{sessionId}, #{empSeq}, #{empName}, #{empAvatar}, #{deptCode}, sysdate, sysdate)
+    </insert>
+
+    <delete id="deleteUserSession">
+        DELETE FROM userSession WHERE session_id = #{sessionId}
+    </delete>
+
+    <delete id="deleteOldSessions">
+        DELETE FROM userSession
+        WHERE login_time <![CDATA[<]]> sysdate - INTERVAL '#{hours}' HOUR
+    </delete>
+
+    <delete id="deleteInactiveSessions">
+        DELETE FROM userSession
+        WHERE last_activity_time <![CDATA[<]]> sysdate - INTERVAL '#{hours}' HOUR
+    </delete>
+
+    <update id="updateLastActivityTime">
+        UPDATE userSession
+        SET last_activity_time = sysdate
+        WHERE session_id = #{sessionId}
+    </update>    
  	
  	
 </mapper>

@@ -13,18 +13,30 @@ public class UserSessionDAO {
     @Autowired
     private SqlSession mybatis;
 
-    public void insertUserSession(String sessionId, int empSeq, String cloverName, String cloverAvatar, int deptCode) {
+    public void insertOrUpdateUserSession(String sessionId, int empSeq, String empName, String empAvatar, int deptCode) {
         Map<String, Object> params = new HashMap<>();
         params.put("sessionId", sessionId);
         params.put("empSeq", empSeq);
-        params.put("cloverName", cloverName);
-        params.put("cloverAvatar", cloverAvatar);
+        params.put("empName", empName);
+        params.put("empAvatar", empAvatar);
         params.put("deptCode", deptCode);
-        mybatis.insert("UserSession.insertUserSession", params);
+        mybatis.insert("UserSession.insertOrUpdateUserSession", params);
     }
 
     public void deleteUserSession(String sessionId) {
         mybatis.delete("UserSession.deleteUserSession", sessionId);
+    }
+
+    public void deleteOldSessions(int hours) {
+        mybatis.delete("UserSession.deleteOldSessions", hours);
+    }
+
+    public void deleteInactiveSessions(int hours) {
+        mybatis.delete("UserSession.deleteInactiveSessions", hours);
+    }
+
+    public void updateLastActivityTime(String sessionId) {
+        mybatis.update("UserSession.updateLastActivityTime", sessionId);
     }
 
     
