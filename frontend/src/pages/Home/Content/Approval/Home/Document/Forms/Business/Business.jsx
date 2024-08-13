@@ -31,7 +31,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const [date, setDate]=useState();
     const [title, setTitle]=useState();
     const handleDateChange=(e)=>{setDate(e.target.value);}
-    const handleTitleChange=(e)=>{setTitle(e.target.value)}
+    const handleTitleChange=(e)=>{setTitle(e.target.value);}
 
     // <handleContentChange> - 에디터 내용 변경 시 호출할 onChange함수
     const [content, setContent] = useState();
@@ -39,6 +39,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const handleContentChange = () => {
         setContent(editorRef.current.getInstance().getHTML());
     }
+
     
 
     // DTO로 만들 데이터
@@ -153,6 +154,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             if (contentRef.current) {  // contentRef.current가 null이 아닌지 확인
                 contentRef.current.innerHTML = resp.data.BS_CONTENT;
             }
+            setTitle(resp.data.BS_TITLE);
             setDocData((prev) => ({
                 ...prev,
                 bsSeq: resp.data.BS_SEQ,
@@ -199,11 +201,9 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         if(isTempTemp && id){
             axios.put(`${BaseUrl()}/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
                 setIsTempInsert(false);
-                alert("임시 저장 성공")
                 navi(`/approval/document/${resp.data.id}?type=${resp.data.type}`);
             }).catch((error) => {
                 setIsTempInsert(false);
-                alert("임시 저장 실패")
             });
         }
 
@@ -222,7 +222,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 <div className={styles.title}>
                     <div className={styles.name}>제목</div>
                         <div className={styles.value}>
-                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange} value={docData.bsTitle} disabled={isReadOnly}></input>
+                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange} value={title} disabled={isReadOnly}></input>
                         </div>
                     </div>
                 </div>
