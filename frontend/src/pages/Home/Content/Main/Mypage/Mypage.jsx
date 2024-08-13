@@ -214,12 +214,12 @@ export const Mypage = ({empSeq, closeModal}) => {
                 <button onClick={handleFileClick}>이미지 찾기</button>
               </div>
             </div>
-        }
-        { /* 전화번호, 이메일 수정 */
+          }
+          { /* 전화번호, 이메일 수정 */
             (updateForm && updateSelectForm === 2)  &&
             <div>
               <div className={styles.row}>
-                <span>Tel.</span>s
+                <span>Tel.</span>
                 <input type="text" name="empTel" onChange={handleUpdateData} value={updateData.empTel}
                        placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
               </div>
