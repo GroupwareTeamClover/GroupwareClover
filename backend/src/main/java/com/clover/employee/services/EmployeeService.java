@@ -64,6 +64,13 @@ public class EmployeeService {
         else return "fail";
     }
 
+    /****/
+    public String updateAvatarEmployee(EmployeeDTO dto) {
+        int result = employeeDAO.updateAvatarEmployee(dto);
+        if(result > 0) return "ok";
+        else return "fail";
+    }
+
     /** 직원 삭제 **/
     public void leaveEmployee(int empSeq) {
         employeeDAO.leaveEmployee(empSeq);

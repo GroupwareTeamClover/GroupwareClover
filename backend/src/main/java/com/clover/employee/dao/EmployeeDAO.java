@@ -43,6 +43,11 @@ public class EmployeeDAO {
         return mybatis.update("Employee.updatePw", dto);
     }
 
+    /** 사원 프로필 사진 변경 **/
+    public int updateAvatarEmployee(EmployeeDTO dto){
+        return mybatis.update("Employee.updateAvatar", dto);
+    }
+
     /** 직원 삭제 **/
     public void leaveEmployee(int empSeq) {
         mybatis.delete("Employee.delete", empSeq);
