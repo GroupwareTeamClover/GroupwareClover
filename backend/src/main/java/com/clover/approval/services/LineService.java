@@ -47,18 +47,22 @@ public class LineService {
 	
 	//결재상태업데이트 함수들
 	//대기->결재
-	//트랜잭션처리를 하면서 순서를 주는 방법?
 	@Transactional
 	public void updateWaitToApproval(int cleanApvLineSeq, int id) {
 		lineDAO.updateWaitToApproval(cleanApvLineSeq);
 		documentDAO.updateDocToApproval(id);
 	}
 	
-	
+	//대기->반려
 	@Transactional
 	public void updateWaitToReject(int id, int lineSeq, String reasonForRejection) {
 		lineDAO.updateWaitToReject(lineSeq, reasonForRejection);
 		documentDAO.updateDocToReject(id);
+	}
+	
+	//대기->보류
+	public void updateWaitToHoldoff(int lineSeq) {
+		lineDAO.updateWaitToHoldoff(lineSeq);
 	}
 
 }

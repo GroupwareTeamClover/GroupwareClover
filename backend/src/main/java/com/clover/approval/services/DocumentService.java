@@ -30,7 +30,7 @@ public class DocumentService {
 		return documentDAO.selectDocCodeInfo();
 	}
 	
-	//insert
+	//insert && temp
 	@Transactional
 	public void insertDoc(DocumentDTO docDTO, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist, DocumentDTO typeDocDTO) {
 		documentDAO.insertDoc(docDTO);
@@ -78,6 +78,27 @@ public class DocumentService {
 		return documentDAO.selectMainDoc(empSeq);
 	}
 	
+	//상신취소
+	@Transactional
+	public void deleteBySeq(int seq, String table) {
+		documentDAO.deleteBySeq(seq);
+		documentDAO.deleteByDocTypeSeq(seq, table);
+		lineDAO.deleteApvLineBySeq(seq);
+		lineDAO.deletePartLineBySeq(seq);
+		
+	}
+	
+	//임시저장에서 결재요청시 문서상태 업데이트
+	@Transactional
+	public void updateDocState(int seq, String table, Map<String,Object> docData) {
+		documentDAO.updateDocState(seq);
+		documentDAO.updateDocTypeData(table, docData);
+	}
+	
+	//임시저장에서 임시저장시
+	public void updateTemptoTemp(String table, Map<String,Object> docData) {
+		documentDAO.updateDocTypeData(table, docData);
+	}
 
 
 }

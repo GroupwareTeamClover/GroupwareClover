@@ -36,25 +36,33 @@ public class LineController {
     
     //대기상태에서 -> 결재로 결재상태업데이트, apvline변화에 따라 문서상태로 변화  
     @PutMapping("/{cleanApvLineSeq}/{id}/approval")
-	public ResponseEntity<Void> put( @PathVariable("cleanApvLineSeq") int cleanApvLineSeq, @PathVariable("id") int id){
+	public ResponseEntity<Void> approval( @PathVariable("cleanApvLineSeq") int cleanApvLineSeq, @PathVariable("id") int id){
     	lineService.updateWaitToApproval(cleanApvLineSeq, id);
     	return ResponseEntity.ok().build();
 	}
     
     //대기상태에서 -> 반려로 상태업데이트, apvline변화에 따라 문서상태도 변화시키기
     @PutMapping("/{lineSeq}/{id}/reject")
-    public ResponseEntity<String> rejectApproval(
+    public ResponseEntity<String> reject(
             @PathVariable int lineSeq,
             @PathVariable int id,
             @RequestBody JsonNode requestBody) {
         // JSON 객체에서 특정 필드 추출
         String reasonForRejection = requestBody.get("reasonForRejection").asText();
-        System.out.println("Reason for Rejection: " + reasonForRejection);
+//        System.out.println("Reason for Rejection: " + reasonForRejection);
         
         lineService.updateWaitToReject(id, lineSeq, reasonForRejection);
-
-  
         return ResponseEntity.ok().build();
     }
+    
+    
+    //대기상태에서 -> 보류로 상태업데이트, 문서상태변화는 없음
+    @PutMapping("/{lineSeq}/holdoff")
+    public ResponseEntity<String> holdaoff(@PathVariable int lineSeq) {
+
+        lineService.updateWaitToHoldoff(lineSeq);
+        return ResponseEntity.ok().build();
+    }
+    
 
 }

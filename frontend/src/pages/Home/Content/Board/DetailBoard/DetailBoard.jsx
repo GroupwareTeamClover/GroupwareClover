@@ -28,6 +28,13 @@ const DetilBoard = () => {
     const [isImportant, setIsImportant] = useState();
 
     const navi = useNavigate();
+    //TOP 버튼 클릭 시 스크롤 맨 위로 이동
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        })
+    }
 
     //스크롤 변화 시 스크롤 맨 아래로 이동
     const commentsEndRef = useRef(null);
@@ -75,7 +82,7 @@ const DetilBoard = () => {
         axios.get(`${BaseUrl()}/board/status/important/${sessionData.empSeq}/${boardSeq}`).then(resp => {
             (resp.data) ? setIsImportant(true) : setIsImportant(false);
         })
-    }, [boardSeq, boardlistSeq, sessionData.empId]);
+    }, [boardSeq, boardlistSeq, sessionData.empId, sessionData.empSeq]);
 
     //첨부파일 조회 및 다운로드
     const [isFileBoxOpen, setIsFileBoxOpen] = useState(false);
@@ -156,15 +163,15 @@ const DetilBoard = () => {
         await axios.post(`${BaseUrl()}/board/important`, {
             empSeq: sessionData.empSeq,
             boardSeq: boardSeq
-        }).then(resp => {
+        }).then(resp => 
             { resp.status === 200 && alert("중요 게시글에 추가되었습니다!"); setIsImportant(true); }
-        })
+        )
     }
     // 중요게시글 삭제
     const handleRemoveImportant = async () => {
-        await axios.delete(`${BaseUrl()}/board/important`, { params: { empSeq: sessionData.empSeq, boardSeq: boardSeq } }).then(resp => {
+        await axios.delete(`${BaseUrl()}/board/important`, { params: { empSeq: sessionData.empSeq, boardSeq: boardSeq } }).then(resp => 
             { resp.status === 200 && alert("중요 게시글에서 삭제되었습니다!"); setIsImportant(false); }
-        })
+        )
     }
 
     return (
@@ -219,7 +226,7 @@ const DetilBoard = () => {
                         <button className={styles.goListBtn} onClick={() => { navi(`/community/board/${boardlistSeq}`) }}>목록</button>
                     </div>
                     <div className={styles.rightBox}>
-                        {post.boardWriter.includes(sessionData.empName) &&
+                        {(post.boardWriter.includes(sessionData.empName) || admin) &&
                             <>
                                 <button className={styles.corBtn} onClick={() => { navi("/community/modifyPost", { state: { ...post } }) }}>수정</button>
                                 <button className={styles.delBtn} onClick={handleDelete}>삭제</button>
@@ -246,6 +253,7 @@ const DetilBoard = () => {
                     )}
                 </div>
             </div>
+            <div appearance="link" onClick={scrollToTop} className={styles.topButton}>▲ 맨위로</div>
             <div ref={commentsEndRef} />
         </div>
     );
