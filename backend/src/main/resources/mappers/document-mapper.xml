@@ -138,13 +138,6 @@
 		        WHERE a.doc_seq = d.doc_seq
 		          AND a.apv_status_code = 4
 		          AND a.doc_seq = #{id}),
-		    finish_date = CASE 
-		                    WHEN (SELECT COUNT(*) 
-		                          FROM apv_line a 
-		                          WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code = 4) >= 1 
-		                    THEN SYSDATE 
-		                    ELSE finish_date 
-		                 END,
 		    doc_state_code = CASE 
 		                       WHEN (SELECT COUNT(*) 
 		                             FROM apv_line a 
@@ -153,6 +146,34 @@
 		                     END
 		WHERE d.doc_seq = #{id}
 	
+	</update>
+	
+	<delete id="deleteBySeq">
+		delete from document where doc_seq=#{seq}
+	</delete>
+	
+	<delete id="deleteByDocTypeSeq">
+		delete from ${table} where parent_seq=#{seq}
+	</delete>
+	
+	<update id="updateDocState">
+		update document set doc_state_code = 1 where doc_seq=#{seq}
+	</update>
+	
+	<update id="updateDocTypeData">
+	    update ${table}
+	    <set>
+	        <if test="bsTitle != null">
+	            bs_title = #{bsTitle},
+	        </if>
+	        <if test="bsContent != null">
+	            bs_content = #{bsContent},
+	        </if>
+	        <if test="bsWriteDate != null">
+	            bs_write_date = #{bsWriteDate},
+	        </if>
+	    </set>
+	    where bs_seq = #{bsSeq}
 	</update>
 	
 

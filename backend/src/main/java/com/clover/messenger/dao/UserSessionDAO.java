@@ -1,31 +1,47 @@
-// package com.clover.messenger.dao;
+package com.clover.messenger.dao;
 
-// import java.util.HashMap;
-// import java.util.Map;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
-// import org.apache.ibatis.session.SqlSession;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Repository;
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-// @Repository
-// public class UserSessionDAO {
+@Repository
+public class UserSessionDAO {
 
-//     @Autowired
-//     private SqlSession mybatis;
+    @Autowired
+    private SqlSession mybatis;
 
-//     public void insertUserSession(String sessionId, int empSeq, String cloverName, String cloverAvatar, int deptCode) {
-//         Map<String, Object> params = new HashMap<>();
-//         params.put("sessionId", sessionId);
-//         params.put("empSeq", empSeq);
-//         params.put("cloverName", cloverName);
-//         params.put("cloverAvatar", cloverAvatar);
-//         params.put("deptCode", deptCode);
-//         mybatis.insert("UserSession.insertUserSession", params);
-//     }
+    public void insertOrUpdateUserSession(String sessionId, int empSeq, String empName, String empAvatar, int deptCode) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("sessionId", sessionId);
+        params.put("empSeq", empSeq);
+        params.put("empName", empName);
+        params.put("empAvatar", empAvatar);
+        params.put("deptCode", deptCode);
+        mybatis.insert("UserSession.insertOrUpdateUserSession", params);
+    }
 
-//     public void deleteUserSession(String sessionId) {
-//         mybatis.delete("UserSession.deleteUserSession", sessionId);
-//     }
+    public void deleteUserSession(String sessionId) {
+        mybatis.delete("UserSession.deleteUserSession", sessionId);
+    }
 
+    public void deleteOldSessions(int hours) {
+        mybatis.delete("UserSession.deleteOldSessions", hours);
+    }
+
+    public void deleteInactiveSessions(int hours) {
+        mybatis.delete("UserSession.deleteInactiveSessions", hours);
+    }
+
+    public void updateLastActivityTime(String sessionId) {
+        mybatis.update("UserSession.updateLastActivityTime", sessionId);
+    }
+
+    public List<Map<String, Object>> getOnlineUsersByDeptCode(int deptCode) {
+        return mybatis.selectList("UserSession.getOnlineUsersByDeptCode", deptCode);
+    }
     
-// }
+}

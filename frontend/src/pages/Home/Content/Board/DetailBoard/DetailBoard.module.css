@@ -122,7 +122,7 @@
 }
 
 .content .viewCont {
-    padding: 10px 10px 150px 10px;
+    padding: 20px 10px 150px 10px;
     font-size: 18px;
     line-height: 30px;
     font-weight: 400;
@@ -219,4 +219,17 @@
 	font-weight: 400;
 	line-height: 36px;
     border-bottom: 1px solid black;
+}
+
+.topButton{
+    position:fixed;
+    right : 0.5%;
+    bottom : 2%;
+    z-index: 1;
+    color : black;
+    font-size: 18px;
+}
+
+.topButton:hover{
+    cursor: pointer;
 }

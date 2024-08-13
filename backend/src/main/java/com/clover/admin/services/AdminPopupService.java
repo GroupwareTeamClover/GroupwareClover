@@ -15,8 +15,10 @@ public class AdminPopupService {
 	@Autowired
 	private AdminPopupDAO adminpopupDAO;
 	
-	public void createPopup(AdminPopupDTO popupdto) {
+	public int createPopup(AdminPopupDTO popupdto) {
 		adminpopupDAO.createPopup(popupdto);
+		int newPopSeq = popupdto.getPopSeq();
+		return newPopSeq;
 	}
 	
 	public List<AdminPopupDTO> getAllPop(){

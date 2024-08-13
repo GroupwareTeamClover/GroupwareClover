@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.clover.admin.dto.AdminLogDTO;
+import com.clover.admin.dto.AdminLogSearchDTO;
 
 @Repository
 public class AdminLogDAO {
@@ -20,5 +21,9 @@ public class AdminLogDAO {
 	
 	public List<AdminLogDTO> getAllLog(){
 		return mybatis.selectList("AdminLog.getAllLog");
+	}
+//	public void getSearchLog(AdminLogSearchDTO logsearchdto){
+	public List<AdminLogDTO> getSearchLog(AdminLogSearchDTO logsearchdto){
+		return mybatis.selectList("AdminLog.getSearchLog", logsearchdto);
 	}
 }

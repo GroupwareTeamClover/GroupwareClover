@@ -4,7 +4,7 @@ import { MdEmergency } from "react-icons/md";
 import { BsPencilSquare, BsDownload } from "react-icons/bs";
 import { useState, useEffect } from 'react';
 
-export const WriterMenu=({setIsInsert, setIsEmergency})=>{
+export const WriterMenu=({setIsInsert, setIsEmergency, setIsTemp})=>{
 
     //결재요청 클릭시 각 양식에서 상태확인
     const handleInsert= () =>{
@@ -21,11 +21,16 @@ export const WriterMenu=({setIsInsert, setIsEmergency})=>{
         }
     }
 
+    //임시저장
+    const handleTemp=()=>{
+        setIsTemp(true);
+    }
+
 
     return(
         <div className={styles.container}>
             <span className={styles.menuspancenter} onClick={handleInsert}><BsPencilSquare size={19}  className={styles.menuright}/>결재요청</span>
-            <span className={styles.menuspancenter}><BsDownload size={19} className={styles.menuright}/>임시저장</span>
+            <span className={styles.menuspancenter} onClick={handleTemp}><BsDownload size={19} className={styles.menuright}/>임시저장</span>
             <span className={styles.menuspancenter}><MdOutlineCancel size={20} className={styles.menuright}/>취소</span>
             <span className={styles.menuspancenter}><MdEmergency className={styles.menuright}/>긴급여부<input type="checkbox" className={styles.inputcheck} onChange={handleEmergencyChange}></input></span>
         </div>

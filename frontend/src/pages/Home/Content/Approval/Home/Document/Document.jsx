@@ -102,6 +102,8 @@ export const Document = ({type}) => {
      const [isInsert, setIsInsert] = useState(false);
      // 긴급여부 체크박스 상태
      const [isEmergency, setIsEmergency] = useState('n');
+     // 임시저장 클릭 시
+     const [isTemp, setIsTemp]=useState(false);
 
     return (
         <div className={styles.container}>
@@ -109,7 +111,7 @@ export const Document = ({type}) => {
                 <h3 className={styles.headerText}>{type}</h3>
             </div>
             <div className={styles.menu}>
-                <WriterMenu setIsInsert={setIsInsert} setIsEmergency={setIsEmergency}/>
+                <WriterMenu setIsInsert={setIsInsert} setIsEmergency={setIsEmergency} setIsTemp={setIsTemp}/>
             </div>
             <div className={styles.detail}>
                 {/* 왼쪽 */}
@@ -149,6 +151,7 @@ export const Document = ({type}) => {
                                 documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
                                 apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
                                 participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}
+                                isTemp={isTemp} setIsTemp={setIsTemp}
                             /> 
                         </div>
                     </div> 

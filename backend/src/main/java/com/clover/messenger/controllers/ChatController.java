@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clover.employee.dto.EmployeeDTO;
 import com.clover.messenger.dto.ChatMessageDTO;
 import com.clover.messenger.dto.ChatRoomDTO;
 import com.clover.messenger.services.ChatService;
+import com.clover.messenger.services.UserSessionService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,6 +31,9 @@ public class ChatController {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private UserSessionService userSessionService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -104,13 +109,34 @@ public class ChatController {
 	}
 
     /**
-     * 현재 로그인한 사용자의 프로필 정보를 조회하는 API 엔드포인트
-     * @return 로그인한 사용자의 프로필 정보
-     */    
+     * 프로필 정보를 조회하는 API 엔드포인트
+     * @param empSeq 조회할 사용자의 사원 번호 (옵션)
+     * @return 프로필 정보
+     */
     @GetMapping("/profile")
-    public ResponseEntity<HashMap<String, Object>> getProfile() {
-        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+    public ResponseEntity<HashMap<String, Object>> getProfile(@RequestParam(required = false) Integer empSeq, HttpSession session) {
+        if (empSeq == null) {
+            empSeq = (Integer) session.getAttribute("cloverSeq");
+            System.out.println("확인1");
+        }
+        if (empSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            
+        }
+        System.out.println("확인2");
         HashMap<String, Object> profile = chatService.getProfile(empSeq);
         return ResponseEntity.ok(profile);
     }
+
+    @GetMapping("/online-users")
+    public ResponseEntity<List<Map<String, Object>>> getOnlineUsers(HttpSession session) {
+        Integer deptCode = (Integer) session.getAttribute("cloverDeptCode");
+        if (deptCode == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<Map<String, Object>> onlineUsers = userSessionService.getOnlineUsersByDeptCode(deptCode);
+        return ResponseEntity.ok(onlineUsers);
+    }
+
+
 }
