@@ -202,7 +202,7 @@ export const PopupDetail =()=>{
                 <h3>{post.empName} 관리자님의 팝업공지글</h3>
                 <div className={styles.popWriteDate}>
                     <div>작성일: {post.popWriteDate ? format(new Date(post.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}</div>
-                    <div>수정일: {post.popUpdatedDate ? format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm'): ''}</div>
+                    <div> {post.popUpdatedDate ? '수정일:'+ format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm'): ''}</div>
                 </div>
             </div>
             <div className={styles.title}>

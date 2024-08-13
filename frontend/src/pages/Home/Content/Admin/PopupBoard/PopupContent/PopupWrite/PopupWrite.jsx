@@ -102,13 +102,21 @@ export const PopupWrite = () => {
             }
 
             else {
+                const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+                    const match = imgTag.match(/src="([^">]+)"/);
+                    return match ? match[1] : null;
+                });
+
                 const payload = {
                     popTitle: title,
                     empId: sessionData.empId,
                     popContent: content,
-                    // files: files,
                     periodType: periodType,
-                    popIsActive: boardActive === 'T'
+                    popIsActive: boardActive === 'T',
+
+                    fileNames: files.map(file => file.name),
+                    fileUrls: files.map(file => file.url),
+                    images : imageUrls
                 };
 
                 // 공지기간 데이터 추가
@@ -142,6 +150,12 @@ export const PopupWrite = () => {
         }
     }
 
+    const handleCancel = () => {
+        const confirm = window.confirm("글 작성을 취소하시겠습니까?");
+        if(confirm){navi(-1)}
+        else{return false}
+    }
+
      //첨부파일
      const [files, setFiles] = useState([]);
      const handleFileChange = (fileList) => {
@@ -157,6 +171,9 @@ export const PopupWrite = () => {
          setFiles((prev) => prev.filter((f) => f.name !== file.name));
      };
 
+
+    const path = encodeURIComponent("temp");
+    
     return (
         <div className={styles.container}>
             <h3>{sessionData.empName} 관리자님의 팝업공지글</h3>
@@ -167,8 +184,8 @@ export const PopupWrite = () => {
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px" defaultContent="" />
             </div>
-            <div className={styles.fileBox}>
-                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
+           <div className={styles.fileBox}>
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
@@ -235,7 +252,7 @@ export const PopupWrite = () => {
                 </div>
             </div>
             <div className={styles.btnBox}>
-                <button className={styles.cancelBtn}>취소</button>
+                <button className={styles.cancelBtn} onClick={handleCancel}>취소</button>
                 <button className={styles.writeBtn} onClick={handleSubmit}>등록</button>
             </div>
             <div className={styles.footer}>
