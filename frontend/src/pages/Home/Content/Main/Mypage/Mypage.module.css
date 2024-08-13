@@ -191,3 +191,51 @@
     display: flex;
     justify-content: center;
 }
+
+.col {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reviewBox {
+    width: 180px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reviewBox > img {
+    width: 150px;
+    height: 150px;
+
+}
+
+.reviewController {
+    width: 180px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.reviewController > button {
+    width: 90%;
+    height: 40px;
+    background-color: var(--btn-color);
+    color: var(--font-color);
+    font-weight: 800;
+    border-radius: 10px;
+    border: none;
+}
+
+.reviewController > button:hover {
+    cursor: pointer;
+    background-color: var(--hover-color);
+    transition: all 500ms;
+}

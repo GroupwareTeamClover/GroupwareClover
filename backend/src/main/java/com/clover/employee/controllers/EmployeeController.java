@@ -1,25 +1,24 @@
 package com.clover.employee.controllers;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+import com.clover.commons.services.S3Service;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.clover.employee.dto.EmployeeDTO;
 import com.clover.employee.services.EmployeeService;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/employee")
 public class EmployeeController {
+    @Autowired
+    private S3Service s3Service;
 
     @Autowired
     private EmployeeService employeeService;
@@ -53,6 +52,25 @@ public class EmployeeController {
         String result = employeeService.updatePwEmployee(dto);
         return ResponseEntity.ok(result);
     }
+
+    @PutMapping("/profile")
+    public ResponseEntity<String> updateAvatarEmployee(@RequestParam("file") MultipartFile file) {
+        String result = "fail";
+        try{
+            String decodePath = URLDecoder.decode("profile", StandardCharsets.UTF_8);
+            String fileUrl = s3Service.uploadFile(file, decodePath);
+            if(fileUrl != null) {
+                EmployeeDTO dto = new EmployeeDTO();
+                dto.setEmpSeq((int)session.getAttribute("cloverSeq"));
+                dto.setEmpAvatar(fileUrl);
+                result = employeeService.updateAvatarEmployee(dto);
+                if(result.equals("ok")) return ResponseEntity.ok(fileUrl);
+            }
+        } catch (Exception e) {}
+
+        return ResponseEntity.ok(result);
+    }
+
 
     @DeleteMapping("/{empSeq}")
     public void leaveEmployee(@PathVariable int empSeq) {

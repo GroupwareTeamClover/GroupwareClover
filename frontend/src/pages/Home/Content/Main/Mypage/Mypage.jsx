@@ -1,6 +1,6 @@
 import styles from './Mypage.module.css'
 import default_image from "../../../../../images/default_avatar.jpg";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {validateEmail, validatePassword, validatePhone} from "../../../../../commons/common";
@@ -9,7 +9,8 @@ import {useMemberStore} from "../../../../../store/store";
 export const Mypage = ({empSeq, closeModal}) => {
 
   const [mypage, setMypage] = useState({});
-  const {sessionData} = useMemberStore();
+  const {sessionData, setAvatar} = useMemberStore();
+
   /** 생년월일 형식 변환하여 출력 **/
   const changeBirth = (birth) => {
     if (birth !== undefined) {
@@ -44,6 +45,26 @@ export const Mypage = ({empSeq, closeModal}) => {
 
   }
 
+  /** 아바타 변경 데이터 **/
+  // 아바타 미리보기를 위한 상태 값
+  const [changeAvatar, setChangeAvatar] = useState(sessionData.empAvatar);
+
+  // input(type:file)을 커스텀하기위해 사용
+  const reviewAvatart = React.useRef(null);
+  const handleFileClick = () => {
+    reviewAvatart.current.click();
+  }
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if(file) {
+      const fileUrl = URL.createObjectURL(file);
+      setChangeAvatar(fileUrl);
+      setSelectedFile(file);
+    }
+  }
+
   /** 비밀번호 업데이트 데이터 **/
   const [changePw, setChangePw] = useState({empPw: "", pwCheck: "", check: false});
 
@@ -72,7 +93,26 @@ export const Mypage = ({empSeq, closeModal}) => {
 
     /** 프로필 사진 업데이트 **/
     if(updateSelectForm === 1) {
+      if(!selectedFile) {
+        alert("선택된 이미지 파일이 없습니다.");
+        return false;
+      }
 
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      axios.put(`${BaseUrl()}/employee/profile`,
+        formData,
+        { headers: {'Content-Type': 'multipart/form-data'}
+      }).then(res => {
+        if(res.data !== "fail") {
+          sessionStorage.setItem("sessionUser", JSON.stringify({...sessionData, empAvatar: res.data}));
+          setAvatar({empAvatar: res.data});
+
+          setUpdateForm(false);
+          setDataState(prev => !prev);
+        }
+      });
     }
 
     /**전화번호 이메일 정보 업데이트 **/
@@ -97,7 +137,6 @@ export const Mypage = ({empSeq, closeModal}) => {
         delete changePw.pwCheck;
         delete changePw.check;
         axios.put(`${BaseUrl()}/employee/${empSeq}`, changePw).then(res => {
-          console.log(res.data);
           if(res.data === "ok") {
             alert("비밀번호 변경이 완료되었습니다.");
             closeModal();
@@ -166,15 +205,21 @@ export const Mypage = ({empSeq, closeModal}) => {
           }
           { /* 프로필 사진 수정 */
             (updateForm && updateSelectForm === 1) &&
-            <div>
-
+            <div className={styles.col}>
+              <div className={styles.reviewBox}>
+                <img src={changeAvatar} />
+              </div>
+              <div className={styles.reviewController}>
+                <input type="file" ref={reviewAvatart} style={{ display : "none" }} onChange={handleFileChange}/>
+                <button onClick={handleFileClick}>이미지 찾기</button>
+              </div>
             </div>
-          }
-          { /* 전화번호, 이메일 수정 */
+        }
+        { /* 전화번호, 이메일 수정 */
             (updateForm && updateSelectForm === 2)  &&
             <div>
               <div className={styles.row}>
-                <span>Tel.</span>
+                <span>Tel.</span>s
                 <input type="text" name="empTel" onChange={handleUpdateData} value={updateData.empTel}
                        placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
               </div>
@@ -187,7 +232,7 @@ export const Mypage = ({empSeq, closeModal}) => {
           }
           { /* 비밀번호 변경 */
             (updateForm && updateSelectForm === 3) &&
-              <div className={styles.joinForm}>
+              <div>
                 <div className={styles.row}>
                   <span style={changePw.empPw !== "" ? (changePw.check ? {color: "#15dcdd"} : {color: "red"}) : undefined} >New Password</span>
                   <input type="password" name="empPw" maxLength="20" value={changePw.empPw || ""}
