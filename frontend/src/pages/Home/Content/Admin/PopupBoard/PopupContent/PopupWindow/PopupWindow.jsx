@@ -78,6 +78,10 @@ export const PopupWindow = ({ setShowPopup }) => {
                                         padding: 10px;
                                         background-color: #f0f0f0;
                                     }
+                                    .header{
+                                        height:10%;
+                                    }
+                                    
                                     h1 {
                                         font-family: 'ONE-Mobile-Title', sans-serif;
                                         // color: #333;
@@ -88,24 +92,22 @@ export const PopupWindow = ({ setShowPopup }) => {
                                     .content{
                                         padding: 0 10px;
                                         margin-top: 20px;
-                                        height:70%;
+                                        height:80%;
                                         overflow: auto;
                                     }
                                     .button{
-                                        height:15%;
+                                   
+                                        height:10%;
                                         display:flex;
                                         justify-content:center;
                                     }
-                                    button {
-                                        padding-left: 15px;
-                                        padding-right: 15px;
-                                        height:25px;
-                                        margin: 5px;
+                                    .button button {
                                         border: none;
                                         background-color: #4CAF50;
                                         color: white;
                                         cursor: pointer;
-                                        font-size: 14px;
+                                        height:50%;
+                                        margin-left: 10px;
                                     }
                                     button:hover {
                                         background-color: #45a049;
@@ -125,12 +127,13 @@ export const PopupWindow = ({ setShowPopup }) => {
                                 <title>${announcement.popTitle || 'Popup Window'}</title>
                             </head>
                             <body>
-                                <h1>${announcement.popTitle || ''}</h1>
+                                <div class='header'>
+                                    <h1>${announcement.popTitle || ''}</h1>
+                                </div>
                                 <div class='content'>${announcement.popContent || ''}</div>
                                 <div class='button'>
-                                <button onclick="window.close()">닫기</button>
-                                <button onclick="todayDismiss()">오늘 하루 보지 않기</button>
-                                <button onclick="permanentDismiss()">더 이상 보지 않기</button>
+                                    <button onclick="todayDismiss()">x</button>오늘 하루 보지 않기
+                                    <button onclick="permanentDismiss()">x</button>더 이상 보지 않기
                                 </div>
                             </body>
                             </html>

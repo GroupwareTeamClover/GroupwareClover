@@ -25,5 +25,8 @@
             <otherwise>0</otherwise>
         </choose>)
 </insert>
+<select id="getAllLog" resultType="com.clover.admin.dto.AdminLogDTO">
+	select * from log order by log_sec desc;
+</select>
 
 </mapper>

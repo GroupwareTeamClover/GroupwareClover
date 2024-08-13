@@ -1,5 +1,7 @@
 package com.clover.admin.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,10 @@ public class AdminLogService {
 	    		   logdto.getEmpName() +"아이디 "+ logdto.getEmpId() +" 부서코드 "+ logdto.getDeptCode()
 	    		   );
 	        adminlogDAO.insertLog(logdto);
+	}
+	
+	public List<AdminLogDTO> getAllLog(){
+		return adminlogDAO.getAllLog();
 	}
 }
 

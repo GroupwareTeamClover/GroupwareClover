@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Comment.module.css';
 import Button from 'rsuite/Button';
 import 'rsuite/Button/styles/index.css';
@@ -9,12 +9,18 @@ import { BaseUrl } from '../../../../../../commons/config';
 
 const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComments, empName }) => {
     const [list, setList] = useState(reples);
+    const replyWriteInput = useRef(null);
 
     //답글작성창표시
     const [openWriteReplyBox, setOpenWriteReplyBox] = useState(false);
     const handleOpenwriteReplyBox = () => {
         setOpenWriteReplyBox(prev => !prev);
     }
+    useEffect(() => {
+        if (openWriteReplyBox && replyWriteInput.current) {
+            replyWriteInput.current.focus();
+        }
+    }, [openWriteReplyBox]);
 
     //답글
     const maxReplyLength = 1000;
@@ -49,12 +55,31 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
 
     //댓글 수정
     const [isModify, setIsmodify] = useState(false);
+    const modifyInput = useRef(null);
+
+    useEffect(() => {
+        if (isModify && modifyInput.current) {
+            modifyInput.current.style.height = 'auto';
+            modifyInput.current.style.height = `${modifyInput.current.scrollHeight}px`;
+        }
+    }, [isModify]);
+
     const handleIsModify = () => {
+        modifyInput.current.focus();
         setIsmodify(prev => !prev);
         setNewComment(dto.boardCommentContent);
+
+        setTimeout(() => {
+            if (modifyInput.current) {
+                modifyInput.current.focus();
+                modifyInput.current.selectionStart = modifyInput.current.value.length;
+                modifyInput.current.selectionEnd = modifyInput.current.value.length;
+            }
+        }, 0);
     }
-    const modifyInput = useRef(null);
+
     const [newComment, setNewComment] = useState(dto.boardCommentContent);
+
     const handleModifyChange = (e) => {
         if (e.target.value.length > maxReplyLength) {
             e.preventDefault();
@@ -64,13 +89,14 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
             setNewComment(e.target.value);
         }
     }
+
     const handleModify = () => {
         if (newComment.trim() === '') {
             alert("댓글 내용을 입력하세요!");
         } else {
             axios.put(`${BaseUrl()}/comment`, {
                 seq: dto.boardCommentSeq,
-                content : newComment
+                content: newComment
             }).then(resp => {
                 if (resp.status === 200) {
                     setIsmodify(false);
@@ -89,9 +115,9 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
     //댓글 삭제 (답글들도 함께 삭제)
     const handleDelete = () => {
         if (window.confirm("이 댓글을 삭제하시겠습니까?")) {
-            axios.delete(`${BaseUrl()}/comment/${dto.boardCommentSeq}`).then(resp => {
+            axios.delete(`${BaseUrl()}/comment/${dto.boardCommentSeq}`).then(resp => 
                 { resp.status === 200 && setComments(prev => prev.filter(item => item.boardCommentSeq !== dto.boardCommentSeq)) }
-            });
+            );
         }
     }
 
@@ -99,11 +125,11 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
         <div className={styles.container}>
             <div className={styles.comment}>
                 <div className={styles.commentWriter}>{dto.boardCommentWriter}</div>
-                {isModify ?
-                    <div className={styles.commentContent}>
-                        <textarea className={styles.modifyInput} onChange={handleModifyChange} value={newComment} autoFocus={true} ref={modifyInput} />
-                    </div> :
-                    <div className={styles.commentContent}>{dto.boardCommentContent}</div>}
+                <div className={styles.commentContent}>
+                    <textarea className={styles.modifyInput} onChange={handleModifyChange} value={newComment} ref={modifyInput} spellCheck={false}
+                        hidden={!isModify}/>
+                    {!isModify && dto.boardCommentContent}
+                </div>
                 <div className={styles.commentDateBox}>
                     {isModify ?
                         <div className={styles.modifyButtonBox}>
@@ -130,7 +156,7 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
                     <div className={styles.replyWriter}>ㄴ {sessionWriter}</div>
                     <div className={styles.replyContentBox}>
                         <textarea
-                            placeholder={`최대 ${maxReplyLength}자까지 작성 가능합니다`}
+                            placeholder={`최대 ${maxReplyLength}자까지 작성 가능합니다`} ref={replyWriteInput}
                             className={styles.replyContent} onChange={handleReplyChange} value={reply} maxLength={maxReplyLength}></textarea>
                         <button type="button" className={styles.writeReplyButton} onClick={handleWriteReply}>등록</button>
                     </div>

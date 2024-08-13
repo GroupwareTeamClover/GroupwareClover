@@ -60,7 +60,7 @@ const WritePost = () => {
             const textContent = tempDiv.textContent || tempDiv.innerText || '';
 
             if (textContent.trim() === "") {
-                alert("내용을 입력해주세요!");
+                alert("한 글자 이상의 내용을 입력해야합니다!");
             } else {
                 const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
                     const match = imgTag.match(/src="([^">]+)"/);
@@ -106,6 +106,7 @@ const WritePost = () => {
         // 파일 리스트에서 해당 파일 제거
         setFiles((prev) => prev.filter((f) => f.name !== file.name));
     };
+    const path = encodeURIComponent("temp");
 
     return (
         <div className={styles.container}>
@@ -127,7 +128,7 @@ const WritePost = () => {
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>

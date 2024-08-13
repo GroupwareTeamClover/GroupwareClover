@@ -96,4 +96,85 @@
 	order by doc.WRITE_DATE desc
 	</select>
 	
+	<update id="updateDocToApproval">
+		UPDATE document d
+		SET 
+		    current_apver_seq = (
+		        SELECT a.apver_id
+		        FROM apv_line a
+		        WHERE a.doc_seq = d.doc_seq
+		          AND a.apv_status_code = 1
+		          AND a.doc_seq = #{id}),
+		    finish_date = CASE 
+		                    WHEN (SELECT COUNT(*) 
+		                          FROM apv_line a 
+		                          WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code != 3) = 0 
+		                    THEN SYSDATE 
+		                    ELSE finish_date 
+		                 END,
+		    doc_com_seq = CASE 
+		                    WHEN (SELECT COUNT(*) 
+		                          FROM apv_line a 
+		                          WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code != 3) = 0 
+		                    THEN 'clover-' || TO_CHAR(SYSDATE, 'YYYY') || '-' || TO_CHAR(d.doc_seq)
+		                    ELSE doc_com_seq 
+		                 END,
+		    doc_state_code = CASE 
+		                       WHEN (SELECT COUNT(*) 
+		                             FROM apv_line a 
+		                             WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code != 3) = 0 
+		                       THEN 3
+		                       ELSE doc_state_code 
+		                     END
+		WHERE d.doc_seq = #{id}
+	</update>
+	
+	<update id="updateDocToReject">
+		UPDATE document d
+		SET 
+		   final_apver_seq = (
+		        SELECT a.apver_id
+		        FROM apv_line a
+		        WHERE a.doc_seq = d.doc_seq
+		          AND a.apv_status_code = 4
+		          AND a.doc_seq = #{id}),
+		    doc_state_code = CASE 
+		                       WHEN (SELECT COUNT(*) 
+		                             FROM apv_line a 
+		                              WHERE a.doc_seq = d.doc_seq AND a.doc_seq = #{id} AND a.apv_status_code = 4) >= 1 
+		                       THEN 4
+		                     END
+		WHERE d.doc_seq = #{id}
+	
+	</update>
+	
+	<delete id="deleteBySeq">
+		delete from document where doc_seq=#{seq}
+	</delete>
+	
+	<delete id="deleteByDocTypeSeq">
+		delete from ${table} where parent_seq=#{seq}
+	</delete>
+	
+	<update id="updateDocState">
+		update document set doc_state_code = 1 where doc_seq=#{seq}
+	</update>
+	
+	<update id="updateDocTypeData">
+	    update ${table}
+	    <set>
+	        <if test="bsTitle != null">
+	            bs_title = #{bsTitle},
+	        </if>
+	        <if test="bsContent != null">
+	            bs_content = #{bsContent},
+	        </if>
+	        <if test="bsWriteDate != null">
+	            bs_write_date = #{bsWriteDate},
+	        </if>
+	    </set>
+	    where bs_seq = #{bsSeq}
+	</update>
+	
+
 </mapper>

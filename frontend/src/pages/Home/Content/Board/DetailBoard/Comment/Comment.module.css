@@ -1,10 +1,7 @@
 .container{
     padding: 20px 0 5px 30px;
 	border-bottom: 1px solid #5a5a64;
-}
-
-.container textarea:focus {
-    outline:none;
+	font-family: monospace;
 }
 
 .comment {
@@ -14,11 +11,13 @@
 
 .comment .commentWriter {
 	font-weight: bold;
+	font-size: 16px;
 }
 
 .comment .commentContent {
 	padding-top: 20px;
 	padding-right : 40px;
+	font-size: 16px;
 	word-break: break-all;
 	white-space: pre-wrap;
 }
@@ -40,12 +39,10 @@
 
 .commentModifyButton{
     margin : 0 0 4px 10px;
-    color : black;
 }
 
 .commentDeleteButton{
     margin : 0 0 4px 0;
-    color : black;
 }
 
 .openRepleWriteButton:focus{
@@ -61,6 +58,7 @@
 .replyWriteBox .replyWriter {
 	height: 30px;
 	padding: 5px 0 0 20px;
+	font-size: 16px;
 	font-weight: bold;
     display: flex;
     align-items: center;
@@ -97,6 +95,7 @@
 	font-size: 16px;
 	resize: none;
 	border : 0;
+	height:100%;
 }
 
 .modifyInput:focus{

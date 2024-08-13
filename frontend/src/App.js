@@ -7,6 +7,8 @@ import { useMemberStore } from "./store/store";
 import { useEffect, useState } from "react";
 import { AdminSideMenu } from './pages/SideMenu/AdminSideMenu';
 import { Admin } from './pages/Admin/Admin';
+import Swal from "sweetalert2";
+import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 
 function App() {
   const userData = sessionStorage.getItem("sessionUser");
@@ -34,11 +36,12 @@ function App() {
     }
   }, [sign]);
 
- 
+
 
   return (
     <div className="container">
       <Router>
+      <ScrollToTop/>
         { !sign && <Login setSign={ setSign } setAdmin={ setAdmin }/> }
         { !admin ?
             <>

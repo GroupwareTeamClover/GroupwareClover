@@ -8,12 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.clover.admin.dto.AdminLogDTO;
 import com.clover.admin.services.AdminLogService;
@@ -36,15 +31,14 @@ public class SignController {
     @Autowired
     private HttpSession session;
 
-    @GetMapping
-    public ResponseEntity<?> signIn(@RequestParam String id, @RequestParam String pw, HttpServletRequest request) {
-        EmployeeDTO empInfo = employeeService.SignIn(id, pw);
-        String logintryId = id;
-        System.out.println(id);
+    @PostMapping
+    public ResponseEntity<?> signIn(@RequestBody EmployeeDTO dto, HttpServletRequest request) {
+        EmployeeDTO empInfo = employeeService.SignIn(dto);
+        
         // 정하윤 로그아이피
         String clientIp = getClientIp(request);	// ip주소 가져오기 
         LocalDateTime localLogTime = LocalDateTime.now(); // 접속시간
-        
+     
         if(empInfo != null) {
             session.setAttribute("cloverSeq", empInfo.getEmpSeq());
             session.setAttribute("cloverId", empInfo.getEmpId());
@@ -64,8 +58,8 @@ public class SignController {
             response.put("wsToken", wsToken);
 
             // 정하윤 로그 아이피 AdminLogService로 보내기 : 로그 기록 테이블에 insert하게. 
-            System.out.println("확인: "+ logintryId);
-            AdminLogDTO adminlogdto = new AdminLogDTO(0, empInfo.getEmpSeq(), empInfo.getEmpName(), logintryId,
+   
+            AdminLogDTO adminlogdto = new AdminLogDTO(0, empInfo.getEmpSeq(), empInfo.getEmpName(), dto.getEmpId(),
             		empInfo.getDeptCode(), clientIp, localLogTime, "로그인 성공");
             adminlogService.insertLog(adminlogdto);
            
@@ -73,11 +67,11 @@ public class SignController {
             return ResponseEntity.ok(response);
         }
         // 정하윤 : 로그인 실패한 로그 기록 테이블에 insert. 
-        AdminLogDTO adminlogdto = new AdminLogDTO(0, 0, "", logintryId, 0, clientIp, localLogTime, "로그인 실패");
-        System.out.println("제발 "+adminlogdto.getEmpId());
+        AdminLogDTO adminlogdto = new AdminLogDTO(0, 0, "", dto.getEmpId(), 0, clientIp, localLogTime, "로그인 실패");
         adminlogService.insertLog(adminlogdto);
-        
-        return ResponseEntity.badRequest().body("로그인 실패");
+
+        return null;
+//        return ResponseEntity.badRequest().body("로그인 실패");
     }
 
     @GetMapping("/{empId}")

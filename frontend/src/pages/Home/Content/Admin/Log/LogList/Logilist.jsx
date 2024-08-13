@@ -2,8 +2,28 @@ import { Pagination } from 'rsuite';
 import styles from './Loglist.module.css';
 import { FaSearch } from 'react-icons/fa';
 import { useState } from 'react';
+import { useMemStore } from '../../../../../../store/store';
 
 export const Loglist=()=>{
+
+    const {storemembers, setstoremembers} = useMemStore();
+    const [loglist, setLoglist] = useState([]);
+    const [filtered, setFiltered] = useState(loglist);
+
+    // // 서버에서 팝업공지글들 가져옴
+    // useEffect(()=>{
+    //     axios.get(`${BaseUrl()}/adminpopup`).then((resp)=>{
+    //         setPoplist(resp.data);
+    //         setFiltered(resp.data);
+    //         setstoremembers(false);
+    //         setIsLoading(false);
+    //         console.log(resp.data)
+    //     });
+
+        
+    // },[storemembers]);
+
+    
     //검색
     const maxSearchLength = 30;
     const [keyword, setKeyword] = useState('');
@@ -128,7 +148,14 @@ export const Loglist=()=>{
                         </tr>
                     </thead>
                     <tbody className={styles.tbody}>
-                       
+                        <tr>
+                            <td className={styles.theadtd}>접속시간</td>
+                            <td className={styles.theadtd}>아이디</td>
+                            <td className={styles.theadtd}>이름</td>
+                            <td className={styles.theadtd}>부서 </td>
+                            <td className={styles.theadtd}>로그정보</td>
+                            <td className={styles.theadtd}>접속IP</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>            

@@ -110,7 +110,7 @@ CREATE SEQUENCE POPUP_PERIOD_SEQUENCE START WITH 1 INCREMENT BY 1 NOMAXVALUE NOC
 
 create table log (
     log_seq number PRIMARY KEY,
-    emp_seq varchar2(100) NULL, 
+    emp_seq number NULL, 
     emp_name varchar2(50) NULL,
     emp_id varchar2(20) NULL,
     dept_code number NULL,

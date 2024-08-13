@@ -14,10 +14,16 @@ import { DragFolder } from "../../Side/ChoiceLine/DragFolder/DragFolder";
 import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./../Document/Menus/DrafterMenu/DrafterMenu";
 import {ApprovalMenu} from "./../Document/Menus/ApprovalMenu/ApprovalMenu";
-import signImage from './../../../../../../images/sign2.PNG';
+import {TempMenu} from './../Document/Menus/TempMenu/TempMenu';
+import signImage from './../../../../../../images/sign.PNG';
+import rejectImage from './../../../../../../images/reject.PNG';
 import { format } from 'date-fns';
+import { Modal } from "../../../../../../components/Modal/Modal";
+import { useNavigate } from 'react-router-dom';
+
 
 export const DetailDocument = ({type}) => {
+    const navi = useNavigate();
 
     //세션정보
     const {sessionData} = useMemberStore();
@@ -46,6 +52,15 @@ export const DetailDocument = ({type}) => {
     //ApprovalMenu에서 보류 클릭시-메뉴컴포넌트에 전달
     const [isHoldoff, setIsHoldoff]=useState(false);
 
+    //TempMenu에서 결재요청 클릭시 - 메뉴컴포넌트에 전달
+    const [isTempInsert, setIsTempInsert] = useState(false);
+
+    //TempMenu에서 긴급여부
+    const [isTempEmergency, setIsTempEmergency]=useState(false);
+
+    //TempMenu에서 임시저장 클릭시
+    const [isTempTemp, setIsTempTemp] =useState(false);
+
     // 날짜 변환 함수
     const formatDate = (date) => {
         if (!date) return '-';
@@ -68,6 +83,7 @@ export const DetailDocument = ({type}) => {
     //메뉴 on 
     const [isDrafterMenu, setIsDrafterMenu]=useState(false);
     const [isApprovalMenu, setIsApprovalMenu]=useState(false);
+    const [isTempMenu, setIsTempMenu]=useState(false);
 
 
     //DB에서 정보 가져오는함수
@@ -77,12 +93,25 @@ export const DetailDocument = ({type}) => {
                 // console.log(`detail접근확인`);
                 console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
 
-
-                if(resp.data.document.drafterSeq===sessionData.empSeq)  setIsDrafterMenu(true)
+                //상신취소메뉴 on 대기또는 예정 누군가 승인또는반려를 한명이라도 시작되었다면 상신취소할 수 없음.
+                const allLinesMeetCondition = resp.data.apvline.every(line => 
+                    line.apvStatusCode === 1 || line.apvStatusCode === 2
+                );
                 
+                if (allLinesMeetCondition && resp.data.document.drafterSeq === sessionData.empSeq && resp.data.document.docStateCode===1) {
+                    setIsDrafterMenu(true);
+                }
+                
+                //결정메뉴들 on(결재, 반려, 보류)
                 resp.data.apvline.map((line, index)=>{
                     if(line.apverId===sessionData.empSeq && line.apvStatusCode===1)  setIsApprovalMenu(true)
                 })
+
+                //임시저장메뉴들 on 2==임시저장문서상태의미
+                //내가 기안자인 임시저장상태 문서처리위한 메뉴
+                if(resp.data.document.drafterSeq === sessionData.empSeq && resp.data.document.docStateCode===2){
+                    setIsTempMenu(true);
+                }
 
                 const documentData = resp.data.document ? [{
                     type: 'document',
@@ -90,7 +119,8 @@ export const DetailDocument = ({type}) => {
                     deptName: resp.data.document.deptName,
                     roleName: resp.data.document.roleName,
                     order: '',
-                    drafterSeq: resp.data.document.drafterSeq
+                    drafterSeq: resp.data.document.drafterSeq,
+                    docSeq:resp.data.document.docSeq
                   }] : [];
 
         
@@ -134,8 +164,6 @@ export const DetailDocument = ({type}) => {
                             return item;
                     }
                 }));
-
-       
             })
         }
 
@@ -143,7 +171,6 @@ export const DetailDocument = ({type}) => {
              
     useEffect(()=>{
         handleGetAll();
-        console.log(isApprovalMenu, isDrafterMenu);
     },[])
 
   
@@ -154,18 +181,20 @@ export const DetailDocument = ({type}) => {
     };
     
     //상신취소클릭시 DB업데이트
-    // useEffect(()=>{
-    //     if(isCancle){
-    //        const apvLineSeq=getApvLineSeq();
-    //         console.log(apvLineSeq);
-    //         // totalLineInfo.map((line,index)=>{
-    //         //     line.type=='apvline' ? 
-    //         // })
-    //         // axios.put(`${BaseUrl()}/approval/line/${id}/`, line).then(()=>{
-    //         //     handleGetAll();
-    //         //   })
-    //     }
-    // },[isCancle])
+    //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
+    useEffect(()=>{
+        if(isCancle){
+            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+            .then(()=>{
+                setIsCancle(false);
+                alert("상신취소하시겠습니까? 모든 내용은 사라집니다.");
+                navi(`/approval`); // 절대 경로 사용
+            }).catch(()=>{
+                setIsCancle(false);
+                alert("취소 실패");
+            })
+        }
+    },[isCancle])
 
     //결재클릭시 DB업데이트 
     useEffect(()=>{
@@ -176,31 +205,97 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${apvLineSeq}`)
             console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/approval`, cleanApvLineSeq).then(()=>{
+            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/approval`, {
+                cleanApvLineSeq:cleanApvLineSeq,
+                id: id
+            }).then(()=>{
+                setIsApproval(false);
                 alert("결재 완료");
+                handleGetAll();
             }).catch(()=>{
+                setIsApproval(false);
                 alert("결재 실패");
             })
+
             //내가 이 문서의 마지막 결재자이고 결재하기로 한다면 문서 상태를 승인으로 업데이트
-            
-            handleGetAll();
+            //결재자들이 모두 승인이면 문서상태 완료로 변경
+            //id는 docSeq
+
         }
     },[isApproval])
 
     //반려클릭시 DB업데이트
-    // useEffect(()=>{
-    //     if(isReject){
+    //반려 모달
+    const [ modalState, setModalState ] = useState("");
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isRejectModalComplete, setIsRejectModalComplete]=useState(false);
+    const openModal = () => setIsModalOpen(true);
+    const closeModal=()=>{
+        setIsModalOpen(false);
+        setModalState("");
+        setIsReject(false);
+    }
+    const [Page, setPage] = useState(1);
+    //모달내용
+    const [reasonForRejection, setReasonForRejection]=useState();
+    const handleModalInput=(e)=>{
+        setReasonForRejection(e.target.value)
+    }
 
-    //     }
-    // },[isReject])
+    //모달 확인 클릭시
+     const handleRejectComplete=()=>{
+        setIsRejectModalComplete(true);
+    }   
+    useEffect(()=>{
+            if(isRejectModalComplete){
+                console.log(reasonForRejection);
+                const apvLineSeq=getApvLineSeq();
+                const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
+                //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
+                axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/reject`, {
+                    cleanApvLineSeq:cleanApvLineSeq,
+                    id: id,
+                    reasonForRejection: reasonForRejection
+                }).then(()=>{
+                    setIsRejectModalComplete(false); //모달창 반려버튼
+                    setIsReject(false); //반려버튼
+                    alert("반려 완료");
+                    handleGetAll();
+                    closeModal();
+                }).catch(()=>{
+                    setIsRejectModalComplete(false);
+                    setIsReject(false);
+                    alert("반려 실패");
+                    closeModal();
+                })
+            }
+    },[isRejectModalComplete])
+
+    //모달 취소 클릭시
+    const handleRejectCancle=()=>{
+        closeModal();
+    }
 
     //보류클릭시 DB업데이트
-    // useEffect(()=>{
-    //     if(isHoldoff){
-
-    //     }
-    // },[isHoldoff])
-
+    useEffect(()=>{
+        if(isHoldoff){
+            const apvLineSeq=getApvLineSeq();
+            const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
+            console.log(`결재번호 ${apvLineSeq}`)
+            console.log(`클린결재번호 ${cleanApvLineSeq}`)
+            //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
+            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/holdoff`, {
+                cleanApvLineSeq:cleanApvLineSeq,
+            }).then(()=>{
+                setIsHoldoff(false);
+                alert("보류 완료");
+                handleGetAll();
+            }).catch(()=>{
+                setIsHoldoff(false);
+                alert("보류 실패");
+            })
+        }
+    },[isHoldoff])
   
    
     return (
@@ -210,7 +305,9 @@ export const DetailDocument = ({type}) => {
             </div>
             <div className={styles.menu}>
               {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
-              {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff}/>}
+              {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} 
+              setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
+              {isTempMenu && <TempMenu setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} />}
             </div>
             <div className={styles.detail}>
                 {/* 왼쪽 */}
@@ -243,6 +340,7 @@ export const DetailDocument = ({type}) => {
                                                         <div className={styles.role}><span className={styles.roleText}>{line.roleName}</span></div>
                                                         <div className={styles.name}>
                                                             {line.apvStatusCode===3 && (<div><img src={signImage} alt="Sign" className={styles.imgSize}/></div>)}
+                                                            {line.apvStatusCode===4 && (<div><img src={rejectImage} alt="Sign" className={styles.imgSize}/></div>)}
                                                             <div><span className={styles.nameText}>{line.empName}</span></div>
                                                         </div>
                                                         <div className={styles.docNumber}>{formatDate(line.lineApvDate)}</div>
@@ -253,7 +351,10 @@ export const DetailDocument = ({type}) => {
                                     ) }
                         </div>
                         <div className={styles.form}>
-                            <FormComponent type={type} id={id} /> 
+                            <FormComponent type={type} id={id} isTempMenu={isTempMenu} 
+                            isTempInsert={isTempInsert} setIsTempInsert={setIsTempInsert} 
+                            isTempEmergency={isTempEmergency} setIsTempEmergency={setIsTempEmergency}
+                            isTempTemp={isTempTemp} setIsTempTemp={setIsTempTemp}/> 
                         </div>
                     </div> 
                     </div>
@@ -262,6 +363,29 @@ export const DetailDocument = ({type}) => {
                 {/* 오른쪽 */}
                 <div className={styles.side}></div>
             </div>
+
+                   
+            {/* 모달창 */}
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <div className={styles.modalForm}>
+                    {modalState === "ModalForm" && (
+                                <> 
+                                    {Page===1 &&(
+                                        <>
+                                            <div className={styles.header}>반려 사유</div>
+                                            <div className={styles.inputBox}>
+                                                <input type="text" placeholder="반려 사유를 입력해주세요." className={styles.inputcss} onChange={handleModalInput}></input>
+                                            </div>
+                                            <div className={styles.modalbtnBox}>
+                                                <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
+                                                <button name="next" onClick={handleRejectCancle} className={styles.btn} > 취소</button>
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            )}
+                </div>
+            </Modal>
         </div>
     );
 };

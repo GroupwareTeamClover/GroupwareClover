@@ -19,8 +19,11 @@ public class EmployeeService {
     private Sha512 sha512;
 
     /** 로그인 **/
-    public EmployeeDTO SignIn(String id, String pw) {
-        return employeeDAO.SignIn(new EmployeeDTO(id, sha512.getSHA512(pw)));
+    public EmployeeDTO SignIn(EmployeeDTO dto) {
+        System.out.println("id ==== " + dto.getEmpId());
+        System.out.println("pw ==== " + dto.getEmpPw());
+        dto.setEmpPw(sha512.getSHA512(dto.getEmpPw()));
+        return employeeDAO.SignIn(dto);
     }
 
     /** 회원 가입 **/
