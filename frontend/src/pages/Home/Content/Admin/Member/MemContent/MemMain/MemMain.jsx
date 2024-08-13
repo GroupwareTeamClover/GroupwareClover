@@ -333,7 +333,9 @@ export const MemMain = () => {
                 {isLoading ? (
                     <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
                 ) : ((filtered.length === 0) ? (
-                    <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
+                        <tr>
+                            <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
+                        </tr>
                 ) : (
                           
                             filtered.length > 0 ? (

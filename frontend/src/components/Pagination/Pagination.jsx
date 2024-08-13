@@ -14,12 +14,17 @@ export const Pagination = ({ pageCount, onPageChange, currentPage }) => {
         pageLinkClassName={styles.pagination__link}
         activeLinkClassName={styles.pagination__link__active}
         forcePage={currentPage} // 현재 페이지를 외부 상태로 설정
-        pageRangeDisplayed={5} // 화면에 표시할 페이지 범위
+        pageRangeDisplayed={4} // 화면에 표시할 페이지 범위
         marginPagesDisplayed={1} // 시작과 끝에 표시할 페이지 번호 수
       />
     );
   };
 
+
+//  중간페이지를 클릭할 시 ( 시작페이지와 끝페이지와 가까워질때 )
+//  전체페이지가 나타남...
+//  react-paginate 의 특징이기때문에 어쩔 수 없음. 
+//  방법이야 찾을 수 있겠다만 나중에....
 
     // <<< 페이지네이션 적용할 컴포넌트에 설정할 코드들 >>>
     //   //==========================================================================

@@ -1,6 +1,7 @@
 package com.clover.admin.dto;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class AdminPopupDTO {
 	private Integer popSeq;
@@ -22,6 +23,60 @@ public class AdminPopupDTO {
 	
     
     
+    private List<String> fileNames;
+    private List<String> fileUrls;
+    private List<String> images;
+    
+    
+    
+	public AdminPopupDTO(Integer popSeq, String popTitle, String empId, String popContent, Timestamp popWriteDate,
+			Timestamp popUpdatedDate, String popIsActive, String empName, Integer popPeriodSeq, String periodType,
+			String specificStartDate, String specificEndDate, String monthlyDay, String weeklyDay,
+			List<String> fileNames, List<String> fileUrls, List<String> images) {
+		super();
+		this.popSeq = popSeq;
+		this.popTitle = popTitle;
+		this.empId = empId;
+		this.popContent = popContent;
+		this.popWriteDate = popWriteDate;
+		this.popUpdatedDate = popUpdatedDate;
+		this.popIsActive = popIsActive;
+		this.empName = empName;
+		this.popPeriodSeq = popPeriodSeq;
+		this.periodType = periodType;
+		this.specificStartDate = specificStartDate;
+		this.specificEndDate = specificEndDate;
+		this.monthlyDay = monthlyDay;
+		this.weeklyDay = weeklyDay;
+		this.fileNames = fileNames;
+		this.fileUrls = fileUrls;
+		this.images = images;
+	}
+
+	public List<String> getFileNames() {
+		return fileNames;
+	}
+
+	public void setFileNames(List<String> fileNames) {
+		this.fileNames = fileNames;
+	}
+
+	public List<String> getFileUrls() {
+		return fileUrls;
+	}
+
+	public void setFileUrls(List<String> fileUrls) {
+		this.fileUrls = fileUrls;
+	}
+
+	public List<String> getImages() {
+		return images;
+	}
+
+	public void setImages(List<String> images) {
+		this.images = images;
+	}
+
 	public String getEmpName() {
 		return empName;
 	}

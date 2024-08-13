@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.clover.admin.dao.AdminLogDAO;
 import com.clover.admin.dto.AdminLogDTO;
+import com.clover.admin.dto.AdminLogSearchDTO;
 
 @Service
 public class AdminLogService {
@@ -25,6 +26,10 @@ public class AdminLogService {
 	
 	public List<AdminLogDTO> getAllLog(){
 		return adminlogDAO.getAllLog();
+	}
+	
+	public List<AdminLogDTO>  getSearchLog(AdminLogSearchDTO logsearchdto){
+		return adminlogDAO.getSearchLog(logsearchdto);
 	}
 }
 

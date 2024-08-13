@@ -9,7 +9,7 @@ export const timeAlert = (title) => {
     icon: "success",
     title,
     showConfirmButton: false,
-    timer: 1500
+    timer: 1000
   });
 }
 
