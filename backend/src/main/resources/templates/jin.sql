@@ -85,9 +85,12 @@ Create table chatMembers (
 
 Create table userSession (
     session_id varchar(255) PRIMARY KEY,
-    emp_seq int,
+    emp_seq number,
+    emp_name varchar(30),
+    emp_avatar varchar(1000),
+    dept_code number,
     login_time TIMESTAMP default sysdate,
-    is_online BOOLEAN DEFAULT true
+    last_activity_time TIMESTAMP default sysdate 
 );
 
 -- 인덱스 추가

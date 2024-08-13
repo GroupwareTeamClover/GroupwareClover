@@ -102,10 +102,6 @@ export const ChatMain = () => {
     sendMessage("/app/chat.readMessages", { roomSeq: roomSeq });
   }, []);
 
-  useEffect(() => {
-    console.log('Selected Profile:', selectedProfile);  // 디버깅을 위해 추가
-}, [selectedProfile]);
-
   return (
     <div className={styles.container}>
       {/* 메신저 사이드 메뉴 */}
