@@ -168,14 +168,15 @@ export const Calendar = () => {
             headerToolbar={{
               left: "prev next",
               center: "title",
-              right: "dayGridMonth timeGridWeek timeGridDay today"
+              right: "today"
+              // right: "dayGridMonth timeGridWeek timeGridDay today"
             }}
 
             buttonText={{
               today: "Today",
-              month: "Month",
-              week: "Week",
-              day: "Day"
+              // month: "Month",
+              // week: "Week",
+              // day: "Day"
             }}
 
             events={checkSchedule}

@@ -13,6 +13,10 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
   const [inputData, setInputData] = useState(defaultInputData);
   const handleDate = (e) => {
     const { name, value } = e.target;
+    if(name === "scheduleContent" && value.length > 300) {
+      alert("내용은 300자 이상 작성할 수 없습니다.");
+      return false;
+    }
     setInputData(prev => ({ ...prev, [name]: value }));
   }
 
@@ -22,6 +26,17 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
       alert("내용을 전부 입력하세요");
       return false;
     }
+
+    if(inputData.startDate > inputData.endDate) {
+      alert("종료 날짜는 시작 날짜 이후만 됩니다.");
+      return false;
+    }
+
+    if(inputData.scheduleContent.length > 300) {
+      alert("내응은 300자 이내로 작성해야 합니다.");
+      return false;
+    }
+
     axios.post(`${BaseUrl()}/schedule`, inputData).then(res => {
       if(res.data === "ok") {
         closeModal();
@@ -70,7 +85,7 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
           </div>
           <div className={styles.insertRow}>
             <span>내용</span>
-            <input type="text" name="scheduleContent" value={inputData.scheduleContent || ""}
+            <input type="text" name="scheduleContent" maxLength="300" value={inputData.scheduleContent || ""}
                    onChange={handleDate}/>
           </div>
         </div>
