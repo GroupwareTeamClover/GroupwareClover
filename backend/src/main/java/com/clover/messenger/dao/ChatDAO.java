@@ -172,6 +172,20 @@ public class ChatDAO {
      */
     public List<Integer> getRoomMembers(int roomSeq) {
         return mybatis.selectList("Chat.getRoomMembers", roomSeq);
+    }
+    
+    public void createGroupRoom(ChatRoomDTO room) {
+        room.setRoomCreateTime(new Timestamp(System.currentTimeMillis()));
+        mybatis.insert("Chat.createGroupRoom", room);
+    }
+
+    public void addGroupMember(int roomSeq, int empSeq, String memberRole) {
+        System.out.println("AddGroupMember 확인 " + roomSeq + " " + empSeq + " " + memberRole);
+        Map<String, Object> params = new HashMap<>();
+        params.put("roomSeq", roomSeq);
+        params.put("empSeq", empSeq);
+        params.put("memberRole", memberRole);
+        mybatis.insert("Chat.addGroupMember", params);
     }    
     
     // ------------------------- 채팅 메시지 구역 ----------------------------------- 

@@ -63,8 +63,6 @@
 }
 
 .container .editorBox {
-    border-top: 1px solid #d3d3d3;
-	border-bottom: 1px solid #d3d3d3;
     min-height: 500px;
 	position: relative;
 	z-index: 1;
@@ -103,4 +101,11 @@
 	border: 1px solid #1A6ED8;
 	font-size: 13px;
 	font-weight: bold;
+}
+
+.charCountBox{
+	display: flex;
+	justify-content: end;
+	padding-right: 5px;
+	margin-top:5px;
 }
