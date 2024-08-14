@@ -84,13 +84,15 @@ public class ChatWebSocketController {
      */
     @MessageMapping("/chat.updateUserStatus")
     public void updateUserStatus(SimpMessageHeaderAccessor headerAccessor) {
-        Integer empSeq = Integer.parseInt(headerAccessor.getUser().getName());
+        String sessionId = headerAccessor.getSessionId();
+        userSessionService.updateLastActivityTime(sessionId);
+        broadcastOnlineUsers(headerAccessor);
+    }
+
+    private void broadcastOnlineUsers(SimpMessageHeaderAccessor headerAccessor) {
         Integer deptCode = (Integer) headerAccessor.getSessionAttributes().get("cloverDeptCode");
-        
         if (deptCode != null) {
             List<Map<String, Object>> onlineUsers = userSessionService.getOnlineUsersByDeptCode(deptCode);
-            
-            // 같은 부서의 모든 클라이언트에게 업데이트된 온라인 사용자 목록을 브로드캐스트
             messagingTemplate.convertAndSend("/topic/userStatus/" + deptCode, onlineUsers);
         }
     }

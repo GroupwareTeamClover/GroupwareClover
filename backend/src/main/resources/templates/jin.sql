@@ -68,6 +68,7 @@ Create table chatRoom (
     room_type varchar(20) not null check (room_type in ('private', 'group', 'public')),
     room_description varchar2(255),
     emp_seq number not null
+    room_avatar varchar(255) not null,
 );
 
 Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;

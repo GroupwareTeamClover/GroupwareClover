@@ -3,6 +3,7 @@ package com.clover.messenger.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,7 +73,35 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(String.valueOf(targetEmpSeq), "/queue/targetNewChatRoom", roomForTarget);
         
         return ResponseEntity.ok(room);
-    }    
+    }
+    
+    @PostMapping("/rooms/group")
+    public ResponseEntity<ChatRoomDTO> createGroupRoom(@RequestBody Map<String, Object> payload, HttpSession session) {
+        String roomName = (String) payload.get("roomName");
+        List<Map<String, Object>> participants = (List<Map<String, Object>>) payload.get("participants");
+        Integer creatorSeq = (Integer) session.getAttribute("cloverSeq");
+        
+        if (creatorSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        List<Integer> participantSeqs = participants.stream()
+        .map(p -> ((Number) p.get("seq")).intValue())
+        .collect(Collectors.toList());
+
+        ChatRoomDTO room = chatService.createGroupRoom(roomName, creatorSeq, participantSeqs, participants);
+        
+        // WebSocket을 통해 참가자들에게 새 그룹 채팅방 생성 알림
+        for (int participantSeq : participantSeqs) {
+            messagingTemplate.convertAndSendToUser(
+                String.valueOf(participantSeq),
+                "/queue/newGroupChatRoom",
+                room
+            );
+        }
+        
+        return ResponseEntity.ok(room);
+    }
 
     /**
      * 특정 채팅방의 메시지 목록을 조회하는 API 엔드포인트

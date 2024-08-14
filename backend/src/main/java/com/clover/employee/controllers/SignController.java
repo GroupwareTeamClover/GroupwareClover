@@ -8,12 +8,14 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import com.clover.admin.dto.AdminLogDTO;
 import com.clover.admin.services.AdminLogService;
 import com.clover.employee.dto.EmployeeDTO;
 import com.clover.employee.services.EmployeeService;
+import com.clover.messenger.services.UserSessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +23,11 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/sign")
 public class SignController {
+
+    @Autowired
+    private UserSessionService userSessionService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;    
 
     @Autowired
     private EmployeeService employeeService;
@@ -56,6 +63,8 @@ public class SignController {
             Map<String, Object> response = new HashMap<>();
             response.put("employeeInfo", empInfo);
             response.put("wsToken", wsToken);
+
+            
 
             // 정하윤 로그 아이피 AdminLogService로 보내기 : 로그 기록 테이블에 insert하게. 
    

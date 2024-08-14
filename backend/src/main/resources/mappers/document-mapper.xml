@@ -176,5 +176,10 @@
 	    where bs_seq = #{bsSeq}
 	</update>
 	
+	<update id="updateTempDocEmergency">
+		update document
+		set egc_yn=#{emg}
+		where doc_seq=#{seq}
+	</update>
 
 </mapper>

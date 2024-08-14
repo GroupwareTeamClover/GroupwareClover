@@ -91,9 +91,9 @@ export const Document = ({type}) => {
 
 
         //왼쪽 기안자 정보
-        const [drafterData, setDrafterData]=useState([
+        const [drafterData, setDrafterData]=useState([ 
             { label: '기안자', value: sessionData.empName },
-            { label: '소속', value: deptName(sessionData.empSeq) },
+            { label: '소속', value: deptName(sessionData.empDeptCode) },
             { label: '기안일', value: currentDate },
             { label: '문서번호', value: '' }
         ]); 

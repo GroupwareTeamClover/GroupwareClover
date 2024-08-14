@@ -10,6 +10,7 @@ import { useChatStore } from '../../../../store/messengerStore';
 import MessengerSideMenu from './MessengerSideMenu/MessengerSideMenu';
 import ProfilePanel from './ProfilePanel/ProfilePanel';
 import { sendMessage, connectWebSocket, disconnectWebSocket } from '../../../../commons/websocket';
+import { handleChatCreated } from './utils/chat-utils';
 
 // axios 전역 설정
 axios.defaults.withCredentials = true; // CORS 요청 시 쿠키 포함
@@ -55,8 +56,10 @@ export const ChatMain = () => {
           setOnlineUsers(message.onlineUsers);
           break;
         case 'NEW_CHAT_ROOM':
-          addChatRoom(message.room);
-          break;
+        case 'CREATE_ONE_ON_ONE_CHAT':
+        case 'CREATE_GROUP_CHAT':
+              handleChatCreated(message.room);
+              break;
         default:
           console.log('알 수 없는 메시지 타입:', message.type);
       }
@@ -102,6 +105,10 @@ export const ChatMain = () => {
     sendMessage("/app/chat.readMessages", { roomSeq: roomSeq });
   }, []);
 
+  const handleChatStart = useCallback((newRoom) => {
+    setSelectedChat(newRoom);
+  }, [setSelectedChat]);
+
   return (
     <div className={styles.container}>
       {/* 메신저 사이드 메뉴 */}
@@ -136,7 +143,7 @@ export const ChatMain = () => {
       </div>
       {/* 프로필 패널 */}
       <div className={styles.profilePanel}>
-        <ProfilePanel selectedProfile={selectedProfile}/>
+        <ProfilePanel selectedProfile={selectedProfile} onChatStart={handleChatStart}/>
       </div>
     </div>
   );

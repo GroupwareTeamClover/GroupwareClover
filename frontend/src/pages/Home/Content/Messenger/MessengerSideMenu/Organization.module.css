@@ -51,6 +51,26 @@
     color: #999;
 }
 
+.footer {
+    padding: 15px;
+    border-top: 1px solid #eee;
+}
+
+.createGroupButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.createGroupButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 /* .searchContent {
     max-height: calc(100vh - 150px);
     overflow-y: auto;

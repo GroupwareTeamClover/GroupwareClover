@@ -91,6 +91,22 @@
         INSERT INTO chatMembers (emp_seq, room_seq, member_role)
         VALUES (#{empSeq}, #{roomSeq}, 'MEMBER')
     </insert>
+
+    <insert id="createGroupRoom" parameterType="com.clover.messenger.dto.ChatRoomDTO" useGeneratedKeys="true" keyProperty="roomSeq">
+        <selectKey keyProperty="roomSeq" order="BEFORE" resultType="int">
+            SELECT room_sequence.nextval FROM DUAL
+        </selectKey>
+        INSERT INTO chatRoom (
+            room_seq, room_name, room_state, room_type, room_description, emp_seq, room_avatar
+        ) VALUES (
+            #{roomSeq}, #{roomName}, 'T', 'group', #{roomDescription}, #{empSeq}, #{roomAvatar,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <insert id="addGroupMember">
+        INSERT INTO chatMembers (emp_seq, room_seq, member_role)
+        VALUES (#{empSeq}, #{roomSeq}, #{memberRole})
+    </insert>    
     
     <!-- 메시지 저장 -->
     <insert id="saveMessage" parameterType="com.clover.messenger.dto.ChatMessageDTO">
