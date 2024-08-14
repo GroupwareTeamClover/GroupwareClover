@@ -303,15 +303,17 @@ export const DetailDocument = ({type}) => {
      //임시저장에서 취소 시 DB삭제
      useEffect(()=>{
         if(isTempCancle && id){
-            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-            .then(()=>{
-                setIsTempCancle(false);
-                alert("삭제 성공");
-                navi(`/approval`); // 절대 경로 사용
-            }).catch(()=>{
-                setIsTempCancle(false);
-                alert("삭제 실패");
-            })
+            if(window.confirm("삭제하시겠습니까?")){
+                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                .then(()=>{
+                    setIsTempCancle(false);
+                    alert("삭제 성공");
+                    navi(`/approval`); // 절대 경로 사용
+                }).catch(()=>{
+                    setIsTempCancle(false);
+                    alert("삭제 실패");
+                })
+            }
         }
     },[isTempCancle, id])
 

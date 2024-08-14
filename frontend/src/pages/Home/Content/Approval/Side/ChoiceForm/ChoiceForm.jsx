@@ -121,7 +121,7 @@ export const ChoiceForm= () =>{
                     <div className={styles.searchBox}>
                         <div className={styles.searchLine}>
                             <div className={styles.inputBox}> 
-                                <input type='text' className={styles.input} placeholder='양식선택' onChange={handleSearchData}></input>
+                                <input type='text' className={styles.input} placeholder='양식명 검색' onChange={handleSearchData}></input>
                                 </div>
                             <div className={styles.iconBox}><FaSearch/></div>
                         </div>

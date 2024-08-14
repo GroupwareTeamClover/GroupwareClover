@@ -203,7 +203,7 @@ export const List=({type})=>{
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{formatDate(line.finishDate)}</td>
                                             <td className={`${styles.td3} ${styles.tablerow}`}>{line.detailName}</td>
                                             <td className={`${styles.td4} ${styles.tablerow}`}>{line.egcYn}</td>
-                                            <td className={`${styles.td5} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
+                                            <td className={`${styles.td5} ${styles.tablerow} ${styles.title}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
                                             <td className={`${styles.td6} ${styles.tablerow}`}>{line.drafterName}</td>
                                             <td className={`${styles.td7} ${styles.tablerow}`}>{line.currentApverName}</td>
                                             <td className={`${styles.td8} ${styles.tablerow}`}>{line.finalApverName}</td>
