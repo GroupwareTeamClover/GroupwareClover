@@ -3,27 +3,50 @@ import axios from 'axios';
 import styles from './ProfilePanel.module.css';
 import { BaseUrl } from '../../../../../commons/config';
 import { useMemberStore } from '../../../../../store/store';
+import { useChatStore } from '../../../../../store/messengerStore';
 
-const ProfilePanel = ({ selectedProfile }) => {
+const ProfilePanel = ({ selectedProfile, onChatStart }) => {
     const [profile, setProfile] = useState(null);
     const { sessionData } = useMemberStore();
+    const { addChatRoom, setSelectedChat } = useChatStore();
 
     useEffect(() => {
-      const fetchProfile = async () => {
-          try {
-              let url = `${BaseUrl()}/chat/profile`;
-              if (selectedProfile) {
-                  url += `?empSeq=${selectedProfile.EMP_SEQ}`;
+        const fetchProfile = async () => {
+            try {
+                let url = `${BaseUrl()}/chat/profile`;
+                if (selectedProfile) {
+                    url += `?empSeq=${selectedProfile.EMP_SEQ}`;
+                }
+                const response = await axios.get(url, { withCredentials: true });
+                setProfile(response.data);
+            } catch (error) {
+                console.error('프로필 정보 오류 발생:', error);
+            }
+        };
+
+        fetchProfile();
+    }, [selectedProfile]);
+
+    const handleStartChat = async () => {
+      try {
+          const response = await axios.post(`${BaseUrl()}/chat/rooms`,
+              { targetEmpSeq: profile.EMP_SEQ },
+              {
+                  headers: {
+                      'Content-Type': 'application/json'
+                  }
               }
-              const response = await axios.get(url, { withCredentials: true });
-              setProfile(response.data);
-          } catch (error) {
-              console.error('프로필 정보 오류 발생:', error);
+          );
+          const newRoom = response.data;
+          addChatRoom(newRoom);
+          setSelectedChat(newRoom);
+          if (onChatStart) {
+              onChatStart(newRoom);
           }
-      };
-  
-      fetchProfile();
-  }, [selectedProfile]);
+      } catch (error) {
+          console.error('1:1 채팅방 생성 중 오류 발생:', error);
+      }
+  };
 
     if (!profile) {
         return <div>로딩 중...</div>;
@@ -45,7 +68,7 @@ const ProfilePanel = ({ selectedProfile }) => {
             <div className={styles.profileName}>
                 <p>{profile.EMP_EMAIL}</p>
             </div>
-            <button className={styles.chatButton}>대화하기</button>
+            <button className={styles.chatButton} onClick={handleStartChat}>대화하기</button>
             <div className={styles.profileDetails}>
                 <div className={styles.detailItem}>
                     <span className={styles.detailLabel}>부서</span>

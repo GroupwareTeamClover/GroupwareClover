@@ -97,9 +97,9 @@
             SELECT room_sequence.nextval FROM DUAL
         </selectKey>
         INSERT INTO chatRoom (
-            room_seq, room_name, room_state, room_type, room_description, emp_seq
+            room_seq, room_name, room_state, room_type, room_description, emp_seq, room_avatar
         ) VALUES (
-            #{roomSeq}, #{roomName}, 'T', 'group', #{roomDescription}, #{empSeq}
+            #{roomSeq}, #{roomName}, 'T', 'group', #{roomDescription}, #{empSeq}, #{roomAvatar,jdbcType=VARCHAR}
         )
     </insert>
 

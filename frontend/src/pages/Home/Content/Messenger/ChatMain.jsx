@@ -105,6 +105,10 @@ export const ChatMain = () => {
     sendMessage("/app/chat.readMessages", { roomSeq: roomSeq });
   }, []);
 
+  const handleChatStart = useCallback((newRoom) => {
+    setSelectedChat(newRoom);
+  }, [setSelectedChat]);
+
   return (
     <div className={styles.container}>
       {/* 메신저 사이드 메뉴 */}
@@ -139,7 +143,7 @@ export const ChatMain = () => {
       </div>
       {/* 프로필 패널 */}
       <div className={styles.profilePanel}>
-        <ProfilePanel selectedProfile={selectedProfile}/>
+        <ProfilePanel selectedProfile={selectedProfile} onChatStart={handleChatStart}/>
       </div>
     </div>
   );

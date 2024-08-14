@@ -43,7 +43,10 @@ export const createGroupChat = async (roomName, participants) => {
     const response = await axios.post(`${BaseUrl()}/chat/rooms/group`,
       { 
         roomName: roomName,
-        participants: participants.map(p => p.seq)
+        participants: participants.map(p => ({
+          seq: p.seq,
+          avatar: p.avatar
+        }))
       },
       {
         headers: {
@@ -52,13 +55,6 @@ export const createGroupChat = async (roomName, participants) => {
       }
     );
     const newRoom = response.data;
-
-    // 생성된 그룹 채팅방 정보를 WebSocket을 통해 실시간으로 전파
-    const message = {
-      type: 'CREATE_GROUP_CHAT',
-      room: newRoom
-    };
-    sendMessage("/app/chat.notifyNewGroupChat", message);
 
     // 로컬 상태 업데이트
     handleChatCreated(newRoom);
