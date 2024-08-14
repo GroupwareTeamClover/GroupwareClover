@@ -56,12 +56,25 @@ stompClient.connect(headers, () => {
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
 
+      // 그룹 채팅방 생성 알림 구독
+      stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newGroupChatRoom`, (payload) => {
+        console.log('그룹 채팅방 생성');
+        const message = JSON.parse(payload.body);
+        onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
+      });
+
       // 타겟 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/targetNewChatRoom`, (payload) => {
         console.log('타겟 1:1 개인 채팅방 생성');
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
+
+    // 온라인 사용자 상태 업데이트 구독 추가
+    stompClient.subscribe('/topic/userStatus', (payload) => {
+      const message = JSON.parse(payload.body);
+      onMessageReceived({ type: 'USER_STATUS', onlineUsers: message });
+    });
     }
   }, (error) => {
     console.error('WebSocket 연결 에러:', error);

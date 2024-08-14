@@ -1,24 +1,22 @@
-// package com.clover.config;
+package com.clover.config;
 
-// import org.springframework.context.annotation.Bean;
-// import org.springframework.context.annotation.Configuration;
-// import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-// import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-// import com.clover.interceptors.HttpSessionInterceptor;
+import com.clover.interceptors.CustomHandlerInterceptor;
 
-// @Configuration
-// public class InterceptorConfig implements WebMvcConfigurer{
-    
+@Configuration
+public class InterceptorConfig implements WebMvcConfigurer {
 
-//     @Override
-//     public void addInterceptors(InterceptorRegistry registry) {
-//         registry.addInterceptor(HttpSessionInterceptor()).addPathPatterns("/**");
-//     }
+    @Autowired
+    private CustomHandlerInterceptor customHandlerInterceptor;
 
-//     @Bean
-//     public HttpSessionInterceptor httpSessionInterceptor() {
-//         return new HttpSessionInterceptor();
-//     }
-
-// }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(customHandlerInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/sign/**");
+    }
+}

@@ -60,6 +60,30 @@ public class LineDAO {
 	public void updateWaitToApproval(int id) {
 		mybatis.update("Line.updateWaitToApproval", id);
 	}
-
+	
+	//대기->반려
+	public void updateWaitToReject(int id, String reasonForRejection) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("seq", id);
+		map.put("reasonForRejection", reasonForRejection);
+		mybatis.update("Line.updateWaitToReject", map);
+	}
+	
+	//대기->보류
+	public void updateWaitToHoldoff(int id) {
+		mybatis.update("Line.updateWaitToHoldoff",id);
+	}
+	
+	//상신취소
+	public void deleteApvLineBySeq(int seq) {
+		mybatis.delete("Line.deleteApvLineBySeq", seq);
+	}
+	
+	//상신취소
+	public void deletePartLineBySeq(int seq) {
+		mybatis.delete("Line.deletePartLineBySeq", seq);
+	}
+	
+	
 }
 

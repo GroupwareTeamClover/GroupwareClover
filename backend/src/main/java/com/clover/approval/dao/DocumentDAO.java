@@ -22,10 +22,11 @@ public class DocumentDAO {
 		return mybatis.selectList("Document.selectDocCodeInfo");
 	}
 	
-	//document정보 insert
+	//document정보 insert && temp
 	public void insertDoc(DocumentDTO docdto) {
 		mybatis.insert("Document.insertDoc",docdto);
 	}
+	
 	
 	//각 양식 table에 대한 insert
 	public void insertBusiness(BusinessDTO business) {
@@ -56,6 +57,45 @@ public class DocumentDAO {
 		return mybatis.selectList("Document.selectMainDoc",empSeq);
 	}
 	
+	//승인업데이트에 따른 문서정보 업데이트
+	public void updateDocToApproval(int docSeq) {
+		mybatis.update("Document.updateDocToApproval",docSeq);
+	}
+	
+	//반려업데이트에 따른 문서정보 업데이트
+	public void updateDocToReject(int docSeq) {
+		mybatis.update("Document.updateDocToReject",docSeq);
+	}
+	
+	//상신취소
+	public void deleteBySeq(int seq) {
+			mybatis.delete("Document.deleteBySeq", seq);
+	}
+	
+	public void deleteByDocTypeSeq(int seq, String table) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("seq", seq);
+		map.put("table", table);
+		mybatis.delete("Document.deleteByDocTypeSeq", map);
+	}
+	
+	//임시저장에서 결재요청시 문서상태 업데이트
+	public void updateDocState(int seq) {
+		mybatis.update("Document.updateDocState", seq);
+	}
+	
+	public void updateDocTypeData(String table, Map<String,Object> docData) {
+		docData.put("table", table);
+		mybatis.update("Document.updateDocTypeData", docData);
+	}
+	
+	//임시저장에서 긴급여부 처리
+	public void updateTempDocEmergency(int id, String emg) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("seq", id);
+		map.put("emg", emg);
+		mybatis.update("Document.updateTempDocEmergency", map);
+	}
 	
 	
 

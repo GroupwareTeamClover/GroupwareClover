@@ -1,7 +1,48 @@
 import emailjs from '@emailjs/browser'
+import Swal from "sweetalert2";
 
+// =============================== [ Alert ] ===============================
 
-// =============================== [ 정규표현식 ] ===============================
+export const timeAlert = (title) => {
+  Swal.fire({
+    position: "top-center",
+    icon: "success",
+    title,
+    showConfirmButton: false,
+    timer: 1000
+  });
+}
+
+export const successAlert = (title, text) => {
+  Swal.fire({
+    title,
+    text,
+    icon: "success"
+  });
+}
+
+export const failAlert = (title, text) => {
+  Swal.fire({
+    title,
+    text,
+    icon: "error"
+  });
+}
+
+export const confirmAlert = (title, text) => {
+  return Swal.fire({
+    title,
+    text,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    cancelButtonText: "취소",
+    confirmButtonText: "확인"
+  })
+}
+
+//
 
 export const validateUserId = (userId) => {
   let regex = /^(?=.*[a-zA-Z])([a-zA-Z0-9]{6,12})$/;

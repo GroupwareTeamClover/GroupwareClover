@@ -19,11 +19,6 @@ import jakarta.servlet.http.HttpSession;
 @Component
 public class HttpSessionInterceptor implements HandshakeInterceptor {
 
-    // @Autowired
-    // private UserSessionService userSessionService;  
-
-    // @Autowired
-    // private ChatService chatService;
 
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
@@ -37,23 +32,7 @@ public class HttpSessionInterceptor implements HandshakeInterceptor {
             if (session.getAttribute("cloverSeq") == null) {
                 return false; // 로그인되지 않은 경우 연결 거부
             }
-
-           
-
-        //     String sessionId = session.getId();
-        //     System.out.println(sessionId);
-        //     int empSeq = (int) session.getAttribute("cloverSeq");
-
-        //     HashMap<String, Object> profile = chatService.getProfile(empSeq);
-        //     System.out.println(profile);
-
-        //     String cloverName = (String) session.getAttribute("cloverName");
-        //     String cloverAvatar = (String) session.getAttribute("cloverAvatar");
-        //     int deptCode = (int) session.getAttribute("cloverDeptCode");
-        //     System.out.println(empSeq + cloverName + cloverAvatar);
-
-        //     // 세션 정보를 UserSession 테이블에 저장하는 로직 추가
-        //     userSessionService.saveUserSession(sessionId, empSeq, cloverName, cloverAvatar, deptCode);
+            System.out.println("Http Interceptor 로그인 확인");
         }
         return true;
     }

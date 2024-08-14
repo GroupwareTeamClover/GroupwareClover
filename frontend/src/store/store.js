@@ -12,6 +12,7 @@ export const useMemberStore = create(set => ({
     empRoleCode: ""
   },
   setSessionData: param => set({ sessionData : param}),
+  setAvatar : param => set(prev => ({ sessionData : { ...prev.sessionData, ...param }})),
   admin: false,
   setAdmin: param => set({admin: param})
 }));

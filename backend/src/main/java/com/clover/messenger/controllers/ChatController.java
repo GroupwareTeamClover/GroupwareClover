@@ -3,8 +3,10 @@ package com.clover.messenger.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,12 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clover.employee.dto.EmployeeDTO;
 import com.clover.messenger.dto.ChatMessageDTO;
 import com.clover.messenger.dto.ChatRoomDTO;
 import com.clover.messenger.services.ChatService;
+import com.clover.messenger.services.UserSessionService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,6 +32,9 @@ public class ChatController {
 
     @Autowired
     private HttpSession session;
+
+    @Autowired
+    private UserSessionService userSessionService;
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
@@ -67,7 +73,35 @@ public class ChatController {
         messagingTemplate.convertAndSendToUser(String.valueOf(targetEmpSeq), "/queue/targetNewChatRoom", roomForTarget);
         
         return ResponseEntity.ok(room);
-    }    
+    }
+    
+    @PostMapping("/rooms/group")
+    public ResponseEntity<ChatRoomDTO> createGroupRoom(@RequestBody Map<String, Object> payload, HttpSession session) {
+        String roomName = (String) payload.get("roomName");
+        List<Map<String, Object>> participants = (List<Map<String, Object>>) payload.get("participants");
+        Integer creatorSeq = (Integer) session.getAttribute("cloverSeq");
+        
+        if (creatorSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        List<Integer> participantSeqs = participants.stream()
+        .map(p -> ((Number) p.get("seq")).intValue())
+        .collect(Collectors.toList());
+
+        ChatRoomDTO room = chatService.createGroupRoom(roomName, creatorSeq, participantSeqs, participants);
+        
+        // WebSocket을 통해 참가자들에게 새 그룹 채팅방 생성 알림
+        for (int participantSeq : participantSeqs) {
+            messagingTemplate.convertAndSendToUser(
+                String.valueOf(participantSeq),
+                "/queue/newGroupChatRoom",
+                room
+            );
+        }
+        
+        return ResponseEntity.ok(room);
+    }
 
     /**
      * 특정 채팅방의 메시지 목록을 조회하는 API 엔드포인트
@@ -104,13 +138,34 @@ public class ChatController {
 	}
 
     /**
-     * 현재 로그인한 사용자의 프로필 정보를 조회하는 API 엔드포인트
-     * @return 로그인한 사용자의 프로필 정보
-     */    
+     * 프로필 정보를 조회하는 API 엔드포인트
+     * @param empSeq 조회할 사용자의 사원 번호 (옵션)
+     * @return 프로필 정보
+     */
     @GetMapping("/profile")
-    public ResponseEntity<HashMap<String, Object>> getProfile() {
-        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+    public ResponseEntity<HashMap<String, Object>> getProfile(@RequestParam(required = false) Integer empSeq, HttpSession session) {
+        if (empSeq == null) {
+            empSeq = (Integer) session.getAttribute("cloverSeq");
+            System.out.println("확인1");
+        }
+        if (empSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            
+        }
+        System.out.println("확인2");
         HashMap<String, Object> profile = chatService.getProfile(empSeq);
         return ResponseEntity.ok(profile);
     }
+
+    @GetMapping("/online-users")
+    public ResponseEntity<List<Map<String, Object>>> getOnlineUsers(HttpSession session) {
+        Integer deptCode = (Integer) session.getAttribute("cloverDeptCode");
+        if (deptCode == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<Map<String, Object>> onlineUsers = userSessionService.getOnlineUsersByDeptCode(deptCode);
+        return ResponseEntity.ok(onlineUsers);
+    }
+
+
 }

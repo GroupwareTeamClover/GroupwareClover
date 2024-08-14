@@ -68,6 +68,7 @@ Create table chatRoom (
     room_type varchar(20) not null check (room_type in ('private', 'group', 'public')),
     room_description varchar2(255),
     emp_seq number not null
+    room_avatar varchar(255) not null,
 );
 
 Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
@@ -85,9 +86,12 @@ Create table chatMembers (
 
 Create table userSession (
     session_id varchar(255) PRIMARY KEY,
-    emp_seq int,
+    emp_seq number,
+    emp_name varchar(30),
+    emp_avatar varchar(1000),
+    dept_code number,
     login_time TIMESTAMP default sysdate,
-    is_online BOOLEAN DEFAULT true
+    last_activity_time TIMESTAMP default sysdate 
 );
 
 -- 인덱스 추가

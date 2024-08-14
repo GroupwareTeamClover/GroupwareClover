@@ -134,9 +134,9 @@ export const List=({type})=>{
             );
             
         }else if(type==='결재문서함'){
-                //내가 결재라인에 포함되어 있고, 결재상태가 완료(3) 또는 반려(4)일때의 문서들
+                //내가 결재라인에 포함되어 있고, 결재상태가 완료(3) 또는 반려(4) 또는 중지(9)일때의 문서들
                 filteredApvline = list.apvline.filter(line =>
-                    line.apverId === sessionData.empSeq && (line.apvStatusCode === 3 || line.apvStatusCode === 4)
+                    line.apverId === sessionData.empSeq && (line.apvStatusCode === 3 || line.apvStatusCode === 4 || line.apvStatusCode===9)
                 );
                 filteredDocument = list.document.filter(doc => 
                    filteredApvline.some(apv => apv.docSeq === doc.docSeq)

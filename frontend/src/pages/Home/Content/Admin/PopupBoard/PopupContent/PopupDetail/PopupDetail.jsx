@@ -8,6 +8,7 @@ import WebEditor from '../../../../../../../components/WebEditor/WebEditor';
 import { Uploader } from 'rsuite';
 import { useParams } from 'react-router-dom';
 import {format} from 'date-fns';
+import { confirmAlert } from '../../../../../../../commons/common';
 
 
 
@@ -69,13 +70,13 @@ export const PopupDetail =()=>{
     }, [popSeq]);
 
 
-    // 유효성 검사: 시작일이 오늘보다 이전일 경우
-    useEffect(() => {
-        if (specificStartDate && specificStartDate < today) {
-            alert("시작일은 오늘보다 이전일 수 없습니다.");
-            setSpecificStartDate(''); // 시작일을 초기화
-        }
-    }, [specificStartDate, today]);
+    // // 유효성 검사: 시작일이 오늘보다 이전일 경우
+    // useEffect(() => {
+    //     if (specificStartDate && specificStartDate < today) {
+    //         alert("시작일은 오늘보다 이전일 수 없습니다.");
+    //         setSpecificStartDate(''); // 시작일을 초기화
+    //     }
+    // }, [specificStartDate, today]);
     // 시작일과 종료일 유효성 검사
     useEffect(() => {
         if (specificStartDate && specificEndDate && specificEndDate < specificStartDate) {
@@ -109,7 +110,7 @@ export const PopupDetail =()=>{
     }
 
     const handleCancel=()=>{
-        const confirm = window.confirm("취소?");
+        const confirm = window.confirm("글 수정을 취소하시겠습니까?");
         if(confirm){navi(-1)}
         else{return false}
         
@@ -201,7 +202,7 @@ export const PopupDetail =()=>{
                 <h3>{post.empName} 관리자님의 팝업공지글</h3>
                 <div className={styles.popWriteDate}>
                     <div>작성일: {post.popWriteDate ? format(new Date(post.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}</div>
-                    <div>수정일: {post.popUpdatedDate ? format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm'): ''}</div>
+                    <div> {post.popUpdatedDate ? '수정일:'+ format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm'): ''}</div>
                 </div>
             </div>
             <div className={styles.title}>

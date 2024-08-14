@@ -94,11 +94,11 @@ export const useChatStore = create((set) => ({
   })),
 
 
-  // 현재 온라인 상태인 사용자 목록 (현재 비사용)
-  onlineUsers: [],
-  
-  // 온라인 사용자 목록을 설정하는 함수 (현재 비사용)
-  setOnlineUsers: (users) => set({ onlineUsers: users }),
+    // 현재 온라인 상태인 사용자 목록
+    onlineUsers: [],
+    
+    // 온라인 사용자 목록을 설정하는 함수
+    setOnlineUsers: (users) => set({ onlineUsers: users }),
 
 
 }));

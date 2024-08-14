@@ -1,0 +1,56 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalContent {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.selectedEmployees {
+    margin-top: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.employeeTag {
+    display: inline-block;
+    background-color: #e0e0e0;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.buttonGroup {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttonGroup button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.buttonGroup button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.buttonGroup button[type="button"] {
+    background-color: #f44336;
+    color: white;
+}

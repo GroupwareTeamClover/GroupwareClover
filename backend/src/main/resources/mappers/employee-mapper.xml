@@ -6,13 +6,7 @@
 
     <select id="signIn" resultType="com.clover.employee.dto.EmployeeDTO">
         SELECT
-            emp_seq,
-            emp_id,
-            emp_name,
-            dept_code,
-            role_code,
-            emp_avatar,
-            worker_state_code
+			*
         FROM
             employee
         WHERE
@@ -91,6 +85,15 @@
             employee
         SET
             emp_pw = #{empPw}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
+    <update id="updateAvatar">
+        UPDATE
+            employee
+        SET
+            emp_avatar = #{empAvatar}
         WHERE
             emp_seq = #{empSeq}
     </update>
