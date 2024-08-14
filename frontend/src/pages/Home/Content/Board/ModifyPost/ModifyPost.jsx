@@ -33,8 +33,30 @@ const ModifyPost = () => {
     //게시글 내용
     const editorRef = useRef();
     const [content, setContent] = useState();
+    const [charCount, setCharCount] = useState(0);
+    const maxContentLength = 3000;
     const handleContentChange = () => {
-        setContent(editorRef.current.getInstance().getHTML());
+        const instance = editorRef.current.getInstance();
+        const htmlContent = instance.getHTML();
+
+        const cleanedContent = htmlContent
+            .replace(/<img[^>]*>/gi, '')
+            .replace(/<p><br><\/p>/g, '\n')
+            .replace(/<br>/g, '\n')
+            .replace(/<\/p>/g, '\n')
+            .replace(/<[^>]+>/g, '');
+
+        // 글자수 산출 및 반영
+        let length = cleanedContent.length - 1;
+
+        if (length > maxContentLength) {
+            const truncatedContent = cleanedContent.slice(0, maxContentLength);
+            instance.setHTML(truncatedContent);
+            length = maxContentLength;
+        }
+
+        setCharCount(length);
+        setContent(htmlContent);
     }
 
     useEffect(() => {
@@ -76,7 +98,7 @@ const ModifyPost = () => {
     useEffect(() => {
         setCategory(loc.state.boardlistSeq);
         setTitle(loc.state.boardTitle);
-        setContent(editorRef.current.getInstance().getHTML());
+        handleContentChange();
         setOriginImageUrls(loc.state.boardContent?.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
             const match = imgTag.match(/src="([^">]+)"/);
             return match ? match[1] : null;
@@ -90,12 +112,11 @@ const ModifyPost = () => {
             alert("제목을 입력해주세요!");
         } else {
             const tempDiv = document.createElement('div');
-            console.log(content);
             tempDiv.innerHTML = content;
             const textContent = tempDiv.textContent || tempDiv.innerText || '';
 
             if (textContent.trim() === "") {
-                alert("내용을 입력해주세요!");
+                alert("공백, 줄바꿈을 제외한 한 글자 이상의 내용을 입력해야합니다!");
             } else {
                 const deletFiles = originFiles?.filter(file => !files.some(newFile => newFile.name === file.name));
                 const addFiles = files?.filter(file => !originFiles.some(originfile => originfile.name === file.name));
@@ -128,7 +149,7 @@ const ModifyPost = () => {
     }
 
     const handleCancel = () => {
-        if (window.confirm("작성중인 글은 사라집니다. 계속하시겠습니까?")) {
+        if (window.confirm("수정중인 글은 원래대로 돌아갑니다. 계속하시겠습니까?")) {
             (category === 0) ? navi("/community") : navi(`/community/board/${loc.state.boardlistSeq}`)
         }
     }
@@ -160,6 +181,7 @@ const ModifyPost = () => {
             </div>
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent={loc.state.boardContent} />
+                <div className={styles.charCountBox}>{charCount}/{maxContentLength}자</div>
             </div>
             <div className={styles.btnBox}>
                 <button className={styles.cancelBtn} onClick={handleCancel}>취소</button>

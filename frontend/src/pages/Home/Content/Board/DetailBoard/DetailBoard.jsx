@@ -26,6 +26,7 @@ const DetilBoard = () => {
     const [files, setFiles] = useState([]);
     const [viewCount, setViewCount] = useState(0);
     const [isImportant, setIsImportant] = useState();
+    const [commentCount, setCommentCount] = useState(0);
 
     const navi = useNavigate();
     //TOP 버튼 클릭 시 스크롤 맨 위로 이동
@@ -111,12 +112,13 @@ const DetilBoard = () => {
             e.preventDefault();
         } else {
             setComment(e.target.value);
+            setCommentCount(e.target.value.length);
         }
     }
     //댓글 작성
     const handleWriteComment = () => {
         if (comment.trim() === '') {
-            alert("댓글 내용을 입력하세요!");
+            alert("공백, 줄바꿈 제외 최소 한 글자 이상을 입력해야 합니다.");
         } else {
             axios.post(`${BaseUrl()}/comment`, {
                 writer: sessionWriter,
@@ -125,6 +127,7 @@ const DetilBoard = () => {
             }).then(resp => {
                 if (resp.status === 200) {
                     setComment('');
+                    setCommentCount(0);
                     setComments(prev => [...prev, resp.data]);
                     setCountComments(prev => prev + 1);
                     setScrollMove(prev => prev + 1);
@@ -163,14 +166,12 @@ const DetilBoard = () => {
         await axios.post(`${BaseUrl()}/board/important`, {
             empSeq: sessionData.empSeq,
             boardSeq: boardSeq
-        }).then(resp => 
-            { resp.status === 200 && alert("중요 게시글에 추가되었습니다!"); setIsImportant(true); }
+        }).then(resp => { resp.status === 200 && alert("중요 게시글에 추가되었습니다!"); setIsImportant(true); }
         )
     }
     // 중요게시글 삭제
     const handleRemoveImportant = async () => {
-        await axios.delete(`${BaseUrl()}/board/important`, { params: { empSeq: sessionData.empSeq, boardSeq: boardSeq } }).then(resp => 
-            { resp.status === 200 && alert("중요 게시글에서 삭제되었습니다!"); setIsImportant(false); }
+        await axios.delete(`${BaseUrl()}/board/important`, { params: { empSeq: sessionData.empSeq, boardSeq: boardSeq } }).then(resp => { resp.status === 200 && alert("중요 게시글에서 삭제되었습니다!"); setIsImportant(false); }
         )
     }
 
@@ -239,10 +240,13 @@ const DetilBoard = () => {
                 <div className={styles.writeCommentBox}>
                     <div className={styles.commentWriter}>{sessionWriter}</div>
                     <div className={styles.commentContentBox}>
-                        <textarea
-                            placeholder={`최대 ${maxCommentLength}자까지 작성 가능합니다`}
-                            className={styles.commentContent} onChange={handleCommentChange} value={comment} maxLength={maxCommentLength}></textarea>
-                        <button type="button" className={styles.writeCommentButton} onClick={handleWriteComment}>등록</button>
+                        <div className={styles.innerCommentContentBox}>
+                            <textarea
+                                placeholder={`최대 ${maxCommentLength}자까지 작성 가능하며 공백, 줄바꿈 제외 최소 한 글자 이상 입력해야 합니다.`}
+                                className={styles.commentContent} onChange={handleCommentChange} value={comment} maxLength={maxCommentLength}></textarea>
+                            <button type="button" className={styles.writeCommentButton} onClick={handleWriteComment}>등록</button>
+                        </div>
+                        <div className={styles.commentCountBox}>{commentCount}/1000자</div>
                     </div>
                 </div>
                 <div className={styles.commentLetter}>댓글 ({countComments})</div>

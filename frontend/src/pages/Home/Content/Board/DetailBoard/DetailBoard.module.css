@@ -173,7 +173,7 @@
 }
 
 .commentBox .writeCommentBox {
-	height: 130px;
+	height: 140px;
 	border: 1px solid gray;
 }
 
@@ -186,20 +186,27 @@
 }
 
 .commentBox .writeCommentBox .commentContentBox {
-	height: 100px;
+	height: 120px;
+	display: flex;
+    flex-direction: column;
+	justify-content: center;
+
+}
+
+.commentBox .writeCommentBox .commentContentBox .innerCommentContentBox{
+    height : 100px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.commentBox .writeCommentBox .commentContentBox .commentContent {
+.commentBox .writeCommentBox .commentContentBox .innerCommentContentBox .commentContent {
 	font-size: 15px;
 	padding-left: 10px;
 	padding-top: 10px;
 	width: 90%;
     height: 80px;
 	resize: none;
-	margin-bottom: 10px;
     border-color: lightgray;
 }
 
@@ -207,7 +214,6 @@
 	width: 8%;
 	height: 80px;
 	margin-left: 5px;
-	margin-bottom: 10px;
 }
 
 .commentBox .commentLetter {
@@ -218,6 +224,7 @@
 	font-size: 18px;
 	font-weight: 400;
 	line-height: 36px;
+    padding-left : 10px;
     border-bottom: 1px solid black;
 }
 
@@ -232,4 +239,12 @@
 
 .topButton:hover{
     cursor: pointer;
+}
+
+.commentCountBox{
+    width : 90%;
+    margin-bottom : 15px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
 }

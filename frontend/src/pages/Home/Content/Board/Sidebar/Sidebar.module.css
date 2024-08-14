@@ -1,6 +1,9 @@
 .container{
     flex:1;
     border-right: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .bar{
@@ -15,7 +18,7 @@
 }
 
 .buttonBox .writeButton{
-    width : 10.42vw;
+    width : 9.42vw;
     height : 5.66vh;
     font-weight: bold;
     font-size: 20px;

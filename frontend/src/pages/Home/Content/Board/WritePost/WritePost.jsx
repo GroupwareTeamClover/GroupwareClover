@@ -33,8 +33,30 @@ const WritePost = () => {
     //게시글 내용
     const editorRef = useRef();
     const [content, setContent] = useState('');
+    const [charCount, setCharCount] = useState(0);
+    const maxContentLength = 3000;
     const handleContentChange = () => {
-        setContent(editorRef.current.getInstance().getHTML());
+        const instance = editorRef.current.getInstance();
+        const htmlContent = instance.getHTML();
+
+        const cleanedContent = htmlContent
+            .replace(/<img[^>]*>/gi, '')
+            .replace(/<p><br><\/p>/g, '\n')
+            .replace(/<br>/g, '\n')
+            .replace(/<\/p>/g, '\n')
+            .replace(/<[^>]+>/g, '');
+
+        // 글자수 산출 및 반영
+        let length = cleanedContent.length - 1;
+
+        if (length > maxContentLength) {
+            const truncatedContent = cleanedContent.slice(0, maxContentLength);
+            instance.setHTML(truncatedContent);
+            length = maxContentLength;
+        }
+
+        setCharCount(length);
+        setContent(htmlContent);
     }
 
     useEffect(() => {
@@ -60,7 +82,7 @@ const WritePost = () => {
             const textContent = tempDiv.textContent || tempDiv.innerText || '';
 
             if (textContent.trim() === "") {
-                alert("한 글자 이상의 내용을 입력해야합니다!");
+                alert("공백, 줄바꿈을 제외한 한 글자 이상의 내용을 입력해야합니다!");
             } else {
                 const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
                     const match = imgTag.match(/src="([^">]+)"/);
@@ -74,14 +96,13 @@ const WritePost = () => {
                     content: content,
                     fileNames: files.map(file => file.name),
                     fileUrls: files.map(file => file.url),
-                    images : imageUrls
+                    images: imageUrls
                 }).then(resp => {
                     if (resp.status === 200) {
                         alert("게시글이 등록되었습니다.");
                         navi(`/community/board/${category}`);
                     }
                 })
-                console.log(files);
             }
         }
     }
@@ -130,11 +151,12 @@ const WritePost = () => {
             <div className={styles.fileBox}>
                 <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
-                    <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
+                    <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
             </div>
             <div className={styles.editorBox}>
-                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent="" />
+                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent=""/>
+                <div className={styles.charCountBox}>{charCount}/{maxContentLength}자</div>
             </div>
             <div className={styles.btnBox}>
                 <button className={styles.cancelBtn} onClick={handleCancel}>취소</button>
