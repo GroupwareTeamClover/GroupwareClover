@@ -95,7 +95,7 @@ public class ChatController {
 
     /**
      * 회사 내 조직도를 조회하는 API 앤드포인트
-     * @return 회사 내 조직도
+     * @return 회사 내 조직도11
      */
 	@GetMapping("/organization")
 	public ResponseEntity<List<HashMap<String, Object>>> getAllData(){
