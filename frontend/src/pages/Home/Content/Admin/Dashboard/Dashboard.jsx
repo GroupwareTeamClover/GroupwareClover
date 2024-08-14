@@ -91,7 +91,7 @@ export const Dashboard = () => {
                 </div>
                 <div className={styles.statItemLarge}>
                     <div className={styles.statItem}>
-                    <Pie data={pieChartData} options={pieChartOptions} />
+                         <Pie data={pieChartData} options={pieChartOptions} />
                     <div className={styles.chartWrapper}>
                         <div className={styles.chartTitle}>Gender Distribution</div>
                        

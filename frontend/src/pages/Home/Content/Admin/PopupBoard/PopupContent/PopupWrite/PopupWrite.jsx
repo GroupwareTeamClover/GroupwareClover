@@ -164,6 +164,7 @@ export const PopupWrite = () => {
      const handleUploadSuccess = (response, file) => {
         console.log("제에에ㅔㅇ발 : "+response);
          const fileUrl = response;
+         console.log(fileUrl);
          // 파일 리스트에 업로드된 파일 추가
          setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
      };
@@ -173,7 +174,6 @@ export const PopupWrite = () => {
      };
      
      const formData = new FormData(); 
-     const path = encodeURIComponent("temp"); 
      formData.append('file', files); 
 
     return (
@@ -187,7 +187,7 @@ export const PopupWrite = () => {
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px" defaultContent="" />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>

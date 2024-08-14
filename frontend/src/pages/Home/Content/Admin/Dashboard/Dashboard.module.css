@@ -1,11 +1,15 @@
+/* *{border: 1px solid black;} */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    background-color: #1e1e2f; /* 어두운 배경 색상 */
+    color: #ffffff; /* 텍스트 색상 */
+    width: 100%;
 }
 
-.topRow, .bottomRow {
+.topRow, .middleRow, .bottomRow {
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -13,65 +17,46 @@
     margin-bottom: 20px;
 }
 
-.topRow {
-    margin-bottom: 20px; /* 위쪽 줄과 아래쪽 줄 사이의 여백 */
-}
-
-.bottomRow {
-    gap: 20px; /* 큰 통계 자료 사이의 간격 */
-}
-
-.statItem, .statItemLarge {
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
+.statItem, .largeStatItem, .smallStatItem {
+    background-color: #292942; /* 카드의 배경색 */
+    border: 1px solid #444;
     border-radius: 8px;
     padding: 20px;
     text-align: center;
     flex: 1;
-    box-sizing: border-box; /* padding 및 border가 총 width/height에 포함되도록 함 */
+    box-sizing: border-box;
+    margin: 10px;
 }
 
+
+
 .statItem {
-    margin: 10px;
-    flex: 1;
     min-width: 200px;
-    height: 250px; /* 원형 차트의 높이 조정 */
+}
+
+.largeStatItem {
+    flex: 2;
+    height: 350px; /* 큰 통계 항목의 높이 조정 */
+}
+
+.smallStatItem {
+    flex: 1;
+    height: 350px; /* 작은 통계 항목의 높이 조정 */
     display: flex;
-    align-items: center; /* 차트를 중앙에 배치 */
-    justify-content: end; /* 차트를 중앙에 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
     position: relative; /* 차트 제목을 절대 위치로 배치하기 위해 필요 */
 }
 
 .chartTitle {
-    position: absolute;
-    top: 10px; /* 제목의 상단 여백 조정 */
-    left: 10px; /* 제목의 좌측 여백 조정 */
     font-size: 1.25rem;
     font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
 }
 
 .statValue {
     font-size: 1.5rem;
-    color: #333;
-}
-
-.statItem:nth-child(1) {
-    background-color: #e9ecef; /* 첫 번째 통계 자료 배경색 */
-   
-}
-
-.statItem:nth-child(2) {
-    background-color: #f1f3f5; /* 두 번째 통계 자료 배경색 */
-}
-
-.statItem:nth-child(3) {
-    background-color: #f8f9fa; /* 세 번째 통계 자료 배경색 */
-}
-
-.statItemLarge:nth-child(1) {
-    background-color: #e9ecef; /* 첫 번째 큰 통계 자료 배경색 */
-}
-
-.statItemLarge:nth-child(2) {
-    background-color: #f1f3f5; /* 두 번째 큰 통계 자료 배경색 */
+    color: #ffffff;
+    text-align: right;
 }
