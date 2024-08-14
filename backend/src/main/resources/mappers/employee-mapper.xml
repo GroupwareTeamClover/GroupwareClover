@@ -89,6 +89,15 @@
             emp_seq = #{empSeq}
     </update>
 
+    <update id="updateAvatar">
+        UPDATE
+            employee
+        SET
+            emp_avatar = #{empAvatar}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
     <delete id="delete">
         DELETE FROM
             employee

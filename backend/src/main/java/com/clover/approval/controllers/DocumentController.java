@@ -106,7 +106,7 @@ public class DocumentController {
 		return ResponseEntity.ok(map);
 	}
 	
-	//상신취소 
+	//상신취소 & 임시저장에서 삭제
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable int id, @RequestParam String table){
 		System.out.println(table);
@@ -133,6 +133,14 @@ public class DocumentController {
 		map.put("id", id);
 		map.put("type",type);
 		return ResponseEntity.ok(map);
+	}
+	
+	//임시저장에서 긴급여부 수정
+	@PutMapping("/temp/emergency/{id}")
+	public ResponseEntity<Void> updateTempDocEmergency(@PathVariable int id, @RequestBody Map<String,String> request){
+		 String isTempEmergency = request.get("isTempEmergency");
+		documentService.updateTempDocEmergency(id, isTempEmergency);
+		return ResponseEntity.ok().build();
 	}
 	
 	

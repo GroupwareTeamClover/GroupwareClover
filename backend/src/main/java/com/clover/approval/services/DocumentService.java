@@ -99,6 +99,11 @@ public class DocumentService {
 	public void updateTemptoTemp(String table, Map<String,Object> docData) {
 		documentDAO.updateDocTypeData(table, docData);
 	}
+	
+	//임시저장에서 긴급여부 처리
+	public void updateTempDocEmergency(int id, String emg) {
+		documentDAO.updateTempDocEmergency(id, emg);
+	}
 
 
 }
