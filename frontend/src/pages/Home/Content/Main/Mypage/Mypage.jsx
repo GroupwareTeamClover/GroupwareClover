@@ -1,12 +1,12 @@
 import styles from './Mypage.module.css'
 import default_image from "../../../../../images/default_avatar.jpg";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {validateEmail, validatePassword, validatePhone} from "../../../../../commons/common";
 import {useMemberStore} from "../../../../../store/store";
 
-export const Mypage = ({empSeq, closeModal}) => {
+export const Mypage = ({ empSeq, closeModal }) => {
 
   const [mypage, setMypage] = useState({});
   const {sessionData, setAvatar} = useMemberStore();
@@ -214,12 +214,12 @@ export const Mypage = ({empSeq, closeModal}) => {
                 <button onClick={handleFileClick}>이미지 찾기</button>
               </div>
             </div>
-        }
-        { /* 전화번호, 이메일 수정 */
+          }
+          { /* 전화번호, 이메일 수정 */
             (updateForm && updateSelectForm === 2)  &&
             <div>
               <div className={styles.row}>
-                <span>Tel.</span>s
+                <span>Tel.</span>
                 <input type="text" name="empTel" onChange={handleUpdateData} value={updateData.empTel}
                        placeholder=" ' - '를 제외한 전화번호를 입력하세요."/>
               </div>

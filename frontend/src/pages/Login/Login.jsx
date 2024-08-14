@@ -46,10 +46,10 @@ export const Login = ({ setSign, setAdmin }) => {
     console.log("res.data ==== ", res.data);
     if(res.status === 200 && res.data.employeeInfo) {
       // 가입 대기 상태 로그인 차단
-      // if(res.data.employeeInfo.workerStateCode === 99) {
-      //   alert("가입 대기중입니다. 잠시만 기다려주세요.");
-      //   return false;
-      // }
+      if(res.data.employeeInfo.workerStateCode === 99) {
+        alert("가입 대기중입니다. 잠시만 기다려주세요.");
+        return false;
+      }
 
       // 응답 데이터에서 employeeInfo와 wsToken을 구조 분해 할당으로 추출
       const {employeeInfo, wsToken} = res.data;
