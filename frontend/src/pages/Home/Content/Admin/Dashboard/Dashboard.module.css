@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.topRow, .bottomRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.topRow {
+    margin-bottom: 20px; /* 위쪽 줄과 아래쪽 줄 사이의 여백 */
+}
+
+.bottomRow {
+    gap: 20px; /* 큰 통계 자료 사이의 간격 */
+}
+
+.statItem, .statItemLarge {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    box-sizing: border-box; /* padding 및 border가 총 width/height에 포함되도록 함 */
+}
+
+.statItem {
+    margin: 10px;
+    flex: 1;
+    min-width: 200px;
+    height: 250px; /* 원형 차트의 높이 조정 */
+    display: flex;
+    align-items: center; /* 차트를 중앙에 배치 */
+    justify-content: end; /* 차트를 중앙에 배치 */
+    position: relative; /* 차트 제목을 절대 위치로 배치하기 위해 필요 */
+}
+
+.chartTitle {
+    position: absolute;
+    top: 10px; /* 제목의 상단 여백 조정 */
+    left: 10px; /* 제목의 좌측 여백 조정 */
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.statItem:nth-child(1) {
+    background-color: #e9ecef; /* 첫 번째 통계 자료 배경색 */
+   
+}
+
+.statItem:nth-child(2) {
+    background-color: #f1f3f5; /* 두 번째 통계 자료 배경색 */
+}
+
+.statItem:nth-child(3) {
+    background-color: #f8f9fa; /* 세 번째 통계 자료 배경색 */
+}
+
+.statItemLarge:nth-child(1) {
+    background-color: #e9ecef; /* 첫 번째 큰 통계 자료 배경색 */
+}
+
+.statItemLarge:nth-child(2) {
+    background-color: #f1f3f5; /* 두 번째 큰 통계 자료 배경색 */
+}

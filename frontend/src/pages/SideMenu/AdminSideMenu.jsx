@@ -10,7 +10,7 @@ import { GiTalk } from 'react-icons/gi';
 
 export const AdminSideMenu = () => {
   const menus = useMemo(() => [
-    { name: "Home", link: "/", type: "Home", icon: IoHome },
+    { name: "Dash", link: "/dash", type: "Dash", icon: IoHome },
     { 
       name: "조직관리", link: "/member", type: "통합사원목록", icon: FaUserTie, 
       submenus: [

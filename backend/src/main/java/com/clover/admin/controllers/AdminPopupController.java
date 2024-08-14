@@ -47,6 +47,8 @@ public class AdminPopupController {
 		List<String> fileNames = (List<String>) popupdto.getFileNames();
 	    List<String> fileUrls = (List<String>) popupdto.getFileUrls();
 	    List<String> images = (List<String>) popupdto.getImages();
+	    System.out.println("왜 :"+fileNames);
+	    System.out.println("왜일까... "+fileUrls);
 	 // 파일 리스트가 null인 경우 빈 리스트로 초기화
         if (fileNames == null) {
             fileNames = new ArrayList<>();
@@ -77,7 +79,7 @@ public class AdminPopupController {
 				content = attServ.updateImageUrl(images.get(i), newImageUrl, content);
 			}
 			// 최종적으로 업데이트된 글내용을 DB에 업데이트
-			attServ.updateContent(content, newPopSeq, "Popup");
+			attServ.updateContent(content, newPopSeq, "AdminPopup");
 		}	    
 		
 		return ResponseEntity.ok().build();
