@@ -1,5 +1,5 @@
 .container{
-    padding: 20px 0 5px 30px;
+    padding: 20px 0 5px 20px;
 	border-top: 1px solid #d3d3d3;
     margin-top:10px;
 	font-family: monospace;
@@ -17,7 +17,7 @@
 
 .reply .replyContent {
 	padding-top: 20px;
-	padding-right : 80px;
+	padding-right : 60px;
 	font-size: 16px;
 	word-break: break-all;
 	white-space: pre-wrap;
@@ -58,4 +58,9 @@
 	width:95%;
 	display: flex;
 	justify-content: end;
+	align-items: center;
+}
+
+.charCount{
+	margin-right : 10px;
 }

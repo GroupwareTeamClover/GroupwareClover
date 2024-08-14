@@ -6,6 +6,7 @@ import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import axios from 'axios';
 import { BaseUrl } from '../../commons/config';
+import { useEffect } from 'react';
 
 const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) => {
     const onUploadImage = async (blob, callback) => {
@@ -24,6 +25,16 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
             return resp.data;
         })
     }
+
+    // 웹에디터 빨간줄 제거
+    useEffect(() => {
+        const editorInstance = editorRef.current.getInstance();
+        const editorEl = editorInstance.getEditorElements().mdEditor; 
+        const wysiwygEl = editorInstance.getEditorElements().wwEditor;
+
+        editorEl.spellcheck = false;
+        wysiwygEl.spellcheck = false;
+      }, []);
 
     return (
         <Editor

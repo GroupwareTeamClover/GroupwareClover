@@ -19,6 +19,7 @@ const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) 
     //답글 수정
     const [isModify, setIsmodify] = useState(false);
     const modifyInput = useRef(null);
+    const [charCount, setCharCount] = useState(0);
 
     useEffect(() => {
         if (isModify && modifyInput.current) {
@@ -30,6 +31,7 @@ const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) 
     const handleIsModify = () => {
         setIsmodify(prev => !prev);
         setNewReply(dto.boardCommentContent);
+        setCharCount(dto.boardCommentContent.length);
 
         setTimeout(() => {
             if (modifyInput.current) {
@@ -49,6 +51,7 @@ const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) 
             modifyInput.current.style.height = 'auto'; //height 초기화
             modifyInput.current.style.height = modifyInput.current.scrollHeight + 'px';
             setNewReply(e.target.value);
+            setCharCount(e.target.value.length);
         }
     }
 
@@ -84,6 +87,7 @@ const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) 
                 <div className={styles.replyDateBox}>
                     {isModify ?
                         <div className={styles.modifyButtonBox}>
+                            <div className={styles.charCount}>{charCount}/1000자</div>
                             <Button appearance="link" className={styles.modifyYesButton} onClick={handleIsModify}>취소</Button>
                             <Button appearance="link" className={styles.modifyNoButton} onClick={handleModify}>완료</Button>
                         </div> :
