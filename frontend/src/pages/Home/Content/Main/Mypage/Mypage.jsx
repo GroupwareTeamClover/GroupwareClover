@@ -1,12 +1,12 @@
 import styles from './Mypage.module.css'
 import default_image from "../../../../../images/default_avatar.jpg";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {validateEmail, validatePassword, validatePhone} from "../../../../../commons/common";
 import {useMemberStore} from "../../../../../store/store";
 
-export const Mypage = ({empSeq, closeModal}) => {
+export const Mypage = ({ empSeq, closeModal }) => {
 
   const [mypage, setMypage] = useState({});
   const {sessionData, setAvatar} = useMemberStore();

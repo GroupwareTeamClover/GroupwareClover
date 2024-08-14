@@ -2,7 +2,7 @@ import styles from './FindPw.module.css'
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../commons/config";
-import {validatePassword} from "../../../commons/common";
+import {sendEmail, validatePassword} from "../../../commons/common";
 
 export const FindPw = ({closeModal}) => {
 
@@ -35,14 +35,13 @@ export const FindPw = ({closeModal}) => {
     axios.get(`${BaseUrl()}/employee/exists`, {params}).then(res => {
       // 이메일 인증 후 인증 번호가 맞다면 아이디 요청
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
-      console.log("ranNumber ====== ", ranNumber);
       if(res.data.empSeq > 0) {
         // 계정 조회 성공
-        // const data = {
-        //   to_name: exists.empId,
-        //   message: ranNumber
-        // }
-        // sendEmail(data);
+        const data = {
+          to_name: exists.empId,
+          message: ranNumber
+        }
+        sendEmail(data);
         setAccessNum(prev => ({ ...prev, code: ranNumber }));
         setChangePw(prev => ({ ...prev, empSeq: res.data.empSeq }));
         setInvalidate(true);
