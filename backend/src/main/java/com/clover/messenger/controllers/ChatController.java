@@ -91,7 +91,7 @@ public class ChatController {
 
         ChatRoomDTO room = chatService.createGroupRoom(roomName, creatorSeq, participantSeqs, participants);
         
-        // WebSocket을 통해 참가자들에게 새 그룹 채팅방 생성 알림
+        // WebSocket을 통해 참가자들에게 새 그룹 채팅방 생성 알림 1 
         for (int participantSeq : participantSeqs) {
             messagingTemplate.convertAndSendToUser(
                 String.valueOf(participantSeq),
