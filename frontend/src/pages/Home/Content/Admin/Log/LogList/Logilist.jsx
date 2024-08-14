@@ -53,6 +53,12 @@ export const Loglist=()=>{
     const [specificEndDate, setSpecificEndDate] = useState('');      // specific
   
   
+    useEffect(()=>{
+        if(specificStartDate&&specificEndDate){
+            handleSearch();
+        }
+        
+    },[specificStartDate, specificEndDate])
 
    
     const handleToday = () => {
