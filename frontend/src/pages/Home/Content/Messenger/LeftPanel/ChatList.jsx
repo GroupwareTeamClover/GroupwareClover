@@ -10,7 +10,7 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
   useEffect(() => {
     const handleMessage = (message) => {
       if (message.type === 'NEW_CHAT_ROOM') {
-        console.log("New chat room received:", message.room);
+        console.log("새로운 채팅방 생성됨:", message.room);
         addChatRoom(message.room);
       } else if (message.type === 'CHAT') {
         updateChatRoom(message.roomSeq, {
@@ -61,9 +61,15 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
           className={styles.chatItem}
           onClick={() => handleChatSelect(chat)}
         >
-          <div className={styles.avatar}>
-          <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
-          </div>
+        <div className={chat.roomType === 'group' ? styles.groupAvatar : styles.avatar}>
+          {chat.roomType === 'group' ? (
+            chat.roomAvatar.split(',').slice(0, 4).map((avatar, index) => (
+              <img key={index} src={avatar.trim()} alt={`Member ${index + 1}`} />
+            ))
+          ) : (
+            <img src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
+          )}
+        </div>
           <div className={styles.chatInfo}>
             <h4>{chat.customRoomName || chat.roomName}</h4>
             <p>{chat.lastMessage}</p>

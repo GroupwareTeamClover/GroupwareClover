@@ -11,40 +11,42 @@ const ChatWindow = ({ chat }) => {
   const { messages, setMessages, addMessage } = useChatStore();
   const [inputMessage, setInputMessage] = useState('');
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   const currentMessages = messages[chat.roomSeq] || [];
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [currentMessages]);
+  const scrollToBottom = useCallback(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+  }, []);
 
   const fetchMessages = useCallback(async () => {
     try {
       const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
       setMessages(chat.roomSeq, response.data);
+      setTimeout(scrollToBottom, 0);
     } catch (error) {
       console.error('메시지를 가져오는 중 오류 발생:', error);
     }
-  }, [chat.roomSeq, setMessages]);
+  }, [chat.roomSeq, setMessages, scrollToBottom]);
 
   useEffect(() => {
     if (chat.roomSeq) {
       fetchMessages();
-      // 채팅방 구독
       const unsubscribe = subscribeToRoom(chat.roomSeq, (message) => {
         addMessage(chat.roomSeq, message);
       });
 
-      // 컴포넌트 언마운트 시 구독 해제
       return () => {
         if (unsubscribe) unsubscribe();
       };
     }
   }, [chat.roomSeq, fetchMessages, addMessage]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [currentMessages, scrollToBottom]);
 
   const sendChatMessage = useCallback(() => {
     if (inputMessage.trim()) {
@@ -57,11 +59,38 @@ const ChatWindow = ({ chat }) => {
       };
 
       sendMessage("/app/chat.sendMessage", message);
-
       setInputMessage('');
     }
   }, [chat.roomSeq, inputMessage]);
 
+  const renderMessage = (message, index) => {
+    const isCurrentUser = message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
+    return (
+      <div
+        key={message.messageSeq || index}
+        className={`${styles.messageContainer} ${isCurrentUser ? styles.sent : styles.received}`}
+      >
+        {!isCurrentUser && (
+          <div className={styles.senderInfo}>
+            <img 
+              src={chat.customRoomAvatar || '/default-avatar.png'} 
+              alt={chat.customRoomName} 
+              className={styles.senderAvatar}
+            />
+          </div>
+        )}
+        <div className={styles.messageWrapper}>
+          {!isCurrentUser && (
+            <span className={styles.senderName}>{chat.customRoomName}</span>
+          )}
+          <div className={styles.messageContent}>{message.messageContent}</div>
+          <span className={styles.messageTime}>
+            {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
+          </span>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className={styles.chatWindow}>
@@ -71,20 +100,8 @@ const ChatWindow = ({ chat }) => {
         <span className={styles.status}>Active</span>
       </div>
 
-      <div className={styles.messages}>
-        {currentMessages.map((message, index) => (
-          <div
-            key={message.messageSeq || index}
-            className={`${styles.message} ${message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq ? styles.sent : ''}`}
-          >
-            <div className={styles.messageWrapper}>
-              <div className={styles.messageContent}>{message.messageContent}</div>
-              <span className={styles.messageTime}>
-                {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
-              </span>
-            </div>
-          </div>
-        ))}
+      <div className={styles.messages} ref={messagesContainerRef}>
+        {currentMessages.map(renderMessage)}
         <div ref={messagesEndRef} />
       </div>
 
@@ -101,4 +118,5 @@ const ChatWindow = ({ chat }) => {
     </div>
   );
 };
+
 export default React.memo(ChatWindow);

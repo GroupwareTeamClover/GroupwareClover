@@ -56,6 +56,13 @@ stompClient.connect(headers, () => {
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
 
+      // 그룹 채팅방 생성 알림 구독
+      stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newGroupChatRoom`, (payload) => {
+        console.log('그룹 채팅방 생성');
+        const message = JSON.parse(payload.body);
+        onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
+      });
+
       // 타겟 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/targetNewChatRoom`, (payload) => {
         console.log('타겟 1:1 개인 채팅방 생성');

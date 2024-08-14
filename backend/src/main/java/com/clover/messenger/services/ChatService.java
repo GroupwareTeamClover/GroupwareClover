@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 import java.sql.Timestamp;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -127,6 +128,58 @@ public class ChatService {
         
         return roomForUser;
     }
+
+    @Transactional
+    public ChatRoomDTO createGroupRoom(String roomName, int creatorSeq, List<Integer> participantSeqs, List<Map<String, Object>> participantDetails) {
+        ChatRoomDTO room = new ChatRoomDTO();
+        room.setRoomName(roomName);
+        room.setRoomType("group");
+        room.setEmpSeq(creatorSeq);
+        room.setRoomDescription("그룹 채팅방");
+
+        // 참가자 아바타 정보를 JSON 문자열로 변환하여 저장
+        String avatars = participantDetails.stream()
+            .map(p -> p.get("avatar").toString())
+            .collect(Collectors.joining(","));
+        room.setRoomAvatar(avatars);
+
+        chatDAO.createGroupRoom(room);
+
+        for (int empSeq : participantSeqs) {
+            String role = (empSeq == creatorSeq) ? "ADMIN" : "MEMBER";
+            chatDAO.addGroupMember(room.getRoomSeq(), empSeq, role);
+        }
+
+        return room;
+    }
+
+    // @Transactional
+    // public ChatRoomDTO createGroupRoom(String roomName, int creatorSeq, List<Integer> participantSeqs) {
+    //     System.out.println("그룹채팅 생성 시작");
+    //     System.out.println("방 이름: " + roomName);
+    //     System.out.println("생성자 seq: " + creatorSeq);
+    //     System.out.println("초기 참가자 목록: " + participantSeqs);
+
+    //     ChatRoomDTO room = new ChatRoomDTO();
+    //     room.setRoomName(roomName);
+    //     room.setRoomType("group");
+    //     room.setEmpSeq(creatorSeq);
+    //     room.setRoomDescription("그룹 채팅방");
+        
+    //     chatDAO.createGroupRoom(room);
+        
+    //     // 생성자를 참가자 목록에 추가
+    //     if (!participantSeqs.contains(creatorSeq)) {
+    //         participantSeqs.add(creatorSeq);
+    //     }
+        
+    //     for (int empSeq : participantSeqs) {
+    //         String role = (empSeq == creatorSeq) ? "ADMIN" : "MEMBER";
+    //         chatDAO.addGroupMember(room.getRoomSeq(), empSeq, role);
+    //     }
+        
+    //     return room;
+    // }
 
 
     /**

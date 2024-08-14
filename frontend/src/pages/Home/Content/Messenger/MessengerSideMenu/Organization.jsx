@@ -5,6 +5,8 @@ import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
 import { FaSearch } from "react-icons/fa";
 import EmployeeModal from './EmployeeModal';
+import GroupChatModal from '../Modals/GroupChatModal';
+import { createGroupChat } from '../utils/chat-utils';
 
 const Organization = ({ onClose }) => {
     // 상태 변수들 정의
@@ -15,6 +17,8 @@ const Organization = ({ onClose }) => {
     const [searchInput, setSearchInput] = useState(''); // 검색어
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 열림 상태
     const [selectedEmployee, setSelectedEmployee] = useState(null); // 선택된 직원
+    const [selectedEmployees, setSelectedEmployees] = useState([]); // 그룹 채팅을 위해 선택된 직원들
+    const [isGroupChatModalOpen, setIsGroupChatModalOpen] = useState(false); // 그룹 채팅 모달 열림 상태
 
     // 초기 데이터 로딩
     useEffect(() => {
@@ -45,7 +49,6 @@ const Organization = ({ onClose }) => {
     }
 
     // 직원 선택 핸들러
-    // EmployeeModal에 전달
     const handleItemClick = (item) => {
         setSelectedItem({ children: item });
         setSelectedEmployee({
@@ -55,21 +58,26 @@ const Organization = ({ onClose }) => {
             avatar: item.avatar
         });
         setIsModalOpen(true);
+
+        // 그룹 채팅을 위한 직원 선택 로직
+        const isSelected = selectedEmployees.some(emp => emp.seq === item.seq);
+        if (isSelected) {
+            setSelectedEmployees(selectedEmployees.filter(emp => emp.seq !== item.seq));
+        } else {
+            setSelectedEmployees([...selectedEmployees, item]);
+        }
     };
 
     // 검색 필터링 로직
     useEffect(() => {
         const filterFolders = (data, query) => {
-            console.log("확인", data);
             if (!query) return data;
             return data
                 .map(folder => {
                     const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
                     const filteredChildren = folder.children.filter(child =>
-                        
                         child.name.toLowerCase().includes(query.toLowerCase()) ||
                         child.role.toLowerCase().includes(query.toLowerCase())
-                        
                     );
                     
                     if (folderMatches || filteredChildren.length) {
@@ -83,7 +91,6 @@ const Organization = ({ onClose }) => {
         setFilteredData(filterFolders(folderData, searchInput));
     }, [searchInput, folderData]);
 
-    
     // Folder 컴포넌트에 전달할 props 조정
     const adjustFolderProps = (folder) => {
         return {
@@ -100,6 +107,22 @@ const Organization = ({ onClose }) => {
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedEmployee(null);
+    };
+
+    // 그룹 채팅 생성 핸들러
+    const handleCreateGroupChat = async (roomName) => {
+        if (selectedEmployees.length < 2) {
+            alert("그룹 채팅을 생성하려면 최소 2명 이상의 사원을 선택해야 합니다.");
+            return;
+        }
+        try {
+            await createGroupChat(roomName, selectedEmployees);
+            setIsGroupChatModalOpen(false);
+            onClose(); // Organization 모달을 닫습니다.
+        } catch (error) {
+            console.error('그룹 채팅방 생성 중 오류2:', error);
+            alert('그룹 채팅방 생성에 실패했습니다.');
+        }
     };
 
     return (
@@ -142,11 +165,28 @@ const Organization = ({ onClose }) => {
                     </div>
                 </div>
             </div>
+            <div className={styles.footer}>
+                <button 
+                    onClick={() => setIsGroupChatModalOpen(true)} 
+                    disabled={selectedEmployees.length < 2}
+                    className={styles.createGroupButton}
+                >
+                    그룹 채팅 생성 ({selectedEmployees.length})
+                </button>
+            </div>
             {/* 직원 상세 정보 모달 */}
             {isModalOpen && selectedEmployee && (
                 <EmployeeModal 
                     employee={selectedEmployee} 
                     onClose={closeModal} 
+                />
+            )}
+            {/* 그룹 채팅 생성 모달 */}
+            {isGroupChatModalOpen && (
+                <GroupChatModal 
+                    selectedEmployees={selectedEmployees}
+                    onClose={() => setIsGroupChatModalOpen(false)}
+                    onCreateGroupChat={handleCreateGroupChat}
                 />
             )}
         </div>
