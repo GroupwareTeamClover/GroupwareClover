@@ -80,14 +80,11 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       let data = sendData;
       data.empGender = data.empGender%2 === 1 ? "M" : "F";
       delete data.pwCheck;
-
-      const res = await axios.post(`${BaseUrl()}/employee`, sendData);
-
+      const res = await axios.post(`${BaseUrl()}/employee`, data);
       if(res.data === "ok"){
         alert("회원가입 완료");
         setSignUpState(false);
       }
-
     } else {
       //  checkData가 fales 인 부분으로 포커스 이동하는 로직 필요
       alert("회원가입 입력창을 확인해주세요");

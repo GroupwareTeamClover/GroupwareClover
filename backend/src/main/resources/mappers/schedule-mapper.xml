@@ -19,9 +19,11 @@
 
     <select id="getScheduleList" resultType="com.clover.schedule.dto.ScheduleDTO" >
         SELECT
-            *
+            s.*,
+            e.emp_name
         FROM
-            schedule
+            schedule s
+            JOIN EMPLOYEE e ON s.emp_seq = e.emp_seq
     </select>
 
     <select id="getMyScheduleList" resultType="com.clover.schedule.dto.ScheduleDTO">

@@ -1,5 +1,5 @@
 import styles from './DetailSchedule.module.css'
-import {dateYMD} from "../../../../../commons/common";
+import {dateSetting, dateYMD} from "../../../../../commons/common";
 import React, {useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
@@ -67,6 +67,8 @@ export const DetailSchedule = ({setDataChange}) => {
     });
   }
 
+
+
   return (
     <div className={styles.modalForm}>
       <div className={styles.list}>
@@ -95,9 +97,9 @@ export const DetailSchedule = ({setDataChange}) => {
               {
                 !updateForm ?
                   <div className={styles.contentLabel}>
-                    <p>시작 : {dateYMD(scheduleDetail.start)}</p>
-                    <p>종료 : {dateYMD(scheduleDetail.end)}</p>
-                    <p>작성자 : {scheduleDetail.empSeq} </p>
+                    <p>시작 : {dateSetting(scheduleDetail.start)}</p>
+                    <p>종료 : {dateSetting(scheduleDetail.end)}</p>
+                    <p>작성자 : {scheduleDetail.empName} </p>
                     <p>내용 : {scheduleDetail.title}</p>
                   </div>
                   :
@@ -106,7 +108,7 @@ export const DetailSchedule = ({setDataChange}) => {
                                    value={dateYMD(updateData.start)}/></p>
                     <p>종료 : <input type="date" name="end" onChange={handleUpdataData} value={dateYMD(updateData.end)}/>
                     </p>
-                    <p>작성자 : {updateData.empSeq}</p>
+                    <p>작성자 : {updateData.empName}</p>
                     <p>내용 : <input type="text" name="title" onChange={handleUpdataData} value={updateData.title}/></p>
                   </div>
               }
