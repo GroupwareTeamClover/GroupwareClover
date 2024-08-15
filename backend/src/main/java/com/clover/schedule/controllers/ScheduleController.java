@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @RestController
@@ -21,6 +24,8 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<String> addSchedule(@RequestBody ScheduleDTO dto){
+        System.out.println("start date ====== " + dto.getStartDate());
+        System.out.println("end date ====== " + dto.getEndDate());
         dto.setEmpSeq((int) session.getAttribute("cloverSeq"));
         dto.setDeptCode((int) session.getAttribute("cloverDeptCode"));
         String result = scheduleService.addSchedule(dto);

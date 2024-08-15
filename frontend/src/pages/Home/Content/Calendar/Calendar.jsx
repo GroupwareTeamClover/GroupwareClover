@@ -43,6 +43,7 @@ export const Calendar = () => {
   const checkScheduleList = () => {
     axios.get(`${BaseUrl()}/schedule`).then(res => {
       // 체크된 그룹에 대하여 색상 설정 추가
+      console.log("res.data ==== ", res.data);
       setScheduleList(itemAttribute(res.data));
       setCheckSchedule(itemAttribute(res.data));
     });
