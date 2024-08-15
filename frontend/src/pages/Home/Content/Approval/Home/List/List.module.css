@@ -78,6 +78,10 @@ table{
     padding-bottom: 5px;
 }
 
+.title:hover{
+    cursor: pointer;
+}
+
 /* 선주기 */
 /* div{
     border: 1px solid black;
