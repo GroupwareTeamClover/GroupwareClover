@@ -133,22 +133,18 @@ export const AddMember = ()=>{
    
     // -----------------------------------------------------------
     // 사원이름 검색
-    const handleSearch = (e) => {
-        const { name, value } = e.target;
-    
-        if (value === "") {
+    const [keyword, setKeyword] = useState('');
+
+    const handleSearch = () => {
+        if (keyword === "") {
             // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
             setFiltered(newMem);
         } else {
             // 검색어가 있는 경우 필터링
-            let result;
-            if (name === "EMP_NAME") {
-                result = newMem.filter((data) => data[name].includes(value));
-            } else {
-                result = newMem.filter((data) => data[name].includes(value));
-            }
+            let result = newMem.filter((data) => data.empName.includes(keyword));
             setFiltered(result);
-        }
+            }
+        
         setCurrentPage(0);
         
     };
@@ -177,14 +173,16 @@ export const AddMember = ()=>{
                         type="text"
                         placeholder=" 사원 이름 검색"
                         name="empName"
+                        value={keyword} 
+                        onChange={(e) => setKeyword(e.target.value)} // 상태 업데이트
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                handleSearch(e);
+                                handleSearch();
                             }
                         }}
                         className={styles.searchInput}
                     />
-                    <button onClick={(e) => handleSearch(e)}>
+                    <button onClick={handleSearch}>
                         <FaSearch className={styles.searchLogo} />
                     </button>
                 </div>
