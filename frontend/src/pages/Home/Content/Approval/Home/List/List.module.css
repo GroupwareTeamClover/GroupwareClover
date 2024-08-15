@@ -45,13 +45,13 @@ table{
 
 /* 열설정 */
 .td1, .theadtd1 {
-    width: 10%;
+    width: 9%;
 }
 .td2, .theadtd2 {
-    width: 10%;
+    width: 9%;
 }
 .td3, .theadtd3 {
-    width: 10%;
+    width: 9%;
 }
 .td4, .theadtd4 {
     width: 8%;
@@ -61,21 +61,25 @@ table{
     text-align: left;
 }
 .td6, .theadtd6 {
-    width: 10%;
+    width: 9%;
 }
 .td7, .theadtd7 {
-    width: 10%;
+    width: 9%;
 }
 .td8, .theadtd8 {
-    width: 10%;
+    width: 9%;
 }
 .td9, .theadtd9 {
-    width: 10%;
+    width: 9%;
+}
+
+.td10, .theadtd10 {
+    width: 7%;
 }
 
 .tablerow{
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .title:hover{
@@ -133,6 +137,42 @@ table{
     letter-spacing: -1px;
     opacity: 0.5;
 }
+
+/* 페이지네이션 */
+.paginationBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination{
+    display: flex;
+}
+
+.naviarrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.naviarrow:hover{
+    cursor: pointer;
+}
+
+.navinum{
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.navinum:hover{
+    cursor: pointer;
+}
+
+
 
 /* 선주기 */
 /* div{

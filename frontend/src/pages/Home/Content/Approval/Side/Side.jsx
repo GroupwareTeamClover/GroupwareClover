@@ -99,7 +99,7 @@ export const Side = () => {
                     {
                         ['기안진행','결재대기','결재예정','참조/열람대기'].map((item,index) => {
                             return(
-                                <div className={styles.menu}  onClick={() => navi(`/approval/list?type=${item}`)}>
+                                <div className={styles.menu}  onClick={() => navi(`/approval/list?type=${item}&cpage=1`)}>
                                     <span className={styles.menutext}>{item}</span>
                                 </div>
                             )
@@ -113,7 +113,7 @@ export const Side = () => {
                     {
                         ['기안문서함','임시문서함','결재문서함','참조/열람문서함'].map((item,index)=>{
                             return(
-                                <div className={styles.menu}  onClick={() => navi(`/approval/list?type=${item}`)}>
+                                <div className={styles.menu}  onClick={() => navi(`/approval/list?type=${item}&cpage=1`)}>
                                     <span className={styles.menutext}>{item}</span>
                                 </div>
                             )
