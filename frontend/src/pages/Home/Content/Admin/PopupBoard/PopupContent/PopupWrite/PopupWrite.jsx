@@ -69,10 +69,13 @@ export const PopupWrite = () => {
         } else {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
-            const textContent = tempDiv.textContent || tempDiv.innerText || '';
+            const hasImage = tempDiv.querySelector('img') !== null;
+        const textContent = tempDiv.textContent || tempDiv.innerText || '';
+        const strippedContent = textContent.trim();
 
-            if (textContent.trim() === "") {
+        if (!hasImage && strippedContent === "") {
                 alert("내용을 입력해주세요!");
+                return;
             }
             if (!periodType) {
                 alert("공지기간을 선택해주세요!");
@@ -162,7 +165,9 @@ export const PopupWrite = () => {
          setFiles(fileList);
      };
      const handleUploadSuccess = (response, file) => {
+        console.log("제에에ㅔㅇ발 : "+response);
          const fileUrl = response;
+         console.log(fileUrl);
          // 파일 리스트에 업로드된 파일 추가
          setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
      };
@@ -170,10 +175,10 @@ export const PopupWrite = () => {
          // 파일 리스트에서 해당 파일 제거
          setFiles((prev) => prev.filter((f) => f.name !== file.name));
      };
+     
+     const formData = new FormData(); 
+     formData.append('file', files); 
 
-
-    const path = encodeURIComponent("temp");
-    
     return (
         <div className={styles.container}>
             <h3>{sessionData.empName} 관리자님의 팝업공지글</h3>
@@ -184,8 +189,8 @@ export const PopupWrite = () => {
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px" defaultContent="" />
             </div>
-           <div className={styles.fileBox}>
-                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
+            <div className={styles.fileBox}>
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>

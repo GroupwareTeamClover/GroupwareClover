@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './PopupDetail.module.css';
 import { useMemberStore } from '../../../../../../../store/store';
 import { useEffect, useRef, useState } from 'react';
@@ -11,190 +11,197 @@ import {format} from 'date-fns';
 import { confirmAlert } from '../../../../../../../commons/common';
 
 
+// ...생략...
 
-export const PopupDetail =()=>{
+export const PopupDetail = () => {
     const navi = useNavigate();
     const { popSeq } = useParams();
-
     const { sessionData } = useMemberStore();
     const editorRef = useRef(); // Editor reference
-    const contentRef = useRef(null);
     const [post, setPost] = useState({});
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [boardActive, setBoardActive] = useState('T');
+    const [periodType, setPeriodType] = useState('');
+    const [specificStartDate, setSpecificStartDate] = useState('');
+    const [specificEndDate, setSpecificEndDate] = useState('');
+    const [monthlyDay, setMonthlyDay] = useState(1);
+    const [weeklyDay, setWeeklyDay] = useState('MONDAY');
+    const [files, setFiles] = useState([]);
+    const [originFiles, setOriginFiles] = useState([]);
+    const [originImageUrls, setOriginImageUrls] = useState([]);
+    const [addFileUrls, setAddFileUrls] = useState([]);
 
 
-   // 공지 기간 옵션
-   const [periodType, setPeriodType] = useState(''); // 'none', 'specific', 'monthly', 'weekly'
-   const [specificStartDate, setSpecificStartDate] = useState('');  // specific
-   const [specificEndDate, setSpecificEndDate] = useState('');      // specific
-   const [monthlyDay, setMonthlyDay] =  useState(1);               // monthly
-   const [weeklyDay, setWeeklyDay] = useState('MONDAY');                  // weekly
-
-    // 현재 날짜
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 현재 날짜를 구하는 거!
-
+     // 활성화 여부
+     const handleActive = (e) => {
+        setBoardActive(e.target.value);
+    }
 
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminpopup/postInfo/${popSeq}`).then(resp => {
-            console.log(resp.data)
             const data = resp.data;
             setPost(data);
-            if (contentRef.current) {
-                contentRef.current.innerHTML = post.popContent || '';
-            }
-
-            // 받아온 데이터를 상태에 대입
             setTitle(data.popTitle || '');
-            console.log(data.popContent)
-            setBoardActive(data.popIsActive==='true' ? 'T' : 'F');
-            
-            // 공지 기간 옵션 상태 설정
+            setBoardActive(data.popIsActive === 'true' ? 'T' : 'F');
+
             if (data.periodType === 'specific') {
                 setPeriodType('specific');
                 setSpecificStartDate(data.specificStartDate || '');
                 setSpecificEndDate(data.specificEndDate || '');
-                console.log(data.specificEndDate)
             } else if (data.periodType === 'monthly') {
                 setPeriodType('monthly');
                 setMonthlyDay(data.monthlyDay || 1);
-                console.log(data.monthlyDay)
             } else if (data.periodType === 'weekly') {
                 setPeriodType('weekly');
                 setWeeklyDay(data.weeklyDay || '');
-                console.log(data.weeklyDay)
             }
-        
-        })
+
+            editorRef.current.getInstance().setHTML(data.popContent || '');
+            setOriginImageUrls(data.popContent?.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+                const match = imgTag.match(/src="([^">]+)"/);
+                return match ? match[1] : null;
+            }));
+
+            axios.get(`${BaseUrl()}/attachment/${'popup'}/${popSeq}`).then(resp => {
+                const fileData = resp.data.map(file => ({ name: file.attachmentOriname, url: file.attachmentSysname }));
+                setOriginFiles(fileData);
+                setFiles(fileData);
+            });
+        });
     }, [popSeq]);
 
+    const handleTitleChange = (e) => setTitle(e.target.value);
 
-    // // 유효성 검사: 시작일이 오늘보다 이전일 경우
-    // useEffect(() => {
-    //     if (specificStartDate && specificStartDate < today) {
-    //         alert("시작일은 오늘보다 이전일 수 없습니다.");
-    //         setSpecificStartDate(''); // 시작일을 초기화
-    //     }
-    // }, [specificStartDate, today]);
-    // 시작일과 종료일 유효성 검사
-    useEffect(() => {
-        if (specificStartDate && specificEndDate && specificEndDate < specificStartDate) {
-            alert("종료일은 시작일보다 전일 수 없습니다.");
-            setSpecificEndDate('');  // 종료일을 초기화
+    const handleContentChange = () => setContent(editorRef.current.getInstance().getHTML());
+
+
+    const handleUploadSuccess = (response, file) => {
+        const fileUrl = response;
+        console.log(fileUrl);
+        setFiles(prev => [...prev, { name: file.name, url: fileUrl }]);
+        setAddFileUrls(prev => [...prev, fileUrl]); // addFileUrls 상태 업데이트
+    };
+
+    const handleRemove = (file) => {
+        setFiles(prev => prev.filter(f => f.name !== file.name));
+        setAddFileUrls(prev => prev.filter(url => url !== file.url)); // remove URL from addFileUrls
+    };
+    const handleCancel = () => {
+        if (window.confirm("글 수정을 취소하시겠습니까?")) {
+            navi(-1);
         }
-    }, [specificStartDate, specificEndDate]);
+    };
 
-    // 활성화 여부
-    const handleActive = (e) => {
-        setBoardActive(e.target.value);
-    }
-
-    //글제목
-    const handleTitleChange = (e) => {
-        setTitle(e.target.value);
-    }
-
-    //첨부파일
-    const [files, setFiles] = useState([]);
-
-    useEffect(() => {
-        if (editorRef.current) {
-            editorRef.current.getInstance().setHTML(post.popContent || '');
-        }
-    }, [post.popContent]);
-
-    //게시글 내용
-    const handleContentChange = () => {
-        setContent(editorRef.current.getInstance().getHTML());
-    }
-
-    const handleCancel=()=>{
-        const confirm = window.confirm("글 수정을 취소하시겠습니까?");
-        if(confirm){navi(-1)}
-        else{return false}
-        
-    }
-    
     const handleSubmit = () => {
         if (title.trim() === "") {
             alert("제목을 입력해주세요!");
-        } else {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            const textContent = tempDiv.textContent || tempDiv.innerText || '';
-
-            if (textContent.trim() === "") {
-                alert("내용을 입력해주세요!");
-            }
-            if (!periodType) {
-                alert("공지기간을 선택해주세요!");
-                return;
-            }
-            if (periodType === 'specific') {
-                if (!specificStartDate || !specificEndDate) {
-                    alert("특정 기간의 시작일과 종료일을 모두 선택해주세요!");
-                    return;
-                }
-            } else if (periodType === 'monthly') {
-                if (!monthlyDay) {
-                    alert("매월 반복의 날짜를 선택해주세요!");
-                    return;
-                }
-            } else if (periodType === 'weekly') {
-                if (!weeklyDay) {
-                    alert("매주 반복의 요일을 선택해주세요!");
-                    return;
-                }
-            }
-
-            // 활성화 여부가 선택되었는지 확인
-            if (!boardActive) {
-                alert("활성화 여부를 선택해주세요!");
-                return;
-            }
-
-            else {
-                const payload = {
-                    popTitle: title,
-                    empId: sessionData.empId,
-                    popContent: content,
-                    // files: files,
-                    periodType: periodType,
-                    popIsActive: boardActive === 'T'
-                };
-
-                // 공지기간 데이터 추가
-                if (periodType === 'specific') {
-                    payload.specificStartDate = specificStartDate;
-                    payload.specificEndDate = specificEndDate;
-                } else if (periodType === 'monthly') {
-                    payload.monthlyDay = monthlyDay;
-                } else if (periodType === 'weekly') {
-                    payload.weeklyDay = weeklyDay;
-                }
-                
-                console.log("확인")
-                console.log(payload);
-
-                axios.put(`${BaseUrl()}/adminpopup/${popSeq}`, payload)
-                .then(resp =>{
-                    console.log(resp.data)
-                    if(resp.status ===200){
-                        alert("공지팝업이 수정되었습니다.");
-                        navi('/popup', {state:{type: '팝업공지글 목록'}}); 
-                    }else {
-                        alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
-                    }
-                })
-                .catch(error=>{
-                    console.log("서버오류: ", error);
-                    alert("서버에 문제 발생.")
-                })
-
-            }
+            return;
         }
-    }
+
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        const hasImage = tempDiv.querySelector('img') !== null;
+        const textContent = tempDiv.textContent || tempDiv.innerText || '';
+        const strippedContent = textContent.trim();
+
+        if (!hasImage && strippedContent === "") {
+      
+            alert("내용을 입력해주세요!");
+            return;
+        }
+
+        if (!periodType) {
+            alert("공지기간을 선택해주세요!");
+            return;
+        }
+
+        if (periodType === 'specific' && (!specificStartDate || !specificEndDate)) {
+            alert("특정 기간의 시작일과 종료일을 모두 선택해주세요!");
+            return;
+        }
+
+        if (periodType === 'monthly' && !monthlyDay) {
+            alert("매월 반복의 날짜를 선택해주세요!");
+            return;
+        }
+
+        if (periodType === 'weekly' && !weeklyDay) {
+            alert("매주 반복의 요일을 선택해주세요!");
+            return;
+        }
+
+        if (!boardActive) {
+            alert("활성화 여부를 선택해주세요!");
+            return;
+        }
+
+        const deleteFiles = originFiles?.filter(file => !files.some(newFile => newFile.name === file.name));
+        const addFiles = files?.filter(file => !originFiles.some(originfile => originfile.name === file.name));
+
+        const newImageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+            const match = imgTag.match(/src="([^">]+)"/);
+            return match ? match[1] : null;
+        }) || [];
+
+        // const deleteImageUrls = originImageUrls?.filter(imageUrl =>  newImageUrls && !newImageUrls.includes(imageUrl));
+        // const addImageUrls = newImageUrls?.filter(imageUrl => !originImageUrls.includes(imageUrl));
+
+        console.log("originImageUrls:", originImageUrls);
+        console.log("newImageUrls:", newImageUrls);
+
+        const deleteImageUrls = originImageUrls?.filter(imageUrl => {
+            console.log("Checking imageUrl in originImageUrls:", imageUrl);
+            return newImageUrls && !newImageUrls.includes(imageUrl);
+        }) || [];
+
+        const addImageUrls = newImageUrls.filter(imageUrl => {
+            console.log("Checking imageUrl in newImageUrls:", imageUrl);
+            return !originImageUrls?.includes(imageUrl);
+        }) || [];
+
+        const payload = {
+            popTitle: title,
+            empId: sessionData.empId,
+            popContent: content,
+            periodType: periodType,
+            popIsActive: boardActive === 'T',
+            deleteFileUrls: deleteFiles.map(file => file.url),
+            addFileNames: addFiles.map(file => file.name),
+            addFileUrls: addFiles.map(file => file.url),
+            deleteImageUrls: deleteImageUrls,
+            addImageUrls: addImageUrls
+        };
+
+        if (periodType === 'specific') {
+            payload.specificStartDate = specificStartDate;
+            payload.specificEndDate = specificEndDate;
+        } else if (periodType === 'monthly') {
+            payload.monthlyDay =  monthlyDay.toString();
+        } else if (periodType === 'weekly') {
+            payload.weeklyDay = weeklyDay;
+        }
+
+        axios.put(`${BaseUrl()}/adminpopup/${popSeq}`, payload)
+            .then(resp => {
+                if (resp.status === 200) {
+                    alert("공지팝업이 수정되었습니다.");
+                    navi('/popup', { state: { type: '팝업공지글 목록' } });
+                } else {
+                    alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+                }
+            })
+            .catch(error => {
+                console.log("서버오류: ", error.response);
+                if (error.response) {
+                    console.log("응답 상태 코드: ", error.response.status);
+                    console.log("응답 데이터: ", error.response.data);
+                }
+                alert("서버에 문제 발생.");
+            });
+    };
+
+    const path = encodeURIComponent("temp");
 
     return (
         <div className={styles.container}>
@@ -202,26 +209,24 @@ export const PopupDetail =()=>{
                 <h3>{post.empName} 관리자님의 팝업공지글</h3>
                 <div className={styles.popWriteDate}>
                     <div>작성일: {post.popWriteDate ? format(new Date(post.popWriteDate), 'yyyy.MM.dd HH:mm') : '날짜 없음'}</div>
-                    <div> {post.popUpdatedDate ? '수정일:'+ format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm'): ''}</div>
+                    <div>{post.popUpdatedDate ? '수정일: ' + format(new Date(post.popUpdatedDate), 'yyyy.MM.dd HH:mm') : ''}</div>
                 </div>
             </div>
             <div className={styles.title}>
                 <input type="text" placeholder="공지 제목을 입력해 주세요 (최대 30자까지 입력 가능)"
-                    name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title}/> 
+                    name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
-           
             <div className={styles.editorBox}>
-                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px"  defaultContent={post.popContent}/>
+                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="500px" defaultContent={post.popContent} />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={false} draggable multiple onChange={setFiles} fileList={files}>
-                    <div style={{ height: 100, width: 800, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span>클릭하거나 드래그하여 파일 첨부</span>
-                    </div>
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
+                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                    <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
             </div>
-            {/* 공지기간 옵션 */}
-            <div className={styles.activeBox}>
+           {/* 공지기간 옵션 */}
+           <div className={styles.activeBox}>
                 <div className={styles.activeLetter}>공지기간</div>
                 <div className={styles.activeRadiobox}>
                     <label>

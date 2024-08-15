@@ -24,6 +24,9 @@ public class AdminMemberService {
 	public List<HashMap<String,Object>> getCountMem(){
 		return adminmemberDAO.getCountMem();
 	}
+	public List<HashMap<String,Object>> getGender(){
+		return adminmemberDAO.getGender();
+	}
 	
 	public void updateMemState(AdminUpdateMemDTO updto) {
 		adminmemberDAO.updateMem(updto);		

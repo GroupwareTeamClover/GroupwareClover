@@ -308,11 +308,13 @@ export const DetailDocument = ({type}) => {
                 .then(()=>{
                     setIsTempCancle(false);
                     alert("삭제 성공");
-                    navi(`/approval`); // 절대 경로 사용
+                    navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
                 }).catch(()=>{
                     setIsTempCancle(false);
                     alert("삭제 실패");
                 })
+            }else{
+                setIsTempCancle(false);
             }
         }
     },[isTempCancle, id])

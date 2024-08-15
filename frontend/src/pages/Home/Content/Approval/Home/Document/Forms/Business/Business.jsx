@@ -84,7 +84,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             }
             return prevBusiness;
         });
-    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData, isEmergency]);
+    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData]);
 
     // 결재양식, 라인선택 후 모달 확인 클릭시 
     // 초기화

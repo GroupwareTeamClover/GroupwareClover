@@ -14,6 +14,7 @@ import com.clover.approval.dto.ListMappingDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
 import com.clover.approval.services.DocumentService;
 import com.clover.approval.services.LineService;
+import com.clover.approval.services.ListService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -27,7 +28,11 @@ public class ListController {
 	public LineService lineService;
 	
 	@Autowired
+	public ListService listService;
+	
+	@Autowired
 	private HttpSession session;
+	
 	//사이드바 리스트
 	@GetMapping
 	public ResponseEntity<ListMappingDTO> getListInfo(){
@@ -38,6 +43,16 @@ public class ListController {
 		return ResponseEntity.ok(listInfo);
 	}
 	
+	//사이드바 리스트-기안진행
+//	@GetMapping("/progress")
+//	public ResponseEntity<Void> getListInfo(@RequestParam String cpage){
+//		System.out.println(cpage);
+//    	int empSeq = (int) session.getAttribute("cloverSeq");
+//		//게시판 전체 레코드 갯수
+//		int recordTotalCount = lineService.getAllProgressCount(empSeq);
+//		return ResponseEntity.ok().build();
+//	}
+	
 	//메인리스트
 	@GetMapping("/main")
 	public ResponseEntity<List<DocumentDTO>> getMainListInfo(){
@@ -45,5 +60,7 @@ public class ListController {
 		List<DocumentDTO> documentDTO = documentService.getMainDoc(empSeq);	
 		return ResponseEntity.ok(documentDTO);
 	}
+	
+	
 
 }

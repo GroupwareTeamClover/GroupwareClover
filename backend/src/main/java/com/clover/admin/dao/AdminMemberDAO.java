@@ -25,6 +25,9 @@ public class AdminMemberDAO {
 	public List<HashMap<String, Object>> getCountMem(){
 		return mybatis.selectList("AdminMember.getCountMem");
 	}
+	public List<HashMap<String, Object>> getGender(){
+		return mybatis.selectList("AdminMember.getGender");
+	}
 	
 	public void updateMem(AdminUpdateMemDTO updto) {
 		Map<String, Object> params = new HashMap<>();
