@@ -101,9 +101,12 @@ export const PopupDetail = () => {
 
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = content;
+        const hasImage = tempDiv.querySelector('img') !== null;
         const textContent = tempDiv.textContent || tempDiv.innerText || '';
+        const strippedContent = textContent.trim();
 
-        if (textContent.trim() === "") {
+        if (!hasImage && strippedContent === "") {
+      
             alert("내용을 입력해주세요!");
             return;
         }
@@ -141,8 +144,21 @@ export const PopupDetail = () => {
             return match ? match[1] : null;
         }) || [];
 
-        const deleteImageUrls = originImageUrls?.filter(imageUrl => !newImageUrls.includes(imageUrl));
-        const addImageUrls = newImageUrls?.filter(imageUrl => !originImageUrls.includes(imageUrl));
+        // const deleteImageUrls = originImageUrls?.filter(imageUrl =>  newImageUrls && !newImageUrls.includes(imageUrl));
+        // const addImageUrls = newImageUrls?.filter(imageUrl => !originImageUrls.includes(imageUrl));
+
+        console.log("originImageUrls:", originImageUrls);
+        console.log("newImageUrls:", newImageUrls);
+
+        const deleteImageUrls = originImageUrls?.filter(imageUrl => {
+            console.log("Checking imageUrl in originImageUrls:", imageUrl);
+            return newImageUrls && !newImageUrls.includes(imageUrl);
+        }) || [];
+
+        const addImageUrls = newImageUrls.filter(imageUrl => {
+            console.log("Checking imageUrl in newImageUrls:", imageUrl);
+            return !originImageUrls?.includes(imageUrl);
+        }) || [];
 
         const payload = {
             popTitle: title,

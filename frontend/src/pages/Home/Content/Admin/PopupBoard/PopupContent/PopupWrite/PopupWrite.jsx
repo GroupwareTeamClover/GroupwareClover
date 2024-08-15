@@ -69,10 +69,13 @@ export const PopupWrite = () => {
         } else {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
-            const textContent = tempDiv.textContent || tempDiv.innerText || '';
+            const hasImage = tempDiv.querySelector('img') !== null;
+        const textContent = tempDiv.textContent || tempDiv.innerText || '';
+        const strippedContent = textContent.trim();
 
-            if (textContent.trim() === "") {
+        if (!hasImage && strippedContent === "") {
                 alert("내용을 입력해주세요!");
+                return;
             }
             if (!periodType) {
                 alert("공지기간을 선택해주세요!");
