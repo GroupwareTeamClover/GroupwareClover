@@ -104,33 +104,43 @@ export const List=({type})=>{
                 line.drafterSeq === sessionData.empSeq && line.stateName === '진행중'
             );
         }else if(type==='결재대기'){
-            //내가 결재라인에 포함되어 있고, 결재상태가 대기==1일때의 문서들, 문서상태가 진행중일때 (임시저장 제외하기 위함)
+            //내가 결재라인에 포함되어 있고, 결재상태가 대기==1 또는 보류==8일때의 문서들
+            //문서상태가 진행중일때 (임시저장 제외하기 위함)
             filteredApvline = list.apvline.filter(line =>
-                line.apverId === sessionData.empSeq && line.apvStatusCode === 1
+                line.apverId === sessionData.empSeq && (line.apvStatusCode === 1 || line.apvStatusCode === 8)
             );
             filteredDocument = list.document.filter(doc => 
-               filteredApvline.some(apv => apv.docSeq === doc.docSeq)
+               filteredApvline.some(apv => apv.docSeq === doc.docSeq) && doc.stateName === '진행중'
             );
     
         }else if(type==='결재예정'){
             //내가 결재라인에 포함되어 있고, 결재상태가 예정==2일때의 문서들
+            //문서상태가 진행중일 때
             filteredApvline = list.apvline.filter(line =>
                 line.apverId === sessionData.empSeq && line.apvStatusCode === 2
             );
             filteredDocument = list.document.filter(doc => 
-               filteredApvline.some(apv => apv.docSeq === doc.docSeq)
+               filteredApvline.some(apv => apv.docSeq === doc.docSeq) && doc.stateName === '진행중'
             );
             
         }else if(type==='참조/열람대기'){
-             //내가 참조라인에 포함되어 있고, 아직 읽지 않은 문서들
+            //참조자: 모든 상태의 문서를 확인할 수 있으나, 아직 읽지 않은 문서들만 포함
+            //열람자: 완료 또는 반려된 문서를 확인할 수 있으나, 아직 읽지 않은 문서들만 포함
+          
              filteredPartLine = list.participantsLineDTOs.filter(line =>
                 line.empSeq === sessionData.empSeq && line.readYN === "n"
             );
             filteredDocument = list.document.filter(doc => 
-                filteredPartLine.some(part => part.docSeq === doc.docSeq)
+                filteredPartLine.some(part => 
+                    part.docSeq === doc.docSeq && (
+                        (part.pcpDivision === 'r') || 
+                        (part.pcpDivision === 'v' && (doc.stateName === '완료' || doc.stateName === '반려'))
+                    )
+                )
             );
             
         }else if(type==='기안문서함'){
+            //백엔드 페이지네이션 필요
             //기안자가 나이고, 문서상태가 반려 또는 완료일 일 때
             filteredDocument = list.document.filter(line =>
                 (line.drafterSeq === sessionData.empSeq) && (line.stateName === '반려' || line.stateName === '완료')
@@ -143,6 +153,7 @@ export const List=({type})=>{
             );
             
         }else if(type==='결재문서함'){
+            //백엔드 페이지 네이션 필요
                 //내가 결재라인에 포함되어 있고, 결재상태가 완료(3) 또는 반려(4) 또는 중지(9)일때의 문서들
                 filteredApvline = list.apvline.filter(line =>
                     line.apverId === sessionData.empSeq && (line.apvStatusCode === 3 || line.apvStatusCode === 4 || line.apvStatusCode===9)
@@ -153,7 +164,7 @@ export const List=({type})=>{
 
            
         }else if(type==='참조/열람문서함'){
-               //내가 참조라인에 포함되어 있고, 아직 읽은 문서들
+               //백엔드 페이지 네이션 필요
                filteredPartLine = list.participantsLineDTOs.filter(line =>
                 line.empSeq === sessionData.empSeq && line.readYN === "y"
             );
@@ -169,6 +180,8 @@ export const List=({type})=>{
         setFilteredPartLines(filteredPartLine);
 
     }, [list])
+
+  
     
     // console.log(list);
 
@@ -229,6 +242,9 @@ export const List=({type})=>{
                                                 : ''}
                                                  {line.stateName === '완료' ?  <div className={styles.stateBox}>
                                                     <span className={styles.comstate}>{line.stateName}</span></div> 
+                                                : ''}
+                                                {line.stateName === '임시저장' ?  <div className={styles.stateBox}>
+                                                    <span className={styles.tempstate}>{line.stateName}</span></div> 
                                                 : ''}
 
                                             </td>
