@@ -40,7 +40,8 @@ export const Main=()=>{
         currentApverName:'',
         finalApverName:'',
         detailName:'',
-        stateName:''
+        stateName:'',
+        apvStateName:''
     }]);
 
     //랩
@@ -76,7 +77,7 @@ export const Main=()=>{
 
         //카드 == 현재결재자가 나인 문서들 넘겨야 할 정보들 (문서상태, 제목, 기안자, 기안일)
         filteredMainCard=list.document.filter(line=>
-            line.currentApverSeq ===sessionData.empSeq && line.stateName === '진행중'
+            line.currentApverSeq ===sessionData.empSeq && line.stateName === '진행중' && (line.apvStateName === '대기' || line.apvStateName==="보류")
         )
 
         //리스트 == 내가 기안자이고 문서상태가 진행중인 문서들
@@ -117,7 +118,8 @@ export const Main=()=>{
             <div className={styles.cardWrapper}>
                 <div className={styles.cardBox}>
                     {displayedCards.map((line, index) => (
-                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName}/>
+                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} 
+                            egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName} apvStateName={line.apvStateName}/>
                         ))}
                 </div>
                 <div className={styles.cardLine}>

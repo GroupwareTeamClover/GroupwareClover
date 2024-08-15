@@ -9,6 +9,11 @@ import { useNavigate } from 'react-router-dom';
 
 export const List=({type})=>{
     //type==기안진행,...사이드바 메뉴들...
+    /************페이지네이션**************/
+
+
+
+
     /************전체데이터준비**************/
     // const[typeCheck, setTypeCheck]=useState(type);
 
@@ -46,7 +51,6 @@ export const List=({type})=>{
     const [apvLineDTOs, setApvLineDTOs] = useState([]);
     // ParticipantsLineDTO 구성
     const [participantsLineDTOs, setParticipantsLineDTOs] = useState([]);
-    
     //랩
     const [list, setList]=useState({});
 
@@ -82,46 +86,61 @@ export const List=({type})=>{
     const [filteredApvLines, setFilteredApvLines] = useState([]);
     const [filteredPartLines, setFilteredPartLines] = useState([]);
 
+
     useEffect(()=>{
         if (!Array.isArray(list.document)) return; // 리스트가 배열이 아닐 때는 아무것도 하지 않음
         //변해야 하는 값
         let filteredDocument = [];
         let filteredApvline = [];
         let filteredPartLine = [];
+        let cpage=1;
+        let recordTotalCount;
+        let recordCountPerPage;
+        let naviCountPerPage;
+
         if(type==='기안진행'){
-            //기안자가 나이고, 문서상태가 진행중이라면
+            //기안자가 나이고, 문서상태가 진행중일 때 
             filteredDocument = list.document.filter(line =>
                 line.drafterSeq === sessionData.empSeq && line.stateName === '진행중'
             );
-            // console.log('기안진행 필터링 결과:', filteredList);
         }else if(type==='결재대기'){
-            //내가 결재라인에 포함되어 있고, 결재상태가 대기==1일때의 문서들
+            //내가 결재라인에 포함되어 있고, 결재상태가 대기==1 또는 보류==8일때의 문서들
+            //문서상태가 진행중일때 (임시저장 제외하기 위함)
             filteredApvline = list.apvline.filter(line =>
-                line.apverId === sessionData.empSeq && line.apvStatusCode === 1
+                line.apverId === sessionData.empSeq && (line.apvStatusCode === 1 || line.apvStatusCode === 8)
             );
             filteredDocument = list.document.filter(doc => 
-               filteredApvline.some(apv => apv.docSeq === doc.docSeq)
+               filteredApvline.some(apv => apv.docSeq === doc.docSeq) && doc.stateName === '진행중'
             );
     
         }else if(type==='결재예정'){
             //내가 결재라인에 포함되어 있고, 결재상태가 예정==2일때의 문서들
+            //문서상태가 진행중일 때
             filteredApvline = list.apvline.filter(line =>
                 line.apverId === sessionData.empSeq && line.apvStatusCode === 2
             );
             filteredDocument = list.document.filter(doc => 
-               filteredApvline.some(apv => apv.docSeq === doc.docSeq)
+               filteredApvline.some(apv => apv.docSeq === doc.docSeq) && doc.stateName === '진행중'
             );
             
         }else if(type==='참조/열람대기'){
-             //내가 참조라인에 포함되어 있고, 아직 읽지 않은 문서들
+            //참조자: 모든 상태의 문서를 확인할 수 있으나, 아직 읽지 않은 문서들만 포함
+            //열람자: 완료 또는 반려된 문서를 확인할 수 있으나, 아직 읽지 않은 문서들만 포함
+          
              filteredPartLine = list.participantsLineDTOs.filter(line =>
                 line.empSeq === sessionData.empSeq && line.readYN === "n"
             );
             filteredDocument = list.document.filter(doc => 
-                filteredPartLine.some(part => part.docSeq === doc.docSeq)
+                filteredPartLine.some(part => 
+                    part.docSeq === doc.docSeq && (
+                        (part.pcpDivision === 'r') || 
+                        (part.pcpDivision === 'v' && (doc.stateName === '완료' || doc.stateName === '반려'))
+                    )
+                )
             );
             
         }else if(type==='기안문서함'){
+            //백엔드 페이지네이션 필요
             //기안자가 나이고, 문서상태가 반려 또는 완료일 일 때
             filteredDocument = list.document.filter(line =>
                 (line.drafterSeq === sessionData.empSeq) && (line.stateName === '반려' || line.stateName === '완료')
@@ -134,6 +153,7 @@ export const List=({type})=>{
             );
             
         }else if(type==='결재문서함'){
+            //백엔드 페이지 네이션 필요
                 //내가 결재라인에 포함되어 있고, 결재상태가 완료(3) 또는 반려(4) 또는 중지(9)일때의 문서들
                 filteredApvline = list.apvline.filter(line =>
                     line.apverId === sessionData.empSeq && (line.apvStatusCode === 3 || line.apvStatusCode === 4 || line.apvStatusCode===9)
@@ -144,7 +164,7 @@ export const List=({type})=>{
 
            
         }else if(type==='참조/열람문서함'){
-               //내가 참조라인에 포함되어 있고, 아직 읽은 문서들
+               //백엔드 페이지 네이션 필요
                filteredPartLine = list.participantsLineDTOs.filter(line =>
                 line.empSeq === sessionData.empSeq && line.readYN === "y"
             );
@@ -160,6 +180,8 @@ export const List=({type})=>{
         setFilteredPartLines(filteredPartLine);
 
     }, [list])
+
+  
     
     // console.log(list);
 
@@ -202,12 +224,30 @@ export const List=({type})=>{
                                             <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{formatDate(line.finishDate)}</td>
                                             <td className={`${styles.td3} ${styles.tablerow}`}>{line.detailName}</td>
-                                            <td className={`${styles.td4} ${styles.tablerow}`}>{line.egcYn}</td>
-                                            <td className={`${styles.td5} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
+                                            <td className={`${styles.td4} ${styles.tablerow}`}>
+                                                {line.egcYn === 'n' ? '' : <div className={styles.stateBox}>
+                                                    <span className={styles.egcstate}>긴급</span></div> 
+                                               }
+                                            </td>
+                                            <td className={`${styles.td5} ${styles.tablerow} ${styles.title}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
                                             <td className={`${styles.td6} ${styles.tablerow}`}>{line.drafterName}</td>
                                             <td className={`${styles.td7} ${styles.tablerow}`}>{line.currentApverName}</td>
                                             <td className={`${styles.td8} ${styles.tablerow}`}>{line.finalApverName}</td>
-                                            <td className={`${styles.td9} ${styles.tablerow}`}>{line.stateName}</td>
+                                            <td className={`${styles.td9} ${styles.tablerow}`}>
+                                                {line.stateName === '진행중' ?  <div className={styles.stateBox}>
+                                                    <span className={styles.ingstate}>{line.stateName}</span></div> 
+                                                : ''}
+                                                 {line.stateName === '반려' ?  <div className={styles.stateBox}>
+                                                    <span className={styles.rejectstate}>{line.stateName}</span></div> 
+                                                : ''}
+                                                 {line.stateName === '완료' ?  <div className={styles.stateBox}>
+                                                    <span className={styles.comstate}>{line.stateName}</span></div> 
+                                                : ''}
+                                                {line.stateName === '임시저장' ?  <div className={styles.stateBox}>
+                                                    <span className={styles.tempstate}>{line.stateName}</span></div> 
+                                                : ''}
+
+                                            </td>
                                         </tr>
                                     ))
                                 ) : (
@@ -225,22 +265,3 @@ export const List=({type})=>{
 }
 
 
-
-        //  const [refParticipants, setRefParticipants]  = useState({
-        //     lineSeq: 0,
-        //     empSeq: 0,
-        //     pcpDivision: '',
-        //     readYN: '',
-        //     readDate: null,
-        //     docSeq: 0
-        // });
-
-
-        // const [vieParticipants, setVieParticipants] =useState({
-        //     lineSeq: 0,
-        //     empSeq: 0,
-        //     pcpDivision: '',
-        //     readYN: '',
-        //     readDate: null,
-        //     docSeq: 0
-        // })
