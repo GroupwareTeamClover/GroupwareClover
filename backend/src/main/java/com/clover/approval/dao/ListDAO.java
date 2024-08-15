@@ -15,20 +15,17 @@ public class ListDAO {
 	
 	@Autowired
 	private SqlSession mybatis;
-	
-	  public List<DocumentDTO> getFinishedDocuments(int page, int size) {
-	        int offset = (page - 1) * size;
 
-	        // 파라미터 맵 생성
-	        Map<String, Object> params = new HashMap<>();
-	        params.put("offset", offset);
-	        params.put("limit", size);
-
-	        return mybatis.selectList("DocumentList.findFinishedDocuments", params);
-	    }
-
-	    public int getTotalFinishedDocumentsCount() {
-	        return mybatis.selectOne("DocumentList.countFinishedDocuments");
-	    }
+	public int getRecordTotalCount(int empSeq) {
+	   return mybatis.selectOne("DocumentList.countFinishedDocuments",empSeq);
+	}
+	    
+	 public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end) {
+	        Map<String, Integer> map = new HashMap<>();
+	        map.put("empSeq", empSeq);
+	        map.put("start", start);
+	        map.put("end", end);
+	        return mybatis.selectList("DocumentList.getFinishedPageDocuments", map);
+	 }
 
 }

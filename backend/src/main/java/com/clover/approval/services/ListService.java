@@ -13,13 +13,15 @@ public class ListService {
 		@Autowired
 		public ListDAO listDAO;
 		
-		//기안진행-페이지별
-		public List<DocumentDTO> getFinishedDocuments(int page, int size) {
-		  int offset = (page - 1) * size;
-		  return listDAO.getFinishedDocuments(offset, size);
-		}
+	
 		//기안진행-총레코드 수
-		public int getTotalFinishedDocumentsCount() {
-		    return listDAO.getTotalFinishedDocumentsCount();
+		public int getRecordTotalCount(int empSeq) {
+		    return listDAO.getRecordTotalCount(empSeq);
+		}
+		
+		//기안진행-페이지별 리스트
+		public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end) {
+		   // MyBatis Mapper에게 start와 end 값을 넘겨 해당 페이지의 문서 리스트.
+		   return listDAO.getFinishedPageDocuments(empSeq, start, end);
 		}
 }
