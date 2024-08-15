@@ -22,7 +22,6 @@ export const MemMain = () => {
     const [checkedMems, setCheckedMems] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
-    const [checkedOut, setCheckedOut] = useState([]); // 퇴사한 직원 관리
 
     // select 4가지 useState("100")으로 설정해주기
     const [deptCode, setDeptCode] = useState("100");
@@ -74,6 +73,7 @@ export const MemMain = () => {
             const processedData = processCountData(resp.data);
             setCountMem(processedData);
             setstoremembers(false);
+            console.log(resp.data)
         });
     },[storemembers]);
 
@@ -100,38 +100,39 @@ export const MemMain = () => {
         window.scrollTo(0,320); // 페이지 변경 시 스크롤 맨 위로 이동
     };
 
-     // 전체 체크박스 클릭 처리
-     const handleCheckAll = (e) => {
+    // 전체 체크박스 클릭 처리
+    const handleCheckAll = (e) => {
         const checked = e.target.checked;
-
+    
         const enabledValues = filtered
             .slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
             .map(mem => mem.empSeq);
-
+    
         checkboxRef.current.forEach((checkbox, i) => {
             const mem = filtered[i + currentPage * PER_PAGE];
             if (checkbox && mem.empStateCode !== 0) {
                 checkbox.checked = checked;
             }
         });
-
+    
         setCheckedMems(checked ? enabledValues.filter((empSeq, i) => {
             const mem = filtered[i + currentPage * PER_PAGE];
             return mem.empStateCode !== 0;
         }) : []);
     };
 
-   // 개별 체크박스 클릭 처리
-   const handleCheckBox = (e) => {
-    const { value, checked } = e.target;
-    setCheckedMems(prev => {
-        if (checked) {
-            return [...prev, value];
-        } else {
-            return prev.filter(prev => prev != value);
-        }
-    });
-};
+    // 개별 체크박스 클릭 처리
+    const handleCheckBox = (e) => {
+        const {value, checked} = e.target;
+        setCheckedMems(prev => {
+            if(checked){
+                return [...prev, value];
+            } else {
+                return prev.filter(prev => prev != value); 
+            }
+        });
+    };
+
     // 체크박스 리셋
     const resetCheckboxes = () => {
         setCheckedMems([]); // 선택된 체크박스 초기화
@@ -142,7 +143,6 @@ export const MemMain = () => {
             }
         });
     };
-
 
     // 모달 설정 -------------------------------------------------
     const [modalState, setModalState] = useState("");
@@ -219,14 +219,7 @@ export const MemMain = () => {
         setCurrentPage(0); // 페이지를 처음으로 이동
     };
     
-     // 체크된 사원 중 empStateCode가 2인 직원이 있는지 확인하는 함수
-    const hasCheckedOutEmp = () => {
-        return checkedMems.some(empSeq => {
-            const emp = filtered.find(mem => mem.empSeq === empSeq);
-            return emp && emp.empStateCode === 2;
-        });
-    };
-
+    
     
 
     return (
@@ -249,22 +242,14 @@ export const MemMain = () => {
         </div>
         <div className={styles.funcBtn}>
             <div className={styles.col_button}>
-            <select name='status' onChange={handleSelectChange}>
-                        {hasCheckedOutEmp() ? (
-                            <>
-                                <option value="">상태변경</option>
-                            <option value="계정상태변경">계정상태변경</option>
-                            </>
-                        ) : (
-                            <>
-                                <option value="">상태변경</option>
-                                <option value="부서변경">부서변경</option>
-                                <option value="직위변경">직위변경</option>
-                                <option value="사용자그룹변경">사용자그룹변경</option>
-                                <option value="계정상태변경">계정상태변경</option>
-                            </>
-                        )}
-                    </select>
+                {/* <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>가입 승인</button> */}
+                <select name='status' onChange={handleSelectChange}>
+                    <option value="">상태변경</option>
+                    <option value="부서변경">부서변경</option>
+                    <option value="직위변경">직위변경</option>
+                    <option value="사용자그룹변경">사용자그룹변경</option>
+                    <option value="계정상태변경">계정상태변경</option>
+                </select>
                 <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
             </div>         
             
@@ -337,7 +322,7 @@ export const MemMain = () => {
                                         <option value='100'>계정상태</option>
                                         <option value='1'>재직중</option>
                                         <option value='2'>퇴사</option>
-                                        {/* <option value='0'>가입대기</option> */}
+                                        <option value='0'>가입대기</option>
                                         {/* <option>휴면</option> */}
                                     </select>
                                 </td>
@@ -401,6 +386,7 @@ export const MemMain = () => {
                                     </td>
                                     <td className={styles.theadtd}>
                                         {
+                                        mem.empStateCode === 0 ? '가입대기': 
                                         mem.empStateCode === 1 ? '재직중': 
                                         mem.empStateCode === 2 ? '퇴사':  '알수없음'
 
