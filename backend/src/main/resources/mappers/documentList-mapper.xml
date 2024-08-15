@@ -4,7 +4,19 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="DocumentList">
 	
-	<select id="selectAllProgressCount">
-		select count(*)
-	</select>
+	<select id="findFinishedDocuments" resultType="com.clover.approval.dto.DocumentDTO">
+        SELECT *
+        FROM document
+         WHERE doc_state = '완료' or doc_state = '반려'
+        ORDER BY writeDate DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countFinishedDocuments" resultType="int">
+        SELECT COUNT(*)
+        FROM document
+        WHERE doc_state = '완료' or doc_state = '반려'
+    </select>
+    
+    
 </mapper>
