@@ -16,7 +16,7 @@
 .container .headbox{
 	display: flex;
 }
-.container h3 {
+.container>h3 {
 	font-size: 20px;
 	line-height: 34px;
 	font-weight: 300;
@@ -167,9 +167,9 @@
     margin-top: 15px;
     padding: 10px;
     padding-left: 90px;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #d3d3d33d;
     border-radius: 5px;
-    background-color: pink;
+    background-color: rgba(231, 218, 220, 0.315);
 	margin-bottom: 20px;
 }
 

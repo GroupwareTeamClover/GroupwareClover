@@ -148,6 +148,7 @@ export const PopupWindow = ({ setShowPopup }) => {
                                         }
                                         .file-content {
                                             padding: 10px;
+                                            overflow:auto;
                                         }
                                         .footer {
                                             height: 10%;

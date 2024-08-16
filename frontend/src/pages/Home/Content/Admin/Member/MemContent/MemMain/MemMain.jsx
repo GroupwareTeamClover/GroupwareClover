@@ -36,16 +36,16 @@ export const MemMain = () => {
         data.forEach(item => {
             switch(item.EMP_STATE_CODE) {
                 case 0:  // 가입대기
-                    counts.prev = item['COUNT(*)'];
+                    counts.prev = item['COUNT'];
                     break;
                 case 1:  // 재직중 (정상1)
-                    counts.normal = item['COUNT(*)'];
+                    counts.normal = item['COUNT'];
                     break;
                 case 2:  // 퇴사
-                    counts.out = item['COUNT(*)'];
+                    counts.out = item['COUNT'];
                     break;
                 case 3:  // 휴직 (정상2)
-                    counts.rest = item['COUNT(*)'];
+                    counts.rest = item['COUNT'];
                     break;
                 default:
                     break;
@@ -170,54 +170,111 @@ export const MemMain = () => {
     };
 
 
-    // 이름 검색. 셀렉트 선택
-    const handleSearch = (e) => {
-        const { name, value } = e.target;
+    // 상태변경 옵션 조건부 렌더링
+    const renderStatusOptions = () => {
+        const hasRetired = checkedMems.some(memSeq => {
+            const mem = members.find(m => m.empSeq == memSeq);
+            return mem && mem.empStateCode === 2; // empStateCode가 2인 직원 (퇴사자) 확인
+        });
 
-        // 선택한 select의 상태를 업데이트하고, 다른 select는 초기화
-        if (name === 'deptCode') {
-            setDeptCode(value);
-            setRoleCode("100");
-            setWorkerStateCode("100");
-            setEmpStateCode("100");
-        } else if (name === 'roleCode') {
-            setRoleCode(value);
-            setDeptCode("100");
-            setWorkerStateCode("100");
-            setEmpStateCode("100");
-        } else if (name === 'workerStateCode') {
-            setWorkerStateCode(value);
-            setDeptCode("100");
-            setRoleCode("100");
-            setEmpStateCode("100");
-        } else if (name === 'empStateCode') {
-            setEmpStateCode(value);
-            setDeptCode("100");
-            setRoleCode("100");
-            setWorkerStateCode("100");
+        if (hasRetired) {
+            return (
+                <option value="계정상태변경">계정상태변경</option>
+            );
+        } else {
+            return (
+                <>
+                    <option value="부서변경">부서변경</option>
+                    <option value="직위변경">직위변경</option>
+                    <option value="사용자그룹변경">사용자그룹변경</option>
+                    <option value="계정상태변경">계정상태변경</option>
+                </>
+            );
         }
-    
-        if (value === "") {
+    };
+
+
+    // 이름 검색 handleNameSearch
+    const [keyword, setKeyword]=useState('');
+    const handleNameSearch =() =>{
+        if (keyword === "") {
             // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
             setFiltered(members);
-        } 
-        else if(value=== "100"){
-            setFiltered(members)
-        }
-        else {
+            setDeptCode("100");
+            setRoleCode("100");
+            setWorkerStateCode("100");
+            setEmpStateCode("100");
+            empNameRef.current.value = '';
+        } else {
             // 검색어가 있는 경우 필터링
-            let result;
-            if (name === "empName") {
-                result = members.filter((data) => data[name].includes(value));
-            } else {
-                
-                result = members.filter((data) => data[name] === parseInt(value));
-                
-            }
+            let result = members.filter((data) => data.empName.includes(keyword));
             setFiltered(result);
+            setDeptCode("100");
+            setRoleCode("100");
+            setWorkerStateCode("100");
+            setEmpStateCode("100");
+
+            }
+        
+        setCurrentPage(0);
+        
+    }
+
+
+    const empNameRef = useRef(null);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+    
+        // 선택한 select의 상태를 업데이트
+        if (name === 'deptCode') {
+            setDeptCode(value);
+        } else if (name === 'roleCode') {
+            setRoleCode(value);
+        } else if (name === 'workerStateCode') {
+            setWorkerStateCode(value);
+        } else if (name === 'empStateCode') {
+            setEmpStateCode(value);
         }
-        setCurrentPage(0); // 페이지를 처음으로 이동
+    
+        // input 필드의 값을 초기화
+        if (empNameRef.current) {
+            empNameRef.current.value = '';
+        }
+    
+       
+    // 필터링을 호출하여 결과를 업데이트
+    applyFilters();
     };
+    
+    // 셀렉트 선택
+    const applyFilters = () => {
+        let result = members;
+
+        // 필터 조건에 따라 데이터 필터링
+        if (deptCode !== "100") {
+            result = result.filter(data => data.deptCode === parseInt(deptCode));
+        }
+        if (roleCode !== "100") {
+            result = result.filter(data => data.roleCode === parseInt(roleCode));
+        }
+        if (workerStateCode !== "100") {
+            result = result.filter(data => data.workerStateCode === parseInt(workerStateCode));
+        }
+        if (empStateCode !== "100") {
+            result = result.filter(data => data.empStateCode === parseInt(empStateCode));
+        }
+        
+        setFiltered(result);
+        setCurrentPage(0); // 페이지를 처음으로 이동
+       
+            
+    };
+
+    useEffect(() => {
+        applyFilters();
+    }, [deptCode, roleCode, workerStateCode, empStateCode, members]);
+    
     
     
     
@@ -245,10 +302,11 @@ export const MemMain = () => {
                 {/* <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>가입 승인</button> */}
                 <select name='status' onChange={handleSelectChange}>
                     <option value="">상태변경</option>
-                    <option value="부서변경">부서변경</option>
+                    {renderStatusOptions()}
+                    {/* <option value="부서변경">부서변경</option>
                     <option value="직위변경">직위변경</option>
                     <option value="사용자그룹변경">사용자그룹변경</option>
-                    <option value="계정상태변경">계정상태변경</option>
+                    <option value="계정상태변경">계정상태변경</option> */}
                 </select>
                 <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
             </div>         
@@ -259,14 +317,17 @@ export const MemMain = () => {
                     type="text"
                     placeholder=" 사원 이름 검색"
                     name="empName"
+                    ref={empNameRef}
+                    value={keyword} 
+                    onChange={(e) => setKeyword(e.target.value)} // 상태 업데이트
                     onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                            handleSearch(e);
+                            handleNameSearch();
                         }
                     }}
                     className={styles.searchInput}
                 />
-                <button onClick={(e) => handleSearch(e)}>
+                <button onClick={handleNameSearch}>
                     <FaSearch className={styles.searchLogo} />
                 </button>
             </div>
@@ -281,7 +342,7 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}><input type="checkbox" name='checkedAll' onClick={handleCheckAll} ref={allCheckRef}></input></td>
                                 <td className={styles.theadtd}>이름</td>
                                 <td className={styles.theadtd}>
-                                    <select name='deptCode' value={deptCode} onChange={handleSearch}>
+                                    <select name='deptCode' value={deptCode} onChange={handleInputChange}>
                                         <option value='100'>부서</option>
                                         <option value='1'>총무</option> 
                                         <option value='2'>인사</option> 
@@ -292,7 +353,7 @@ export const MemMain = () => {
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name='roleCode' value={roleCode} onChange={handleSearch}>
+                                    <select name='roleCode' value={roleCode} onChange={handleInputChange}>
                                         <option value='100'>직위</option>
                                         <option value='1'>사장</option> 
                                         <option value='2'>부사장</option> 
@@ -307,7 +368,7 @@ export const MemMain = () => {
                                     </select>   
                                 </td>
                                 <td className={styles.theadtd}>
-                                    <select name="workerStateCode" value={workerStateCode} onChange={handleSearch}>
+                                    <select name="workerStateCode" value={workerStateCode} onChange={handleInputChange}>
                                         <option value='100'>사용자그룹</option>
                                         <option value='1'>정규직</option> 
                                         <option value='2'>비정규직</option> 
@@ -318,7 +379,7 @@ export const MemMain = () => {
                                 </td>
                                 <td className={styles.theadtd}>이메일</td>
                                 <td className={styles.theadtd}>
-                                    <select name='empStateCode' value={empStateCode} onChange={handleSearch}>
+                                    <select name='empStateCode' value={empStateCode} onChange={handleInputChange}>
                                         <option value='100'>계정상태</option>
                                         <option value='1'>재직중</option>
                                         <option value='2'>퇴사</option>

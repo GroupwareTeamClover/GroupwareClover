@@ -155,7 +155,7 @@ export const PopupWrite = () => {
 
     const handleCancel = () => {
         const confirm = window.confirm("글 작성을 취소하시겠습니까?");
-        if(confirm){navi(-1)}
+        if(confirm){  navi('/popup', {state:{type: '팝업공지글 목록'}}); }
         else{return false}
     }
 
