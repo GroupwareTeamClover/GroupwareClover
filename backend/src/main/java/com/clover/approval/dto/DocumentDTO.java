@@ -24,7 +24,7 @@ public class DocumentDTO {
     private String finalApverName;
     private String detailName;
     private String stateName;
-    
+    private String pcpDivision;
 
 
     public DocumentDTO() {
@@ -73,7 +73,8 @@ public class DocumentDTO {
   	//list용 생성자
   	 public DocumentDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
              Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq,
-             String title, String drafterName, String currentApverName, String finalApverName, String detailName, String stateName) {
+             String title, String drafterName, String currentApverName, String finalApverName, String detailName, String stateName,
+             String pcpDivision) {
 		super();
 		this.docSeq = docSeq;
 		this.docDetailCode = docDetailCode;
@@ -91,6 +92,7 @@ public class DocumentDTO {
 		this.finalApverName=finalApverName;
 		this.detailName=detailName;
 		this.stateName=stateName;
+		this.pcpDivision=pcpDivision;
   	 }
   	
 
@@ -247,7 +249,14 @@ public class DocumentDTO {
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
 	}
-	
+
+	public String getPcpDivision() {
+		return pcpDivision;
+	}
+
+	public void setPcpDivision(String pcpDivision) {
+		this.pcpDivision = pcpDivision;
+	}
 	
 	
 

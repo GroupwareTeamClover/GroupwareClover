@@ -14,14 +14,34 @@ public class ListService {
 		public ListDAO listDAO;
 		
 	
-		//기안진행-총레코드 수
-		public int getRecordTotalCount(int empSeq) {
-		    return listDAO.getRecordTotalCount(empSeq);
+		//총레코드 수
+		public int getRecordTotalCount(String type, int empSeq) {
+			if(type.equals("기안문서함")) {
+				return listDAO.getFinishedRecordTotalCount(empSeq);
+			}else if(type.equals("임시문서함")) {
+				return listDAO.getTempRecordTotalCount(empSeq);
+			}else if(type.equals("결재문서함")) {
+				return listDAO.getApprovalRecordTotalCount(empSeq);
+			}else if(type.equals("참조/열람문서함")) {
+				return listDAO.getPartRecordTotalCount(empSeq);
+			}else {
+				return 0;
+			}
 		}
 		
-		//기안진행-페이지별 리스트
-		public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end) {
-		   // MyBatis Mapper에게 start와 end 값을 넘겨 해당 페이지의 문서 리스트.
-		   return listDAO.getFinishedPageDocuments(empSeq, start, end);
+		//페이지별 리스트
+		public List<DocumentDTO> getPageDocuments(String type, int empSeq, int start, int end) {
+			if(type.equals("기안문서함")) {
+				 return listDAO.getFinishedPageDocuments(empSeq, start, end);
+			}else if(type.equals("임시문서함")) {
+				return listDAO.getTempPageDocuments(empSeq, start, end);
+			}else if(type.equals("결재문서함")) {
+				return listDAO.getApprovalPageDocuments(empSeq, start, end);
+			}else if(type.equals("참조/열람문서함")) {
+				return listDAO.getPartPageDocuments(empSeq, start, end);
+			}else {
+				return null;
+			}
+		  
 		}
 }

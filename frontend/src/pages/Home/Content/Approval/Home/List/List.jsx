@@ -34,6 +34,20 @@ export const List = ({ type }) => {
     const [needPrev, setNeedPrev] = useState(false);
     const [needNext, setNeedNext] = useState(false);
 
+    //페이지네이션 함수
+    const calculatePagination = (totalRecords) => {
+        const totalPages = Math.ceil(totalRecords / recordCountPerPage);
+        setRecordTotalCount(totalRecords);
+        setPageTotalCount(totalPages);
+
+        const start = Math.floor((cpage - 1) / naviCountPerPage) * naviCountPerPage + 1;
+        const end = Math.min(start + naviCountPerPage - 1, totalPages);
+        setStartNavi(start);
+        setEndNavi(end);
+        setNeedPrev(start > 1);
+        setNeedNext(end < totalPages);
+    };
+
     /************전체데이터준비**************/
     const [loading, setLoading] = useState(true);
     const navi = useNavigate();
@@ -111,17 +125,7 @@ export const List = ({ type }) => {
                     setFilteredApvLines(filteredApvline);
                     setFilteredPartLines(filteredPartLine);
 
-                    const totalRecords = filteredDocument.length;
-                    const totalPages = Math.ceil(totalRecords / recordCountPerPage);
-                    setRecordTotalCount(totalRecords);
-                    setPageTotalCount(totalPages);
-
-                    const start = Math.floor((cpage - 1) / naviCountPerPage) * naviCountPerPage + 1;
-                    const end = Math.min(start + naviCountPerPage - 1, totalPages);
-                    setStartNavi(start);
-                    setEndNavi(end);
-                    setNeedPrev(start > 1);
-                    setNeedNext(end < totalPages);
+                    calculatePagination(filteredDocument.length); 
 
                     setPaginatedDocuments(filteredDocument.slice(
                         (cpage - 1) * recordCountPerPage,
@@ -148,19 +152,103 @@ export const List = ({ type }) => {
                     const totalRecords = resp.data.recordTotalCount;
                     const documents = resp.data.documents;
 
-                    const totalPages = Math.ceil(totalRecords / recordCountPerPage);
-                    setRecordTotalCount(totalRecords);
+
                     setDocumentDTOs(documents);
                     setPaginatedDocuments(documents);
 
-                    const start = Math.floor((cpage - 1) / naviCountPerPage) * naviCountPerPage + 1;
-                    const end = Math.min(start + naviCountPerPage - 1, totalPages);
-                    setPageTotalCount(totalPages);
-                    setStartNavi(start);
-                    setEndNavi(end);
-                    setNeedPrev(start > 1);
-                    setNeedNext(end < totalPages);
+                    calculatePagination(totalRecords); 
+                }).catch((error) => {
+                    console.error('Error fetching documents:', error);
+                }).finally(() => {
+                    setLoading(false);  // 로딩 상태 해제
+                });
+        }
+    }, [type, cpage, recordCountPerPage, naviCountPerPage]);
 
+    
+    //임시문서함 (백엔드 페이지네이션)
+    useEffect(() => {
+        if (type === '임시문서함') {
+            setLoading(true);  // 로딩 상태 설정
+            axios.get(`${BaseUrl()}/approval/list/temp`, {
+                params: {
+                    cpage: cpage,  // 페이지 번호 전달
+                    recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
+                    naviCountPerPage: naviCountPerPage  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                }
+            })
+                .then((resp) => {
+                    const totalRecords = resp.data.recordTotalCount;
+                    const documents = resp.data.documents;
+
+                    setDocumentDTOs(documents);
+                    setPaginatedDocuments(documents);
+
+                    calculatePagination(totalRecords); 
+                }).catch((error) => {
+                    console.error('Error fetching documents:', error);
+                }).finally(() => {
+                    setLoading(false);  // 로딩 상태 해제
+                });
+        }
+    }, [type, cpage, recordCountPerPage, naviCountPerPage]);
+
+    //결재문서함 (백엔드 페이지네이션)
+    useEffect(() => {
+        if (type === '결재문서함') {
+            setLoading(true);  // 로딩 상태 설정
+            axios.get(`${BaseUrl()}/approval/list/approval`, {
+                params: {
+                    cpage: cpage,  // 페이지 번호 전달
+                    recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
+                    naviCountPerPage: naviCountPerPage  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                }
+            })
+                .then((resp) => {
+                    const totalRecords = resp.data.recordTotalCount;
+                    const documents = resp.data.documents;
+
+                    setDocumentDTOs(documents);
+                    setPaginatedDocuments(documents);
+
+                    calculatePagination(totalRecords); 
+                }).catch((error) => {
+                    console.error('Error fetching documents:', error);
+                }).finally(() => {
+                    setLoading(false);  // 로딩 상태 해제
+                });
+        }
+    }, [type, cpage, recordCountPerPage, naviCountPerPage]);
+
+
+    //참조/열람문서함 (백엔드 페이지네이션)
+    useEffect(() => {
+        if (type === '참조/열람문서함') {
+            setLoading(true);  // 로딩 상태 설정
+            axios.get(`${BaseUrl()}/approval/list/part`, {
+                params: {
+                    cpage: cpage,  // 페이지 번호 전달
+                    recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
+                    naviCountPerPage: naviCountPerPage  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                }
+            })
+                .then((resp) => {
+                    console.log(resp)  
+                    const totalRecords = resp.data.recordTotalCount;
+                    const documents = resp.data.documents;
+
+                    // documents 배열에 participantType 추가
+                    const updatedDocuments = documents.map(doc => {
+                        return {
+                            ...doc,
+                            participantType: doc.pcpDivision === 'r' ? '참조' : '열람'
+                        };
+                    });
+
+                    setDocumentDTOs(updatedDocuments);
+                    setPaginatedDocuments(updatedDocuments);
+
+                    calculatePagination(totalRecords); 
                 }).catch((error) => {
                     console.error('Error fetching documents:', error);
                 }).finally(() => {

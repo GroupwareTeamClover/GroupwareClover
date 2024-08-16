@@ -407,7 +407,7 @@ export const DetailDocument = ({type}) => {
                                 <> 
                                     {Page===1 &&(
                                         <>
-                                            <div className={styles.header}>반려 사유</div>
+                                            <div className={styles.modalheader}>반려 사유</div>
                                             <div className={styles.inputBox}>
                                                 <input type="text" placeholder="반려 사유를 입력해주세요." className={styles.inputcss} onChange={handleModalInput}></input>
                                             </div>

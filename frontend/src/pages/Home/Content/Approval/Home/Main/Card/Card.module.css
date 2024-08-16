@@ -27,6 +27,7 @@
 
 
 .stateBox, .titleBox, .approvalBox{
+    
     flex: 1.8;
     display: flex;
     align-items: center;
