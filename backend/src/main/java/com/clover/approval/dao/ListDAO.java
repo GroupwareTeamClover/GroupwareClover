@@ -17,15 +17,21 @@ public class ListDAO {
 	private SqlSession mybatis;
 	
 	//기안문서함
-	public int getFinishedRecordTotalCount(int empSeq) {
-	   return mybatis.selectOne("DocumentList.countFinishedDocuments",empSeq);
+	public int getFinishedRecordTotalCount(int empSeq, String searchType, String keyword) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("empSeq", empSeq);
+        map.put("searchType", searchType);
+        map.put("keyword", keyword);
+	   return mybatis.selectOne("DocumentList.countFinishedDocuments",map);
 	}
 	    
-	 public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end) {
-	        Map<String, Integer> map = new HashMap<>();
+	 public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end, String searchType, String keyword) {
+	        Map<String, Object> map = new HashMap<>();
 	        map.put("empSeq", empSeq);
 	        map.put("start", start);
 	        map.put("end", end);
+	        map.put("searchType", searchType);
+	        map.put("keyword", keyword);
 	        return mybatis.selectList("DocumentList.getFinishedPageDocuments", map);
 	 }
 

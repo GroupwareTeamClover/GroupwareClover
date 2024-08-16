@@ -15,9 +15,9 @@ public class ListService {
 		
 	
 		//총레코드 수
-		public int getRecordTotalCount(String type, int empSeq) {
+		public int getRecordTotalCount(String type, int empSeq, String searchType, String keyword) {
 			if(type.equals("기안문서함")) {
-				return listDAO.getFinishedRecordTotalCount(empSeq);
+				return listDAO.getFinishedRecordTotalCount(empSeq, searchType, keyword);
 			}else if(type.equals("임시문서함")) {
 				return listDAO.getTempRecordTotalCount(empSeq);
 			}else if(type.equals("결재문서함")) {
@@ -30,9 +30,9 @@ public class ListService {
 		}
 		
 		//페이지별 리스트
-		public List<DocumentDTO> getPageDocuments(String type, int empSeq, int start, int end) {
+		public List<DocumentDTO> getPageDocuments(String type, int empSeq, int start, int end, String searchType, String keyword) {
 			if(type.equals("기안문서함")) {
-				 return listDAO.getFinishedPageDocuments(empSeq, start, end);
+				 return listDAO.getFinishedPageDocuments(empSeq, start, end, searchType, keyword);
 			}else if(type.equals("임시문서함")) {
 				return listDAO.getTempPageDocuments(empSeq, start, end);
 			}else if(type.equals("결재문서함")) {

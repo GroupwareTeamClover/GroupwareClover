@@ -72,8 +72,8 @@
 }
 
 .headerText{
-    margin-left: 24px;
-    letter-spacing: -2px;
+    padding-left: 12px;
+    letter-spacing: -1px;
 }
 
 .tableWrapper{
