@@ -20,8 +20,6 @@ public class EmployeeService {
 
     /** 로그인 **/
     public EmployeeDTO SignIn(EmployeeDTO dto) {
-        System.out.println("id ==== " + dto.getEmpId());
-        System.out.println("pw ==== " + dto.getEmpPw());
         dto.setEmpPw(sha512.getSHA512(dto.getEmpPw()));
         return employeeDAO.SignIn(dto);
     }

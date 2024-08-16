@@ -100,9 +100,8 @@ public class DocumentController {
 	//select-양식 정보
 	@GetMapping("/{id}/{type}")
 	public ResponseEntity<Map<String,Object>> getDocTypeBySeq(@PathVariable int id, @PathVariable String type, @RequestParam String table){
-//		System.out.println(type);
-//		System.out.println(table);
 		Map<String, Object> map =documentService.getDocTypeBySeq(id, table);
+		System.out.println(map);
 		return ResponseEntity.ok(map);
 	}
 	

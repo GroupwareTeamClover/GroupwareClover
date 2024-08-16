@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { useApprovalStore } from '../../../../../../../store/approvalStore'; 
 
-export const Card= ({stateName, title, drafterName, writeDate, egcYn, seq, detailName}) =>{
+export const Card= ({stateName, title, drafterName, writeDate, egcYn, seq, detailName, apvStateName}) =>{
     const navi = useNavigate();
 
     // 날짜 변환 함수
@@ -20,7 +20,8 @@ export const Card= ({stateName, title, drafterName, writeDate, egcYn, seq, detai
         <div className={styles.container}>
              <div className={styles.card}> 
                     <div className={styles.stateBox}>
-                        <span className={styles.state}>{stateName}</span>
+                        {apvStateName==='대기' && <span className={styles.state}>대기</span>}
+                        {apvStateName==='보류' && <span className={styles.state}>보류</span>}
                     </div>
 
                     <div className={styles.titleBox}>

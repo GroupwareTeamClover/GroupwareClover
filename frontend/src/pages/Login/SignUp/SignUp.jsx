@@ -13,7 +13,6 @@ export const SignUp = ({setSignUpState}) => {
     empBirth: "",
     empGender: "",
     empTel: "",
-    empAddress: "",
     pwCheck: ""
   }
   const [sendData, setSendData] = useState(defaultData);

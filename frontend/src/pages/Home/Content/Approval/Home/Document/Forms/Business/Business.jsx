@@ -84,7 +84,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             }
             return prevBusiness;
         });
-    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData, isEmergency]);
+    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData]);
 
     // 결재양식, 라인선택 후 모달 확인 클릭시 
     // 초기화
@@ -150,7 +150,11 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const getData=()=>{
         axios.get(`${BaseUrl()}/approval/document/${id}/${type}?table=business`, business).then((resp) => {
             console.log(resp.data);
-            const writeDate = new Date(resp.data.BS_WRITE_DATE).toISOString().split('T')[0];
+            // '2024. 8. 14.' 형식으로 받은 날짜를 'YYYY-MM-DD' 형식으로 변환
+            const localeDate = new Date(resp.data.BS_WRITE_DATE).toLocaleDateString('ko-KR');
+            const [year, month, day] = localeDate.split('. ').map(num => num.replace('.', '').padStart(2, '0'));
+            const writeDate = `${year}-${month}-${day}`;
+            console.log(`날짜 정보: ${writeDate}`);
             if (contentRef.current) {  // contentRef.current가 null이 아닌지 확인
                 contentRef.current.innerHTML = resp.data.BS_CONTENT;
             }
@@ -209,14 +213,14 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     },[isTempTemp,docData, business, id])
 
-   
+    const today = new Date().toISOString().split('T')[0];
     return(
         <div className={styles.container}>
             <div className={styles.datatitle}>
                 <div className={styles.date}>
                     <div className={styles.name}>시행일자</div>
                     <div className={styles.value}>
-                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={docData.bsWriteDate} disabled={isReadOnly}></input>
+                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={docData.bsWriteDate} disabled={isReadOnly}  min={today} ></input>
                     </div>
                 </div>
                 <div className={styles.title}>
