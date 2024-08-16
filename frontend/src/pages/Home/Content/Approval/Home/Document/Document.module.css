@@ -1,4 +1,4 @@
-.container{
+ .container{
     width: 100%;
     height: 100%;
     display: flex;
@@ -7,10 +7,10 @@
 
 /* 헤더 */
 .header{
-    flex:1;
+    flex:0.5;
     display: flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 10vh;
 }
 
 .headerText{
@@ -18,20 +18,21 @@
 }
 
 
+
 /* 메뉴 */
 .menu{
-    flex: 1;
+    flex: 0.5;
     padding-left: 24px;
     display: flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 8vh;
 }
 
 
 /* 디테일 */
 
 .detail{
-    flex:8;
+    flex:9;
     display: flex;
 
 }
@@ -176,6 +177,10 @@
     align-items: center;
     justify-content: center;
 
+}
+
+.imgSize{
+    width: 50px;
 }
 
 

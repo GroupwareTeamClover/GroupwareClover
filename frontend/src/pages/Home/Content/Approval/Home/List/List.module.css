@@ -12,9 +12,69 @@
     align-items: center;
 }
 
+/* 메뉴라인 메뉴와 검색기능 */
+.menuline{
+    flex: 1;
+    display: flex;
+}
+
 .menu{
     flex: 1;
 }
+
+.search{
+    flex: 1;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.searchBox{
+    height: 6.37vh;
+    border-bottom: 1px solid #5a5a64;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right : 1vw;
+    padding-bottom: 0.55vh;
+}
+
+.searchBox select {
+	width: 6.25vw;
+	height: 4.6vh;
+	background: white;
+	border: 1px solid #5a5a64;
+	cursor: pointer;
+	padding: 0 0 0 0.52vw;
+}
+
+.searchBox input{
+    padding: 0;
+	margin: 0;
+	width: 10.417vw;
+	height: 4.6vh;
+	border: none;
+	border: 1px solid #5a5a64;
+	border-right: 0;
+    border-left : 0;
+	font-size: 14px;
+	text-indent: 1.0417vw;
+}
+
+.searchBox button{
+    height: 4.6vh;
+    width : 2.08vw;
+	border: 1px solid #5a5a64;
+	border-left: 0;
+    background-color: white;
+}
+
+.searchBox button:hover{
+    cursor: pointer;
+}
+
+
+
 
 .content{
     flex: 8;
@@ -54,10 +114,10 @@ table{
     width: 9%;
 }
 .td4, .theadtd4 {
-    width: 8%;
+    width: 6%;
 }
 .td5, .theadtd5 {
-    width: 22%;
+    width: 25%;
     text-align: left;
 }
 .td6, .theadtd6 {
@@ -74,7 +134,7 @@ table{
 }
 
 .td10, .theadtd10 {
-    width: 7%;
+    width: 6%;
 }
 
 .tablerow{
@@ -175,10 +235,10 @@ table{
 
 
 /* 선주기 */
-/* div{
+div{
     border: 1px solid black;
 }
 
-table, tr{
+/*table, tr{
     border: 1px solid black;
 } */
