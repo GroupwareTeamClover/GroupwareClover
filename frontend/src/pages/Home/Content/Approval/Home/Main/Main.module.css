@@ -129,3 +129,24 @@
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+
+.stateName{
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.egcstate{
+    background: none;
+    border: 1px solid #ff9f9d;
+    color: #fb4c49;
+    font-size: 13px;
+    padding: 1px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}

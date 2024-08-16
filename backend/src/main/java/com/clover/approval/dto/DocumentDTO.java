@@ -25,6 +25,7 @@ public class DocumentDTO {
     private String detailName;
     private String stateName;
     private String pcpDivision;
+    private String apvState;
 
 
     public DocumentDTO() {
@@ -74,7 +75,7 @@ public class DocumentDTO {
   	 public DocumentDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
              Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq,
              String title, String drafterName, String currentApverName, String finalApverName, String detailName, String stateName,
-             String pcpDivision) {
+             String pcpDivision, String apvState) {
 		super();
 		this.docSeq = docSeq;
 		this.docDetailCode = docDetailCode;
@@ -93,6 +94,7 @@ public class DocumentDTO {
 		this.detailName=detailName;
 		this.stateName=stateName;
 		this.pcpDivision=pcpDivision;
+		this.apvState=apvState;
   	 }
   	
 
@@ -257,6 +259,16 @@ public class DocumentDTO {
 	public void setPcpDivision(String pcpDivision) {
 		this.pcpDivision = pcpDivision;
 	}
+
+	public String getApvState() {
+		return apvState;
+	}
+
+	public void setApvState(String apvState) {
+		this.apvState = apvState;
+	}
+	
+	
 	
 	
 

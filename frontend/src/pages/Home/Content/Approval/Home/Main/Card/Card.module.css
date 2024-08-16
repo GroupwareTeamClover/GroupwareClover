@@ -22,7 +22,9 @@
 }
 
 .card:hover .approvalBtn {
-    background-color: var(--bg-color);
+    background-color: var(--side-color);
+    color: white;
+    transition: background-color 1s ease, color 0.5s;
 }
 
 
@@ -45,7 +47,7 @@
     align-items: start;
 }
 
-.state{
+.waitstate{
     margin-left: 10px;
     background-color: #a6c76c;
     border: none;
@@ -56,10 +58,35 @@
     letter-spacing: -1px;
 }
 
+
+.holdstate{
+    margin-left: 10px;
+    background-color: #A3A3A3;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.egcstate{
+    margin-top: 3px;
+    background: none;
+    border: 1px solid #ff9f9d;
+    color: #fb4c49;
+    font-size: 13px;
+    padding: 1px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
 .title{
     margin-left: 10px;
     font-weight: bold;
     letter-spacing: -1px;
+    margin-right: 10px;
+    font-size: 17px;
 }
 
 .drafter, .drafterDate{
@@ -79,4 +106,5 @@
     align-items: center;
     border-top: 1px solid #ddd;
     letter-spacing: -2px;
+
 }
