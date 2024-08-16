@@ -57,6 +57,8 @@
 
 .container .title {
 	border-top: 1px solid #d3d3d3;
+	margin-top:15px;
+	margin-bottom:5px;
     /* border: 1px solid black; */
 }
 
