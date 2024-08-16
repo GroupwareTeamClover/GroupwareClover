@@ -383,7 +383,7 @@ export const MemMain = () => {
                                         <option value='100'>계정상태</option>
                                         <option value='1'>재직중</option>
                                         <option value='2'>퇴사</option>
-                                        <option value='0'>가입대기</option>
+                                        {/* <option value='0'>가입대기</option> */}
                                         {/* <option>휴면</option> */}
                                     </select>
                                 </td>
