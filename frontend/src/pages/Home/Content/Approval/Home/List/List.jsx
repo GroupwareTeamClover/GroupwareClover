@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from './List.module.css';
 import { BaseUrl } from '../../../../../../commons/config';
 import axios from "axios";
@@ -185,7 +185,6 @@ export const List = ({ type }) => {
                     const totalRecords = resp.data.recordTotalCount;
                     const documents = resp.data.documents;
 
-
                     setDocumentDTOs(documents);
                     setPaginatedDocuments(documents);
 
@@ -207,7 +206,9 @@ export const List = ({ type }) => {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
-                    naviCountPerPage: naviCountPerPage  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                    naviCountPerPage: naviCountPerPage,  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                    searchType: searchType,
+                    keyword: keyword
                 }
             })
                 .then((resp) => {
@@ -234,7 +235,9 @@ export const List = ({ type }) => {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
-                    naviCountPerPage: naviCountPerPage  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                    naviCountPerPage: naviCountPerPage,  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                    searchType: searchType,
+                    keyword: keyword
                 }
             })
                 .then((resp) => {
@@ -262,7 +265,9 @@ export const List = ({ type }) => {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
-                    naviCountPerPage: naviCountPerPage  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                    naviCountPerPage: naviCountPerPage,  // 고정값: 페이지 번호 자체를 몇 개씩 보여줄 건지 결정
+                    searchType: searchType,
+                    keyword: keyword
                 }
             })
                 .then((resp) => {
@@ -337,6 +342,25 @@ export const List = ({ type }) => {
             navi(`?type=${type}&cpage=1&searchType=${inputType}&keyword=${inputKeyword}`);
         }
     }
+
+    const resetSearchInputs = () => {
+        setInputKeyword('');
+        setInputType('title'); 
+    };
+
+    //사이드바 넘겨지면 검색창 없애기 
+    // useRef를 컴포넌트 함수의 최상위에서 호출
+    const prevTypeRef = useRef(undefined);
+
+    useEffect(() => {
+        // 이전 타입과 현재 타입이 다르면 검색 입력 값을 초기화
+        if (prevTypeRef.current !== type) {
+            resetSearchInputs();
+        }
+
+        // 현재 타입을 prevTypeRef에 저장하여 다음 렌더링에서 사용
+        prevTypeRef.current = type;
+    }, [type]);
 
     return (
         <div className={styles.container}>
@@ -431,7 +455,9 @@ export const List = ({ type }) => {
                                             const pageButtons = [];
                                             for (let i = startNavi; i <= endNavi; i++) {
                                                 pageButtons.push(
-                                                    <span key={i} onClick={() => handlePageClick(i)} className={styles.navinum}>{i}</span>
+                                                    <span key={i} onClick={() => handlePageClick(i)} 
+                                                    className={`${styles.navinum} ${cpage === i ? styles.activePage : ''}`}>
+                                                        {i}</span>
                                                 );
                                             }
                                             return pageButtons;

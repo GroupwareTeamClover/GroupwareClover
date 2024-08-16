@@ -19,11 +19,11 @@ public class ListService {
 			if(type.equals("기안문서함")) {
 				return listDAO.getFinishedRecordTotalCount(empSeq, searchType, keyword);
 			}else if(type.equals("임시문서함")) {
-				return listDAO.getTempRecordTotalCount(empSeq);
+				return listDAO.getTempRecordTotalCount(empSeq, searchType, keyword);
 			}else if(type.equals("결재문서함")) {
-				return listDAO.getApprovalRecordTotalCount(empSeq);
+				return listDAO.getApprovalRecordTotalCount(empSeq, searchType, keyword);
 			}else if(type.equals("참조/열람문서함")) {
-				return listDAO.getPartRecordTotalCount(empSeq);
+				return listDAO.getPartRecordTotalCount(empSeq, searchType, keyword);
 			}else {
 				return 0;
 			}
@@ -34,11 +34,11 @@ public class ListService {
 			if(type.equals("기안문서함")) {
 				 return listDAO.getFinishedPageDocuments(empSeq, start, end, searchType, keyword);
 			}else if(type.equals("임시문서함")) {
-				return listDAO.getTempPageDocuments(empSeq, start, end);
+				return listDAO.getTempPageDocuments(empSeq, start, end, searchType, keyword);
 			}else if(type.equals("결재문서함")) {
-				return listDAO.getApprovalPageDocuments(empSeq, start, end);
+				return listDAO.getApprovalPageDocuments(empSeq, start, end, searchType, keyword);
 			}else if(type.equals("참조/열람문서함")) {
-				return listDAO.getPartPageDocuments(empSeq, start, end);
+				return listDAO.getPartPageDocuments(empSeq, start, end, searchType, keyword);
 			}else {
 				return null;
 			}

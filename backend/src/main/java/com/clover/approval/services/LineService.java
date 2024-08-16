@@ -64,5 +64,10 @@ public class LineService {
 	public void updateWaitToHoldoff(int lineSeq) {
 		lineDAO.updateWaitToHoldoff(lineSeq);
 	}
+	
+	//읽음처리
+	public void updateReadCheck(int lineSeq) {
+		lineDAO.updateReadCheck(lineSeq);
+	}
 
 }

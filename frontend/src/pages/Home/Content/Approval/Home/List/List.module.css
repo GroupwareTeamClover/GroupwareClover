@@ -30,8 +30,7 @@
 }
 
 .searchBox{
-    height: 6.37vh;
-    border-bottom: 1px solid #5a5a64;
+    height: 5vh;
     display: flex;
     align-items: center;
     justify-content: end;
@@ -232,12 +231,17 @@ table{
     cursor: pointer;
 }
 
+.activePage {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 
 
 /* 선주기 */
-div{
+/* div{
     border: 1px solid black;
-}
+} */
 
 /*table, tr{
     border: 1px solid black;
