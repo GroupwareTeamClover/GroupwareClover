@@ -398,22 +398,39 @@
   text-align: left;
 }
 
-/* 메시지 입력 영역 */
 .chatInput {
   display: flex;
   padding: 15px;
   border-top: 1px solid #eee;
+  align-items: center; /* 버튼과 입력 필드의 수직 정렬 */
 }
 
-.chatInput input {
-  flex: 1;
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  width: 100%; /* 부모 요소에 맞춰 너비를 100%로 설정 */
+  position: relative;
+}
+
+.textInput {
+  flex: 1; /* 입력 필드가 가능한 많은 공간을 차지하도록 설정 */
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 20px;
   font-size: 14px;
 }
 
-.chatInput button {
+.emojiButton {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.sendButton {
   margin-left: 10px;
   padding: 10px 20px;
   background-color: #4CAF50;
@@ -421,4 +438,11 @@
   border: none;
   border-radius: 20px;
   cursor: pointer;
+}
+
+.emojiPicker {
+  position: absolute;
+  bottom: 50px; /* 버튼 위에 표시되도록 조정 */
+  right: 20px; /* 버튼에 맞춰 우측 정렬 */
+  z-index: 1000; /* 다른 요소 위에 표시 */
 }

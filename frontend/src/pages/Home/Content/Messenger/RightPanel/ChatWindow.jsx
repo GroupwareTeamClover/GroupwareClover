@@ -6,10 +6,14 @@ import { formatDistanceToNow } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage, subscribeToRoom } from '../../../../../commons/websocket';
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
 
 const ChatWindow = ({ chat }) => {
   const { messages, setMessages, addMessage } = useChatStore();
-  const [inputMessage, setInputMessage] = useState('');
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [messageContent, setMessageContent] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);  // 파일 상태 추가
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
@@ -48,20 +52,51 @@ const ChatWindow = ({ chat }) => {
     scrollToBottom();
   }, [currentMessages, scrollToBottom]);
 
-  const sendChatMessage = useCallback(() => {
-    if (inputMessage.trim()) {
-      const message = {
-        roomSeq: chat.roomSeq,
-        messageContent: inputMessage,
-        messageType: 'CHAT',
-        senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq,
-        sendTime: new Date().toISOString()
-      };
+  const sendChatMessage = useCallback(async () => {
+    let message = {
+      roomSeq: chat.roomSeq,
+      messageContent,
+      messageType: 'CHAT',
+      senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq,
+      sendTime: new Date().toISOString()
+    };
 
-      sendMessage("/app/chat.sendMessage", message);
-      setInputMessage('');
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const response = await axios.post(`${BaseUrl()}/attachment/upload`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        message.attachmentUrl = response.data.url; // 업로드된 파일 URL 추가
+        message.attachmentName = selectedFile.name; // 파일 이름 추가
+        setSelectedFile(null);  // 파일 전송 후 초기화
+      } catch (error) {
+        console.error('파일 업로드 실패:', error);
+      }
     }
-  }, [chat.roomSeq, inputMessage]);
+
+    if (messageContent.trim() || message.attachmentUrl) {
+      sendMessage("/app/chat.sendMessage", message);
+      setMessageContent('');  // 메시지 전송 후 입력창 비우기
+    }
+  }, [chat.roomSeq, messageContent, selectedFile]);
+
+  const handleEmojiSelect = useCallback((emoji) => {
+    setMessageContent(prevContent => prevContent + emoji.native);
+  }, []);
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    if (value.length <= 100) {
+      setMessageContent(value);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);  // 선택한 파일 상태 업데이트
+  };
 
   const renderMessage = (message, index) => {
     const isCurrentUser = message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
@@ -83,7 +118,16 @@ const ChatWindow = ({ chat }) => {
           {!isCurrentUser && (
             <span className={styles.senderName}>{chat.customRoomName}</span>
           )}
-          <div className={styles.messageContent}>{message.messageContent}</div>
+          <div className={styles.messageContent}>
+            {message.messageContent}
+            {message.attachmentUrl && (
+              <div>
+                <a href={message.attachmentUrl} download={message.attachmentName} target="_blank" rel="noopener noreferrer">
+                  {message.attachmentName} 다운로드
+                </a>
+              </div>
+            )}
+          </div>
           <span className={styles.messageTime}>
             {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
           </span>
@@ -106,14 +150,23 @@ const ChatWindow = ({ chat }) => {
       </div>
 
       <div className={styles.chatInput}>
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
-          placeholder="메시지를 입력하세요..."
-        />
-        <button onClick={sendChatMessage}>전송</button>
+        <div className={styles.inputWrapper}>
+          <input
+            type="text"
+            value={messageContent}
+            onChange={handleInputChange}
+            placeholder="메시지를 입력하세요..."
+            className={styles.textInput}
+          />
+          <input type="file" onChange={handleFileChange} className={styles.fileInput} /> {/* 파일 입력 필드 추가 */}
+          <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} className={styles.emojiButton}>😀</button>
+          {showEmojiPicker && (
+            <div className={styles.emojiPicker}>
+              <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+            </div>
+          )}
+        </div>
+        <button onClick={sendChatMessage} className={styles.sendButton}>전송</button>
       </div>
     </div>
   );
