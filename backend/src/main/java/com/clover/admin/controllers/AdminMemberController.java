@@ -32,6 +32,11 @@ public class AdminMemberController {
 		return ResponseEntity.ok(adminmemberService.getCountMem());
 	}
 	
+	@GetMapping("/gender")
+	public ResponseEntity<List<HashMap<String,Object>>> getGender(){
+		return ResponseEntity.ok(adminmemberService.getGender());
+	}
+	
 	@PutMapping
 	public ResponseEntity<Void> updateMultiMemState(@RequestBody AdminUpdateMemDTO updto){
 		System.out.println(updto.getEmpSeqList());

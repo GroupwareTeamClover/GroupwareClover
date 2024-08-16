@@ -6,12 +6,25 @@ import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-sy
 import '@toast-ui/editor/dist/i18n/ko-kr';
 import axios from 'axios';
 import { BaseUrl } from '../../commons/config';
+import { useEffect } from 'react';
 
 const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) => {
+    const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB 제한
+
     const onUploadImage = async (blob, callback) => {
-        const url = await uploadImage(blob);
-        callback(url, 'alt text');
-        return false;
+        if (blob.size > MAX_IMAGE_SIZE) {
+            alert('이미지 크기가 너무 큽니다. 최대 5MB까지 업로드할 수 있습니다.');
+            return false; // 업로드 중단
+        }
+
+        try {
+            const url = await uploadImage(blob);
+            callback(url, 'alt text');
+        } catch (error) {
+            console.error('이미지 업로드 실패:', error);
+            alert('이미지 업로드에 실패했습니다. 다시 시도해 주세요.');
+        }
+        return false; // false를 반환하여 Toast UI Editor의 기본 동작 방지
     };
 
     const uploadImage = (blob) => {
@@ -24,6 +37,16 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
             return resp.data;
         })
     }
+
+    // 웹에디터 빨간줄 제거
+    useEffect(() => {
+        const editorInstance = editorRef.current.getInstance();
+        const editorEl = editorInstance.getEditorElements().mdEditor; 
+        const wysiwygEl = editorInstance.getEditorElements().wwEditor;
+
+        editorEl.spellcheck = false;
+        wysiwygEl.spellcheck = false;
+      }, []);
 
     return (
         <Editor

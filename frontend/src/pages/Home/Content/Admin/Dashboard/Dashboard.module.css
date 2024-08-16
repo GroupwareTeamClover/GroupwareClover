@@ -1,0 +1,62 @@
+/* *{border: 1px solid black;} */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #1e1e2f; /* 어두운 배경 색상 */
+    color: #ffffff; /* 텍스트 색상 */
+    width: 100%;
+}
+
+.topRow, .middleRow, .bottomRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.statItem, .largeStatItem, .smallStatItem {
+    background-color: #292942; /* 카드의 배경색 */
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    flex: 1;
+    box-sizing: border-box;
+    margin: 10px;
+}
+
+
+
+.statItem {
+    min-width: 200px;
+}
+
+.largeStatItem {
+    flex: 2;
+    height: 350px; /* 큰 통계 항목의 높이 조정 */
+}
+
+.smallStatItem {
+    flex: 1;
+    height: 350px; /* 작은 통계 항목의 높이 조정 */
+    display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    position: relative; /* 차트 제목을 절대 위치로 배치하기 위해 필요 */
+}
+
+.chartTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.statValue {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-align: right;
+}

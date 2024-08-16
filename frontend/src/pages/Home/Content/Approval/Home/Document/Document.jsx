@@ -105,6 +105,11 @@ export const Document = ({type}) => {
      // 임시저장 클릭 시
      const [isTemp, setIsTemp]=useState(false);
 
+    //긴급처리
+     useEffect(() => {
+        setDocumentDTO((prev) => ({ ...prev, egcYn: isEmergency }));
+    }, [isEmergency]);
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>

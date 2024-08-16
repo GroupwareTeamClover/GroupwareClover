@@ -23,7 +23,6 @@ const MainBoard = () => {
     const pageCount = Math.ceil(filtered.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
     const handlePageChange = ({ selected }) => {
         setCurrentPage(selected);
-        window.scrollTo(0, 320);
     }
 
     useEffect(() => {

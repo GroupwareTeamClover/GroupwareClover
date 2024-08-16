@@ -6,9 +6,7 @@ import com.clover.schedule.dto.ScheduleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ScheduleService {
@@ -18,7 +16,7 @@ public class ScheduleService {
 
     @Autowired
     private DateFormat dataFormat;
-    
+
     /** 스케줄 추가 **/
     public String addSchedule(ScheduleDTO dto) {
         int result = scheduleDAO.addSchedule(dto);

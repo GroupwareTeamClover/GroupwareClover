@@ -303,15 +303,19 @@ export const DetailDocument = ({type}) => {
      //임시저장에서 취소 시 DB삭제
      useEffect(()=>{
         if(isTempCancle && id){
-            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-            .then(()=>{
+            if(window.confirm("삭제하시겠습니까?")){
+                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                .then(()=>{
+                    setIsTempCancle(false);
+                    alert("삭제 성공");
+                    navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
+                }).catch(()=>{
+                    setIsTempCancle(false);
+                    alert("삭제 실패");
+                })
+            }else{
                 setIsTempCancle(false);
-                alert("삭제 성공");
-                navi(`/approval`); // 절대 경로 사용
-            }).catch(()=>{
-                setIsTempCancle(false);
-                alert("삭제 실패");
-            })
+            }
         }
     },[isTempCancle, id])
 
@@ -403,7 +407,7 @@ export const DetailDocument = ({type}) => {
                                 <> 
                                     {Page===1 &&(
                                         <>
-                                            <div className={styles.header}>반려 사유</div>
+                                            <div className={styles.modalheader}>반려 사유</div>
                                             <div className={styles.inputBox}>
                                                 <input type="text" placeholder="반려 사유를 입력해주세요." className={styles.inputcss} onChange={handleModalInput}></input>
                                             </div>

@@ -45,13 +45,13 @@ table{
 
 /* 열설정 */
 .td1, .theadtd1 {
-    width: 10%;
+    width: 9%;
 }
 .td2, .theadtd2 {
-    width: 10%;
+    width: 9%;
 }
 .td3, .theadtd3 {
-    width: 10%;
+    width: 9%;
 }
 .td4, .theadtd4 {
     width: 8%;
@@ -61,22 +61,118 @@ table{
     text-align: left;
 }
 .td6, .theadtd6 {
-    width: 10%;
+    width: 9%;
 }
 .td7, .theadtd7 {
-    width: 10%;
+    width: 9%;
 }
 .td8, .theadtd8 {
-    width: 10%;
+    width: 9%;
 }
 .td9, .theadtd9 {
-    width: 10%;
+    width: 9%;
+}
+
+.td10, .theadtd10 {
+    width: 7%;
 }
 
 .tablerow{
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
+
+.title:hover{
+    cursor: pointer;
+}
+
+.ingstate{
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.rejectstate{
+    background-color: #ff616b;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+
+.comstate{
+    background-color: #A3A3A3;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.egcstate{
+    background: none;
+    border: 1px solid #ff9f9d;
+    color: #fb4c49;
+    font-size: 13px;
+    padding: 1px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.tempstate{
+    background-color: #ff616b;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+    opacity: 0.5;
+}
+
+/* 페이지네이션 */
+.paginationBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination{
+    display: flex;
+}
+
+.naviarrow{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.naviarrow:hover{
+    cursor: pointer;
+}
+
+.navinum{
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.navinum:hover{
+    cursor: pointer;
+}
+
+
 
 /* 선주기 */
 /* div{

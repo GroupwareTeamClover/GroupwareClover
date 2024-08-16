@@ -33,10 +33,10 @@
      SELECT * FROM log
         <where>
             <if test="empName != null and empName != ''">
-                AND emp_name like '%'||#{empName}||'%'
+                AND emp_name like '%' || #{empName} || '%'
             </if>
             <if test="empId != null and empId != ''">
-                AND emp_id like '%'||#{empId}||'%'
+                AND emp_id like '%' || #{empId}|| '%'
             </if>
             <if test="logStatus != null and logStatus != ''">
                 AND log_status = #{logStatus}

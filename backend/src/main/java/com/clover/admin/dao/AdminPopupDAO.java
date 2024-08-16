@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.clover.admin.dto.AdminPopupDTO;
-import com.clover.employee.dto.EmployeeDTO;
+import com.clover.admin.dto.AdminPopupUpdateDTO;
 
 @Repository
 public class AdminPopupDAO {

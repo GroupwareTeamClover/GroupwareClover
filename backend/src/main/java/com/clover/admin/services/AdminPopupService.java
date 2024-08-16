@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.clover.admin.dao.AdminPopupDAO;
 import com.clover.admin.dto.AdminPopupDTO;
-import com.clover.employee.dto.EmployeeDTO;
+import com.clover.admin.dto.AdminPopupUpdateDTO;
 
 @Service
 public class AdminPopupService {

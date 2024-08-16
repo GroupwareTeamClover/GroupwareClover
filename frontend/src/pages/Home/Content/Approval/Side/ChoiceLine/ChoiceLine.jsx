@@ -97,12 +97,36 @@ export const ChoiceLine= () =>{
         event.preventDefault();
         const data = JSON.parse(event.dataTransfer.getData('application/json'));
         const { item, department } = data;
+
+        // 중복 확인 로직 추가
+        setSelectedEmpInfo(prev => {
+            const existingItems = prev[type] || [];
+            const isDuplicate = existingItems.some(existingItem => existingItem.seq === item.seq);
+
+            // 결재자로 이미 포함된 경우 참조자나 열람자로 추가하지 않음
+            if (type !== 'apvchoice' && prev.apvchoice && prev.apvchoice.some(existingItem => existingItem.seq === item.seq)) {
+                alert("이미 결재자로 포함된 직원은 참조자나 열람자로 설정될 수 없습니다.");
+                return prev;
+            }
+
+            if (isDuplicate) {
+                // 이미 추가된 경우 아무것도 하지 않음
+                alert("이미 포함된 직원입니다.");
+                return prev;
+            }
+
+            // 중복되지 않은 경우에만 추가
+            return {
+                ...prev,
+                [type]: [...existingItems, { ...item, department }]
+            };
+        });
         // console.log(item, department);
 
-        setSelectedEmpInfo(prev => ({
-            ...prev,
-            [type]: [...(prev[type] || []), { ...item, department }]
-        }));
+        // setSelectedEmpInfo(prev => ({
+        //     ...prev,
+        //     [type]: [...(prev[type] || []), { ...item, department }]
+        // }));
 
         // console.log(selectedEmpInfo);
 
@@ -143,7 +167,7 @@ export const ChoiceLine= () =>{
                     <div className={styles.searchBox}>
                         <div className={styles.searchLine}>
                             <div className={styles.inputBox}> 
-                                <input type='text' className={styles.input} placeholder='라인선택' onChange={handleSearchData}></input>
+                                <input type='text' className={styles.input} placeholder='직원 검색' onChange={handleSearchData}></input>
                                 </div>
                             <div className={styles.iconBox}><FaSearch/></div>
                         </div>
