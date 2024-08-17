@@ -8,7 +8,7 @@ import 'chartjs-adapter-date-fns';
 
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
-import {  FaUserPlus } from 'react-icons/fa';
+import {  FaExchangeAlt, FaSignOutAlt, FaUserPlus } from 'react-icons/fa';
 import { MdMale, MdFemale } from 'react-icons/md';
 
 
@@ -200,13 +200,18 @@ export const Dashboard = () => {
                 <div className={styles.statItem}>
                     <div className={styles.newbox}>
                         <div className={styles.newchartWrapper}>
-                            <div className={styles.chartTitle}> 뭐하냐...</div>
-                            <div className={styles.NewMemstatValue}>{empData.newMem}</div>
+                            <div className={styles.chartTitle}> 이번달 퇴사자 수</div>
+                            <div className={styles.NewMemstatValue}>{empData.outMem}</div>
                         </div>
                         <div className={styles.newchartWrapperIcon}>
-                            <FaUserPlus className={styles.newicon} /> 
+                            <FaSignOutAlt  className={styles.newicon} /> 
                         </div>
+                        
                     </div>
+                    <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
+                        Monthly Employee Turnover Rate &nbsp; {empData.ingMem !== 0 ? ((empData.outMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
+                    </div>
+                
                 </div>
             </div>
             <div className={styles.bottomRow}>
