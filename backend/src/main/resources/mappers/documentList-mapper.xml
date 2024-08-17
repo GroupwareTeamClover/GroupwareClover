@@ -72,7 +72,7 @@
 				    <if test="searchType != null and keyword != null">
 				    	  <choose>
 				            <when test="searchType == 'title'">
-				                AND sub.title LIKE '%' || #{keyword} || '%'
+				                AND sub.title LIKE '%' || #{keyword} || '%' 
 				            </when>
 				            <when test="searchType == 'drafter_name'">
 				                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
@@ -92,6 +92,7 @@
 	               CASE 
 	                   WHEN b.BS_TITLE IS NOT NULL THEN b.BS_TITLE
 	                   WHEN d.parent_seq IS NOT NULL THEN '휴가신청서'
+	                   ELSE ''
 	               END AS title,
 	               e1.emp_name as drafter_name,
 	               e2.emp_name as current_apver_name,
@@ -112,7 +113,7 @@
 			    <if test="searchType != null and keyword != null">
 			    	  <choose>
 			            <when test="searchType == 'title'">
-			                AND sub.title LIKE '%' || #{keyword} || '%'
+			                AND sub.title LIKE '%' || #{keyword} || '%' OR sub.title IS NULL
 			            </when>
 			            <when test="searchType == 'drafter_name'">
 			                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
@@ -131,6 +132,7 @@
 				               CASE 
 				                   WHEN b.BS_TITLE IS NOT NULL THEN b.BS_TITLE
 				                   WHEN d.parent_seq IS NOT NULL THEN '휴가신청서'
+				                   ELSE ''
 				               END AS title,
 				               e1.emp_name as drafter_name,
 				               e2.emp_name as current_apver_name,
@@ -151,7 +153,7 @@
 				    <if test="searchType != null and keyword != null">
 				    	  <choose>
 				            <when test="searchType == 'title'">
-				                AND sub.title LIKE '%' || #{keyword} || '%'
+				                AND sub.title LIKE '%' || #{keyword} || '%' OR sub.title IS NULL
 				            </when>
 				            <when test="searchType == 'drafter_name'">
 				                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
