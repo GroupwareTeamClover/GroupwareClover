@@ -44,6 +44,10 @@ public class AdminMemberController {
 	public ResponseEntity<List<EmployeeDTO>> getExit(){
 		return ResponseEntity.ok(adminmemberService.getExit());
 	}
+	@GetMapping("/deptCount")
+	public ResponseEntity<List<HashMap<String,Object>>> getDept(){
+		return ResponseEntity.ok(adminmemberService.getDept());
+	}
 	
 	@PutMapping
 	public ResponseEntity<Void> updateMultiMemState(@RequestBody AdminUpdateMemDTO updto){

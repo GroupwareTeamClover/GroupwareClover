@@ -19,6 +19,9 @@
 	<select id="getExit" resultType="com.clover.employee.dto.EmployeeDTO">
 		select * from employee where emp_state_code = 2
 	</select>
+	<select id="getDept" resultType="java.util.HashMap">
+		select dept_code, count(*) as count from employee group by dept_code
+	</select>
 	
 	
 	

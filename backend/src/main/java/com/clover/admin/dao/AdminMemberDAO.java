@@ -34,6 +34,9 @@ public class AdminMemberDAO {
 	public List<EmployeeDTO> getExit(){
 		return mybatis.selectList("AdminMember.getExit");
 	}
+	public List<HashMap<String, Object>> getDept(){
+		return mybatis.selectList("AdminMember.getDept");
+	}
 	
 	public void updateMem(AdminUpdateMemDTO updto) {
 		Map<String, Object> params = new HashMap<>();

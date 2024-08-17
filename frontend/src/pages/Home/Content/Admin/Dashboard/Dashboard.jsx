@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Dashboard.module.css';
-import { Line, Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, TimeScale, LineElement, PointElement, LinearScale, Title, Tooltip, Legend } from 'chart.js';
+import { Bar, Line, Pie } from 'react-chartjs-2';
+// import { Chart as ChartJS, ArcElement, TimeScale, LineElement, PointElement, LinearScale, Title, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, ArcElement, TimeScale, LineElement, PointElement, LinearScale, BarElement, CategoryScale, Title, Tooltip, Legend } from 'chart.js'; // BarElement, CategoryScale 추가
+
 import 'chartjs-adapter-date-fns';
 
 import axios from 'axios';
@@ -15,14 +17,15 @@ import { MdMale, MdFemale } from 'react-icons/md';
 // Chart.js 구성 요소 등록
 ChartJS.register(ArcElement, Tooltip, Legend);
 ChartJS.register(TimeScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(BarElement, CategoryScale); // BarElement, CategoryScale 등록
+
 
 export const Dashboard = () => {
     const [genderData, setGenderData] = useState({ male: 0, female: 0 });
     const [workerData, setWorkerData] = useState({ regular: 0, irregular: 0 , contract:0});
     const [empData, setEmpData] = useState({ newMem: 0, ingMem: 0 , outMem:0});
     const [exitData, setExitData] = useState([]);
-
-    const [salesData, setSalesData] = useState({ total: 0, monthlyAverage: 0, max: 0 });
+    const [deptData, setDeptData] = useState({ '총무':0, '인사':0, '사무':0, '유통':0, '경영':0, '미정':0})
 
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/gender`)
@@ -32,9 +35,6 @@ export const Dashboard = () => {
                 setGenderData({ male: maleCount, female: femaleCount });
             })
             .catch(error => console.error('Error fetching data:', error));
-
-        // Mock sales data - replace with actual API call if needed
-        setSalesData({ total: 250, monthlyAverage: 25, max: 50 });
     }, []);
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/worker`)
@@ -46,9 +46,6 @@ export const Dashboard = () => {
                 setWorkerData({ regular: regularCount, irregular: irregularCount , contract: contractCount});
             })
             .catch(error => console.error('Error fetching data:', error));
-
-        // Mock sales data - replace with actual API call if needed
-        setSalesData({ total: 250, monthlyAverage: 25, max: 50 });
     }, []);
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/countmem`)
@@ -60,33 +57,21 @@ export const Dashboard = () => {
                 console.log("newMem "+ newMemCount)
                 setEmpData({ newMem: newMemCount, ingMem: ingMemCount , outMem: outMemCount});
             })
-            .catch(error => console.error('Error fetching data:', error));
-
-        // Mock sales data - replace with actual API call if needed
-        setSalesData({ total: 250, monthlyAverage: 25, max: 50 });
+            .catch(error => console.error('Error fetching data:', error));        
     }, []);
     useEffect(() => {
-        axios.get(`${BaseUrl()}/adminmember/exit`)
+        axios.get(`${BaseUrl()}/adminmember/deptCount`)
         .then((resp) => {
-            const rawData = resp.data;
-                const dateMap = rawData.reduce((acc, item) => {
-                    const date = new Date(item.leaveDate).toISOString().split('T')[0]; // 날짜만 추출
-                    acc[date] = (acc[date] || 0) + 1;
-                    return acc;
-                }, {});
-
-                const formattedData = Object.keys(dateMap).map(date => ({
-                    date,
-                    count: dateMap[date]
-                }));
-
-                setExitData(formattedData);
-                console.log(formattedData)
+            console.log(resp.data)
+            const a = resp.data.find(item => item.DEPT_CODE === 1)?.COUNT  || 0;
+            const b = resp.data.find(item => item.DEPT_CODE === 2)?.COUNT  || 0;
+            const c = resp.data.find(item => item.DEPT_CODE === 3)?.COUNT  || 0;
+            const d = resp.data.find(item => item.DEPT_CODE === 4)?.COUNT  || 0;
+            const e = resp.data.find(item => item.DEPT_CODE === 5)?.COUNT  || 0;
+            const none = resp.data.find(item => item.DEPT_CODE === 99)?.COUNT  || 0;
+            setDeptData({ '총무':a, '인사':b, '사무':c, '유통':d, '경영':e, '미정':none})
             })
             .catch(error => console.error('Error fetching data:', error));
-
-        // Mock sales data - replace with actual API call if needed
-        setSalesData({ total: 250, monthlyAverage: 25, max: 50 });
     }, []);
 
     // 원형 차트 데이터
@@ -126,92 +111,60 @@ export const Dashboard = () => {
         }
     };
 
-     // 퇴사 인원 수 시계열 차트 데이터
-     const lineChartData = {
-        labels: exitData.map(data => data.date), // 날짜 라벨
+    // 부서 막대
+      // 부서별 인원수 막대 차트 데이터
+      const barChartData = {
+        labels: Object.keys(deptData), // 부서명 배열
         datasets: [{
-            label: '퇴사 인원수',
-            data: exitData.map(data => data.count), // 퇴사 인원 수
-            borderColor: 'rgba(255, 99, 132, 1)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            fill: true,
+            label: '부서별 인원 수',
+            data: Object.values(deptData), // 각 부서별 인원수 배열
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)', // 총무 부서 색상
+                'rgba(54, 162, 235, 0.6)', // 인사 부서 색상
+                'rgba(255, 206, 86, 0.6)', // 사무 부서 색상
+                'rgba(75, 192, 192, 0.6)', // 유통 부서 색상
+                'rgba(153, 102, 255, 0.6)', // 경영 부서 색상
+                'rgba(255, 159, 64, 0.6)'  // 미정 부서 색상
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1,
         }],
     };
-
-    const lineChartOptions = {
+    const barChartOptions = {
         plugins: {
-            tooltip: {
-                backgroundColor: '#333', // 툴팁 배경 색상
-                titleColor: '#fff', // 툴팁 제목 색상
-                bodyColor: '#fff', // 툴팁 본문 색상
-                borderColor: '#444', // 툴팁 경계 색상
-                borderWidth: 1,},
             legend: {
-                display: true,
-                position: 'top',
-                labels: {
-                    color: '#ffffff', // 범례 텍스트 색상
-                    font: {
-                        size: 14, // 범례 폰트 크기
-                        weight: 'bold', // 범례 폰트 굵기
-                    },
-                },
+                display: false, // 범례 비활성화
             },
         },
         scales: {
             x: {
-                type: 'time',
-                time: {
-                    unit: 'day',
-                    displayFormats: {
-                        day: 'MMM d', // 날짜 형식
-                    },
-                },
                 grid: {
-                    color: 'rgba(255, 255, 255, 0.1)', // X축 그리드 색상
+                    display: false, // X축 그리드 비활성화
                 },
                 ticks: {
-                    color: '#ffffff', // X축 눈금 색상
+                    color: '#ffffff', // 부서명 글자 색상 흰색
                     font: {
-                        size: 12, // X축 폰트 크기
+                        size: 14, // 폰트 크기 조정 가능
                     },
                 },
             },
             y: {
+                beginAtZero: true,
                 grid: {
                     color: 'rgba(255, 255, 255, 0.1)', // Y축 그리드 색상
                 },
                 ticks: {
                     color: '#ffffff', // Y축 눈금 색상
-                    font: {
-                        size: 12, // Y축 폰트 크기
-                    },
-                    callback: function(value) {
-                        // Y축 눈금을 정수로 포맷
-                        return Number.isInteger(value) ? value : value.toFixed(0);
-                    },
-                    stepSize: 1, // 간격을 1로 설정하여 눈금이 일정하게 표시되도록 조정
                 },
-                beginAtZero: true, // Y축을 0에서 시작하도록 설정
-                suggestedMin: 0, // 최소값 제안
-                suggestedMax: 15, // 최대값 제안
             },
         },
-        elements: {
-            line: {
-                tension: 0.1, // 선의 곡률
-                borderWidth: 3, // 선의 두께
-                borderColor: 'rgba(255, 99, 132, 1)', // 선의 색상
-                backgroundColor: 'rgba(255, 99, 132, 0.2)', // 선의 배경 색상
-            },
-            point: {
-                radius: 5, // 포인트의 반지름
-                backgroundColor: 'rgba(255, 99, 132, 1)', // 포인트 배경 색상
-                borderColor: '#ffffff', // 포인트 테두리 색상
-                borderWidth: 2, // 포인트 테두리 두께
-            },
-        },
-        
     };
 
     return (
@@ -233,38 +186,45 @@ export const Dashboard = () => {
                     </div>
                 </div>
                 <div className={styles.statItem}>
-                    <div className={styles.newchartWrapper}>
-                        <FaUserPlus className={styles.newicon} /> 
-                        <div className={styles.chartTitle}> 이번달 신규 입사</div>
+                    <div className={styles.newbox}>
+                        <div className={styles.newchartWrapper}>
+                            <div className={styles.chartTitle}> 이번달 신규 입사</div>
+                            <div className={styles.NewMemstatValue}>{empData.newMem}</div>
+                        </div>
+                        <div className={styles.newchartWrapperIcon}>
+                            <FaUserPlus className={styles.newicon} /> 
+                        </div>
                     </div>
-                        <div className={styles.NewMemstatValue}>{empData.newMem}</div>
                 </div>
                 
                 <div className={styles.statItem}>
-                    <div className={styles.newchartWrapper}>
-                        {/* <MdMale className={styles.newicon} />  */}
-                        <div className={styles.chartTitle}> 할게 없어</div>
+                    <div className={styles.newbox}>
+                        <div className={styles.newchartWrapper}>
+                            <div className={styles.chartTitle}> 뭐하냐...</div>
+                            <div className={styles.NewMemstatValue}>{empData.newMem}</div>
+                        </div>
+                        <div className={styles.newchartWrapperIcon}>
+                            <FaUserPlus className={styles.newicon} /> 
+                        </div>
                     </div>
-                        <div className={styles.NewMemstatValue}>{empData.newMem}</div>
                 </div>
             </div>
             <div className={styles.bottomRow}>
                 <div className={styles.linestatItemLarge}>
                     <div className={styles.statItem}>
-                        <Line data={lineChartData} options={lineChartOptions} />
-                    </div>
-                    <div className={styles.chartWrapper}>
-                        <div className={styles.chartTitle}>Trends in Employee Turnover Over Time</div>
+                        <Bar data={barChartData} options={barChartOptions} />
+                        <div className={styles.chartWrapper}>
+                            <div className={styles.chartTitle}>Employee Count by Department</div>
+                        </div>
                     </div>
                 </div>
                 <div className={styles.statItemLarge}>
                     <div className={styles.statItem}>
                          <Pie data={pieChartData} options={pieChartOptions} />
-                    <div className={styles.chartWrapper}>
-                        <div className={styles.chartTitle}>Gender Distribution</div>
-                       
+                        <div className={styles.chartWrapper}>
+                            <div className={styles.chartTitle}>Gender Distribution</div>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>

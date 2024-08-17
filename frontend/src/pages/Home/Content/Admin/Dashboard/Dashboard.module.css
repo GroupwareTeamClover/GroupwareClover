@@ -19,9 +19,12 @@
     justify-content: space-between;
     margin-bottom: 20px;
 }
+.bottomRow{
+    padding-top:50px;
+}
 
 
-.statItem, .largeStatItem, .smallStatItem .linestatItem {
+.statItem, .largeStatItem, .smallStatItem .linestatItem .statItemNew {
     background-color: #292942; /* 카드의 배경색 */
     border: 1px solid #444;
     border-radius: 8px;
@@ -38,7 +41,7 @@
     align-items: center;
 }
 /* 기존 .statItem 스타일은 그대로 유지 */
-.statItem {
+.statItem .statItemNew{
     min-width: 200px;
 }
 
@@ -57,15 +60,37 @@
 /* ===================================== */
 
 /* 이번달 신규 입사 */
-.newchartWrapper{
+.newbox{
     display: flex;
 }
-.newchartWrapper .newicon{
-    font-size: 2.0rem;
+.newchartWrapper{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+}
+.newchartWrapper .chartTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.newchartWrapperIcon{
+    flex:1;
+    display: flex;
+    align-items: right;
+    justify-content: right;
+}
+.newchartWrapperIcon .newicon{
+    flex: 1;
+    font-size: 5.0rem;
+    display: flex;
+    color:#f0bbe494;
 }
 .NewMemstatValue{
+    flex:1;
     text-align: left;
-    font-size: 1.5rem;
+    font-size: 3rem;
     color: #ffffff;
     padding-left: 50px;
 }
@@ -104,7 +129,7 @@
 }
 
 /* 성별 원 차트  */
-.statItemLarge .statItem canvas{
+.statItemLarge .statItem>canvas{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -130,6 +155,8 @@
     height: 80%; /* 차트의 높이 */
     width: 80%; /* 차트의 너비를 설정 */
     max-width: 1200px; /* 최대 너비 설정 (필요시 조정) */
+    padding-top:50px;
+    margin-bottom:50px;
     background-color: #292942;
     border: 1px solid #444; 
     border-radius: 8px; 
@@ -139,6 +166,8 @@
     align-items: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
-.linestatItemLarge .chartTitle{
-    padding-left:20px;
+.linestatItemLarge .statItem>canvas{
+    margin-bottom: 0px;
+    /* background-color: pink; */
 }
+
