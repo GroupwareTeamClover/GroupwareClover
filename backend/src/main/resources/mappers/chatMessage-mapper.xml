@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ChatMessageMapper">
+    <!-- 메시지 저장 -->
+    <insert id="saveMessage" parameterType="com.clover.messenger.dto.ChatMessageDTO">
+        INSERT INTO ChatMessage (message_seq, message_content, message_type, send_time, room_seq, sender_seq)
+        VALUES (message_sequence.NEXTVAL, #{messageContent, jdbcType=CLOB}, #{messageType, jdbcType=VARCHAR}, CURRENT_TIMESTAMP, #{roomSeq}, #{senderSeq})
+    </insert>
+
+    <!-- 채팅방의 메시지 목록 조회 -->
+    <select id="getRoomMessages" resultType="com.clover.messenger.dto.ChatMessageDTO">
+        SELECT *
+        FROM ChatMessage
+        WHERE room_seq = #{roomSeq}
+        ORDER BY send_time ASC
+    </select>
+
+    <!-- 읽지 않은 메시지 수 조회 -->
+    <select id="getUnreadMessageCount" resultType="int">
+        SELECT COUNT(*)
+        FROM ChatMessage cm
+        LEFT JOIN LastReadMessage lrm ON cm.room_seq = lrm.room_seq AND lrm.emp_seq = #{empSeq}
+        WHERE cm.room_seq = #{roomSeq}
+        AND (lrm.last_read_message_seq IS NULL OR cm.message_seq > lrm.last_read_message_seq)
+    </select>
+
+    <!-- 채팅방의 마지막 메시지 조회 -->
+    <select id="getLastMessage" resultType="com.clover.messenger.dto.ChatMessageDTO">
+        SELECT *
+        FROM (
+            SELECT *
+            FROM ChatMessage
+            WHERE room_seq = #{roomSeq}
+            ORDER BY send_time DESC
+        )
+        WHERE ROWNUM = 1
+    </select>
+
+    <!-- 사용자의 마지막 읽은 메시지 업데이트 -->
+    <update id="updateLastReadMessage">
+        MERGE INTO LastReadMessage lrm
+        USING DUAL
+        ON (lrm.emp_seq = #{empSeq} AND lrm.room_seq = #{roomSeq})
+        WHEN MATCHED THEN
+            UPDATE SET lrm.last_read_message_seq = #{messageSeq},
+                       lrm.last_read_time = CURRENT_TIMESTAMP
+        WHEN NOT MATCHED THEN
+            INSERT (emp_seq, room_seq, last_read_message_seq, last_read_time)
+            VALUES (#{empSeq}, #{roomSeq}, #{messageSeq}, CURRENT_TIMESTAMP)
+    </update>
+
+    <!-- 채팅방 메시지 삭제 -->
+    <delete id="deleteChatHistory">
+        DELETE FROM ChatMessage
+        WHERE room_seq = #{roomSeq} AND sender_seq = #{empSeq}
+    </delete>
+</mapper>

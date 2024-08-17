@@ -81,7 +81,8 @@ Create table chatMembers (
     custom_room_avatar varchar2(1000),
     member_role VARCHAR2(20) DEFAULT 'MEMBER' 
         CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),
-    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    
+    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL,
+    notifications_enabled char(1) DEFAULT 'Y'
 );
 
 Create table userSession (

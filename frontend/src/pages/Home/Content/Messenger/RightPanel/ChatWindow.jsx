@@ -1,23 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import styles from '../Messenger.module.css';
-import { formatDistanceToNow } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import { useChatStore } from '../../../../../store/messengerStore';
-import { sendMessage, subscribeToRoom } from '../../../../../commons/websocket';
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
+import { sendMessage, subscribeToRoom, leaveRoom, clearChatHistory, toggleNotifications } from '../../../../../commons/websocket';
+import ChatHeader from './ChatHeader';
+import MessageList from './MessageList';
+import ChatInput from './ChatInput';
 
 const ChatWindow = ({ chat }) => {
-  const { messages, setMessages, addMessage } = useChatStore();
-  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [messageContent, setMessageContent] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);  // 파일 상태 추가
-  const messagesEndRef = useRef(null);
+  const { messages, setMessages, addMessage, setChatRooms, setSelectedChat } = useChatStore();
   const messagesContainerRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMessages, setFilteredMessages] = useState([]);
 
   const currentMessages = messages[chat.roomSeq] || [];
+  const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
 
   const scrollToBottom = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -27,7 +25,8 @@ const ChatWindow = ({ chat }) => {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
+      // URL을 새로운 API 구조에 맞게 수정
+      const response = await axios.get(`${BaseUrl()}/chat/messages/${chat.roomSeq}`);
       setMessages(chat.roomSeq, response.data);
       setTimeout(scrollToBottom, 0);
     } catch (error) {
@@ -38,136 +37,113 @@ const ChatWindow = ({ chat }) => {
   useEffect(() => {
     if (chat.roomSeq) {
       fetchMessages();
-      const unsubscribe = subscribeToRoom(chat.roomSeq, (message) => {
-        addMessage(chat.roomSeq, message);
-      });
-
+      const unsubscribe = subscribeToRoom(chat.roomSeq, handleReceivedMessage);
       return () => {
         if (unsubscribe) unsubscribe();
       };
     }
-  }, [chat.roomSeq, fetchMessages, addMessage]);
+  }, [chat.roomSeq, fetchMessages]);
 
   useEffect(() => {
     scrollToBottom();
   }, [currentMessages, scrollToBottom]);
 
-  const sendChatMessage = useCallback(async () => {
-    let message = {
+  const handleReceivedMessage = useCallback((message) => {
+    switch (message.messageType) {
+      case 'CHAT':
+        addMessage(chat.roomSeq, message);
+        scrollToBottom();
+        break;
+      case 'LEAVE':
+        console.log(message.messageContent);
+        // 채팅방 나가기 처리
+        break;
+      case 'CLEAR':
+        console.log(message.messageContent);
+        setMessages(chat.roomSeq, []);
+        break;
+      default:
+        console.log('Unknown message type:', message.messageType);
+    }
+  }, [chat.roomSeq, addMessage, setMessages, scrollToBottom]);
+
+  const sendChatMessage = useCallback((messageContent) => {
+    const message = {
       roomSeq: chat.roomSeq,
       messageContent,
       messageType: 'CHAT',
-      senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq,
+      senderSeq: currentUserSeq,
       sendTime: new Date().toISOString()
     };
+    sendMessage("/app/chat.sendMessage", message);
+  }, [chat.roomSeq, currentUserSeq]);
 
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-
+  const handleLeaveChat = async () => {
+    if (window.confirm("정말로 채팅방을 나가시겠습니까?")) {
       try {
-        const response = await axios.post(`${BaseUrl()}/attachment/upload`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        message.attachmentUrl = response.data.url; // 업로드된 파일 URL 추가
-        message.attachmentName = selectedFile.name; // 파일 이름 추가
-        setSelectedFile(null);  // 파일 전송 후 초기화
+        await axios.post(`${BaseUrl()}/chat/rooms/leave/${chat.roomSeq}`);
+        leaveRoom(chat.roomSeq);
+        setChatRooms(prevRooms => prevRooms.filter(room => room.roomSeq !== chat.roomSeq));
+        setSelectedChat(null);
       } catch (error) {
-        console.error('파일 업로드 실패:', error);
+        console.error('채팅방 나가기 오류:', error);
       }
     }
+  };
 
-    if (messageContent.trim() || message.attachmentUrl) {
-      sendMessage("/app/chat.sendMessage", message);
-      setMessageContent('');  // 메시지 전송 후 입력창 비우기
-    }
-  }, [chat.roomSeq, messageContent, selectedFile]);
-
-  const handleEmojiSelect = useCallback((emoji) => {
-    setMessageContent(prevContent => prevContent + emoji.native);
-  }, []);
-
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    if (value.length <= 100) {
-      setMessageContent(value);
+  const handleClearChat = async () => {
+    if (window.confirm("대화 내용을 삭제하시겠습니까? (서버에서도 삭제됩니다)")) {
+      try {
+        // URL을 새로운 API 구조에 맞게 수정
+        await axios.delete(`${BaseUrl()}/chat/messages/clear/${chat.roomSeq}`);
+        clearChatHistory(chat.roomSeq);
+        setMessages(chat.roomSeq, []);
+      } catch (error) {
+        console.error('대화 내용 삭제 오류:', error);
+      }
     }
   };
 
-  const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);  // 선택한 파일 상태 업데이트
+  const handleToggleNotifications = async (enabled) => {
+    try {
+      await axios.post(`${BaseUrl()}/chat/notifications/${chat.roomSeq}`, { enabled });
+      toggleNotifications(chat.roomSeq, enabled);
+      console.log(`알림 ${enabled ? '켜기' : '끄기'}`);
+    } catch (error) {
+      console.error('알림 설정 변경 오류:', error);
+    }
   };
 
-  const renderMessage = (message, index) => {
-    const isCurrentUser = message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
-    return (
-      <div
-        key={message.messageSeq || index}
-        className={`${styles.messageContainer} ${isCurrentUser ? styles.sent : styles.received}`}
-      >
-        {!isCurrentUser && (
-          <div className={styles.senderInfo}>
-            <img 
-              src={chat.customRoomAvatar || '/default-avatar.png'} 
-              alt={chat.customRoomName} 
-              className={styles.senderAvatar}
-            />
-          </div>
-        )}
-        <div className={styles.messageWrapper}>
-          {!isCurrentUser && (
-            <span className={styles.senderName}>{chat.customRoomName}</span>
-          )}
-          <div className={styles.messageContent}>
-            {message.messageContent}
-            {message.attachmentUrl && (
-              <div>
-                <a href={message.attachmentUrl} download={message.attachmentName} target="_blank" rel="noopener noreferrer">
-                  {message.attachmentName} 다운로드
-                </a>
-              </div>
-            )}
-          </div>
-          <span className={styles.messageTime}>
-            {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
-          </span>
-        </div>
-      </div>
-    );
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (term) {
+      const filtered = currentMessages.filter(message =>
+        message.messageContent.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredMessages(filtered);
+    } else {
+      setFilteredMessages([]);
+    }
   };
 
   return (
     <div className={styles.chatWindow}>
-      <div className={styles.chatHeader}>
-        <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
-        <h2>{chat.customRoomName || chat.roomName}</h2>
-        <span className={styles.status}>Active</span>
+      <ChatHeader
+        chat={chat}
+        onSearch={handleSearch}
+        onLeaveChat={handleLeaveChat}
+        onClearChat={handleClearChat}
+        onToggleNotifications={handleToggleNotifications}
+      />
+      <div className={styles.messageListContainer} ref={messagesContainerRef}>
+        <MessageList
+          messages={searchTerm ? filteredMessages : currentMessages}
+          chat={chat}
+          currentUserSeq={currentUserSeq}
+          searchTerm={searchTerm}
+        />
       </div>
-
-      <div className={styles.messages} ref={messagesContainerRef}>
-        {currentMessages.map(renderMessage)}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className={styles.chatInput}>
-        <div className={styles.inputWrapper}>
-          <input
-            type="text"
-            value={messageContent}
-            onChange={handleInputChange}
-            placeholder="메시지를 입력하세요..."
-            className={styles.textInput}
-          />
-          <input type="file" onChange={handleFileChange} className={styles.fileInput} /> {/* 파일 입력 필드 추가 */}
-          <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} className={styles.emojiButton}>😀</button>
-          {showEmojiPicker && (
-            <div className={styles.emojiPicker}>
-              <Picker data={data} onEmojiSelect={handleEmojiSelect} />
-            </div>
-          )}
-        </div>
-        <button onClick={sendChatMessage} className={styles.sendButton}>전송</button>
-      </div>
+      <ChatInput onSendMessage={sendChatMessage} />
     </div>
   );
 };
