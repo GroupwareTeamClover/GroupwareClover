@@ -87,7 +87,7 @@ export const DetailDocument = ({type}) => {
         { label: '문서번호', value: '' }
     ]); 
 
-    const [totalLineInfo, setTotalLineInfo]=useState({});
+    const [totalLineInfo, setTotalLineInfo]=useState([]);
 
 
     //메뉴 on 
@@ -142,7 +142,9 @@ export const DetailDocument = ({type}) => {
                     roleName: resp.data.document.roleName,
                     order: '',
                     drafterSeq: resp.data.document.drafterSeq,
-                    docSeq:resp.data.document.docSeq
+                    docSeq:resp.data.document.docSeq,
+                    egcYn:resp.data.document.egcYn,
+                    docStateCode: resp.data.document.docStateCode
                   }] : [];
 
         
@@ -155,7 +157,8 @@ export const DetailDocument = ({type}) => {
                     lineSeq: item.lineSeq,
                     apverId: item.apverId,
                     apvStatusCode: item.apvStatusCode,
-                    lineApvDate: item.lineApvDate
+                    lineApvDate: item.lineApvDate,
+                    lineApvCmt:item.lineApverCmt
                   })) : [];
         
                   const plineData = resp.data.pline ? resp.data.pline.map(item => ({
@@ -166,7 +169,8 @@ export const DetailDocument = ({type}) => {
                     order: item.pcpDivision,
                     lineSeq: item.lineSeq,
                     empSeq: item.empSeq,
-                    readYN: item.readYN
+                    readYN: item.readYN,
+                    readDate: item.readDate
                   })) : [];
         
                   setTotalLineInfo([...documentData, ...apvlineData, ...plineData]);
@@ -241,10 +245,12 @@ export const DetailDocument = ({type}) => {
                 id: id
             }).then(()=>{
                 setIsApproval(false);
+                setIsApprovalMenu(false);
                 alert("결재 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsApproval(false);
+                setIsApprovalMenu(false);
                 alert("결재 실패");
             })
 
@@ -290,6 +296,7 @@ export const DetailDocument = ({type}) => {
                 }).then(()=>{
                     setIsRejectModalComplete(false); //모달창 반려버튼
                     setIsReject(false); //반려버튼
+                    setIsApprovalMenu(false);
                     alert("반려 완료");
                     handleGetAll();
                     closeModal();
@@ -297,6 +304,7 @@ export const DetailDocument = ({type}) => {
                 }).catch(()=>{
                     setIsRejectModalComplete(false);
                     setIsReject(false);
+                    setIsApprovalMenu(false);
                     alert("반려 실패");
                     closeModal();
                 })
@@ -319,12 +327,12 @@ export const DetailDocument = ({type}) => {
             axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/holdoff`, {
                 cleanApvLineSeq:cleanApvLineSeq,
             }).then(()=>{
-                alert("보류 완료");
                 setIsHoldoff(false);
+                alert("보류 완료");
                 handleGetAll();
             }).catch(()=>{
-                alert("보류 실패");
                 setIsHoldoff(false);
+                alert("보류 실패");
             })
         }
     },[isHoldoff, totalLineInfo])
@@ -374,22 +382,44 @@ export const DetailDocument = ({type}) => {
                 id: id
             }).then(()=>{
                 setIsPartCheck(false);
+                setIsPartMenu(false);
                 alert("읽음 처리 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsPartCheck(false);
+                setIsPartMenu(false);
                 alert("읽음 처리 실패");
             })
 
         }
     },[isPartCheck, totalLineInfo])
 
+    // 사이드 메뉴 상태 관리
+    const [activeMenu, setActiveMenu] = useState('checkInfo'); // 기본값 설정
+
+    // 메뉴 변경 핸들러
+    const handleMenuClick = (menu) => {
+        setActiveMenu(menu);
+    };
+
+    const menuItems = [
+        { id: 'checkInfo', label: '확인기록' },
+        ...(totalLineInfo.some(item => item.type === 'document' && item.docStateCode === 4) ? [{ id: 'rejectInfo', label: '반려정보' }] : [])
+    ];
+    
+    useEffect(()=>{
+        console.log(totalLineInfo)
+    },[totalLineInfo])
   
    
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h3 className={styles.headerText}>{type}</h3>
+                <h3 className={styles.headerText}>{type} 
+                {totalLineInfo.some(item => item.type === 'document' && item.egcYn === 'y') && (
+                         <span className={styles.egcstate}>긴급</span>
+                    )}
+                </h3>
             </div>
             <div className={styles.menu}>
                 {isPartMenu && <ParticipantMenu setIsPartCheck={setIsPartCheck}/>}
@@ -451,7 +481,97 @@ export const DetailDocument = ({type}) => {
                     </div>
                 </div>
                 {/* 오른쪽 */}
-                <div className={styles.side}></div>
+                <div className={styles.side}>
+                    <div className={styles.menuBox}>
+                        {menuItems.map((item) => (
+                            <div
+                                key={item.id}
+                                className={`${styles.menudiv} ${activeMenu === item.id ? styles.active : ''}`}
+                                onClick={() => handleMenuClick(item.id)}
+                            >
+                                <span className={styles.menuspan}>{item.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                    <div className={styles.menuInfo}>
+                        <div className={styles.sideinfo}>
+                            {menuItems.map((item) => (
+                                activeMenu === item.id && (
+                                    <div key={item.id}>
+                                        {/* 메뉴에 따른 내용을 여기서 구분해서 출력 */}
+                                        {item.id === 'checkInfo' && (
+                                            <div className={styles.infocontainer}>
+                                                {/* 참조자 섹션 */}
+                                                {totalLineInfo.filter(line => line.type === 'pline' && line.order === 'r').length > 0 ? (
+                                                    <div className={`${styles.section} ${styles.referenceSection}`}>
+                                                        <h4 className={styles.sectionTitle}>참조자</h4>
+                                                        {totalLineInfo.filter(line => line.type === 'pline' && line.order === 'r').map((line, index) => (
+                                                            <div key={index} className={styles.row}>
+                                                                <div className={styles.rightdiv}>
+                                                                    <span>{line.empName}</span> <span>{line.roleName}</span> <span>({line.deptName}) : </span> <span>{line.readDate ? formatDate(line.readDate) : '미확인'}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className={styles.section}>
+                                                        <h4 className={styles.sectionTitle}>참조자</h4>
+                                                        <div className={styles.row}>
+                                                            <span>참조자 정보가 없습니다.</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* 열람자 섹션 */}
+                                                {totalLineInfo.filter(line => line.type === 'pline' && line.order === 'v').length > 0 ? (
+                                                    <div className={styles.section}>
+                                                        <h4 className={styles.sectionTitle}>열람자</h4>
+                                                        {totalLineInfo.filter(line => line.type === 'pline' && line.order === 'v').map((line, index) => (
+                                                            <div key={index} className={styles.row}>
+                                                                <div className={styles.rightdiv}>
+                                                                    <span>{line.empName}</span> <span>{line.roleName}</span> <span>({line.deptName}) : </span> <span>{line.readDate ? formatDate(line.readDate) : '미확인'}</span>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <div className={styles.section}>
+                                                        <h4 className={styles.sectionTitle}>열람자</h4>
+                                                        <div className={styles.row}>
+                                                            <span>열람자 정보가 없습니다.</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                       {item.id === 'rejectInfo' && (
+                                        <div className={styles.infocontainer}>
+                                            <div className={`${styles.section} ${styles.referenceSection}`}>
+                                                <h4 className={styles.sectionTitle}>반려자</h4>
+                                                {totalLineInfo.filter(line => line.type === 'apvline' && line.apvStatusCode === 4).map((line, index) => (
+                                                    <div key={index} className={styles.row}>
+                                                        <div className={styles.rightdiv}>
+                                                            <span>{line.empName}</span> <span>{line.roleName}</span> <span>({line.deptName})</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <h4 className={styles.sectionTitle}>반려 이유</h4>
+                                                {totalLineInfo.filter(line => line.type === 'apvline' && line.apvStatusCode === 4).map((line, index) => (
+                                                    <div key={index} className={styles.row}>
+                                                        <div className={styles.rightdiv}>
+                                                            <span>{line.lineApvCmt}</span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                    </div>
+                                )
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
 
                    

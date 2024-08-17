@@ -29,7 +29,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const [isReadOnly, setIsReadOnly] = useState(false); // 추가된 상태
     //날짜, 제목
     const [date, setDate]=useState(null);
-    const [title, setTitle]=useState();
+    const [title, setTitle]=useState('');
     const handleDateChange = (e) => {
         const selectedDate = e.target.value;
         setDate(selectedDate === "" ? null : selectedDate); // 날짜가 입력되지 않았을 때 null로 설정
@@ -37,11 +37,14 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const handleTitleChange=(e)=>{setTitle(e.target.value);}
 
     // <handleContentChange> - 에디터 내용 변경 시 호출할 onChange함수
-    const [content, setContent] = useState();
-    const editorRef = useRef();
+    const [content, setContent] = useState('');
+    const editorRef = useRef('');
     const handleContentChange = () => {
         setContent(editorRef.current.getInstance().getHTML());
     }
+
+    // defaultContent를 관리할 상태 변수 추가
+    const [defaultContent, setDefaultContent] = useState("");
 
     // 유효성 검사 함수
     const validateForm = () => {
@@ -100,7 +103,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     // 초기화
     useEffect(() => {
         if (isModalComplete) {
-            setDate('');
+            setDate(null);
             setTitle('');
             setContent('');
             if (editorRef.current) {
@@ -133,16 +136,19 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장 insert할 때 사용
     useEffect(() => {
         if (isTemp && !id) {  // id가 없는 경우에만 실행
+            console.log('setDocumentDTO있는 영역');
+            console.log(business);
             // 기존 값에 임시저장 상태로 업데이트
             setDocumentDTO((prev) => ({
                 ...prev, 
                 docStateCode: 2
             }));
         }
-    }, [isTemp, id]);
+    }, [isTemp]);
 
     useEffect(() => {
         if (isTemp && !id) {
+            console.log(business);
             axios.post(`${BaseUrl()}/approval/document`, business)
                 .then((resp) => {
                     alert("임시 저장 성공");
@@ -174,11 +180,16 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             } else {
                 console.log("날짜 정보: null");
             }
-
+            //디테일 페이지에서 사용
             if (contentRef.current) {  // contentRef.current가 null이 아닌지 확인
                 contentRef.current.innerHTML = resp.data.BS_CONTENT;
             }
+
+            // 가져온 BS_CONTENT를 defaultContent로 설정
+            setDefaultContent(resp.data.BS_CONTENT);
+         
             setTitle(resp.data.BS_TITLE);
+            setDate(writeDate);
             setDocData((prev) => ({
                 ...prev,
                 bsSeq: resp.data.BS_SEQ,
@@ -207,6 +218,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장에서 결재요청 시 documnet정보 진행중으로 변경
     useEffect(() => {
         if (isTempInsert && id) {  
+           
             if (validateForm()) {
                 setIsTempInsert(false);
             }else{
@@ -225,6 +237,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     //임시저장에서 임시저장 시 정보 변경
     useEffect(()=>{
+        
         if(isTempTemp && id){
             axios.put(`${BaseUrl()}/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
                 setIsTempTemp(false);
@@ -237,14 +250,24 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         }
     },[isTempTemp])
 
+
     const today = new Date().toISOString().split('T')[0];
+
+    //임시저장하고 결재요청시 예외처리
+    useEffect(() => {
+        // 컴포넌트가 마운트되거나 defaultContent가 변경될 때 content 상태를 초기화
+        if (!content && defaultContent) {
+            setContent(defaultContent);
+        }
+    }, [defaultContent, content]);
+
     return(
         <div className={styles.container}>
             <div className={styles.datatitle}>
                 <div className={styles.date}>
                     <div className={styles.name}>시행일자</div>
                     <div className={styles.value}>
-                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={docData.bsWriteDate} disabled={isReadOnly}  min={today} ></input>
+                        <input type='date' className={styles.inputdate} onChange={handleDateChange} value={date} disabled={isReadOnly}  min={today} ></input>
                     </div>
                 </div>
                 <div className={styles.title}>
@@ -257,7 +280,15 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             <div className={styles.editerContainer}>
                 {!id && <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent=""/>}
                 {id && !isTempMenu && <div ref={contentRef} ></div>}
-                {id && isTempMenu && <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent={docData.bsContent}/>}
+                {isTempMenu && (
+                    <>
+                        {defaultContent === "" ? (  // defaultContent가 비어 있을 경우 로딩 메시지 표시
+                            <div>데이터 불러오는 중...</div>
+                        ) : (
+                            <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent={defaultContent||''} />
+                        )}
+                    </>
+                )}
             </div>                     
         </div>
     
