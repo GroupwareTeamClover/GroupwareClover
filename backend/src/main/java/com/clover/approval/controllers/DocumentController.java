@@ -49,33 +49,65 @@ public class DocumentController {
 	
 	//insert-문서,결재자,참조/열람자,양식정보까지 && 임시저장
 	@PostMapping
-	 public ResponseEntity<Integer> insertData(@RequestBody InsertMappingDTO insertMappingDTO) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	public ResponseEntity<Integer> insertData(@RequestBody InsertMappingDTO insertMappingDTO) {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	        // DTO 처리
-	        // 팩토리 패턴을 사용하여 적절한 DocumentDTO 생성
-	        DocumentDTO document=insertMappingDTO.getDocument();
-	        DocumentDTO typeDocument = DocumentFactory.createDocument(insertMappingDTO.getDocType());
+	    // DTO 처리
+	    // 팩토리 패턴을 사용하여 적절한 DocumentDTO 생성
+	    DocumentDTO document = insertMappingDTO.getDocument();
+	    DocumentDTO typeDocument = DocumentFactory.createDocument(insertMappingDTO.getDocType());
+	    
+	    if (typeDocument instanceof BusinessDTO) {
+	        BusinessDTO TypeDocDTO = (BusinessDTO) typeDocument;
+	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
+	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
+	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
 	        
-	        if (typeDocument instanceof BusinessDTO) {
-	            BusinessDTO TypeDocDTO = (BusinessDTO) typeDocument;
-	            TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
-	            TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
-	            TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
-	            Date parsedDate=null;
-				try {
-					parsedDate = dateFormat.parse((String) insertMappingDTO.getDocData().get("bsWriteDate"));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				TypeDocDTO.setBsWriteDate(parsedDate);
-				TypeDocDTO.setParentSeq((int) insertMappingDTO.getDocData().get("parentSeq"));
-//	            System.out.println(business.getBsContent());
-		        documentService.insertDoc(document, insertMappingDTO.getApvline(), insertMappingDTO.getPline(), TypeDocDTO);
+	        // 날짜 문자열이 null이 아닌지 확인
+//	        String dateStr = (String) insertMappingDTO.getDocData().get("bsWriteDate");
+//	        if (dateStr != null && !dateStr.trim().isEmpty()) {  // null 및 빈 문자열 체크
+//	            try {
+//	                Date parsedDate = dateFormat.parse(dateStr);
+//	                TypeDocDTO.setBsWriteDate(parsedDate);
+//	            } catch (ParseException e) {
+//	                e.printStackTrace();
+//	            }
+//	        } else {
+//	            TypeDocDTO.setBsWriteDate(null);
+//	        }
+	        
+	        // 날짜 처리
+	        Object bsWriteDate = insertMappingDTO.getDocData().get("bsWriteDate");
+	        if (bsWriteDate instanceof Date) {
+	            // bsWriteDate가 Date 객체일 경우
+	            TypeDocDTO.setBsWriteDate((Date) bsWriteDate);
+	        } else if (bsWriteDate instanceof String) {
+	            // bsWriteDate가 String 객체일 경우
+	            String dateStr = (String) bsWriteDate;
+	            if (!dateStr.trim().isEmpty()) {
+	                try {
+	                    Date parsedDate = dateFormat.parse(dateStr);
+	                    TypeDocDTO.setBsWriteDate(parsedDate);
+	                } catch (ParseException e) {
+	                    e.printStackTrace();
+	                    // 파싱 오류 발생 시 null로 설정 (필요에 따라 예외 처리 가능)
+	                    TypeDocDTO.setBsWriteDate(null);
+	                }
+	            } else {
+	                // 빈 문자열인 경우 null로 설정
+	                TypeDocDTO.setBsWriteDate(null);
+	            }
+	        } else {
+	            // bsWriteDate가 null이거나 다른 타입일 경우
+	            TypeDocDTO.setBsWriteDate(null);
 	        }
-	        	       
-	        return ResponseEntity.ok(document.getDocSeq());
+
+	        TypeDocDTO.setParentSeq((int) insertMappingDTO.getDocData().get("parentSeq"));
+	        documentService.insertDoc(document, insertMappingDTO.getApvline(), insertMappingDTO.getPline(), TypeDocDTO);
 	    }
+
+	    return ResponseEntity.ok(document.getDocSeq());
+	}
 	
 	
 	//select-문서,기안자,참조/열람자 정보
