@@ -142,9 +142,6 @@ export const List = ({ type }) => {
                             return false;
                         });
                     }
-
-                     // 날짜를 최신순으로 정렬
-                    filteredDocument.sort((a, b) => new Date(b.writeDate) - new Date(a.writeDate));
         
                     setFilteredDocuments(filteredDocument);
                     calculatePagination(filteredDocument.length);
@@ -217,8 +214,7 @@ export const List = ({ type }) => {
                 .then((resp) => {
                     const totalRecords = resp.data.recordTotalCount;
                     const documents = resp.data.documents;
-                    console.log(totalRecords);
-                    console.log(documents);
+
                     setDocumentDTOs(documents);
                     setPaginatedDocuments(documents);
 

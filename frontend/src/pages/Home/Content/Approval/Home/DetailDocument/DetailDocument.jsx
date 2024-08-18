@@ -120,7 +120,7 @@ export const DetailDocument = ({type}) => {
                 //결정메뉴들 on(결재, 반려, 보류)
                 //대기와 보류일때 
                 resp.data.apvline.map((line, index)=>{
-                    if(line.apverId===sessionData.empSeq && (line.apvStatusCode===1 || line.apvStatusCode===8))  setIsApprovalMenu(true)
+                    if(line.apverId===sessionData.empSeq && line.apvStatusCode===1 || line.apvStatusCode===8)  setIsApprovalMenu(true)
                     if(line.apvStatusCode===8) setIsHoldoffClicked(true)
                 })
 
@@ -211,19 +211,15 @@ export const DetailDocument = ({type}) => {
     //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
     useEffect(()=>{
         if(isCancle){
-            if(window.confirm("상신취소하시겠습니까? 모든 내용은 사라집니다.")){
-                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-                .then(()=>{
-                    setIsCancle(false);
-                    navi(`/approval`); // 절대 경로 사용
-                }).catch(()=>{
-                    setIsCancle(false);
-                    alert("취소 실패");
-                })
-            }else{
+            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+            .then(()=>{
                 setIsCancle(false);
-            }
-     
+                alert("상신취소하시겠습니까? 모든 내용은 사라집니다.");
+                navi(`/approval`); // 절대 경로 사용
+            }).catch(()=>{
+                setIsCancle(false);
+                alert("취소 실패");
+            })
         }
     },[isCancle])
 
