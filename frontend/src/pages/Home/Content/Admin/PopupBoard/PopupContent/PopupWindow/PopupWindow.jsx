@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useMemberStore } from '../../../../../../../store/store';
@@ -173,35 +173,19 @@ export const PopupWindow = ({ setShowPopup }) => {
 
                                         function handleTodayCheckboxChange(checked) {
                                             isTodayChecked = checked;
+                                            if (checked) {
+                                                window.opener.onTodayDismiss('${popupId}');
+                                                window.close();
+                                            }
                                         }
 
                                         function handlePermanentCheckboxChange(checked) {
                                             isPermanentChecked = checked;
-                                        }
-
-                                        function todayDismiss() {
-                                            if (isTodayChecked) {
-                                                window.opener.onTodayDismiss('${popupId}');
-                                            }
-                                            window.close();
-                                        }
-                                        
-                                        function permanentDismiss() {
-                                            if (isPermanentChecked) {
+                                            if (checked) {
                                                 window.opener.onPermanentDismiss('${popupId}');
+                                                window.close();
                                             }
-                                            window.close();
                                         }
-
-                                        // 팝업이 닫힐 때 호출되는 이벤트
-                                        window.addEventListener('beforeunload', () => {
-                                            if (isTodayChecked) {
-                                                window.opener.onTodayDismiss('${popupId}');
-                                            }
-                                            if (isPermanentChecked) {
-                                                window.opener.onPermanentDismiss('${popupId}');
-                                            }
-                                        });
 
                                         // 파일 박스 토글 핸들러
                                         function toggleFileBox() {

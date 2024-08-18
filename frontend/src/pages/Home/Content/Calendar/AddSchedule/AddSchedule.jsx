@@ -13,7 +13,24 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
   const [inputData, setInputData] = useState(defaultInputData);
   const handleDate = (e) => {
     const { name, value } = e.target;
+    if(name === "scheduleContent" && value.length > 300) return false;
+    if((name === "endHour" || name === "startHour") && value > 12) return false;
+    if((name === "startMinute" || name === "endMinute") && value > 59) return false;
     setInputData(prev => ({ ...prev, [name]: value }));
+  }
+
+  /** 날짜 형식 변환 함수 **/
+  const makeDate = (date, time, hour, minute) => {
+    let hourInt = parseInt(hour, 10);
+    const minuteInt = parseInt(minute, 10);
+
+    if (time === "pm" && hourInt !== 12) {
+      hourInt += 12;
+    } else if (time === "am" && hourInt === 12) {
+      hourInt = 0; // 오전 12시는 00시로 변환
+    }
+    const formattedTime = `${hourInt.toString().padStart(2, '0')}:${minuteInt.toString().padStart(2, '0')}:00`;
+    return `${date}T${formattedTime}`;
   }
 
   /**  일정 추가 핸들러 **/
@@ -22,7 +39,27 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
       alert("내용을 전부 입력하세요");
       return false;
     }
-    axios.post(`${BaseUrl()}/schedule`, inputData).then(res => {
+
+    if(inputData.startDate > inputData.endDate) {
+      alert("종료 날짜는 시작 날짜 이후만 됩니다.");
+      return false;
+    }
+
+    if(inputData.scheduleContent.length > 300) {
+      alert("내응은 300자 이내로 작성해야 합니다.");
+      return false;
+    }
+
+    const data = {
+      scheduleContent : inputData.scheduleContent,
+      startDate : inputData.startDate,
+      endDate: inputData.endDate
+
+    }
+
+    console.log("data ==== ", JSON.stringify(data));
+
+    axios.post(`${BaseUrl()}/schedule`, data).then(res => {
       if(res.data === "ok") {
         closeModal();
         setDataChange(prev => !prev);
@@ -44,33 +81,17 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
         <div className={styles.inputData}>
           <div className={styles.insertRow}>
             <span>시작 날짜</span>
-            <input type="date" name="startDate" value={inputData.startDate || ""}
+            <input type="datetime-local" name="startDate" value={inputData.startDate || ""}
                    onChange={handleDate}/>
-            <div className={styles.time}>
-              <select name="startTime">
-                <option value="am">오전</option>
-                <option value="pm">오후</option>
-              </select>
-              <input type="number" name="startHour" max="12" placeholder="시"/>
-              <input type="number" name="startMinute" max="59" placeholder="분"/>
-            </div>
           </div>
           <div className={styles.insertRow}>
             <span>종료 날짜</span>
-            <input type="date" name="endDate" value={inputData.endDate || ""}
+            <input type="datetime-local" name="endDate" value={inputData.endDate || ""}
                    onChange={handleDate}/>
-            <div className={styles.time}>
-              <select name="endTime">
-                <option value="am">오전</option>
-                <option value="pm">오후</option>
-              </select>
-              <input type="number" name="endHour" max="12" placeholder="시"/>
-              <input type="number" name="endMinute" max="59" placeholder="분"/>
-            </div>
           </div>
           <div className={styles.insertRow}>
             <span>내용</span>
-            <input type="text" name="scheduleContent" value={inputData.scheduleContent || ""}
+            <input type="text" name="scheduleContent" maxLength="300" value={inputData.scheduleContent || ""}
                    onChange={handleDate}/>
           </div>
         </div>

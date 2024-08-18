@@ -59,10 +59,14 @@ public class LineController {
     //대기상태에서 -> 보류로 상태업데이트, 문서상태변화는 없음
     @PutMapping("/{lineSeq}/holdoff")
     public ResponseEntity<String> holdaoff(@PathVariable int lineSeq) {
-
         lineService.updateWaitToHoldoff(lineSeq);
         return ResponseEntity.ok().build();
     }
     
-
+    //참조/열람 읽음으로 상태변경 및 읽은 날짜 update
+    @PutMapping("/{cleanPartLineSeq}/{id}/part")
+  	public ResponseEntity<Void> part( @PathVariable("cleanPartLineSeq") int cleanPartLineSeq, @PathVariable("id") int id){
+      	lineService.updateReadCheck(cleanPartLineSeq);
+      	return ResponseEntity.ok().build();
+  	}
 }

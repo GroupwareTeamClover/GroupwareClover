@@ -10,6 +10,9 @@
 	<select id="getCountMem" resultType="java.util.HashMap">
 		select emp_state_code, count(*) from employee group by emp_state_code
 	</select>
+	<select id="getGender" resultType="java.util.HashMap">
+		select emp_gender, count(*) as count from employee group by emp_gender
+	</select>
 	<update id="updateMem" parameterType="map">
 		update employee 
 		set ${tbObject.stateCode} = (

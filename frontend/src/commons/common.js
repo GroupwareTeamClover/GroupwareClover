@@ -127,6 +127,15 @@ export const dateYMD = (timestamp) => {
   return dateData;
 }
 
+export const dateSetting = (date) => {
+  const newDate = new Date(date);
+  // 원하는 형식으로 포맷
+  const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+  const formattedDate = newDate.toLocaleString('ko-KR', options);
+  console.log(formattedDate); // 2024.08.11. 09:00
+  return formattedDate;
+}
+
 // =============================== [ 분 단위 시간으로 변환 ] ===============================
 
 export const workTime = (time) => {

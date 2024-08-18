@@ -7,10 +7,10 @@
 
 /* 헤더 */
 .header{
-    flex:1;
+    flex:0.5;
     display: flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 10vh;
 }
 
 .headerText{
@@ -20,18 +20,18 @@
 
 /* 메뉴 */
 .menu{
-    flex: 1;
+    flex: 0.5;
     padding-left: 24px;
     display: flex;
     align-items: center;
-    min-height: 30px;
+    min-height: 8vh;
 }
 
 
 /* 디테일 */
 
 .detail{
-    flex:8;
+    flex:9;
     display: flex;
 
 }
@@ -193,8 +193,6 @@
 }
 
 
-
-
 /* 오른쪽 */
 .side{
     flex: 2.5;
@@ -218,7 +216,7 @@
     flex-direction: column;
 } */
 
-.header{
+.modalheader{
     width: 100%;
     flex: 3;
     padding-left: 10px;

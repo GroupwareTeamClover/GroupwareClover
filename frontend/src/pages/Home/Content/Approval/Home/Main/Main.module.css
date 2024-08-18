@@ -72,8 +72,8 @@
 }
 
 .headerText{
-    margin-left: 24px;
-    letter-spacing: -2px;
+    padding-left: 12px;
+    letter-spacing: -1px;
 }
 
 .tableWrapper{
@@ -128,4 +128,25 @@
 .td1,.td2,.td3,.td4,.td5,.td6,.td7{
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+
+.stateName{
+    background-color: #a6c76c;
+    border: none;
+    color: white;
+    font-size: 13px;
+    padding: 3.5px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+.egcstate{
+    background: none;
+    border: 1px solid #ff9f9d;
+    color: #fb4c49;
+    font-size: 13px;
+    padding: 1px;
+    border-radius: 3px;
+    letter-spacing: -1px;
 }

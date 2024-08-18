@@ -14,6 +14,7 @@ import { DragFolder } from "../../Side/ChoiceLine/DragFolder/DragFolder";
 import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./../Document/Menus/DrafterMenu/DrafterMenu";
 import {ApprovalMenu} from "./../Document/Menus/ApprovalMenu/ApprovalMenu";
+import {ParticipantMenu} from "./../Document/Menus/ParticipantMenu/ParticipantMenu";
 import {TempMenu} from './../Document/Menus/TempMenu/TempMenu';
 import signImage from './../../../../../../images/sign.PNG';
 import rejectImage from './../../../../../../images/reject.PNG';
@@ -52,6 +53,9 @@ export const DetailDocument = ({type}) => {
     //ApprovalMenu에서 보류 클릭시-메뉴컴포넌트에 전달
     const [isHoldoff, setIsHoldoff]=useState(false);
 
+    //보류 클릭 여부 확인
+    const [isHoldoffClicked, setIsHoldoffClicked] = useState(false); // 보류 버튼 클릭 여부를 관리
+
     //TempMenu에서 결재요청 클릭시 - 메뉴컴포넌트에 전달
     const [isTempInsert, setIsTempInsert] = useState(false);
 
@@ -63,6 +67,9 @@ export const DetailDocument = ({type}) => {
 
     //TempMenu에서 취소 클릭시
     const [isTempCancle, setIsTempCancle]=useState(false);
+
+    //ParticipantMenu에서 읽음 클릭시
+    const [isPartCheck, setIsPartCheck]=useState(false);
 
     // 날짜 변환 함수
     const formatDate = (date) => {
@@ -87,6 +94,11 @@ export const DetailDocument = ({type}) => {
     const [isDrafterMenu, setIsDrafterMenu]=useState(false);
     const [isApprovalMenu, setIsApprovalMenu]=useState(false);
     const [isTempMenu, setIsTempMenu]=useState(false);
+    const [isPartMenu, setIsPartMenu]=useState(false);
+
+    useEffect(()=>{
+        handleGetAll();
+    },[])
 
 
     //DB에서 정보 가져오는함수
@@ -106,8 +118,10 @@ export const DetailDocument = ({type}) => {
                 }
                 
                 //결정메뉴들 on(결재, 반려, 보류)
+                //대기와 보류일때 
                 resp.data.apvline.map((line, index)=>{
-                    if(line.apverId===sessionData.empSeq && line.apvStatusCode===1)  setIsApprovalMenu(true)
+                    if(line.apverId===sessionData.empSeq && (line.apvStatusCode===1 || line.apvStatusCode===8))  setIsApprovalMenu(true)
+                    if(line.apvStatusCode===8) setIsHoldoffClicked(true)
                 })
 
                 //임시저장메뉴들 on 2==임시저장문서상태의미
@@ -115,6 +129,11 @@ export const DetailDocument = ({type}) => {
                 if(resp.data.document.drafterSeq === sessionData.empSeq && resp.data.document.docStateCode===2){
                     setIsTempMenu(true);
                 }
+
+                //참조자/열람자 메뉴 on
+                resp.data.pline.map((line, index)=>{
+                    if(line.empSeq===sessionData.empSeq && line.readYN === 'n') setIsPartMenu(true)
+                })
 
                 const documentData = resp.data.document ? [{
                     type: 'document',
@@ -145,7 +164,9 @@ export const DetailDocument = ({type}) => {
                     deptName: item.deptName,
                     roleName: item.roleName,
                     order: item.pcpDivision,
-                    lineSeq: item.lineSeq
+                    lineSeq: item.lineSeq,
+                    empSeq: item.empSeq,
+                    readYN: item.readYN
                   })) : [];
         
                   setTotalLineInfo([...documentData, ...apvlineData, ...plineData]);
@@ -172,30 +193,37 @@ export const DetailDocument = ({type}) => {
 
     }      
              
-    useEffect(()=>{
-        handleGetAll();
-    },[])
+ 
 
   
     /*********************메뉴 클릭에 따른 update******************** */
-    // 나의 결재라인번호 가져오기
+    // 나의 결재라인번호 가져오기 대기또는 보류일때만
     const getApvLineSeq = () => {
-        return totalLineInfo.filter(item => item.type === 'apvline').map(item => item.apverId===sessionData.empSeq && item.apvStatusCode === 1? item.lineSeq : '');
+        return totalLineInfo.filter(item => item.type === 'apvline').map(item => item.apverId===sessionData.empSeq && (item.apvStatusCode === 1 || item.apvStatusCode === 8 )? item.lineSeq : '');
     };
+    //나의 참가자라인번호 가져오기
+    const getPartLineSeq = () => {
+        return totalLineInfo.filter(item => item.type === 'pline').map(item =>  item.empSeq === sessionData.empSeq && item.readYN === 'n' ? item.lineSeq : '');
+    };
+
     
     //상신취소클릭시 DB업데이트
     //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
     useEffect(()=>{
         if(isCancle){
-            axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-            .then(()=>{
+            if(window.confirm("상신취소하시겠습니까? 모든 내용은 사라집니다.")){
+                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                .then(()=>{
+                    setIsCancle(false);
+                    navi(`/approval`); // 절대 경로 사용
+                }).catch(()=>{
+                    setIsCancle(false);
+                    alert("취소 실패");
+                })
+            }else{
                 setIsCancle(false);
-                alert("상신취소하시겠습니까? 모든 내용은 사라집니다.");
-                navi(`/approval`); // 절대 경로 사용
-            }).catch(()=>{
-                setIsCancle(false);
-                alert("취소 실패");
-            })
+            }
+     
         }
     },[isCancle])
 
@@ -225,7 +253,7 @@ export const DetailDocument = ({type}) => {
             //id는 docSeq
 
         }
-    },[isApproval])
+    },[isApproval, totalLineInfo])
 
     //반려클릭시 DB업데이트
     //반려 모달
@@ -265,6 +293,7 @@ export const DetailDocument = ({type}) => {
                     alert("반려 완료");
                     handleGetAll();
                     closeModal();
+                    
                 }).catch(()=>{
                     setIsRejectModalComplete(false);
                     setIsReject(false);
@@ -272,7 +301,7 @@ export const DetailDocument = ({type}) => {
                     closeModal();
                 })
             }
-    },[isRejectModalComplete])
+    },[isRejectModalComplete, totalLineInfo])
 
     //모달 취소 클릭시
     const handleRejectCancle=()=>{
@@ -290,15 +319,15 @@ export const DetailDocument = ({type}) => {
             axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/holdoff`, {
                 cleanApvLineSeq:cleanApvLineSeq,
             }).then(()=>{
-                setIsHoldoff(false);
                 alert("보류 완료");
+                setIsHoldoff(false);
                 handleGetAll();
             }).catch(()=>{
-                setIsHoldoff(false);
                 alert("보류 실패");
+                setIsHoldoff(false);
             })
         }
-    },[isHoldoff])
+    },[isHoldoff, totalLineInfo])
 
      //임시저장에서 취소 시 DB삭제
      useEffect(()=>{
@@ -308,11 +337,13 @@ export const DetailDocument = ({type}) => {
                 .then(()=>{
                     setIsTempCancle(false);
                     alert("삭제 성공");
-                    navi(`/approval`); // 절대 경로 사용
+                    navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
                 }).catch(()=>{
                     setIsTempCancle(false);
                     alert("삭제 실패");
                 })
+            }else{
+                setIsTempCancle(false);
             }
         }
     },[isTempCancle, id])
@@ -328,6 +359,31 @@ export const DetailDocument = ({type}) => {
         }
     },[isTempEmergency, id])
 
+
+    //참조자, 열람자 확인 클릭시
+    useEffect(()=>{
+        if(isPartCheck){
+            //내 결재라인 구분 번호
+            const partLineSeq=getPartLineSeq();
+            const cleanPartLineSeq=String(partLineSeq).replace(/,/g,'');
+            console.log(`결재번호 ${partLineSeq}`)
+            console.log(`클린결재번호 ${cleanPartLineSeq}`)
+            //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
+            axios.put(`${BaseUrl()}/approval/line/${cleanPartLineSeq}/${id}/part`, {
+                cleanPartLineSeq:cleanPartLineSeq,
+                id: id
+            }).then(()=>{
+                setIsPartCheck(false);
+                alert("읽음 처리 완료");
+                handleGetAll();
+            }).catch(()=>{
+                setIsPartCheck(false);
+                alert("읽음 처리 실패");
+            })
+
+        }
+    },[isPartCheck, totalLineInfo])
+
   
    
     return (
@@ -336,10 +392,11 @@ export const DetailDocument = ({type}) => {
                 <h3 className={styles.headerText}>{type}</h3>
             </div>
             <div className={styles.menu}>
-              {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
-              {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} 
-              setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
-              {isTempMenu && <TempMenu setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
+                {isPartMenu && <ParticipantMenu setIsPartCheck={setIsPartCheck}/>}
+                {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
+                {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} setIsHoldoffClicked={setIsHoldoffClicked} isHoldoffClicked={isHoldoffClicked}
+                 setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
+                {isTempMenu && <TempMenu setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
             </div>
             <div className={styles.detail}>
                 {/* 왼쪽 */}
@@ -405,7 +462,7 @@ export const DetailDocument = ({type}) => {
                                 <> 
                                     {Page===1 &&(
                                         <>
-                                            <div className={styles.header}>반려 사유</div>
+                                            <div className={styles.modalheader}>반려 사유</div>
                                             <div className={styles.inputBox}>
                                                 <input type="text" placeholder="반려 사유를 입력해주세요." className={styles.inputcss} onChange={handleModalInput}></input>
                                             </div>

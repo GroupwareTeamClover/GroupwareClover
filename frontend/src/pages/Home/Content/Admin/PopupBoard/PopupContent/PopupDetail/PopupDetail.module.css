@@ -76,17 +76,11 @@
 }
 
 .container .fileBox {
-	min-height: 120px;
 	width: 100%;
 	border-top: 1px solid #d3d3d3;
-	display: flex;
-    justify-content: center; /* 수평 가운데 정렬 */
-    align-items: center; /* 수직 가운데 정렬 */
-	padding-top : 10px;
-	padding-left : 20px;
-    padding-right: 20px;
+	padding : 10px 0;
+	min-height : 100px;
 }
-
 .container .editorBox {
     border-top: 1px solid #d3d3d3;
 	border-bottom: 1px solid #d3d3d3;

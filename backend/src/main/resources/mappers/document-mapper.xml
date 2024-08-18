@@ -24,17 +24,17 @@
     </selectKey>
 </insert>
 	
-	<insert id="insertBusiness">
-	    insert into business
-	    values(business_sequence.nextval, #{bsTitle}, #{bsContent},
-	            <if test="bsWriteDate == null">
-	                SYSDATE
-	            </if>
-	            <if test="bsWriteDate != null">
-	                #{bsWriteDate}
-	            </if>,
-	            #{parentSeq})
-	</insert>
+<insert id="insertBusiness">
+    insert into business
+    values(business_sequence.nextval, #{bsTitle}, #{bsContent},
+        <if test="bsWriteDate == null">
+            null,
+        </if>
+        <if test="bsWriteDate != null">
+            #{bsWriteDate},
+        </if>
+        #{parentSeq})
+</insert>
 	
 	<select id="selectDoc" resultType="com.clover.approval.dto.DocumentDTO">
 		select doc.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
@@ -95,8 +95,8 @@
 		LEFT JOIN doc_state_code st on doc.DOC_STATE_CODE=st.DOC_STATE_CODE
 		LEFT JOIN apv_line a1 on doc.DOC_SEQ = a1.DOC_SEQ
 		LEFT JOIN APV_STATE_CODE a2 on a1.apv_status_code=a2.APV_STATE_CODE
-		where st.DOC_STATE_NAME = '진행중' and (doc.drafter_seq = 36 or doc.CURRENT_APVER_SEQ = 36)
-		order by doc.WRITE_DATE desc
+		where st.DOC_STATE_NAME = '진행중' and (doc.drafter_seq = #{empSeq} or doc.CURRENT_APVER_SEQ = #{empSeq})
+		order by doc.egc_yn desc, doc.WRITE_DATE desc
 	</select>
 	
 	<update id="updateDocToApproval">
