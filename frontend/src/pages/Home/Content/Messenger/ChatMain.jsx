@@ -9,7 +9,7 @@ import SearchBar from './LeftPanel/SearchBar';
 import { useChatStore } from '../../../../store/messengerStore';
 import MessengerSideMenu from './MessengerSideMenu/MessengerSideMenu';
 import ProfilePanel from './ProfilePanel/ProfilePanel';
-import { sendMessage, connectWebSocket, disconnectWebSocket } from '../../../../commons/websocket';
+import { sendMessage, connectWebSocket, disconnectWebSocket, leaveRoom, clearChatHistory, toggleNotifications } from '../../../../commons/websocket';
 import { handleChatCreated } from './utils/chat-utils';
 
 // axios 전역 설정
@@ -21,7 +21,7 @@ export const ChatMain = () => {
   const {
     chatRooms, setChatRooms, addChatRoom, updateChatRoom,
     selectedChat, setSelectedChat,
-    addMessage, setOnlineUsers, setUnreadCounts, onlineUsers
+    addMessage, setOnlineUsers, setUnreadCounts, onlineUsers, setMessages
   } = useChatStore();
 
   // 선택된 프로필 상태 관리
@@ -109,6 +109,44 @@ export const ChatMain = () => {
     setSelectedChat(newRoom);
   }, [setSelectedChat]);
 
+  const handleLeaveChat = async (roomSeq) => {
+    if (window.confirm("정말로 채팅방을 나가시겠습니까?")) {
+      try {
+        await axios.post(`${BaseUrl()}/chat/rooms/leave/${roomSeq}`);
+        leaveRoom(roomSeq);
+        setSelectedChat(null);
+        await fetchChatRooms();
+      } catch (error) {
+        console.error('채팅방 나가기 오류:', error);
+      }
+    }
+  };
+
+  const handleClearChat = async (roomSeq) => {
+    if (window.confirm("대화 내용을 삭제하시겠습니까? (서버에서도 삭제됩니다)")) {
+      try {
+        await axios.delete(`${BaseUrl()}/chat/messages/clear/${roomSeq}`);
+        // 서버에서 메시지 삭제 후, 해당 채팅방의 메시지를 다시 로드
+        const response = await axios.get(`${BaseUrl()}/chat/rooms/${roomSeq}/messages`);
+        setMessages(roomSeq, response.data);
+        // 채팅방 목록 갱신 (필요한 경우)
+        await fetchChatRooms();
+      } catch (error) {
+        console.error('대화 내용 삭제 오류:', error);
+      }
+    }
+  };
+
+  const handleToggleNotifications = async (roomSeq, enabled) => {
+    try {
+      await axios.post(`${BaseUrl()}/chat/notifications/${roomSeq}`, { enabled });
+      toggleNotifications(roomSeq, enabled);
+      console.log(`알림 ${enabled ? '켜기' : '끄기'}`);
+    } catch (error) {
+      console.error('알림 설정 변경 오류:', error);
+    }
+  };
+
   return (
     <div className={styles.container}>
       {/* 메신저 사이드 메뉴 */}
@@ -134,6 +172,9 @@ export const ChatMain = () => {
             chat={selectedChat} 
             sendChatMessage={sendChatMessage}
             markMessagesAsRead={markMessagesAsRead}
+            onLeaveChat={handleLeaveChat}
+            onClearChat={handleClearChat}
+            onToggleNotifications={handleToggleNotifications}
           />
         ) : (
           <div className={styles.noChatSelected}>

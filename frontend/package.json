@@ -36,6 +36,7 @@
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.25.1",
     "react-scripts": "^5.0.1",
+    "react-toastify": "^10.0.5",
     "rsuite": "^5.68.1",
     "sockjs-client": "^1.6.1",
     "sweetalert2": "^11.12.4",

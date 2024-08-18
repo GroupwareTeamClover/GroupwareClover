@@ -8,7 +8,7 @@ import ChatHeader from './ChatHeader';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 
-const ChatWindow = ({ chat }) => {
+const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) => {
   const { messages, setMessages, addMessage, setChatRooms, setSelectedChat } = useChatStore();
   const messagesContainerRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -78,41 +78,9 @@ const ChatWindow = ({ chat }) => {
     sendMessage("/app/chat.sendMessage", message);
   }, [chat.roomSeq, currentUserSeq]);
 
-  const handleLeaveChat = async () => {
-    if (window.confirm("정말로 채팅방을 나가시겠습니까?")) {
-      try {
-        await axios.post(`${BaseUrl()}/chat/rooms/leave/${chat.roomSeq}`);
-        leaveRoom(chat.roomSeq);
-        setChatRooms(prevRooms => prevRooms.filter(room => room.roomSeq !== chat.roomSeq));
-        setSelectedChat(null);
-      } catch (error) {
-        console.error('채팅방 나가기 오류:', error);
-      }
-    }
-  };
-
-  const handleClearChat = async () => {
-    if (window.confirm("대화 내용을 삭제하시겠습니까? (서버에서도 삭제됩니다)")) {
-      try {
-        // URL을 새로운 API 구조에 맞게 수정
-        await axios.delete(`${BaseUrl()}/chat/messages/clear/${chat.roomSeq}`);
-        clearChatHistory(chat.roomSeq);
-        setMessages(chat.roomSeq, []);
-      } catch (error) {
-        console.error('대화 내용 삭제 오류:', error);
-      }
-    }
-  };
-
-  const handleToggleNotifications = async (enabled) => {
-    try {
-      await axios.post(`${BaseUrl()}/chat/notifications/${chat.roomSeq}`, { enabled });
-      toggleNotifications(chat.roomSeq, enabled);
-      console.log(`알림 ${enabled ? '켜기' : '끄기'}`);
-    } catch (error) {
-      console.error('알림 설정 변경 오류:', error);
-    }
-  };
+    const handleLeaveChat = () => onLeaveChat(chat.roomSeq);
+    const handleClearChat = () => onClearChat(chat.roomSeq);
+    const handleToggleNotifications = (enabled) => onToggleNotifications(chat.roomSeq, enabled);
 
   const handleSearch = (term) => {
     setSearchTerm(term);

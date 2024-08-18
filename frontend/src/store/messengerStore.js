@@ -1,6 +1,7 @@
 import { create } from 'zustand';
+import { toast} from 'react-toastify'
 
-export const useChatStore = create((set) => ({
+export const useChatStore = create((set, get) => ({
   // 모든 채팅방 목록
   chatRooms: [],
   
@@ -45,12 +46,31 @@ export const useChatStore = create((set) => ({
   // 각 채팅방별 메시지 목록
   // 구조: { roomSeq1: [messages], roomSeq2: [messages], ... }
   messages: {},
-  addMessage: (roomSeq, message) => set((state) => ({
-    messages: {
-      ...state.messages,
-      [roomSeq]: [...(state.messages[roomSeq] || []), message]
+  addMessage: (roomSeq, message) => set((state) => {
+    // 현재 사용자의 ID를 가져옴
+    const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser'))?.empSeq;
+
+    // 메시지 발신자가 현재 사용자가 아니고, 선택된 채팅방이 아닌 경우에만 알림을 표시
+    if (message.senderSeq !== currentUserSeq && roomSeq !== get().selectedChat?.roomSeq) {
+      toast.info(`새 메시지: ${message.messageContent}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
-  })),
+
+    return {
+      messages: {
+        ...state.messages,
+        [roomSeq]: [...(state.messages[roomSeq] || []), message]
+      }
+    };
+  }),
+
+
 
   // 각 채팅창별 읽지 않은 메시지 수
   unreadCounts: {},

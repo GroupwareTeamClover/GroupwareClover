@@ -9,6 +9,8 @@ import { AdminSideMenu } from './pages/SideMenu/AdminSideMenu';
 import { Admin } from './pages/Admin/Admin';
 import Swal from "sweetalert2";
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const userData = sessionStorage.getItem("sessionUser");
@@ -56,6 +58,7 @@ function App() {
             </>
         }
       </Router>
+      <ToastContainer></ToastContainer>
     </div>
   );
 }
