@@ -123,6 +123,7 @@
     gap: 5px;
     padding: 10px;
     margin-bottom: 20px;
+    word-break: break-word;
 }
 
 .contentDate {
