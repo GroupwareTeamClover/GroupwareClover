@@ -75,6 +75,32 @@ stompClient.connect(headers, () => {
       const message = JSON.parse(payload.body);
       onMessageReceived({ type: 'USER_STATUS', onlineUsers: message });
     });
+
+    stompClient.subscribe('/user/queue/chat', (payload) => {
+      const message = JSON.parse(payload.body);
+      onMessageReceived(message);
+    });
+
+    // 채팅방 나가기, 대화 내용 삭제, 알림 설정 변경을 위한 구독
+    stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/chatRoomUpdates`, (payload) => {
+      const message = JSON.parse(payload.body);
+      switch (message.type) {
+        case 'LEAVE':
+          console.log('채팅방 나가기:', message.content);
+          onMessageReceived({ type: 'LEAVE_ROOM', ...message });
+          break;
+        case 'CLEAR':
+          console.log('대화 내용 삭제:', message.content);
+          onMessageReceived({ type: 'CLEAR_CHAT', ...message });
+          break;
+        case 'NOTIFICATIONS':
+          console.log('알림 설정 변경:', message.content);
+          onMessageReceived({ type: 'TOGGLE_NOTIFICATIONS', ...message });
+          break;
+        default:
+          console.log('알 수 없는 채팅방 업데이트:', message);
+      }
+    });
     }
   }, (error) => {
     console.error('WebSocket 연결 에러:', error);
@@ -95,15 +121,16 @@ export const disconnectWebSocket = () => {
 
 // 서버로 메시지를 전송하는 함수
 export const sendMessage = (destination, message) => {
-  if (stompClient) {
+  if (stompClient && stompClient.connected) {
     // STOMP 클라이언트를 통해 메시지 전송
     // destination: 메시지를 보낼 주소
     // {}: 빈 헤더
     // JSON.stringify(message): 메시지 객체를 JSON 문자열로 변환
     stompClient.send(destination, {}, JSON.stringify(message));
+  } else {
+    console.error('WebSocket이 연결되어 있지 않습니다.');
   }
 };
-
 
 // 채팅방 구독하는 함수
   // roomSeq: 구독할 채팅방의 roomSeq
@@ -138,3 +165,15 @@ export const subscribeToRoom = (roomSeq, onMessageReceived) => {
       return () => {}; // 연결되지 않은 경우 더미 함수 반환
     }
   };
+
+export const leaveRoom = (roomSeq) => {
+  sendMessage("/app/chat.leaveRoom", { roomSeq });
+};
+
+export const clearChatHistory = (roomSeq) => {
+  sendMessage("/app/chat.clearHistory", { roomSeq });
+};
+
+export const toggleNotifications = (roomSeq, enabled) => {
+  sendMessage("/app/chat.toggleNotifications", { roomSeq, enabled });
+};

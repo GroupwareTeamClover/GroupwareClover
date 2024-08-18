@@ -175,4 +175,9 @@ public class ChatRoomDTO {
         this.lastMessageTime = other.lastMessageTime;
         this.unreadCount = other.unreadCount;
     }
+
+    public ChatRoomDTO(int roomSeq, String roomType) {
+        this.roomSeq = roomSeq;
+        this.roomType = roomType;
+    }
 }

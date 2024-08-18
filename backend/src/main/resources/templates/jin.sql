@@ -14,10 +14,11 @@
 --조진혁
 -- room_seq, emp_seq, message_seq 모두 외래키, emp_seq, room_seq는 기본키
 CREATE TABLE LastReadMessage (
-    emp_seq NUMBER primary key,
-    room_seq NUMBER,
-    last_read_message_seq NUMBER,
-    last_read_time TIMESTAMP DEFAULT SYSDATE NOT NULL
+    EMP_SEQ NUMBER NOT NULL,
+    ROOM_SEQ NUMBER NOT NULL,
+    LAST_READ_MESSAGE_SEQ NUMBER,
+    LAST_READ_TIME TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    CONSTRAINT PK_LastReadMessage PRIMARY KEY (EMP_SEQ, ROOM_SEQ)
 );
 
 
@@ -81,7 +82,8 @@ Create table chatMembers (
     custom_room_avatar varchar2(1000),
     member_role VARCHAR2(20) DEFAULT 'MEMBER' 
         CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),
-    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    
+    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL,
+    notifications_enabled char(1) DEFAULT 'Y'
 );
 
 Create table userSession (

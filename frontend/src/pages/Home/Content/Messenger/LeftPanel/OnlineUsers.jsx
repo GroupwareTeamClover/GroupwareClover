@@ -1,13 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import styles from '../Messenger.module.css';
+import styles from './onlineUsers.module.css';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useMemberStore } from '../../../../../store/store';
 
 const OnlineUsers = ({ onlineUsers, onProfileSelect }) => {
     const [showLeftArrow, setShowLeftArrow] = useState(false);
     const [showRightArrow, setShowRightArrow] = useState(false);
     const userListRef = useRef(null);
 
+    const { sessionData } = useMemberStore(); // sessionData에서 empSeq를 가져옴
+
     useEffect(() => {
         checkArrows();
+        console.log('onlineUsers:', onlineUsers);
     }, [onlineUsers]);
 
     const checkArrows = () => {
@@ -32,30 +37,32 @@ const OnlineUsers = ({ onlineUsers, onProfileSelect }) => {
 
     return (
         <div className={styles.onlineUsers}>
-            <h3>온라인 사용자 ({onlineUsers.length})</h3>
+            <h3>온라인 사용자 ({onlineUsers.length -1})</h3>
             {showLeftArrow && (
-                <div className={`${styles.arrow} ${styles.arrowLeft}`} onClick={() => scroll('left')}></div>
+                <FaChevronLeft className={`${styles.arrow} ${styles.arrowLeft}`} onClick={() => scroll('left')} />
             )}
             <div className={styles.userList} ref={userListRef}>
-                {onlineUsers.map((user) => (
-                    <div 
-                        key={user.emp_seq} 
-                        className={styles.userItem}
-                        onClick={() => handleProfileClick(user)}
-                    >
-                        <div className={styles.avatarWrapper}>
-                            <img 
-                                src={user.EMP_AVATAR} 
-                                alt={user.EMP_NAME} 
-                                className={styles.avatar}
-                            />
+                {onlineUsers
+                    .filter(user => user.EMP_SEQ !== sessionData.empSeq) // 본인의 아바타를 필터링
+                    .map((user) => (
+                        <div 
+                            key={user.emp_seq} 
+                            className={styles.userItem}
+                            onClick={() => handleProfileClick(user)}
+                        >
+                            <div className={styles.avatarWrapper}>
+                                <img 
+                                    src={user.EMP_AVATAR} 
+                                    alt={user.EMP_NAME} 
+                                    className={styles.avatar}
+                                />
+                                <span className={styles.userName}>{user.EMP_NAME}</span>
+                            </div>
                         </div>
-                        <span className={styles.userName}>{user.emp_name}</span>
-                    </div>
-                ))}
+                    ))}
             </div>
             {showRightArrow && (
-                <div className={`${styles.arrow} ${styles.arrowRight}`} onClick={() => scroll('right')}></div>
+                <FaChevronRight className={`${styles.arrow} ${styles.arrowRight}`} onClick={() => scroll('right')} />
             )}
         </div>
     );
