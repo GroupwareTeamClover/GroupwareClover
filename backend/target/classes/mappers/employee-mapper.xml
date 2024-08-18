@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Employee">
+
+    <select id="signIn" resultType="com.clover.employee.dto.EmployeeDTO">
+        SELECT
+			*
+        FROM
+            employee
+        WHERE
+            emp_id = #{empId}
+        AND
+            emp_pw = #{empPw}
+    </select>
+
+    <select id="getMyInfo" resultType="java.util.HashMap">
+        SELECT
+            e.emp_seq,
+            e.emp_id,
+            e.emp_name,
+            e.emp_email,
+            e.emp_birth,
+            e.emp_gender,
+            e.emp_tel,
+            e.emp_avatar,
+            r.role_name,
+            d.dept_name,
+            e.annual_leave_day
+        FROM
+            employee e
+            JOIN
+                DEPARTMENT d ON e.DEPT_CODE = d.DEPT_CODE
+            JOIN
+                ROLE r ON e.ROLE_CODE = r.ROLE_CODE
+        WHERE
+            emp_seq = #{empSeq}
+    </select>
+
+    <select id="existsId" resultType="Integer">
+        SELECT
+            count(*)
+        FROM
+            employee
+        WHERE
+            emp_id = #{empId}
+    </select>
+
+    <insert id="signUp">
+        INSERT INTO
+            employee
+        VALUES(
+            employee_sequence.nextval,
+            0,
+            #{empId},
+            #{empPw},
+            #{empName},
+            #{empEmail},
+            #{empBirth},
+            #{empGender},
+            #{empTel},
+            #{empAvatar},
+            99,
+            99,
+            null,
+            null,
+            0,
+            99
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+            employee
+        SET
+            emp_email = #{empEmail},
+            emp_tel = #{empTel}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
+    <update id="updatePw">
+        UPDATE
+            employee
+        SET
+            emp_pw = #{empPw}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
+    <update id="updateAvatar">
+        UPDATE
+            employee
+        SET
+            emp_avatar = #{empAvatar}
+        WHERE
+            emp_seq = #{empSeq}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM
+            employee
+        WHERE
+            emp_seq = #{empSeq}
+    </delete>
+
+    <select id="existsEmployee" resultType="com.clover.employee.dto.EmployeeDTO">
+        SELECT
+            emp_seq,
+            emp_id
+        FROM
+            employee
+        WHERE
+            emp_email = #{empEmail}
+        <if test='empName != null and empName != ""'>
+            AND emp_name = #{empName}
+        </if>
+        <if test='empId != null and empId != ""'>
+            AND emp_id = #{empId}
+        </if>
+    </select>
+</mapper>

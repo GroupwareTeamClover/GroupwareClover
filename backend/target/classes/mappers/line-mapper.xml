@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Line">
+
+	<select id="selectMemberInfo" resultType="java.util.Map">
+		select d.dept_name as dept, e.emp_name as name,  e.emp_seq as seq, r.role_name as role 
+		from employee e
+		left outer join department d on e.dept_code=d.dept_code
+		left outer join role r on e.role_code=r.role_code
+		where e.emp_seq!=#{seq}
+	</select>
+
+	<insert id="insertApvLine">
+		INSERT INTO apv_line 
+		VALUES(apv_line_sequence.nextval, #{apvStatusCode}, #{apverId}, null, #{lineOrder}, null, #{docSeq})
+	</insert>
+	
+	<insert id="insertPartLine">
+		INSERT INTO participants_line
+		VALUES(participants_line_sequence.nextval, #{empSeq}, #{pcpDivision}, #{readYN}, null, #{docSeq})
+	</insert>
+			
+			
+	<select id="selectApvLine" resultType="com.clover.approval.dto.ApvLineDTO">
+		select a.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
+		from  apv_line a
+		join employee e on a.APVER_ID=e.EMP_SEQ
+		join department d on e.DEPT_CODE=d.DEPT_CODE
+		join role r on e.ROLE_CODE=r.ROLE_CODE
+		where doc_seq=#{seq}
+		order by line_order
+	</select>
+	
+	<select id="selectPartLine" resultType="com.clover.approval.dto.ParticipantsLineDTO">
+		select p.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 
+		from  participants_line p
+		join employee e on p.EMP_SEQ=e.EMP_SEQ
+		join department d on e.DEPT_CODE=d.DEPT_CODE
+		join role r on e.ROLE_CODE=r.ROLE_CODE
+		where doc_seq=#{seq}
+	</select>
+	
+	<select id="selectAllApv" resultType="com.clover.approval.dto.ApvLineDTO">
+		select * from apv_line
+	</select>
+	
+	<select id="selectAllPart" resultType="com.clover.approval.dto.ParticipantsLineDTO">
+		select * from participants_line
+	</select>
+	
+	<update id="updateWaitToApproval">
+		UPDATE apv_line
+			SET apv_status_code = CASE
+			                            WHEN line_seq = #{seq} THEN 3
+			                            WHEN doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+			                                 AND line_order = (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}) THEN 1
+			                            WHEN doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+			                                 AND line_order >= (SELECT line_order + 2 FROM apv_line WHERE line_seq = #{seq}) THEN 2
+			                        END,
+			   line_apv_date= CASE
+                                WHEN line_seq=#{seq} THEN sysdate
+                                else line_apv_date
+                            END
+		WHERE line_seq = #{seq}
+		   OR (doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+		       AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}))
+	</update>
+	
+	<update id="updateWaitToReject">
+        UPDATE apv_line
+			SET apv_status_code = CASE
+			                            WHEN line_seq = #{seq} THEN 4
+			                            WHEN doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+			                                 AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}) THEN 9
+			                        END,
+			   line_apv_date= CASE
+                                WHEN line_seq=#{seq} THEN sysdate
+                                else line_apv_date
+                            END,
+            line_apver_cmt = CASE
+                                    WHEN line_seq = #{seq} THEN #{reasonForRejection}
+                             END
+		WHERE line_seq = #{seq}
+		   OR (doc_seq = (SELECT doc_seq FROM apv_line WHERE line_seq = #{seq}) 
+		       AND line_order >= (SELECT line_order + 1 FROM apv_line WHERE line_seq = #{seq}))
+	</update>
+	
+	<update id="updateWaitToHoldoff">
+		update apv_line SET apv_status_code = 8 WHERE line_seq = #{seq}
+	</update>
+	
+	<delete id="deleteApvLineBySeq">
+		delete from apv_line where doc_seq=#{seq}
+	</delete>
+	
+	<delete id="deletePartLineBySeq">
+				delete from apv_line where doc_seq=#{seq}
+	</delete>
+	
+</mapper>

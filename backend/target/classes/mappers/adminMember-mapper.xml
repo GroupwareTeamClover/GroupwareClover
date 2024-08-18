@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="AdminMember">
+	<select id="getAllData" resultType="com.clover.employee.dto.EmployeeDTO">
+		select * from employee order by emp_seq desc
+	</select>
+	<select id="getCountMem" resultType="java.util.HashMap">
+		select emp_state_code, count(*) from employee group by emp_state_code
+	</select>
+	<update id="updateMem" parameterType="map">
+		update employee 
+		set ${tbObject.stateCode} = (
+		select ${tbObject.stateCode} 
+		from ${tbObject.joinTable} 
+		where ${tbObject.valueCol}= #{newValue}
+		) 
+		where emp_seq = #{empSeq}
+	</update>
+	
+	<select id="getAllNew" resultType="com.clover.employee.dto.EmployeeDTO">
+		select * from employee where emp_state_code = 0 or to_char(join_date, 'MM')=to_char(sysdate,'MM') order by emp_seq desc
+	</select>
+	<update id="addMem" parameterType="map">
+		update employee
+		set dept_code=#{dept},
+			role_code=#{role},
+			worker_state_code=#{worker_state},
+			emp_state_code=1,
+			join_date=sysdate
+		where emp_seq=#{empSeq}
+	</update>
+</mapper>

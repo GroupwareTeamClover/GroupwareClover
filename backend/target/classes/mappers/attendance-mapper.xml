@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Attendance">
+
+    <select id="getMyAtt" resultType="Map">
+        SELECT
+            count(*) AS "work_day",
+            SUM(CASE WHEN att_success = 'Y' THEN 1 ELSE 0 END) AS "work_success",
+            SUM(CASE WHEN att_arrive > '09:00' THEN 1 ELSE 0 END) AS "work_late",
+            sum(att_total) AS "work_total_time"
+        FROM
+            attendance
+        WHERE
+            emp_seq = #{empSeq}
+        AND
+            TRUNC(att_date) between #{start} AND #{end}
+    </select>
+
+    <select id="attendanceList" resultType="com.clover.attendance.dto.AttendanceDTO">
+        SELECT
+            *
+        FROM
+            attendance
+        WHERE
+            emp_seq = 27
+        AND
+            TRUNC(att_date) between #{start} AND #{end}
+    </select>
+
+    <select id="today" resultType="com.clover.attendance.dto.AttendanceDTO">
+        SELECT
+            *
+        FROM
+            attendance
+        WHERE
+            emp_seq = #{empSeq}
+        AND
+            TRUNC(att_date) = #{today}
+    </select>
+
+    <insert id="arrive">
+        INSERT INTO
+            attendance
+        VALUES(
+            attendance_sequence.nextval,
+            #{empSeq},
+            #{attArrive},
+            null,
+            0,
+            'N',
+            sysdate
+        )
+    </insert>
+
+    <update id="leave">
+        UPDATE
+            attendance
+        SET
+            att_leave = #{attLeave},
+            att_total = #{attTotal},
+            att_success = #{attSuccess}
+        WHERE
+            att_seq = #{attSeq}
+    </update>
+
+</mapper>
