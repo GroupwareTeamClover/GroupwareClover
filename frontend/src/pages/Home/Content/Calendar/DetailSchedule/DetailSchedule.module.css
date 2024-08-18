@@ -94,11 +94,11 @@
     border-radius: 5px;
     margin: 2px 0;
     padding: 0 5px;
-    border: 1px solid burlywood;
+    border: 1px solid var(--btn-color);
 }
 
 .contentLabel > input:focus {
-    background-color: floralwhite;
+    background-color: var(--bg-color);
 }
 
 .btnBox {
