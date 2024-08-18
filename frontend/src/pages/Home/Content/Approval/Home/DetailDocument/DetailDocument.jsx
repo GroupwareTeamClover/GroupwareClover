@@ -128,6 +128,11 @@ export const DetailDocument = ({type}) => {
                 //내가 기안자인 임시저장상태 문서처리위한 메뉴
                 if(resp.data.document.drafterSeq === sessionData.empSeq && resp.data.document.docStateCode===2){
                     setIsTempMenu(true);
+                    console.log(resp.data.document.egcYn);
+                    if(resp.data.document.egcYn==='y'){
+                        setIsTempEmergency('y');
+                    }
+                    
                 }
 
                 //참조자/열람자 메뉴 on
@@ -426,7 +431,7 @@ export const DetailDocument = ({type}) => {
                 {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
                 {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} setIsHoldoffClicked={setIsHoldoffClicked} isHoldoffClicked={isHoldoffClicked}
                  setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
-                {isTempMenu && <TempMenu setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
+                {isTempMenu && <TempMenu isTempEmergency={isTempEmergency} setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
             </div>
             <div className={styles.detail}>
                 {/* 왼쪽 */}

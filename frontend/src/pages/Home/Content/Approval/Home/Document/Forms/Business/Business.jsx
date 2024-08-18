@@ -21,6 +21,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     isTempCancle, setIsTempCancle
 })=>{  
     const navi = useNavigate();
+    const [isContentLoaded, setIsContentLoaded] = useState(false);
 
     //********************************write 시 코드******************************************/
     const {cloneDocCode, cloneEmpInfo, isModalComplete, setIsModalComplete} =useApprovalStore();
@@ -182,11 +183,14 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             }
             //디테일 페이지에서 사용
             if (contentRef.current) {  // contentRef.current가 null이 아닌지 확인
-                contentRef.current.innerHTML = resp.data.BS_CONTENT;
+                contentRef.current.innerHTML = resp.data.BS_CONTENT || "";
             }
 
             // 가져온 BS_CONTENT를 defaultContent로 설정
-            setDefaultContent(resp.data.BS_CONTENT);
+            setDefaultContent(()=>{
+                setIsContentLoaded(true);
+                return resp.data.BS_CONTENT || "";
+            });
          
             setTitle(resp.data.BS_TITLE);
             setDate(writeDate);
@@ -256,10 +260,22 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장하고 결재요청시 예외처리
     useEffect(() => {
         // 컴포넌트가 마운트되거나 defaultContent가 변경될 때 content 상태를 초기화
-        if (!content && defaultContent) {
+        if (defaultContent) {
             setContent(defaultContent);
         }
-    }, [defaultContent, content]);
+    }, [defaultContent]);
+
+
+    // 컴포넌트가 언마운트될 때 인스턴스 해제
+    useEffect(() => {
+            return () => {
+                if (editorRef.current) {
+                    editorRef.current.getInstance().destroy();  // 인스턴스 해제
+                }
+            };
+    }, []);
+
+ 
 
     return(
         <div className={styles.container}>
@@ -278,16 +294,10 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                     </div>
                 </div>
             <div className={styles.editerContainer}>
-                {!id && <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent=""/>}
-                {id && !isTempMenu && <div ref={contentRef} ></div>}
-                {isTempMenu && (
-                    <>
-                        {defaultContent === "" ? (  // defaultContent가 비어 있을 경우 로딩 메시지 표시
-                            <div>데이터 불러오는 중...</div>
-                        ) : (
+                {!id && (<WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent=""/>)}
+                {id && !isTempMenu && (<div ref={contentRef} ></div>)}
+                {id && isTempMenu && defaultContent!==null && isContentLoaded &&(
                             <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="100%" defaultContent={defaultContent||''} />
-                        )}
-                    </>
                 )}
             </div>                     
         </div>
