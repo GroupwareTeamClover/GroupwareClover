@@ -102,7 +102,7 @@
 .table thead td:nth-child(2) {
     width: 20%;
     background-color: #f1f1f1;
-    border-left: 1px solid #9caa745b;
+    border-left: 0.1px solid #9caa745b;
 }
 
 .table thead td:nth-child(3) {

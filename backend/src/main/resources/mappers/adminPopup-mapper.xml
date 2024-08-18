@@ -171,6 +171,9 @@
      	WHERE pop_seq = #{popSeq}
 	</update>
     
+    <delete id="deletePopup">
+    	delete from popup_board where pop_seq = #{newPopSeq}
+    </delete>
 </mapper>
   
   

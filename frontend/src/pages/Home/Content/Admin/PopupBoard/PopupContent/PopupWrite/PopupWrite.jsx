@@ -14,6 +14,8 @@ export const PopupWrite = () => {
     const navi = useNavigate();
 
     const { sessionData } = useMemberStore();
+    const [uploadError, setUploadError] = useState(false);
+
 
    // 공지 기간 옵션
    const [periodType, setperiodType] = useState(''); // 'none', 'specific', 'monthly', 'weekly'
@@ -40,9 +42,7 @@ export const PopupWrite = () => {
         }
     }, [specificStartDate, specificEndDate]);
 
-    // 팝업 옵션 -- popup 컴포넌트에다가 걍 설정하는 것으로!!
-    // const [activeOption, setActiveOption] = useState(''); // 'none', 'asLogin', 'hideToday', 'notAnymore'
-    // 활성화 여부
+   // 활성화 여부
     const [boardActive, setBoardActive] = useState('T');
     const handleActive = (e) => {
         setBoardActive(e.target.value);
@@ -66,10 +66,17 @@ export const PopupWrite = () => {
     const handleSubmit = () => {
         if (title.trim() === "") {
             alert("제목을 입력해주세요!");
-        } else {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = content;
-            const hasImage = tempDiv.querySelector('img') !== null;
+            return;
+        } 
+        if (uploadError) {
+            alert("파일 용량이 큽니다. 모든 파일이 성공적으로 업로드되었는지 확인해주세요.");
+            return;
+        }
+
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = content;
+        const hasImage = tempDiv.querySelector('img') !== null;
         const textContent = tempDiv.textContent || tempDiv.innerText || '';
         const strippedContent = textContent.trim();
 
@@ -104,38 +111,35 @@ export const PopupWrite = () => {
                 return;
             }
 
-            else {
-                const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
-                    const match = imgTag.match(/src="([^">]+)"/);
-                    return match ? match[1] : null;
-                });
+            const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+                const match = imgTag.match(/src="([^">]+)"/);
+                return match ? match[1] : null;
+            });
 
-                const payload = {
-                    popTitle: title,
-                    empId: sessionData.empId,
-                    popContent: content,
-                    periodType: periodType,
-                    popIsActive: boardActive === 'T',
+            const payload = {
+                popTitle: title,
+                empId: sessionData.empId,
+                popContent: content,
+                periodType: periodType,
+                popIsActive: boardActive === 'T',
 
-                    fileNames: files.map(file => file.name),
-                    fileUrls: files.map(file => file.url),
-                    images : imageUrls
-                };
+                fileNames: files.map(file => file.name),
+                fileUrls: files.map(file => file.url),
+                images : imageUrls
+            };
 
-                // 공지기간 데이터 추가
-                if (periodType === 'specific') {
-                    payload.specificStartDate = specificStartDate;
-                    payload.specificEndDate = specificEndDate;
-                } else if (periodType === 'monthly') {
-                    payload.monthlyDay = monthlyDay;
-                } else if (periodType === 'weekly') {
-                    payload.weeklyDay = weeklyDay;
-                }
-                
-                console.log("확인")
-                console.log(payload);
+            // 공지기간 데이터 추가
+            if (periodType === 'specific') {
+                payload.specificStartDate = specificStartDate;
+                payload.specificEndDate = specificEndDate;
+            } else if (periodType === 'monthly') {
+                payload.monthlyDay = monthlyDay;
+            } else if (periodType === 'weekly') {
+                payload.weeklyDay = weeklyDay;
+            }
+               
 
-                axios.post(`${BaseUrl()}/adminpopup`, payload)
+            axios.post(`${BaseUrl()}/adminpopup`, payload)
                 .then(resp =>{
                     if(resp.status ===200){
                         alert("공지팝업이 등록되었습니다.");
@@ -149,9 +153,8 @@ export const PopupWrite = () => {
                     alert("서버에 문제 발생.")
                 })
 
-            }
         }
-    }
+    
 
     const handleCancel = () => {
         const confirm = window.confirm("글 작성을 취소하시겠습니까?");
@@ -160,24 +163,48 @@ export const PopupWrite = () => {
     }
 
      //첨부파일
-     const [files, setFiles] = useState([]);
-     const handleFileChange = (fileList) => {
-         setFiles(fileList);
+    const [files, setFiles] = useState([]);
+    const handleFileChange = (fileList) => {
+        // setFiles(fileList.map(file => ({ name: file.name, url: file.blobUrl })));
+        const newFiles = fileList.map(file => ({ name: file.name, url: file.blobUrl }));
+        setFiles(prevFiles => {
+            // 기존 파일 리스트에서 중복 제거 후 추가
+            const existingFileNames = new Set(prevFiles.map(file => file.name));
+            const filteredFiles = newFiles.filter(file => !existingFileNames.has(file.name));
+            return [...prevFiles, ...filteredFiles];
+        });
+    };
+    
+    const handleUploadSuccess = (response, file) => {
+        //  const fileUrl = response;     // 서버에서 받은 파일 url
+        //  setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);  // 파일 리스트에 업로드된 파일 추가
+        //  setUploadError(false);
+        const fileUrl = response; // 서버에서 받은 파일 URL
+        setFiles(prevFiles => {
+            const newFile = { name: file.name, url: fileUrl };
+            const existingFileNames = new Set(prevFiles.map(file => file.name));
+            // 중복된 파일이 없을 때만 추가
+            if (!existingFileNames.has(file.name)) {
+                return [...prevFiles, newFile];
+            }
+            return prevFiles;
+        });
+        setUploadError(false);
      };
-     const handleUploadSuccess = (response, file) => {
-        console.log("제에에ㅔㅇ발 : "+response);
-         const fileUrl = response;
-         console.log(fileUrl);
-         // 파일 리스트에 업로드된 파일 추가
-         setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
-     };
-     const handleRemove = (file) => {
+    const handleUploadError = (error, file) => {
+        console.error('File upload error:', error);
+        alert('파일 용량이 큽니다. ');
+        // setUploadError(true); // 에러 상태 설정
+        // 실패한 파일을 리스트에서 제거
+        handleRemove(file);
+    };
+    const handleRemove = (file) => {
          // 파일 리스트에서 해당 파일 제거
          setFiles((prev) => prev.filter((f) => f.name !== file.name));
      };
      
-     const formData = new FormData(); 
-     formData.append('file', files); 
+    // const formData = new FormData(); 
+    // formData.append('file', files); 
 
     return (
         <div className={styles.container}>
@@ -191,7 +218,9 @@ export const PopupWrite = () => {
             </div>
             <div className={styles.fileBox}>
                 <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
-                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}
+                    onError={handleUploadError} 
+                    >
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
             </div>
@@ -248,7 +277,6 @@ export const PopupWrite = () => {
                 </div>
             )}
 
-            {/* 사용여부 */}
             <div className={styles.activeBox}>
                 <div className={styles.activeLetter}>활성화 여부</div>
                 <div className={styles.activeRadiobox}>

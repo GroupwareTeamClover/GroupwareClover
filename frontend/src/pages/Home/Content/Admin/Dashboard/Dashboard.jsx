@@ -195,6 +195,9 @@ export const Dashboard = () => {
                             <FaUserPlus className={styles.newicon} /> 
                         </div>
                     </div>
+                    <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
+                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((empData.newMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
+                    </div>
                 </div>
                 
                 <div className={styles.statItem}>
