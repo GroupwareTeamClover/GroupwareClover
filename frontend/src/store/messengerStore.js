@@ -79,11 +79,16 @@ export const useChatStore = create((set, get) => ({
   setUnreadCounts : (counts) => set({ unreadCounts: counts }),
 
   // 특정 채팅방의 읽지 않은 메시지 수를 업데이트하는 함수
+  // updateUnreadCount: (roomSeq, count) => set((state) => ({
+  //   unreadCounts: {
+  //    ...state.unreadCounts,
+  //     [roomSeq]: count
+  //   }
+  // })),
   updateUnreadCount: (roomSeq, count) => set((state) => ({
-    unreadCounts: {
-     ...state.unreadCounts,
-      [roomSeq]: count
-    }
+    chatRooms: state.chatRooms.map(room => 
+      room.roomSeq === roomSeq ? { ...room, unreadCount: count } : room
+    )
   })),
 
   //메시지를 읽음 처리하는 함수

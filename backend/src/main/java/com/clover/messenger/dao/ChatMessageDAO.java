@@ -76,6 +76,10 @@ public class ChatMessageDAO {
         return mybatis.selectOne("ChatMessageMapper.getLastMessage", roomSeq);
     }
 
+    public int getLastMessageSeq(int roomSeq) {
+        return mybatis.selectOne("ChatMessageMapper.getLastMessageSeq", roomSeq);
+    }
+
     /**
      * 채팅방 메시지 기록을 삭제하는 메서드
      * @param roomSeq 채팅방 번호

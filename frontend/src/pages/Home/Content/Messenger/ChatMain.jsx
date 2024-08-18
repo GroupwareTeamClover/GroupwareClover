@@ -21,7 +21,7 @@ export const ChatMain = () => {
   const {
     chatRooms, setChatRooms, addChatRoom, updateChatRoom,
     selectedChat, setSelectedChat,
-    addMessage, setOnlineUsers, setUnreadCounts, onlineUsers, setMessages
+    addMessage, setOnlineUsers, setUnreadCounts, onlineUsers, setMessages, updateUnreadCount
   } = useChatStore();
 
   // 선택된 프로필 상태 관리
@@ -55,6 +55,9 @@ export const ChatMain = () => {
         case 'USER_STATUS':
           setOnlineUsers(message.onlineUsers);
           break;
+        case 'UNREAD_COUNT_UPDATE':
+          updateUnreadCount(message.roomSeq, message.unreadCount);
+        break;          
         case 'NEW_CHAT_ROOM':
         case 'CREATE_ONE_ON_ONE_CHAT':
         case 'CREATE_GROUP_CHAT':
@@ -72,14 +75,18 @@ export const ChatMain = () => {
     return () => {
       disconnectWebSocket();
     };
-  }, [addMessage, setOnlineUsers, addChatRoom]);
+  }, [addMessage, setOnlineUsers, addChatRoom, updateUnreadCount]);
 
   // 채팅방 목록을 서버로부터 가져오는 함수
   const fetchChatRooms = useCallback(async () => {
     try {
       const response = await axios.get(`${BaseUrl()}/chat/rooms`);
-      setChatRooms(response.data);
-      setSelectedChat(null); // selectedChat 상태 초기화
+      const roomsWithUnreadCounts = await Promise.all(response.data.map(async (room) => {
+        const unreadCountResponse = await axios.get(`${BaseUrl()}/chat/messages/unread/${room.roomSeq}`);
+        return { ...room, unreadCount: unreadCountResponse.data };
+      }));
+      setChatRooms(roomsWithUnreadCounts);
+      setSelectedChat(null);
     } catch (error) {
       console.error('채팅방 목록 조회 오류:', error);
     }

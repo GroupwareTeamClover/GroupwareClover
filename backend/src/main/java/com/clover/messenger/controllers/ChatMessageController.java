@@ -52,4 +52,34 @@ public class ChatMessageController {
         chatRoomService.clearChatHistory(roomSeq, empSeq);
         return ResponseEntity.ok().build();
     }
+
+        /**
+     * 메시지를 읽음 처리하는 API 엔드포인트
+     * @param roomSeq 채팅방 번호
+     * @return 처리 결과
+     */
+    @PostMapping("/read/{roomSeq}")
+    public ResponseEntity<?> markMessagesAsRead(@PathVariable int roomSeq) {
+        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+        if (empSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        chatMessageService.markMessagesAsRead(roomSeq, empSeq);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * 읽지 않은 메시지 수를 조회하는 API 엔드포인트
+     * @param roomSeq 채팅방 번호
+     * @return 읽지 않은 메시지 수
+     */
+    @GetMapping("/unread/{roomSeq}")
+    public ResponseEntity<Integer> getUnreadMessageCount(@PathVariable int roomSeq) {
+        Integer empSeq = (Integer) session.getAttribute("cloverSeq");
+        if (empSeq == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        int unreadCount = chatMessageService.getUnreadMessageCount(roomSeq, empSeq);
+        return ResponseEntity.ok(unreadCount);
+    }
 }

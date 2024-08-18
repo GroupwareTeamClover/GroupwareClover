@@ -7,6 +7,8 @@ import {BaseUrl} from "../../../commons/config";
 import {useNavigate} from "react-router-dom";
 import {ImExit} from "react-icons/im";
 import {confirmAlert, failAlert, successAlert, timeAlert} from "../../../commons/common";
+import { FaEnvelope } from 'react-icons/fa';
+import { useChatStore } from "../../../store/messengerStore";
 
 export const Header = () => {
   const navi = useNavigate();
@@ -33,6 +35,16 @@ export const Header = () => {
 
   }
 
+  const { chatRooms } = useChatStore();
+  const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
+
+  const totalUnreadCount = chatRooms.reduce((total, chat) => {
+    if (chat.lastMessage && chat.lastMessage.senderSeq !== currentUserSeq) {
+      return total + chat.unreadCount;
+    }
+    return total;
+  }, 0);
+
   return (
       <div className={styles.container}>
         <div className={styles.form}>
@@ -41,6 +53,12 @@ export const Header = () => {
             <span>Clover Office</span>
           </div>
           <div className={styles.userInfo}>
+            <div className={styles.messageIcon}>
+              <FaEnvelope size={24} />
+              {totalUnreadCount > 0 && (
+                <span className={styles.unreadBadge}>{totalUnreadCount}</span>
+              )}
+            </div>
             <div className={styles.userAvatar}>
               {sessionData.empAvatar === null ?
                 <img src={defaultImage} alt="기본 이미지"/>

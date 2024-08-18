@@ -24,7 +24,8 @@
         FROM ChatMessage cm
         LEFT JOIN LastReadMessage lrm ON cm.room_seq = lrm.room_seq AND lrm.emp_seq = #{empSeq}
         WHERE cm.room_seq = #{roomSeq}
-        AND (lrm.last_read_message_seq IS NULL OR cm.message_seq > lrm.last_read_message_seq)
+        AND cm.sender_seq != #{empSeq}
+        AND (lrm.last_read_message_seq IS NULL OR cm.message_seq <![CDATA[ > ]]> lrm.last_read_message_seq)
     </select>
 
     <!-- 채팅방의 마지막 메시지 조회 -->
@@ -43,14 +44,21 @@
     <update id="updateLastReadMessage">
         MERGE INTO LastReadMessage lrm
         USING DUAL
-        ON (lrm.emp_seq = #{empSeq} AND lrm.room_seq = #{roomSeq})
+        ON (lrm.EMP_SEQ = #{empSeq} AND lrm.ROOM_SEQ = #{roomSeq})
         WHEN MATCHED THEN
-            UPDATE SET lrm.last_read_message_seq = #{messageSeq},
-                       lrm.last_read_time = CURRENT_TIMESTAMP
+            UPDATE SET 
+                lrm.LAST_READ_MESSAGE_SEQ = #{messageSeq},
+                lrm.LAST_READ_TIME = CURRENT_TIMESTAMP
         WHEN NOT MATCHED THEN
-            INSERT (emp_seq, room_seq, last_read_message_seq, last_read_time)
+            INSERT (EMP_SEQ, ROOM_SEQ, LAST_READ_MESSAGE_SEQ, LAST_READ_TIME)
             VALUES (#{empSeq}, #{roomSeq}, #{messageSeq}, CURRENT_TIMESTAMP)
     </update>
+
+    <select id="getLastMessageSeq" resultType="int">
+        SELECT MAX(message_seq)
+        FROM ChatMessage
+        WHERE room_seq = #{roomSeq}
+    </select>
 
     <!-- 채팅방 메시지 삭제 -->
     <delete id="deleteChatHistory">

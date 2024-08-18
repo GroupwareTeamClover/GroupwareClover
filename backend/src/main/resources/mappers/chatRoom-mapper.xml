@@ -42,7 +42,7 @@
             SELECT cm2.room_seq, COUNT(*) AS unread_count
             FROM ChatMessage cm2
             LEFT JOIN LastReadMessage lrm ON cm2.room_seq = lrm.room_seq AND lrm.emp_seq = #{empSeq}
-            WHERE lrm.last_read_message_seq IS NULL OR cm2.message_seq > lrm.last_read_message_seq
+            WHERE lrm.last_read_message_seq IS NULL OR cm2.message_seq <![CDATA[ > ]]> lrm.last_read_message_seq
             GROUP BY cm2.room_seq
         )
         SELECT cr.room_seq, cr.room_name, cr.room_state, cr.room_create_time, 

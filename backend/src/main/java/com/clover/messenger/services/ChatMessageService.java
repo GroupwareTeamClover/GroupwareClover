@@ -52,7 +52,13 @@ public class ChatMessageService {
      * @param empSeq 사용자의 사원 번호
      * @param messageSeq 마지막으로 읽은 메시지 번호
      */
-    public void markMessagesAsRead(int roomSeq, int empSeq, int messageSeq) {
+    public void updateLastReadMessage(int empSeq, int roomSeq, int messageSeq) {
         chatMessageDAO.updateLastReadMessage(empSeq, roomSeq, messageSeq);
+    }
+
+    @Transactional
+    public void markMessagesAsRead(int roomSeq, int empSeq) {
+        int lastMessageSeq = chatMessageDAO.getLastMessageSeq(roomSeq);
+        chatMessageDAO.updateLastReadMessage(empSeq, roomSeq, lastMessageSeq);
     }
 }

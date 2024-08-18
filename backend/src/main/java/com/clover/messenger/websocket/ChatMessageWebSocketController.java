@@ -55,13 +55,12 @@ public class ChatMessageWebSocketController {
      */
     @MessageMapping("/chat.readMessages")
     public void readMessages(@Payload ReadMessageDTO readMessageDTO, SimpMessageHeaderAccessor headerAccessor) {
-        // WebSocket 세션에서 사용자 ID를 추출
         Integer empSeq = Integer.parseInt(headerAccessor.getUser().getName());
-        // 메시지를 읽음 처리
-        chatMessageService.markMessagesAsRead(readMessageDTO.getRoomSeq(), empSeq, readMessageDTO.getMessageSeq());
+        chatMessageService.markMessagesAsRead(readMessageDTO.getRoomSeq(), empSeq);
 
         // 읽음 처리 후 업데이트된 읽지 않은 메시지 수 계산
         int unreadCount = chatMessageService.getUnreadMessageCount(readMessageDTO.getRoomSeq(), empSeq);
+        
         // 업데이트된 읽지 않은 메시지 수를 사용자에게 전송
         messagingTemplate.convertAndSendToUser(
             String.valueOf(empSeq),
