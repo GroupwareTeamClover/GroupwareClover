@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import styles from '../Messenger.module.css';
+import styles from './ChatWindow.module.css';
 import { FaSearch, FaEllipsisV, FaTimes, FaBell, FaBellSlash } from 'react-icons/fa';
 
 const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifications }) => {
@@ -39,7 +39,12 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
     <div className={styles.chatHeader}>
       <div className={styles.chatInfo}>
         <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
-        <h2>{chat.customRoomName || chat.roomName}</h2>
+        <div className={styles.roomNameContainer}>
+          <h2 className={styles.roomName}>{chat.customRoomName || chat.roomName}</h2>
+          <span className={chat.isOnline ? styles.onlineStatus : styles.offlineStatus}>
+            {chat.isOnline ? '온라인' : '오프라인'}
+          </span>
+        </div>
       </div>
       <div className={styles.headerControls}>
         <div className={`${styles.searchContainer} ${isSearching ? styles.active : ''}`}>

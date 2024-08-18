@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
-import styles from '../Messenger.module.css';
+import styles from './ChatWindow.module.css';
 import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage, subscribeToRoom } from '../../../../../commons/websocket';
 import ChatHeader from './ChatHeader';
