@@ -65,4 +65,8 @@ public class BoardService {
 	public boolean isImportant(int empSeq, int boardSeq) {
 		return bDao.isImportant(empSeq, boardSeq);
 	}
+
+	public List<BoardDTO> getMainNotice(){
+		return bDao.getMainNotice();
+	}
 }

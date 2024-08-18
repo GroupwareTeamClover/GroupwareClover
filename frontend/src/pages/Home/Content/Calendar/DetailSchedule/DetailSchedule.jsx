@@ -70,70 +70,74 @@ export const DetailSchedule = ({setDataChange}) => {
 
 
   return (
-    <div className={styles.modalForm}>
-      <div className={styles.list}>
-        <p>일정 목록 ( {scheduleDay} )</p>
-        <ul>
-          { scheduleSelectList.length > 0 ?
-            scheduleSelectList.map((item, i) => {
-              return (
-                <li key={i} onClick={() => handleSelectDetail(item.scheduleSeq)}>
+      <div className={styles.modalForm}>
+        <div className={styles.list}>
+          <p>일정 목록 ( {scheduleDay} )</p>
+          <ul>
+            { scheduleSelectList.length > 0 ?
+                scheduleSelectList.map((item, i) => {
+                  return (
+                      <li key={i} onClick={() => handleSelectDetail(item.scheduleSeq)}>
                   <span
-                    style={item.type === "individual" ? {color: "#FF8225"} : item.type === "department" ? {color: "#478CCF"} : {color: "#173B45"}}> [ {item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사"} 일정 ]</span>
-                  {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
-                </li>
-              );
-            })
-            :
-            <li>해당 날짜에 스케줄이 없습니다.</li>
-          }
-        </ul>
-      </div>
-      <div className={styles.detail}>
-        <p>일정 상세 정보</p>
-        { scheduleDetail.scheduleSeq !== undefined &&
-          <>
-            <div className={styles.content}>
-              {
-                !updateForm ?
-                  <div className={styles.contentLabel}>
-                    <p>시작 : {dateSetting(scheduleDetail.start)}</p>
-                    <p>종료 : {dateSetting(scheduleDetail.end)}</p>
-                    <p>작성자 : {scheduleDetail.empName} </p>
-                    <p>내용 : {scheduleDetail.title}</p>
-                  </div>
-                  :
-                  <div className={styles.contentLabel}>
-                    <p>시작 : <input type="date" name="start" onChange={handleUpdataData}
-                                   value={dateYMD(updateData.start)}/></p>
-                    <p>종료 : <input type="date" name="end" onChange={handleUpdataData} value={dateYMD(updateData.end)}/>
-                    </p>
-                    <p>작성자 : {updateData.empName}</p>
-                    <p>내용 : <input type="text" name="title" onChange={handleUpdataData} value={updateData.title}/></p>
-                  </div>
-              }
-
-            </div>
-
-            {
-              updateData.empSeq === sessionData.empSeq &&
+                      style={item.type === "individual" ? {color: "#FF8225"} : item.type === "department" ? {color: "#478CCF"} : {color: "#173B45"}}> [ {item.type === "individual" ? "개인" : item.type === "department" ? "부서" : "회사"} 일정 ]</span>
+                        {item.title.length > 20 ? item.title.slice(0, 20) + "..." : item.title}
+                      </li>
+                  );
+                })
+                :
+                <li>해당 날짜에 스케줄이 없습니다.</li>
+            }
+          </ul>
+        </div>
+        <div className={styles.detail}>
+          <p>일정 상세 정보</p>
+          { scheduleDetail.scheduleSeq !== undefined &&
               <>
-                {!updateForm ?
-                  <div className={styles.btnBox}>
-                    <button onClick={() => handleScheduleDelete(scheduleDetail.scheduleSeq)}>일정 삭제</button>
-                    <button onClick={() => setUpdateForm(true)}>일정 수정</button>
-                  </div>
-                  :
-                  <div className={styles.btnBox}>
-                    <button onClick={handleScheduleUpdate}>확인</button>
-                    <button onClick={() => setUpdateForm(false)}>취소</button>
-                  </div>
+                <div className={styles.content}>
+                  {
+                    !updateForm ?
+                        <div className={styles.contentLabel}>
+                          <p>시작 : {dateSetting(scheduleDetail.start)}</p>
+                          <p>종료 : {dateSetting(scheduleDetail.end)}</p>
+                          <p>작성자 : {scheduleDetail.empName} </p>
+                          <p>내용 : {scheduleDetail.title}</p>
+                        </div>
+                        :
+                        <div className={styles.contentLabel}>
+                          <p>시작 : <input type="datetime-local" name="start" onChange={handleUpdataData}
+                                         value={updateData.start.slice(0, 16) || ""}/></p>
+                          <p>종료 : <input type="datetime-local" name="end" onChange={handleUpdataData} value={updateData.end.slice(0, 16) || ""}/>
+                          </p>
+                          <p>작성자 : {updateData.empName}</p>
+                          <p>내용 : <input type="text" name="title" onChange={handleUpdataData} value={updateData.title}/></p>
+                        </div>
+                  }
+
+                </div>
+
+                {
+                    updateData.empSeq === sessionData.empSeq &&
+                    <>
+                      {!updateForm ?
+                          <div className={styles.btnBox}>
+                            <button onClick={() => handleScheduleDelete(scheduleDetail.scheduleSeq)}>일정 삭제</button>
+                            <button onClick={() => {
+                              setUpdateForm(true)
+                              console.log("updateData === ", updateData);
+                            }
+                            }>일정 수정</button>
+                          </div>
+                          :
+                          <div className={styles.btnBox}>
+                            <button onClick={handleScheduleUpdate}>확인</button>
+                            <button onClick={() => setUpdateForm(false)}>취소</button>
+                          </div>
+                      }
+                    </>
                 }
               </>
-            }
-          </>
-        }
+          }
+        </div>
       </div>
-    </div>
   );
 }
