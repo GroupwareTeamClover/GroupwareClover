@@ -104,9 +104,9 @@ export const DetailSchedule = ({setDataChange}) => {
                   </div>
                   :
                   <div className={styles.contentLabel}>
-                    <p>시작 : <input type="date" name="start" onChange={handleUpdataData}
-                                   value={dateYMD(updateData.start)}/></p>
-                    <p>종료 : <input type="date" name="end" onChange={handleUpdataData} value={dateYMD(updateData.end)}/>
+                    <p>시작 : <input type="datetime-local" name="start" onChange={handleUpdataData}
+                                   value={updateData.start.slice(0, 16) || ""}/></p>
+                    <p>종료 : <input type="datetime-local" name="end" onChange={handleUpdataData} value={updateData.end.slice(0, 16) || ""}/>
                     </p>
                     <p>작성자 : {updateData.empName}</p>
                     <p>내용 : <input type="text" name="title" onChange={handleUpdataData} value={updateData.title}/></p>
@@ -121,7 +121,11 @@ export const DetailSchedule = ({setDataChange}) => {
                 {!updateForm ?
                   <div className={styles.btnBox}>
                     <button onClick={() => handleScheduleDelete(scheduleDetail.scheduleSeq)}>일정 삭제</button>
-                    <button onClick={() => setUpdateForm(true)}>일정 수정</button>
+                    <button onClick={() => {
+                      setUpdateForm(true)
+                      console.log("updateData === ", updateData);
+                    }
+                    }>일정 수정</button>
                   </div>
                   :
                   <div className={styles.btnBox}>

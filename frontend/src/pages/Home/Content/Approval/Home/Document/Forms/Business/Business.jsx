@@ -28,12 +28,9 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const {sessionData} = useMemberStore();
     const [isReadOnly, setIsReadOnly] = useState(false); // 추가된 상태
     //날짜, 제목
-    const [date, setDate]=useState(null);
+    const [date, setDate]=useState();
     const [title, setTitle]=useState();
-    const handleDateChange = (e) => {
-        const selectedDate = e.target.value;
-        setDate(selectedDate === "" ? null : selectedDate); // 날짜가 입력되지 않았을 때 null로 설정
-    };
+    const handleDateChange=(e)=>{setDate(e.target.value);}
     const handleTitleChange=(e)=>{setTitle(e.target.value);}
 
     // <handleContentChange> - 에디터 내용 변경 시 호출할 onChange함수
@@ -43,14 +40,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         setContent(editorRef.current.getInstance().getHTML());
     }
 
-    // 유효성 검사 함수
-    const validateForm = () => {
-        if (!title) {
-            alert("제목은 필수 값입니다.");
-            return true;
-        }
-        return false;
-    };
+    
 
     // DTO로 만들 데이터
     const [business, setBusiness] = useState({});
@@ -114,21 +104,17 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //insert
     useEffect(() => {
         if (isInsert && !id) {  // id가 없는 경우에만 실행
-            if (validateForm()) {
+            axios.post(`${BaseUrl()}/approval/document`, business).then((resp) => {
+                alert("문서 생성 성공");
+                navi(`/approval/document/${resp.data}?type=${type}`);
                 setIsInsert(false);
-            }else{
-                console.log('전송할 데이터:', business); // 전송 전에 데이터를 로그로 확인
-                axios.post(`${BaseUrl()}/approval/document`, business).then((resp) => {
-                    alert("문서 생성 성공");
-                    navi(`/approval/document/${resp.data}?type=${type}`);
-                    setIsInsert(false);
-                }).catch((error) => {
-                    alert('문서 생성 실패');
-                    setIsInsert(false);
-                });
-            }
+            }).catch((error) => {
+                alert('문서 생성 실패');
+                setIsInsert(false);
+            });
+            
         }
-    }, [isInsert]);
+    }, [isInsert, business, id]);
 
     //임시저장 insert할 때 사용
     useEffect(() => {
@@ -164,17 +150,11 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const getData=()=>{
         axios.get(`${BaseUrl()}/approval/document/${id}/${type}?table=business`, business).then((resp) => {
             console.log(resp.data);
-            let writeDate = null;
-            if (resp.data.BS_WRITE_DATE) {
-                // '2024. 8. 14.' 형식으로 받은 날짜를 'YYYY-MM-DD' 형식으로 변환
-                const localeDate = new Date(resp.data.BS_WRITE_DATE).toLocaleDateString('ko-KR');
-                const [year, month, day] = localeDate.split('. ').map(num => num.replace('.', '').padStart(2, '0'));
-                writeDate = `${year}-${month}-${day}`;
-                console.log(`날짜 정보: ${writeDate}`);
-            } else {
-                console.log("날짜 정보: null");
-            }
-
+            // '2024. 8. 14.' 형식으로 받은 날짜를 'YYYY-MM-DD' 형식으로 변환
+            const localeDate = new Date(resp.data.BS_WRITE_DATE).toLocaleDateString('ko-KR');
+            const [year, month, day] = localeDate.split('. ').map(num => num.replace('.', '').padStart(2, '0'));
+            const writeDate = `${year}-${month}-${day}`;
+            console.log(`날짜 정보: ${writeDate}`);
             if (contentRef.current) {  // contentRef.current가 null이 아닌지 확인
                 contentRef.current.innerHTML = resp.data.BS_CONTENT;
             }
@@ -207,35 +187,31 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장에서 결재요청 시 documnet정보 진행중으로 변경
     useEffect(() => {
         if (isTempInsert && id) {  
-            if (validateForm()) {
+            // console.log(business.docData);
+            axios.put(`${BaseUrl()}/approval/document/temp/${id}/${type}?table=business`, business).then((resp) => {
+                alert("문서 생성 성공");
+                navi(`/approval/list?type=기안진행`);
                 setIsTempInsert(false);
-            }else{
-                // console.log(business.docData);
-                axios.put(`${BaseUrl()}/approval/document/temp/${id}/${type}?table=business`, business).then((resp) => {
-                    alert("문서 생성 성공");
-                    navi(`/approval/list?type=기안진행`);
-                    setIsTempInsert(false);
-                }).catch((error) => {
-                    alert('문서 생성 실패');
-                    setIsTempInsert(false);
-                });
-            }
+            }).catch((error) => {
+                alert('문서 생성 실패');
+                setIsTempInsert(false);
+            });
+                
         }
-    }, [isTempInsert]);
+    }, [isTempInsert, docData, business, id]);
 
     //임시저장에서 임시저장 시 정보 변경
     useEffect(()=>{
         if(isTempTemp && id){
             axios.put(`${BaseUrl()}/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
-                setIsTempTemp(false);
-                alert("저장 완료");
+                setIsTempInsert(false);
                 navi(`/approval/document/${resp.data.id}?type=${resp.data.type}`);
             }).catch((error) => {
-                setIsTempTemp(false);
-                alert("저장 실패");
+                setIsTempInsert(false);
             });
         }
-    },[isTempTemp])
+
+    },[isTempTemp,docData, business, id])
 
     const today = new Date().toISOString().split('T')[0];
     return(
@@ -250,7 +226,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 <div className={styles.title}>
                     <div className={styles.name}>제목</div>
                         <div className={styles.value}>
-                            <input type='text' className={styles.inputtitle} placeholder='제목은 필수 값입니다.' onChange={handleTitleChange} value={title} disabled={isReadOnly}></input>
+                            <input type='text' className={styles.inputtitle} placeholder='제목을 입력하세요.' onChange={handleTitleChange} value={title} disabled={isReadOnly}></input>
                         </div>
                     </div>
                 </div>
