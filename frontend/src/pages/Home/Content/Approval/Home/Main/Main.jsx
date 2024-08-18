@@ -16,7 +16,7 @@ export const Main=()=>{
 
      const navi = useNavigate();
 
-        // 날짜 변환 함수
+    // 날짜 변환 함수
     const formatDate = (date) => {
         if (!date) return '-';
         return format(new Date(date), 'yyyy-MM-dd');
@@ -41,7 +41,7 @@ export const Main=()=>{
         finalApverName:'',
         detailName:'',
         stateName:'',
-        apvStateName:''
+        apvState:''
     }]);
 
     //랩
@@ -77,7 +77,7 @@ export const Main=()=>{
 
         //카드 == 현재결재자가 나인 문서들 넘겨야 할 정보들 (문서상태, 제목, 기안자, 기안일)
         filteredMainCard=list.document.filter(line=>
-            line.currentApverSeq ===sessionData.empSeq && line.stateName === '진행중' && (line.apvStateName === '대기' || line.apvStateName==="보류")
+            line.currentApverSeq ===sessionData.empSeq && line.stateName === '진행중' && (line.apvState === '대기' || line.apvState==="보류")
         )
 
         //리스트 == 내가 기안자이고 문서상태가 진행중인 문서들
@@ -118,8 +118,8 @@ export const Main=()=>{
             <div className={styles.cardWrapper}>
                 <div className={styles.cardBox}>
                     {displayedCards.map((line, index) => (
-                            <Card key={index} stateName={line.stateName} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} 
-                            egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName} apvStateName={line.apvStateName}/>
+                            <Card key={index} apvState={line.apvState} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} 
+                            egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName} />
                         ))}
                 </div>
                 <div className={styles.cardLine}>
@@ -144,7 +144,7 @@ export const Main=()=>{
                 </div>
             </div>
             <div className={styles.ingBox}>
-                <div className={styles.listheader}><h4 className={styles.headerText}>기안 진행 문서</h4></div>
+                <div className={styles.listheader}><h3 className={styles.headerText}>기안 진행 문서</h3></div>
                 <div className={styles.tableWrapper}>
                     <table className={styles.table}>
                         <thead className={styles.thead}>
@@ -160,11 +160,19 @@ export const Main=()=>{
                                         <tr key={index} className={styles.tbodytr}>
                                             <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
                                             <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>
-                                            <td className={`${styles.td3} ${styles.tablerow}`}>{line.egcYn}</td>
+                                            <td className={`${styles.td3} ${styles.tablerow}`}>
+                                                {line.egcYn === 'n' ? '' : <div className={styles.stateBox}>
+                                                            <span className={styles.egcstate}>긴급</span></div>
+                                                        }
+                                            </td>
                                             <td className={`${styles.td4} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
                                             <td className={`${styles.td5} ${styles.tablerow}`}>{line.drafterName}</td>
                                             <td className={`${styles.td6} ${styles.tablerow}`}>{line.currentApverName}</td>
-                                            <td className={`${styles.td7} ${styles.tablerow}`}>{line.stateName}</td>
+                                            <td className={`${styles.td7} ${styles.tablerow}`}>
+                                                {line.stateName === '진행중' ? <div className={styles.stateBox}>
+                                                            <span className={styles.stateName}>{line.stateName}</span></div>
+                                                            : ''}
+                                            </td>
                                         </tr>
                                 ))
                             }
