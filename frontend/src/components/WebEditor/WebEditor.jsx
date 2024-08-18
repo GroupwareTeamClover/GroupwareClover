@@ -8,7 +8,7 @@ import axios from 'axios';
 import { BaseUrl } from '../../commons/config';
 import { useEffect } from 'react';
 
-const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) => {
+const WebEditor = ({ editorRef, handleContentChange, height, defaultContent, placeHolder }) => {
     const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB 제한
 
     const onUploadImage = async (blob, callback) => {

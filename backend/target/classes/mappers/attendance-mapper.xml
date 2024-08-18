@@ -24,7 +24,7 @@
         FROM
             attendance
         WHERE
-            emp_seq = 27
+            emp_seq = ${empSeq}
         AND
             TRUNC(att_date) between #{start} AND #{end}
     </select>

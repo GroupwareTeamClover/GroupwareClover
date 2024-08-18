@@ -99,4 +99,8 @@
 				delete from apv_line where doc_seq=#{seq}
 	</delete>
 	
+	<update id="updateReadCheck">
+		update participants_line set read_yn = 'y', read_date = sysdate where line_seq=#{lineSeq}
+	</update>
+	
 </mapper>
