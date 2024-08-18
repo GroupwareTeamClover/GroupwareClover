@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Board">
+	<insert id="insertPost"> insert into board values(board_sequence.nextval,
+		#{boardlistSeq}, #{boardTitle}, #{boardWriter}, #{boardContent},
+		sysdate, 0) <selectKey keyProperty="boardSeq" resultType="int"
+			order="AFTER">
+			SELECT board_sequence.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<select id="selectWriterInfo" resultType="java.util.HashMap">
+		select employee.emp_name, role.role_name, department.dept_name from
+		employee
+		join role on employee.role_code = role.role_code
+		join department on employee.dept_code = department.dept_code
+		where emp_id = #{writer}
+	</select>
+
+	<select id="selectAllPost"
+		resultType="com.clover.board.dto.BoardDTO">
+		select * from board where boardlist_seq = #{boardlistSeq}
+		order by board_seq desc
+	</select>
+
+	<select id="selectSearchedPost" parameterType="map"
+		resultType="com.clover.board.dto.BoardDTO"> SELECT * FROM board WHERE
+		boardlist_seq = #{boardlistSeq} <if
+			test="type != null and keyword != null">
+			<choose>
+				<when test="searchType == 'writer'">
+					AND writer LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+				<when test="searchType == 'title'">
+					AND title LIKE CONCAT('%', #{keyword}, '%')
+				</when>
+			</choose>
+		</if>
+		order by board_seq desc </select>
+
+	<select id="selectTargetPost" resultType="com.clover.board.dto.BoardDTO">
+		select * from board where board_seq = #{boardSeq}
+	</select>
+
+	<delete id="deletePost">
+		delete from board where board_seq = #{boardSeq}
+	</delete>
+	
+	<update id="updateContentWithUrl">
+		update board set board_content = #{content} where board_seq = #{seq}
+	</update>
+	
+	<update id="updatePost">
+		update board set boardlist_seq = #{boardlistSeq}, board_title = #{boardTitle}, board_content = #{boardContent}, board_write_date = sysdate
+		where board_seq = #{boardSeq}
+	</update>
+	
+	<update id="increaseViewCount">
+		update board set board_view_count = board_view_count + 1 where board_seq = #{seq}
+	</update>
+	
+	<insert id="addImportant">
+		insert into board_important values(#{empSeq}, #{boardSeq})
+	</insert>
+	
+	<delete id="removeImportant">
+		delete from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
+	</delete>
+	
+	<select id="selectImportantPosts" resultType="com.clover.board.dto.BoardDTO">
+		select * from board where board_seq in (select board_seq from board_important where emp_seq = #{empSeq})
+		order by board_seq desc
+	</select>
+	
+	<select id="isImportant" resultType="boolean">
+		select count(*) from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
+	</select>
+
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BoardList">
+	<select id="selectAllMember" resultType="java.util.HashMap">
+		select employee.emp_seq,
+		employee.emp_name, role.role_name, department.dept_name
+		from employee
+		join department on employee.dept_code = department.dept_code
+		join role
+		on employee.role_code = role.role_code
+		order by emp_seq
+	</select>
+
+	<select id="selectAllDept" resultType="string">
+		select dept_name from
+		department
+	</select>
+
+	<select id="isTitleExist" resultType="boolean">
+		select count(*) from
+		boardlist where boardlist_name = #{title}
+	</select>
+
+	<select id="selectAllBoards"
+		resultType="com.clover.board.dto.BoardlistDTO">
+		select * from boardlist
+		where boardlist_type = 'A'
+		order by boardlist_seq
+	</select>
+
+	<select id="selectGroupBoards"
+		resultType="com.clover.board.dto.BoardlistDTO">
+		select * from boardlist
+		where boardlist_type = 'G'
+		order by boardlist_seq
+	</select>
+
+	<select id="selectEntireBoards"
+		resultType="com.clover.board.dto.BoardlistDTO">
+		select * from boardlist
+		order by boardlist_seq
+	</select>
+
+	<select id="selectTargetWhitelistMembers" resultType="Integer">
+		select
+		emp_seq from board_whitelist where boardlist_seq = #{boardSeq}
+	</select>
+
+	<insert id="insertBoard">
+		insert into boardlist values(boardlist_sequence.nextval,
+		#{boardlistName}, #{boardlistType}, #{boardlistActive})
+		<selectKey keyProperty="boardlistSeq" resultType="int"
+			order="AFTER">
+			SELECT boardlist_sequence.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+	<insert id="createWhitelist" parameterType="java.util.HashMap">
+		insert into board_whitelist (emp_seq, boardlist_seq)
+		<foreach collection="members" item="member" index="index"
+			separator="UNION ALL">
+			SELECT #{member}, #{seq} FROM dual
+		</foreach>
+	</insert>
+
+	<delete id="deleteBoard">
+		delete from BOARDLIST where boardlist_seq = #{seq}
+	</delete>
+
+	<update id="updateBoard">
+		update BOARDLIST set
+		BOARDLIST_NAME = #{boardlistName}, BOARDLIST_TYPE = #{boardlistType},
+		BOARDLIST_ACTIVE = #{boardlistActive}
+		where BOARDLIST_SEQ =
+		#{boardlistSeq}
+	</update>
+
+	<delete id="deleteWhitelist">
+		delete from BOARD_WHITELIST where BOARDLIST_SEQ =
+		#{boardSeq}
+	</delete>
+
+	<select id="selectEachBoard"
+		resultType="com.clover.board.dto.BoardlistDTO">
+		select * from boardlist where boardlist_seq = #{boardSeq}
+	</select>
+
+	<select id="selectIndividualBoard"
+		resultType="com.clover.board.dto.BoardlistDTO">
+		select * from boardlist where boardlist_type='A'
+		union
+		select * from boardlist where boardlist_type = 'G' and boardlist_seq in
+		(select boardlist_seq from board_whitelist where emp_seq = #{empSeq})
+	</select>
+</mapper>

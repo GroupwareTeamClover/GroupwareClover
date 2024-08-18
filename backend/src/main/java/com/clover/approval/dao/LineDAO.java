@@ -84,6 +84,11 @@ public class LineDAO {
 		mybatis.delete("Line.deletePartLineBySeq", seq);
 	}
 	
+	//읽음 처리
+	public void updateReadCheck(int lineSeq) {
+		mybatis.update("Line.updateReadCheck", lineSeq);
+	}
+	
 	
 }
 
