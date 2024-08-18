@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="AdminPopup">
+ <resultMap id="adminPopupResultMap" type="com.clover.admin.dto.AdminPopupDTO">
+	    <result property="popSeq" column="pop_seq"/>
+	    <result property="popTitle" column="pop_title"/>
+	    <result property="empId" column="emp_id"/>
+	    <result property="empName" column="emp_name"/>
+	    <result property="popContent" column="pop_content"/>
+	    <result property="popIsActive" column="pop_is_active"/>
+	    <result property="popWriteDate" column="pop_write_date"/>
+	    <result property="popUpdatedDate" column="pop_updated_date"/>
+	    <result property="popPeriodSeq" column="pop_period_seq"/>
+	    <result property="periodType" column="period_type"/>
+	    <result property="specificStartDate" column="start_date"/>
+	    <result property="specificEndDate" column="end_date"/>
+	    <result property="monthlyDay" column="monthly_day"/>
+	    <result property="weeklyDay" column="weekly_day"/>
+	</resultMap>
+    <!-- 팝업 생성 쿼리 -->
+  	<insert id="insertPop" parameterType="com.clover.admin.dto.AdminPopupDTO">
+  		<selectKey keyProperty="popSeq" resultType="int" order="BEFORE">
+        	SELECT popup_board_sequence.NEXTVAL FROM dual
+    	</selectKey>
+	    INSERT INTO popup_board (pop_seq, pop_title, emp_id, pop_content, pop_is_active, pop_write_date)
+	    VALUES (#{popSeq}, #{popTitle}, #{empId}, #{popContent}, #{popIsActive}, sysdate)
+	</insert>
+
+
+    <!-- 팝업 기간 생성 쿼리 -->
+    <insert id="insertPopPeriod" parameterType="com.clover.admin.dto.AdminPopupDTO">
+        INSERT INTO popup_period (pop_period_seq, pop_seq, period_type, start_date, end_date, monthly_day, weekly_day)
+        VALUES (popup_period_sequence.nextval, #{popSeq}, #{periodType},
+                <choose>
+                    <when test="specificStartDate != null">#{specificStartDate}</when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="specificEndDate != null">#{specificEndDate}</when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="monthlyDay != null">#{monthlyDay}</when>
+                    <otherwise>null</otherwise>
+                </choose>,
+                <choose>
+                    <when test="weeklyDay != null">#{weeklyDay}</when>
+                    <otherwise>null</otherwise>
+                </choose>)
+    </insert>
+    <select id="getAllData" resultMap="adminPopupResultMap">
+		select * from employee order by emp_seq desc
+	</select>
+	<select id="getAllPop" resultMap="adminPopupResultMap">
+    	SELECT
+		    pb.pop_seq,
+		    pb.pop_title,
+		    pb.emp_id,
+		    e.emp_name,       
+		    pb.pop_content,
+		    pb.pop_is_active,
+		    pb.pop_write_date,
+		    pb.pop_updated_date,
+		    pp.pop_period_seq,
+		    pp.period_type,
+		    pp.start_date,
+		    pp.end_date,
+		    pp.monthly_day,
+		    pp.weekly_day
+		FROM
+		    popup_board pb
+		LEFT JOIN
+		    popup_period pp ON pb.pop_seq = pp.pop_seq
+		LEFT JOIN
+		    employee e ON pb.emp_id = e.emp_id
+	 	ORDER BY pop_seq desc
+	 	
+    	
+    </select>
+    
+   
+
+	<select id="getPostInfo" resultMap="adminPopupResultMap">
+	    SELECT
+	        pb.pop_seq,
+	        pb.pop_title,
+	        pb.emp_id,
+	        e.emp_name,
+	        pb.pop_content,
+	        pb.pop_is_active,
+	        pb.pop_write_date,
+	        pb.pop_updated_date,
+	        pp.pop_period_seq,
+	        pp.period_type,
+	        pp.start_date,
+	        pp.end_date,
+	        pp.monthly_day,
+	        pp.weekly_day
+	    FROM
+	        popup_board pb
+	    LEFT JOIN
+	        popup_period pp ON pb.pop_seq = pp.pop_seq
+	    LEFT JOIN
+	        employee e ON pb.emp_id = e.emp_id
+	    WHERE pb.pop_seq = #{empSeq}
+	</select>
+	<select id="getPopWindow" resultMap="adminPopupResultMap">
+		<![CDATA[
+	    SELECT pb.POP_SEQ, pb.POP_TITLE, pb.POP_CONTENT, pb.POP_IS_ACTIVE, pb.POP_WRITE_DATE
+	    FROM popup_board pb
+	    JOIN popup_period pp ON pb.POP_SEQ = pp.POP_SEQ
+	    WHERE (
+	        (pp.PERIOD_TYPE = 'specific' 
+	         AND TRUNC(TO_DATE(pp.START_DATE, 'YYYY-MM-DD')) <= TRUNC(SYSDATE) 
+	         AND TRUNC(TO_DATE(pp.END_DATE, 'YYYY-MM-DD')) >= TRUNC(SYSDATE))
+	        OR (pp.PERIOD_TYPE = 'monthly' 
+	            AND TO_CHAR(SYSDATE, 'DD') = LPAD(pp.MONTHLY_DAY, 2, '0'))
+	        OR (pp.PERIOD_TYPE = 'weekly' 
+	            AND TRIM(UPPER(TO_CHAR(SYSDATE, 'DAY', 'NLS_DATE_LANGUAGE=ENGLISH'))) = UPPER(pp.WEEKLY_DAY))
+	    ) AND pb.POP_IS_ACTIVE = 'true'
+	    ]]>
+	</select>
+	
+	
+	<update id="updateContentWithUrl">
+		update popup_board set pop_content = #{content} where pop_seq = #{seq}
+	</update>
+	
+  	<update id="updatePopup"  parameterType="com.clover.admin.dto.AdminPopupDTO">
+	    UPDATE 
+	    	popup_board 
+	    SET 
+	    	pop_title= #{popTitle}, 
+	    	emp_id=#{empId}, 
+	    	pop_content=#{popContent}, 
+	    	pop_is_active=#{popIsActive}, 
+	    	pop_updated_date = sysdate
+	    WHERE pop_seq = #{popSeq}
+	
+	</update>
+
+    <!-- 팝업 기간 업데이트 쿼리 -->
+    <update id="updatePopPeriod" parameterType="com.clover.admin.dto.AdminPopupDTO">
+       	UPDATE 
+       		popup_period 
+       	SET 
+       		period_type = #{periodType},
+      		start_date=
+            <choose>
+                <when test="specificStartDate != null">#{specificStartDate}</when>
+                <otherwise>null</otherwise>
+            </choose>,
+        	end_date=
+           	<choose>
+               <when test="specificEndDate != null">#{specificEndDate}</when>
+               <otherwise>null</otherwise>
+           	</choose>,
+           	monthly_day=
+           	<choose>
+               <when test="monthlyDay != null">#{monthlyDay}</when>
+               <otherwise>null</otherwise>
+           	</choose>,
+           	weekly_day=
+            <choose>
+                <when test="weeklyDay != null">#{weeklyDay}</when>
+                <otherwise>null</otherwise>
+            </choose>
+     	WHERE pop_seq = #{popSeq}
+	</update>
+    
+</mapper>
+  
+  

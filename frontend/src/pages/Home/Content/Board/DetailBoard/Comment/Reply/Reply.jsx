@@ -6,13 +6,13 @@ import axios from 'axios';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useEffect, useRef, useState } from 'react';
 
-const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) => {
+const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName, setCountComments }) => {
     //답글 삭제
     const handleDelete = () => {
         if (window.confirm("이 답글을 삭제하시겠습니까?")) {
-            axios.delete(`${BaseUrl()}/comment/reply/${dto.boardCommentSeq}`).then(resp => 
-                { resp.status === 200 && setList(prev => prev.filter(item => (item.boardCommentSeq !== dto.boardCommentSeq))) }
-            )
+            setCountComments(prev => prev - 1);
+            axios.delete(`${BaseUrl()}/comment/reply/${dto.boardCommentSeq}`).then(resp => { resp.status === 200 && setList(prev => prev.filter(item => (item.boardCommentSeq !== dto.boardCommentSeq))) }
+            );
         }
     }
 
@@ -41,7 +41,7 @@ const Reply = ({ dto, sessionWriter, admin, setList, maxReplyLength, empName }) 
             }
         }, 0);
     }
-    
+
     const [newReply, setNewReply] = useState(dto.boardCommentContent);
 
     const handleModifyChange = (e) => {

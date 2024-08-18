@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Comment">
+	<insert id="insertComment">
+		insert into board_comment values(board_comment_sequence.nextval, #{boardCommentWriter}, #{boardCommentContent}, sysdate, #{boardSeq}, null)
+		<selectKey keyProperty="boardCommentSeq" resultType="int"
+			order="AFTER">
+			SELECT board_comment_sequence.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<insert id="insertReply">
+		insert into board_comment values(board_comment_sequence.nextval, #{boardCommentWriter}, #{boardCommentContent}, sysdate, #{boardSeq}, #{boardCommentReplySeq})
+		<selectKey keyProperty="boardCommentSeq" resultType="int"
+			order="AFTER">
+			SELECT board_comment_sequence.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<select id="selectAllComment" resultType="com.clover.board.dto.CommentDTO">
+		select * from board_comment where board_seq = #{boardSeq} order by board_comment_seq
+	</select>
+	
+	<select id="selectComment" resultType="com.clover.board.dto.CommentDTO">
+		select * from board_comment where board_comment_seq = #{seq}
+	</select>
+	
+	<delete id="deleteComment">
+		delete from board_comment where board_comment_seq = #{commentSeq}
+	</delete>
+	
+	<delete id="deleteDefendencyReples">
+		delete from board_comment where board_comment_reply_seq = #{commentSeq}
+	</delete>
+	
+	<delete id="deleteReply">
+		delete from board_comment where board_comment_seq = #{replySeq}
+	</delete>
+	
+	<update id="updateComment">
+		update board_comment set
+		board_comment_content = #{boardCommentContent}, board_comment_write_date = sysdate
+		where board_comment_seq = #{boardCommentSeq}
+	</update>
+	
+</mapper>
