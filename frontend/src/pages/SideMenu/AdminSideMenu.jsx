@@ -7,15 +7,19 @@ import { FaHistory } from 'react-icons/fa';
 import { HiMenuAlt3 } from "react-icons/hi";
 import React, { useEffect, useMemo, useState } from 'react';
 import { GiTalk } from 'react-icons/gi';
+import { FaCalendarDays } from 'react-icons/fa6';
 
 export const AdminSideMenu = () => {
   const menus = useMemo(() => [
     { name: "Dash", link: "/", type: "Dash", icon: IoHome },
+    { name: "Calendar", link: "/calendar", type: "Calendar", icon: FaCalendarDays },
     { 
       name: "조직관리", link: "/member", type: "통합사원목록", icon: FaUserTie, 
       submenus: [
+
         { name: "통합 사원 목록", link: "/member", type: "통합 사원 목록" },
-        { name: "가입 승인 목록", link: "/member/addmem", type: "가입 승인 목록" }
+        { name: "가입 승인 목록", link: "/member/addmem", type: "가입 승인 목록" },
+        { name: "통합 근태 목록", link: "/member/attend", type: "통합 근태 목록" },
       ]
     },
     { 
