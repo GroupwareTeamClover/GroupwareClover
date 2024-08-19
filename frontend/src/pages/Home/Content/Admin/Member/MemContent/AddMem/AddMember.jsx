@@ -9,6 +9,7 @@ import { useMemStore } from "../../../../../../../store/store";
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import {format} from 'date-fns';
 import { FaSearch } from "react-icons/fa";
+import { Loader } from "rsuite";
 
 
 export const AddMember = ()=>{
@@ -22,6 +23,8 @@ export const AddMember = ()=>{
     const [filtered, setFiltered] = useState(newMem);
     const [modalMems, setModalMems] = useState([]); // 모달에 전달할 props 설정.
     const [checkedMems, setCheckedMems] = useState([]); // 체크박스 
+    const [isLoading, setIsLoading] = useState(true);
+
 
 
     // axios로 출력받기 emp table - joindate가 이번달인 사람들....  
@@ -31,6 +34,7 @@ export const AddMember = ()=>{
             setNewMem(resp.data);
             setFiltered(resp.data);
             setstoremembers(false);
+            setIsLoading(false);
 
             // empStateCode가 1인 갯수(승인완료)
             const countState1 = resp.data.filter(mem => mem.empStateCode !== 0).length;
@@ -133,22 +137,18 @@ export const AddMember = ()=>{
    
     // -----------------------------------------------------------
     // 사원이름 검색
-    const handleSearch = (e) => {
-        const { name, value } = e.target;
-    
-        if (value === "") {
+    const [keyword, setKeyword] = useState('');
+
+    const handleSearch = () => {
+        if (keyword === "") {
             // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
             setFiltered(newMem);
         } else {
             // 검색어가 있는 경우 필터링
-            let result;
-            if (name === "EMP_NAME") {
-                result = newMem.filter((data) => data[name].includes(value));
-            } else {
-                result = newMem.filter((data) => data[name].includes(value));
-            }
+            let result = newMem.filter((data) => data.empName.includes(keyword));
             setFiltered(result);
-        }
+            }
+        
         setCurrentPage(0);
         
     };
@@ -177,14 +177,16 @@ export const AddMember = ()=>{
                         type="text"
                         placeholder=" 사원 이름 검색"
                         name="empName"
+                        value={keyword} 
+                        onChange={(e) => setKeyword(e.target.value)} // 상태 업데이트
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                handleSearch(e);
+                                handleSearch();
                             }
                         }}
                         className={styles.searchInput}
                     />
-                    <button onClick={(e) => handleSearch(e)}>
+                    <button onClick={handleSearch}>
                         <FaSearch className={styles.searchLogo} />
                     </button>
                 </div>
@@ -206,9 +208,17 @@ export const AddMember = ()=>{
                         </thead>
                         <tbody className={styles.tbody}>
                             {/* 데이터영역 */}
-                            { filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem,i)=>{
-                                return(
-                                        <tr key={i}>
+                            {isLoading ? (
+                    <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
+                ) : ((filtered.length === 0) ? (
+                        <tr>
+                            <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
+                        </tr>
+                ) : (
+                          
+                            filtered.length > 0 ? (
+                                filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
+                                    <tr key={i}>
                                             <td className={styles.theadtd}>
                                                 {mem.empStateCode ===0 ? (
                                                     <input type="checkbox" name="emp_seq" value={mem.empSeq} onClick={handleCheckBox} ref={data=> checkboxRef.current[i]=data}></input>
@@ -261,9 +271,15 @@ export const AddMember = ()=>{
                                                 }
                                             </td>
                                         </tr>
-                                    )
-                                })
-                            }
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
+                                    </tr>
+                                )
+                            )
+                        )
+                        }
                         </tbody>
                     </table>
                 </div>            

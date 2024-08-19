@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ public class AdminPopupController {
 		String content = popupdto.getPopContent();
 		int newPopSeq = adminpopupService.createPopup(popupdto);
 		
+		try {
 		//첨부파일명, 첨부파일URL, 이미지URL 데이터 받아오기
 		List<String> fileNames = (List<String>) popupdto.getFileNames();
 	    List<String> fileUrls = (List<String>) popupdto.getFileUrls();
@@ -65,7 +67,7 @@ public class AdminPopupController {
 				//파일 주소 변환 후 DB에 등록
 				String newFilePath = "popups/" + newPopSeq + "/" + UUID.randomUUID() + "_" + fileNames.get(i);
 				String newFileUrl = s3Serv.moveFile(newFilePath, fileUrls.get(i));
-				
+				 if (newFileUrl == null) throw new Exception("파일 저장 실패");
 				attServ.insertFile(new AttachmentDTO(0, fileNames.get(i), newFileUrl, "popup", newPopSeq));
 			}
 		}
@@ -75,12 +77,19 @@ public class AdminPopupController {
 				String newImagePath = "images/popups/" + newPopSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
 				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
 				String newImageUrl = s3Serv.moveFile(newImagePath, images.get(i));
+				if (newImageUrl == null) throw new Exception("이미지 저장 실패");
+
 				//변환된 주소로 글 내용을 바꾸고 반환
 				content = attServ.updateImageUrl(images.get(i), newImageUrl, content);
 			}
 			// 최종적으로 업데이트된 글내용을 DB에 업데이트
 			attServ.updateContent(content, newPopSeq, "AdminPopup");
 		}	    
+		
+		} catch(Exception e) {
+			adminpopupService.deletePopup(newPopSeq);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 		
 		return ResponseEntity.ok().build();
 	}
@@ -111,15 +120,16 @@ public class AdminPopupController {
 		 String empId = (String)data.get("empId");
 		 String popContent = (String)data.get("popContent");
 		 Boolean isActive = (Boolean) data.get("popIsActive");
-	        String popIsActive = isActive.toString(); // 올바른 변환 방법
+	     String popIsActive = isActive.toString(); // 올바른 변환 방법
 		
 		 String periodType =(String)data.get("periodType"); // 'none', 'specific', 'monthly', 'weekly'
 	     String specificStartDate= (String)data.get("specificStartDate"); // YYYY-MM-DD
 	     String specificEndDate = (String)data.get("specificEndDate");   // YYYY-MM-DD
 	     String monthlyDay = (String)data.get("monthlyDay");       // 1-31
 	     String weeklyDay =(String)data.get("weeklyDay");      
-		AdminPopupDTO popupdto= new AdminPopupDTO(popSeq, popTitle, empId, popContent, null, null, popIsActive, null, null, periodType, specificStartDate, specificEndDate, monthlyDay, weeklyDay, null, null, null);
-		adminpopupService.updatePopup(popupdto); // 글 수정
+	     
+	     AdminPopupDTO popupdto= new AdminPopupDTO(popSeq, popTitle, empId, popContent, null, null, popIsActive, null, null, periodType, specificStartDate, specificEndDate, monthlyDay, weeklyDay, null, null, null);
+		
 		
 		
 		List<String> deleteFileUrls = (List<String>) data.getOrDefault("deleteFileUrls", new ArrayList<>());
@@ -133,6 +143,7 @@ public class AdminPopupController {
 	    System.out.println(addFileNames);
 	    System.out.println(addFileUrls);
 	    
+	    try {
 	    // 삭제할 기존 파일 제거(DB, S3)
 	    if (deleteFileUrls.size() > 0) {
 			for (String deleteFileUrl : deleteFileUrls) {
@@ -152,7 +163,8 @@ public class AdminPopupController {
 				String newFilePath = "popups/" + popSeq + "/" + UUID.randomUUID() + "_" + addFileNames.get(i);
 				//파일 주소 변환 후 DB에 등록
 				String newFileUrl = s3Serv.moveFile(newFilePath, addFileUrls.get(i));
-				
+                if (newFileUrl == null) throw new Exception("파일 업로드 실패");
+
 				attServ.insertFile(new AttachmentDTO(0, addFileNames.get(i), newFileUrl, "popup", popSeq));
 			}
 		}
@@ -162,11 +174,19 @@ public class AdminPopupController {
 				String newImagePath = "images/popups/" + popSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
 				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
 				String newImageUrl = s3Serv.moveFile(newImagePath, addImageUrls.get(i));
+                if (newImageUrl == null) throw new Exception("이미지 업로드 실패");
+
 				//변환된 주소로 글 내용을 바꾸고 반환
 				popContent = attServ.updateImageUrl(addImageUrls.get(i), newImageUrl, popContent);
 			}
+		}
 			// 최종적으로 업데이트된 글내용을 DB에 업데이트
+			adminpopupService.updatePopup(popupdto); // 글 수정
 			attServ.updateContent(popContent, popSeq, "AdminPopup");
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 		
 		return ResponseEntity.ok().build();

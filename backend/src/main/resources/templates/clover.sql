@@ -165,7 +165,7 @@ create sequence boardlist_sequence start with 1 increment by 1 nomaxvalue nocach
 create table attachment (
     attachment_seq number primary key,
     attachment_oriname varchar2(300 char) not null,
-    attachment_sysname varchar2(300 char) not null,
+    attachment_sysname varchar2(400 char) not null,
     attachment_from varchar2(20 char) not null,
     attachment_parent_seq number not null
 );

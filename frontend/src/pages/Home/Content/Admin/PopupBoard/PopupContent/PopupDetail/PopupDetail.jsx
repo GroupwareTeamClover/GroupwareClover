@@ -11,8 +11,6 @@ import {format} from 'date-fns';
 import { confirmAlert } from '../../../../../../../commons/common';
 
 
-// ...생략...
-
 export const PopupDetail = () => {
     const navi = useNavigate();
     const { popSeq } = useParams();
@@ -38,6 +36,14 @@ export const PopupDetail = () => {
         setBoardActive(e.target.value);
     }
 
+    // 컴포넌트가 언마운트될 때 인스턴스 해제
+    useEffect(() => {
+        return () => {
+            if (editorRef.current) {
+                editorRef.current.getInstance().destroy();  // 인스턴스 해제
+            }
+        };
+    }, []);
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminpopup/postInfo/${popSeq}`).then(resp => {
             const data = resp.data;
@@ -78,9 +84,20 @@ export const PopupDetail = () => {
 
     const handleUploadSuccess = (response, file) => {
         const fileUrl = response;
-        console.log(fileUrl);
-        setFiles(prev => [...prev, { name: file.name, url: fileUrl }]);
+        const newFile = { name: file.name, url: fileUrl };
+        // 중복 파일 제거
+        setFiles(prev => prev.filter(f => f.name !== file.name));
+        
+        // 파일 추가
+        setFiles(prev => [...prev, newFile]);
         setAddFileUrls(prev => [...prev, fileUrl]); // addFileUrls 상태 업데이트
+    };
+    const handleUploadError = (error, file) => {
+        console.error('File upload error:', error);
+        alert(file.name+'파일 용량이 큽니다. 파일 크기를 확인해주세요.');
+        // setUploadError(true); // 에러 상태 설정
+        // 실패한 파일을 리스트에서 제거
+        handleRemove(file);
     };
 
     const handleRemove = (file) => {
@@ -106,7 +123,6 @@ export const PopupDetail = () => {
         const strippedContent = textContent.trim();
 
         if (!hasImage && strippedContent === "") {
-      
             alert("내용을 입력해주세요!");
             return;
         }
@@ -221,7 +237,8 @@ export const PopupDetail = () => {
             </div>
             <div className={styles.fileBox}>
                 <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
-                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}
+                    onError={handleUploadError}>
                     <div style={{lineHeight:'100px', textAlign:'center'}}>클릭하거나 드래그하여 파일을 추가하세요</div>
                 </Uploader>
             </div>

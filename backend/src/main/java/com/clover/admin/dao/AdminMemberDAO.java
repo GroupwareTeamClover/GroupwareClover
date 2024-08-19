@@ -28,6 +28,15 @@ public class AdminMemberDAO {
 	public List<HashMap<String, Object>> getGender(){
 		return mybatis.selectList("AdminMember.getGender");
 	}
+	public List<HashMap<String, Object>> getWorker(){
+		return mybatis.selectList("AdminMember.getWorker");
+	}
+	public List<EmployeeDTO> getExit(){
+		return mybatis.selectList("AdminMember.getExit");
+	}
+	public List<HashMap<String, Object>> getDept(){
+		return mybatis.selectList("AdminMember.getDept");
+	}
 	
 	public void updateMem(AdminUpdateMemDTO updto) {
 		Map<String, Object> params = new HashMap<>();
@@ -36,10 +45,20 @@ public class AdminMemberDAO {
 			params.put("tbObject", updto.getUpdateMems());
 			params.put("newValue", updto.getNewValue());
 			params.put("empSeq", empSeq);
+			
+			// newValue가 퇴사일 경우 true로 설정
+	        boolean isLeave = "퇴사".equals(updto.getNewValue());
+	        params.put("isLeave", isLeave);
+	        
 			System.out.println("확인용 :"+ params.get("tbObject"));
 			System.out.println("String: "+ params.get("newValue"));
 			System.out.println("empSeq"+empSeq);
 			mybatis.update("AdminMember.updateMem", params);
+			
+			// '퇴사'일 때 추가적인 leave_date 업데이트해주기.
+	        if (isLeave) {
+	            mybatis.update("AdminMember.updateLeaveDate", empSeq);
+	        }
 		}
 	}
 	

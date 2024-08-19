@@ -36,6 +36,9 @@ public class AdminPopupService {
 	public void updatePopup(AdminPopupDTO popupdto) {
 		adminpopupDAO.updatePopup(popupdto);
 	}
+	public void deletePopup(int newPopSeq) {
+		adminpopupDAO.deletePopup(newPopSeq);
+	}
 	
 }
 

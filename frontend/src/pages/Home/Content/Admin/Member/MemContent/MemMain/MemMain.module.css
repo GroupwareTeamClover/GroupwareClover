@@ -81,6 +81,7 @@
 
 
 
+
 /* ===================================================== */
 .funcBtn{
     padding-top:40px;
@@ -194,6 +195,9 @@
     width: 100px;/* 계정상태 열의 너비 */
 }
 
+.table tbody tr:hover{
+    background-color: #dee4d53a;
+}
 .table tbody td{
     /* background-color: #1a4f72; */
     padding: 8px 0;

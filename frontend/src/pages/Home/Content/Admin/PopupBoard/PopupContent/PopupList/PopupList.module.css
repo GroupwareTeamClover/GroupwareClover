@@ -101,7 +101,8 @@
 
 .table thead td:nth-child(2) {
     width: 20%;
-    background-color: #d5f8e562;
+    background-color: #f1f1f1;
+    border-left: 0.1px solid #9caa745b;
 }
 
 .table thead td:nth-child(3) {
@@ -110,7 +111,7 @@
 }
 .table thead td:nth-child(4) {
     width: 10%;
-    background-color: #d5f8e562;
+    background-color: #e7e7e7d5;
 }
 
 .table tbody tr {
@@ -163,6 +164,7 @@
 
 .table tbody td:nth-child(2) {
     text-align: left;
+    padding-left: 20px;
 }
 
 
