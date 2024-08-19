@@ -239,4 +239,8 @@ public class ChatRoomDAO {
         params.put("empSeq", empSeq);
         mybatis.delete("ChatRoomMapper.deleteChatHistory", params);
     }
+    
+    public void updateRoom(ChatRoomDTO room) {
+        mybatis.update("ChatRoomMapper.updateRoom", room);
+    }
 }

@@ -14,6 +14,9 @@ public class ChatMessageService {
 
     @Autowired
     private ChatMessageDAO chatMessageDAO;
+    
+    @Autowired
+    private ChatRoomService chatRoomService;
 
     /**
      * 특정 채팅방의 메시지 목록을 가져오는 메서드
@@ -33,6 +36,7 @@ public class ChatMessageService {
     @Transactional
     public ChatMessageDTO saveMessage(ChatMessageDTO message) {
         chatMessageDAO.saveMessage(message);
+        chatRoomService.updateRoomLastMessage(message.getRoomSeq(), message);
         return message;
     }
 
