@@ -7,7 +7,7 @@ import {Mypage} from "./Mypage/Mypage";
 import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import {roleName, deptName, dateYMD} from "../../../../commons/common";
+import {roleName, deptName, dateYMD, dateSettingOrigin} from "../../../../commons/common";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
 
@@ -58,7 +58,6 @@ export const Main = () => {
 
         /** 회사 공지 목록 **/
         axios.get(`${BaseUrl()}/board/main/notice`).then(res => {
-            console.log("res.data ==== ", res.data);
             setNoticeList(res.data);
         })
 
@@ -67,8 +66,8 @@ export const Main = () => {
 
     const [weekSchedule, setWeekSchedule] = useState({start: "", end: "", title: ""});
     const eventClick = (data) => {
-        const start = dateYMD(data.event._instance.range.start);
-        const end = dateYMD(data.event._instance.range.end);
+        const start = dateSettingOrigin(data.event._instance.range.start);
+        const end = dateSettingOrigin(data.event._instance.range.end);
         const title = data.event._def.title;
         setWeekSchedule({start, end, title});
         setModalState("week");
