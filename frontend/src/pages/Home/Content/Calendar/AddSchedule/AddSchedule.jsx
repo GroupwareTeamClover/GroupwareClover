@@ -8,6 +8,7 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
 
   const { admin } = useMemberStore();
 
+  /** 오늘보다 이전 날짜 선택 못하도록 상태 관리 **/
   const [minDateTime, setMinDateTime] = useState('');
   useEffect(() => {
     const now = new Date();
@@ -47,14 +48,16 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
       return false;
     }
 
+    let dept = 1;
+    if(select) dept = 0;
+
     const data = {
       scheduleContent : inputData.scheduleContent,
       startDate : inputData.startDate,
-      endDate: inputData.endDate
+      endDate: inputData.endDate,
+      deptCode: dept
 
     }
-
-    console.log("data ==== ", JSON.stringify(data));
 
     axios.post(`${BaseUrl()}/schedule`, data).then(res => {
       if(res.data === "ok") {
@@ -63,18 +66,19 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
         setInputData(defaultInputData);
       }
     });
+
+    setSelect(false);
+  }
+
+  const [select, setSelect] = useState(false);
+  const handleCheckBox = (e) => {
+    setSelect(e.target.checked);
   }
 
   return (
     <div className={styles.modalForm}>
       <div className={styles.insert}>
         <h2>일정 추가</h2>
-        {admin &&
-          <div className={styles.companySchedule}>
-            <input id="deptCode" name="deptCode" type="checkbox"/>
-            <label htmlFor="deptCode">회사 전체 일정으로 추가하기</label>
-          </div>
-        }
         <div className={styles.inputData}>
           <div className={styles.insertRow}>
             <span>시작 날짜</span>
@@ -91,7 +95,15 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
             <input type="text" name="scheduleContent" maxLength="300" value={inputData.scheduleContent || ""}
                    onChange={handleDate}/>
           </div>
+
+          {admin &&
+            <div className={styles.companySchedule}>
+              <input id="deptCode" name="deptCode" type="checkbox" onChange={handleCheckBox}/>
+              <label htmlFor="deptCode">회사 전체 일정으로 추가하기</label>
+            </div>
+          }
         </div>
+
         <div className={styles.btnBox}>
           <button onClick={handleInsertSchedule}>추가</button>
           <button onClick={closeModal}>취소</button>

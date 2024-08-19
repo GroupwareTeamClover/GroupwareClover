@@ -39,6 +39,7 @@ export const DetailSchedule = ({setDataChange}) => {
           setScheduleDetail({});
           const selectList = scheduleSelectList.filter(item => item.scheduleSeq !== seq)
           setScheduleSelectList(selectList);
+          setDataChange(prev => !prev);
         }
       });
     }
