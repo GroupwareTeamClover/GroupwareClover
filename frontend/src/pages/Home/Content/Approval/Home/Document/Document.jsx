@@ -15,7 +15,8 @@ import { DragFolder } from "../../Side/ChoiceLine/DragFolder/DragFolder";
 import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./Menus/DrafterMenu/DrafterMenu";
 import {deptName} from "./../../../../../../commons/common"
-
+import 'rsuite/Uploader/styles/index.css';
+import { Uploader } from 'rsuite';
 
 export const Document = ({type}) => {
     //맵핑해서 양식별 메뉴와 폼 컴포넌트 결정
@@ -110,6 +111,23 @@ export const Document = ({type}) => {
         setDocumentDTO((prev) => ({ ...prev, egcYn: isEmergency }));
     }, [isEmergency]);
 
+
+     //첨부파일
+     const [files, setFiles] = useState([]);
+     const handleFileChange = (fileList) => {
+         setFiles(fileList);
+     };
+     const handleUploadSuccess = (response, file) => {
+         const fileUrl = response;
+         // 파일 리스트에 업로드된 파일 추가
+         setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
+     };
+     const handleRemove = (file) => {
+         // 파일 리스트에서 해당 파일 제거
+         setFiles((prev) => prev.filter((f) => f.name !== file.name));
+     };
+     const path = encodeURIComponent("temp");
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -119,52 +137,61 @@ export const Document = ({type}) => {
                 <WriterMenu setIsInsert={setIsInsert} setIsEmergency={setIsEmergency} setIsTemp={setIsTemp}/>
             </div>
             <div className={styles.detail}>
-                {/* 왼쪽 */}
-                <div className={styles.left}>
-                    <div className={styles.test}>
-                    <div className={styles.leftcontainer}>
-                    <div className={styles.insideheader}>
-                        <span><h2>{type}</h2></span>
-                    </div>
-                    <div className={styles.bigcontent}>
-                        <div className={styles.info}> 
-                            <div className={styles.docInfo}>
-                            <div className={styles.tablebox}>
-                                {drafterData.map((row, index) => (
-                                <div className={styles[`row${index + 1}`]} key={index}>
-                                    <div className={styles[`row${index + 1}col1`]}>{row.label}</div>
-                                    <div className={styles[`row${index + 1}col2`]}>{row.value}</div>
-                                </div>
-                                ))}
-                            </div>
-                            </div>
-                            <div className={styles.lineEmptyBox}></div>
-                                {cloneEmpInfo.apvchoice && cloneEmpInfo.apvchoice.length > 0 && (
-                                        <div className={styles.apvlineInfo}>
-                                            {cloneEmpInfo.apvchoice.map((line, index) => (
-                                                <div key={index} className={styles.tablelbox2}>
-                                                    <div className={styles.role}><span className={styles.roleText}>{line.role}</span></div>
-                                                    <div className={styles.name}><span className={styles.nameText}>{line.name}</span></div>
-                                                    <div className={styles.docNumber}></div>
+                {/* left와 side 섹션을 감싸는 래퍼 추가 */}
+                <div className={styles.contentWrapper}>
+                    {/* 왼쪽 */}
+                    <div className={styles.left}>
+                        <div className={styles.test}>
+                            <div className={styles.leftcontainer}>
+                                    <div className={styles.insideheader}>
+                                        <span><h2>{type}</h2></span>
+                                    </div>
+                                    <div className={styles.bigcontent}>
+                                        <div className={styles.info}> 
+                                            <div className={styles.docInfo}>
+                                            <div className={styles.tablebox}>
+                                                {drafterData.map((row, index) => (
+                                                <div className={styles[`row${index + 1}`]} key={index}>
+                                                    <div className={styles[`row${index + 1}col1`]}>{row.label}</div>
+                                                    <div className={styles[`row${index + 1}col2`]}>{row.value}</div>
                                                 </div>
-                                            ))}
+                                                ))}
+                                            </div>
+                                            </div>
+                                            <div className={styles.lineEmptyBox}></div>
+                                                {cloneEmpInfo.apvchoice && cloneEmpInfo.apvchoice.length > 0 && (
+                                                        <div className={styles.apvlineInfo}>
+                                                            {cloneEmpInfo.apvchoice.map((line, index) => (
+                                                                <div key={index} className={styles.tablelbox2}>
+                                                                    <div className={styles.role}><span className={styles.roleText}>{line.role}</span></div>
+                                                                    <div className={styles.name}><span className={styles.nameText}>{line.name}</span></div>
+                                                                    <div className={styles.docNumber}></div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                         </div>
-                                    )}
+                                        <div className={styles.form}>
+                                            <FormComponent type={type} isInsert={isInsert} setIsInsert={setIsInsert} isEmergency={isEmergency}
+                                                documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
+                                                apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
+                                                participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}
+                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files}
+                                            /> 
+                                        </div>
+                                    </div> 
+                            </div>
                         </div>
-                        <div className={styles.form}>
-                            <FormComponent type={type} isInsert={isInsert} setIsInsert={setIsInsert} isEmergency={isEmergency}
-                                documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
-                                apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
-                                participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}
-                                isTemp={isTemp} setIsTemp={setIsTemp}
-                            /> 
-                        </div>
-                    </div> 
+                        <div className={styles.fileBox}>
+                            <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
+                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                                <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
+                            </Uploader>
+                        </div> 
                     </div>
-                    </div>
+                    {/* 오른쪽 */}
+                    <div className={styles.side}></div>
                 </div>
-                {/* 오른쪽 */}
-                <div className={styles.side}></div>
             </div>
         </div>
     );
