@@ -20,7 +20,7 @@
 		select * from employee where emp_state_code = 2
 	</select>
 	<select id="getDept" resultType="java.util.HashMap">
-		select dept_code, count(*) as count from employee group by dept_code
+		select dept_code, count(*) as count from employee where emp_state_code !=2 group by dept_code
 	</select>
 	
 	
