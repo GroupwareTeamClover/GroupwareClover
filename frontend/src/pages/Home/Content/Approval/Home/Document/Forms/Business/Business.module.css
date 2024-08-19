@@ -58,3 +58,8 @@
     flex: 9.3;
 }
 
+.edit{
+    resize: none;
+    flex-wrap: wrap;
+}
+
