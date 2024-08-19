@@ -20,7 +20,7 @@ export const MemMain = () => {
     const [filtered, setFiltered] = useState(members);
     const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
     const [checkedMems, setCheckedMems] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
     // select 4가지 useState("100")으로 설정해주기
@@ -67,13 +67,15 @@ export const MemMain = () => {
         });
     },[storemembers]);
 
+  
+
     // 서버에서 사원 수 데이터를 가져옴
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/countmem`).then((resp)=>{
             const processedData = processCountData(resp.data);
             setCountMem(processedData);
             setstoremembers(false);
-            console.log(resp.data)
+            console.log(resp.data);
         });
     },[storemembers]);
 
@@ -213,7 +215,7 @@ export const MemMain = () => {
             setRoleCode("100");
             setWorkerStateCode("100");
             setEmpStateCode("100");
-
+            // setKeyword("");
             }
         
         setCurrentPage(0);
@@ -241,15 +243,15 @@ export const MemMain = () => {
         if (empNameRef.current) {
             empNameRef.current.value = '';
         }
-    
        
-    // 필터링을 호출하여 결과를 업데이트
-    applyFilters();
+        // 필터링을 호출하여 결과를 업데이트
+        applyFilters();
     };
     
     // 셀렉트 선택
     const applyFilters = () => {
-        let result = members;
+        // let result = members;
+        let result = members.filter((data) => data.empName.includes(keyword));;
 
         // 필터 조건에 따라 데이터 필터링
         if (deptCode !== "100") {
@@ -266,14 +268,14 @@ export const MemMain = () => {
         }
         
         setFiltered(result);
-        setCurrentPage(0); // 페이지를 처음으로 이동
+       setCurrentPage(0); // 페이지를 처음으로 이동
        
             
     };
 
     useEffect(() => {
         applyFilters();
-    }, [deptCode, roleCode, workerStateCode, empStateCode, members]);
+    }, [deptCode, roleCode, workerStateCode, empStateCode, members, ]);
     
     
     
@@ -303,10 +305,6 @@ export const MemMain = () => {
                 <select name='status' onChange={handleSelectChange}>
                     <option value="">상태변경</option>
                     {renderStatusOptions()}
-                    {/* <option value="부서변경">부서변경</option>
-                    <option value="직위변경">직위변경</option>
-                    <option value="사용자그룹변경">사용자그룹변경</option>
-                    <option value="계정상태변경">계정상태변경</option> */}
                 </select>
                 <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
             </div>         
@@ -398,7 +396,6 @@ export const MemMain = () => {
                             <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
                         </tr>
                 ) : (
-                          
                             filtered.length > 0 ? (
                                 filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
                                     <tr key={i}>
@@ -482,10 +479,7 @@ export const MemMain = () => {
         <Modal isOpen={isModalOpen} onClose={closeModal}>
             <div className={styles.modalForm}>
                 { modalState === status.status &&
-                    <ModalPosition modalState={modalState} checkedMems={checkedMems} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} resetCheckboxes={resetCheckboxes} />
-                }
-                { modalState === 'deleteMem' &&
-                    <ModalDelete checkedMems={checkedMems} setIsModalOpen={setIsModalOpen}/>
+                    <ModalPosition modalState={modalState} checkedMems={checkedMems} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} resetCheckboxes={resetCheckboxes} currentPage={currentPage} setCurrentPage={setCurrentPage} />
                 }
             </div>
         </Modal>
