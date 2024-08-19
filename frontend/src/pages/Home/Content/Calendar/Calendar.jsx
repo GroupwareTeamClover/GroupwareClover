@@ -7,12 +7,13 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
-import {scheduleType} from "../../../../commons/common";
+import {dateSettingOrigin, scheduleType} from "../../../../commons/common";
 import {BaseUrl} from "../../../../commons/config";
 import {useMemberStore} from "../../../../store/store";
 import {AddSchedule} from "./AddSchedule/AddSchedule";
 import {DetailSchedule} from "./DetailSchedule/DetailSchedule";
 import {useScheduleStore} from "../../../../store/scheduleStore";
+import {SelectSchedule} from "./SelectSchedule/SelectSchedule";
 
 export const Calendar = () => {
   const { sessionData} = useMemberStore();
@@ -93,9 +94,15 @@ export const Calendar = () => {
   }, [select]);
 
   /** 이벤트 클릭 **/
-  // const eventClick = (data) => {
-  //   const eventDate = data.event.start; // 이벤트의 시작 날짜
-  // }
+  const [eventData, setEventData] = useState({start: "", end: "", title: ""});
+  const eventClick = (data) => {
+    const start = dateSettingOrigin(data.event._instance.range.start);
+    const end = dateSettingOrigin(data.event._instance.range.end);
+    const title = data.event._def.title;
+    setEventData({start, end, title});
+    setModalDisplay("select");
+    openModal();
+  }
 
   /** 선택된 날짜를 모달에 표시 **/
   const calendarDayClick = (arg) => {
@@ -180,7 +187,7 @@ export const Calendar = () => {
             }}
 
             events={checkSchedule}
-            // eventClick={eventClick}
+            eventClick={eventClick}
 
             dateClick={calendarDayClick} // 날짜가 선택 될 때
 
@@ -193,6 +200,7 @@ export const Calendar = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         { modalDisplay === "detail" && <DetailSchedule closeModal={closeModal} setDataChange={setDataChange}/> }
         { modalDisplay === "insert" && <AddSchedule closeModal={closeModal} setDataChange={setDataChange}/> }
+        { modalDisplay === "select" && <SelectSchedule closeModal={closeModal} setDataChange={setDataChange} eventData={eventData}/> }
       </Modal>
 
     </div>
