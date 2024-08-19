@@ -27,6 +27,15 @@ public class AdminMemberService {
 	public List<HashMap<String,Object>> getGender(){
 		return adminmemberDAO.getGender();
 	}
+	public List<HashMap<String,Object>> getWorker(){
+		return adminmemberDAO.getWorker();
+	}
+	public List<EmployeeDTO> getExit(){
+		return adminmemberDAO.getExit();
+	}
+	public List<HashMap<String,Object>> getDept(){
+		return adminmemberDAO.getDept();
+	}
 	
 	public void updateMemState(AdminUpdateMemDTO updto) {
 		adminmemberDAO.updateMem(updto);		

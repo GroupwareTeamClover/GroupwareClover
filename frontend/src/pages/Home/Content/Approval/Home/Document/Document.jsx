@@ -80,7 +80,7 @@ export const Document = ({type}) => {
         const [participantsLineDTOs, setParticipantsLineDTOs] = useState([...refParticipants, ...vieParticipants]);
     
         // 현재 날짜 마운트 시 한 번만
-        const [currentDate, setCurrentDate] = useState('');
+        const [currentDate, setCurrentDate] = useState(null);
         useEffect(() => {
             setDrafterData((prev)=>
                 prev.map((item)=>

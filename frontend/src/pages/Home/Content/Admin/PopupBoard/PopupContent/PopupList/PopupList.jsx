@@ -129,8 +129,20 @@ export const PopupList=()=>{
                                         }
                                        
                                        <td className={styles.theadtd}>
-                                            {mem.monthlyDay ? '매월 ' + mem.monthlyDay+'일' :
-                                            mem.weeklyDay ? '매주 '+ mem.weeklyDay :
+                                            {mem.monthlyDay ? ('매월 ' + mem.monthlyDay+'일' )
+                                            :
+                                            mem.weeklyDay ? 
+                                            ('매주 '+ 
+                                            (mem.weeklyDay === 'MONDAY' ? '월':
+                                            mem.weeklyDay === 'TUESDAY' ? '화':
+                                            mem.weeklyDay === 'WEDNESDAY' ? '수':
+                                            mem.weeklyDay === 'THURSDAY' ? '목':
+                                            mem.weeklyDay === 'FRIDAY' ? '금':
+                                            mem.weeklyDay === 'SATURDAY' ? '토':
+                                            mem.weeklyDay === 'SUNDAY' ? '일':
+
+                                             '')+'요일'
+                                            ):
                                         mem.specificStartDate +'~'+ mem.specificEndDate }
                                        </td>
                                         <td className={styles.theadtd}>

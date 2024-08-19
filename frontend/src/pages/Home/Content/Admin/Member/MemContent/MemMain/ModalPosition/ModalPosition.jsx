@@ -110,7 +110,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                             <option value="">계정상태</option>
                             <option>재직중</option> 
                             <option>퇴사</option> 
-                            <option>가입대기</option> 
+                            {/* <option>가입대기</option>  */}
                         </select>
                         </>
                     }

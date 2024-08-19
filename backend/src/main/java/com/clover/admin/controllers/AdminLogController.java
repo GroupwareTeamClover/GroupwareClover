@@ -24,6 +24,8 @@ public class AdminLogController {
 	@GetMapping
 	public ResponseEntity<PageInfo<AdminLogDTO>> getAllLog(@RequestParam(defaultValue = "1") int page,
              @RequestParam(defaultValue = "10") int size) {
+		System.out.println("log page = "+page);
+		System.out.println("log size = " + size);
 	return ResponseEntity.ok(adminlogService.getAllLog(page, size));
 	}
 	

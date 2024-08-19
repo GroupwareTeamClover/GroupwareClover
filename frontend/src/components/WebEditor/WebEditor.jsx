@@ -8,7 +8,7 @@ import axios from 'axios';
 import { BaseUrl } from '../../commons/config';
 import { useEffect } from 'react';
 
-const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) => {
+const WebEditor = ({ editorRef, handleContentChange, height, defaultContent, placeHolder }) => {
     const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB 제한
 
     const onUploadImage = async (blob, callback) => {
@@ -41,17 +41,17 @@ const WebEditor = ({ editorRef, handleContentChange, height, defaultContent }) =
     // 웹에디터 빨간줄 제거
     useEffect(() => {
         const editorInstance = editorRef.current.getInstance();
-        const editorEl = editorInstance.getEditorElements().mdEditor; 
+        const editorEl = editorInstance.getEditorElements().mdEditor;
         const wysiwygEl = editorInstance.getEditorElements().wwEditor;
 
         editorEl.spellcheck = false;
         wysiwygEl.spellcheck = false;
-      }, []);
+    }, []);
 
     return (
         <Editor
             initialValue={defaultContent || ""}
-            placeholder="글내용을 입력해주세요"
+            placeholder={placeHolder || "글 내용을 입력해주세요."}
             previewStyle="tab"
             height={height}
             initialEditType="wysiwyg"

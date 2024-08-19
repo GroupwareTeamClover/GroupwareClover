@@ -46,6 +46,9 @@ public class AdminPopupDAO {
 		mybatis.update("AdminPopup.updatePopup", popupdto);
 		mybatis.update("AdminPopup.updatePopPeriod", popupdto);
 	}
+	public void deletePopup(int newPopSeq) {
+		mybatis.delete("AdminPopup.deletePopup", newPopSeq);
+	}
 	
 	
 

@@ -1,3 +1,7 @@
+/* div{
+    border: 1px solid black;
+} */
+
 .container{
     width: 100%;
     height: 100%;
@@ -15,6 +19,9 @@
 
 .headerText{
     padding-left: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -196,8 +203,118 @@
 /* 오른쪽 */
 .side{
     flex: 2.5;
-    overflow: hidden; 
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
+
+.menuBox{
+    flex: 0.5;
+    display: flex;
+    align-items: end;
+    border-bottom: 3px solid #ddd;
+    border-top:  3px solid #ddd;
+    color:#b8b8b8;
+}
+
+.menudiv{
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.menudiv:hover{
+    cursor: pointer;
+}
+
+.menuspan{
+    font-size: 14px;
+}
+
+.active{
+    color: black;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+}
+
+
+.menuInfo{
+    flex: 9.5;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.sideInfo{
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.egcstate{
+    margin-left: 7px;
+    background: none;
+    border: 1px solid #ff9f9d;
+    color: #fb4c49;
+    font-size: 13px;
+    padding: 1px;
+    border-radius: 3px;
+    letter-spacing: -1px;
+}
+
+/* 사이드 컨테이너 스타일 (열람자,반려이유)*/
+.infocontainer {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* 섹션 공통 스타일 */
+.section {
+    margin-bottom: 30px; /* 공통적으로 섹션 간의 간격을 조정 */
+}
+
+/* 타이틀 스타일 */
+.sectionTitle {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 2px solid #ddd; /* 타이틀 아래에 구분선 추가 */
+    padding-bottom: 5px;
+}
+
+/* 행 스타일 */
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-bottom: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 13.5px;
+    margin-left: 20px;
+}
+
+/* 왼쪽/오른쪽 내용 스타일 */
+.rightdiv {
+    display: flex;
+    flex-direction: row; /* 한 줄로 표시 */
+    justify-content: flex-end;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 5px; /* 항목 간의 간격 추가 */
+    color: #555;
+}
+
+.sectionTitle{
+    font-size: 14px;
+}
+
+
 
 /* 모달 */
 .modalForm {

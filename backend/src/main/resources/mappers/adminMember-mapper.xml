@@ -5,14 +5,26 @@
   
 <mapper namespace="AdminMember">
 	<select id="getAllData" resultType="com.clover.employee.dto.EmployeeDTO">
-		select * from employee order by emp_seq desc
+		select * from employee where emp_state_code != 0 order by emp_seq desc
 	</select>
 	<select id="getCountMem" resultType="java.util.HashMap">
-		select emp_state_code, count(*) from employee group by emp_state_code
+		select emp_state_code, count(*) as count from employee group by emp_state_code
 	</select>
 	<select id="getGender" resultType="java.util.HashMap">
 		select emp_gender, count(*) as count from employee group by emp_gender
 	</select>
+	<select id="getWorker" resultType="java.util.HashMap">
+		select worker_state_code, count(*) as count from employee group by worker_state_code
+	</select>
+	<select id="getExit" resultType="com.clover.employee.dto.EmployeeDTO">
+		select * from employee where emp_state_code = 2
+	</select>
+	<select id="getDept" resultType="java.util.HashMap">
+		select dept_code, count(*) as count from employee where emp_state_code !=2 group by dept_code
+	</select>
+	
+	
+	
 	<update id="updateMem" parameterType="map">
 		update employee 
 		set ${tbObject.stateCode} = (
@@ -21,6 +33,11 @@
 		where ${tbObject.valueCol}= #{newValue}
 		) 
 		where emp_seq = #{empSeq}
+	</update>
+	<update id="updateLeaveDate" parameterType="int">
+	    update employee
+	    set leave_date = sysdate
+	    where emp_seq = #{empSeq}
 	</update>
 	
 	<select id="getAllNew" resultType="com.clover.employee.dto.EmployeeDTO">
@@ -35,4 +52,5 @@
 			join_date=sysdate
 		where emp_seq=#{empSeq}
 	</update>
+	
 </mapper>

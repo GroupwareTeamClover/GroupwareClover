@@ -117,10 +117,14 @@ export const Main=()=>{
             <div className={styles.header}><h3>전자결재</h3></div>
             <div className={styles.cardWrapper}>
                 <div className={styles.cardBox}>
-                    {displayedCards.map((line, index) => (
-                            <Card key={index} apvState={line.apvState} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate} 
-                            egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName} />
-                        ))}
+                {displayedCards.length > 0 ? (
+                        displayedCards.map((line, index) => (
+                            <Card key={index} apvState={line.apvState} title={line.title} drafterName={line.drafterName} writeDate={line.writeDate}
+                                egcYn={line.egcYn} seq={line.docSeq} detailName={line.detailName} />
+                        ))
+                    ) : (
+                        <div className={styles.noData}>결재할 문서가 없습니다.</div>
+                    )}
                 </div>
                 <div className={styles.cardLine}>
                     <div className={styles.pagination}>
@@ -155,27 +159,32 @@ export const Main=()=>{
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
-                            {
-                                       (filteredMainList || []).map((line, index) => (
-                                        <tr key={index} className={styles.tbodytr}>
-                                            <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
-                                            <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>
-                                            <td className={`${styles.td3} ${styles.tablerow}`}>
-                                                {line.egcYn === 'n' ? '' : <div className={styles.stateBox}>
-                                                            <span className={styles.egcstate}>긴급</span></div>
-                                                        }
-                                            </td>
-                                            <td className={`${styles.td4} ${styles.tablerow}`}  onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
-                                            <td className={`${styles.td5} ${styles.tablerow}`}>{line.drafterName}</td>
-                                            <td className={`${styles.td6} ${styles.tablerow}`}>{line.currentApverName}</td>
-                                            <td className={`${styles.td7} ${styles.tablerow}`}>
-                                                {line.stateName === '진행중' ? <div className={styles.stateBox}>
-                                                            <span className={styles.stateName}>{line.stateName}</span></div>
-                                                            : ''}
-                                            </td>
-                                        </tr>
+                        {filteredMainList.length > 0 ? (
+                                filteredMainList.map((line, index) => (
+                                    <tr key={index} className={styles.tbodytr}>
+                                        <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
+                                        <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>
+                                        <td className={`${styles.td3} ${styles.tablerow}`}>
+                                            {line.egcYn === 'n' ? '' : <div className={styles.stateBox}>
+                                                <span className={styles.egcstate}>긴급</span></div>
+                                            }
+                                        </td>
+                                        <td className={`${styles.td4} ${styles.tablerow}`} onClick={() => handleDetail(line.docSeq, line.detailName)}>{line.title}</td>
+                                        <td className={`${styles.td5} ${styles.tablerow}`}>{line.drafterName}</td>
+                                        <td className={`${styles.td6} ${styles.tablerow}`}>{line.currentApverName}</td>
+                                        <td className={`${styles.td7} ${styles.tablerow}`}>
+                                            {line.stateName === '진행중' ? <div className={styles.stateBox}>
+                                                <span className={styles.stateName}>{line.stateName}</span></div>
+                                                : ''}
+                                        </td>
+                                    </tr>
                                 ))
-                            }
+                            ) : (
+                                <tr>
+                                    <td colSpan={7} className={styles.noData}>진행 중인 문서가 없습니다.</td>
+                                </tr>
+                            )}
+                        
                         </tbody>
                     </table>
                 </div>                
