@@ -76,4 +76,8 @@
 		select count(*) from board_important where emp_seq = #{empSeq} and board_seq = #{boardSeq}
 	</select>
 
+	<select id="getMainNotice" resultType="com.clover.board.dto.BoardDTO">
+		select * from (select * from board where boardlist_seq = 1 order by board_write_date desc) where rownum &lt;= 5 order by board_write_date
+	</select>
+
 </mapper>

@@ -25,9 +25,14 @@ const GroupChatModal = ({ selectedEmployees, onClose, onCreateGroupChat }) => {
                     />
                     <div className={styles.selectedEmployees}>
                         {selectedEmployees.map(emp => (
-                            <span key={emp.seq} className={styles.employeeTag}>
-                                {emp.name} ({emp.role})
-                            </span>
+                            <div key={emp.seq} className={styles.employeeTag}>
+                            <img 
+                                src={emp.avatar || '/default-avatar.png'} 
+                                alt={emp.name} 
+                                className={styles.employeeAvatar}
+                            />
+                            <span>{emp.name} ({emp.role})</span>
+                        </div>
                         ))}
                     </div>
                     <div className={styles.buttonGroup}>

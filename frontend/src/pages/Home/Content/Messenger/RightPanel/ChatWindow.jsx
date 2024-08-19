@@ -1,29 +1,39 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
-import styles from '../Messenger.module.css';
-import { formatDistanceToNow } from 'date-fns';
-import { ko } from 'date-fns/locale';
+import styles from './ChatWindow.module.css';
 import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage, subscribeToRoom } from '../../../../../commons/websocket';
+import ChatHeader from './ChatHeader';
+import MessageList from './MessageList';
+import ChatInput from './ChatInput';
 
-const ChatWindow = ({ chat }) => {
+const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) => {
+  // Zustand 스토어에서 필요한 함수들을 가져옵니다.
   const { messages, setMessages, addMessage } = useChatStore();
-  const [inputMessage, setInputMessage] = useState('');
-  const messagesEndRef = useRef(null);
+  
+  // 메시지 컨테이너에 대한 ref를 생성합니다.
   const messagesContainerRef = useRef(null);
+  
+  // 검색 기능을 위한 상태를 설정합니다.
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredMessages, setFilteredMessages] = useState([]);
 
+  // 현재 채팅방의 메시지와 현재 사용자 정보를 가져옵니다.
   const currentMessages = messages[chat.roomSeq] || [];
+  const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
 
+  // 메시지 목록을 스크롤 맨 아래로 이동시키는 함수입니다.
   const scrollToBottom = useCallback(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, []);
 
+  // 서버에서 메시지를 가져오는 함수입니다.
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await axios.get(`${BaseUrl()}/chat/rooms/${chat.roomSeq}/messages`);
+      const response = await axios.get(`${BaseUrl()}/chat/messages/${chat.roomSeq}`);
       setMessages(chat.roomSeq, response.data);
       setTimeout(scrollToBottom, 0);
     } catch (error) {
@@ -31,90 +41,92 @@ const ChatWindow = ({ chat }) => {
     }
   }, [chat.roomSeq, setMessages, scrollToBottom]);
 
+  // 새로운 메시지를 처리하는 함수입니다.
+  const handleReceivedMessage = useCallback((message) => {
+    switch (message.messageType) {
+      case 'CHAT':
+        addMessage(chat.roomSeq, message);
+        scrollToBottom();
+        break;
+      case 'LEAVE':
+        console.log(message.messageContent);
+        // 채팅방 나가기 처리
+        break;
+      case 'CLEAR':
+        console.log(message.messageContent);
+        setMessages(chat.roomSeq, []);
+        break;
+      default:
+        console.log('Unknown message type:', message.messageType);
+    }
+  }, [chat.roomSeq, addMessage, setMessages, scrollToBottom]);
+
+  // 컴포넌트가 마운트되거나 채팅방이 변경될 때 실행되는 효과입니다.
   useEffect(() => {
+    let unsubscribe;
     if (chat.roomSeq) {
       fetchMessages();
-      const unsubscribe = subscribeToRoom(chat.roomSeq, (message) => {
-        addMessage(chat.roomSeq, message);
-      });
-
-      return () => {
-        if (unsubscribe) unsubscribe();
-      };
+      unsubscribe = subscribeToRoom(chat.roomSeq, handleReceivedMessage);
+      sendMessage("/app/chat.readMessages", { roomSeq: chat.roomSeq });
     }
-  }, [chat.roomSeq, fetchMessages, addMessage]);
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [chat.roomSeq, fetchMessages, handleReceivedMessage]);
 
+  // 메시지 목록이 변경될 때마다 스크롤을 맨 아래로 이동시킵니다.
   useEffect(() => {
     scrollToBottom();
   }, [currentMessages, scrollToBottom]);
 
-  const sendChatMessage = useCallback(() => {
-    if (inputMessage.trim()) {
-      const message = {
-        roomSeq: chat.roomSeq,
-        messageContent: inputMessage,
-        messageType: 'CHAT',
-        senderSeq: JSON.parse(sessionStorage.getItem('sessionUser')).empSeq,
-        sendTime: new Date().toISOString()
-      };
+  // 채팅 메시지를 전송하는 함수입니다.
+  const sendChatMessage = useCallback((messageContent) => {
+    const message = {
+      roomSeq: chat.roomSeq,
+      messageContent,
+      messageType: 'CHAT',
+      senderSeq: currentUserSeq,
+      sendTime: new Date().toISOString()
+    };
+    sendMessage("/app/chat.sendMessage", message);
+  }, [chat.roomSeq, currentUserSeq]);
 
-      sendMessage("/app/chat.sendMessage", message);
-      setInputMessage('');
+  // 채팅방 나가기, 대화 내용 삭제, 알림 설정 변경 핸들러
+  const handleLeaveChat = () => onLeaveChat(chat.roomSeq);
+  const handleClearChat = () => onClearChat(chat.roomSeq);
+  const handleToggleNotifications = (enabled) => onToggleNotifications(chat.roomSeq, enabled);
+
+  // 메시지 검색 핸들러
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (term) {
+      const filtered = currentMessages.filter(message =>
+        message.messageContent.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredMessages(filtered);
+    } else {
+      setFilteredMessages([]);
     }
-  }, [chat.roomSeq, inputMessage]);
-
-  const renderMessage = (message, index) => {
-    const isCurrentUser = message.senderSeq === JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
-    return (
-      <div
-        key={message.messageSeq || index}
-        className={`${styles.messageContainer} ${isCurrentUser ? styles.sent : styles.received}`}
-      >
-        {!isCurrentUser && (
-          <div className={styles.senderInfo}>
-            <img 
-              src={chat.customRoomAvatar || '/default-avatar.png'} 
-              alt={chat.customRoomName} 
-              className={styles.senderAvatar}
-            />
-          </div>
-        )}
-        <div className={styles.messageWrapper}>
-          {!isCurrentUser && (
-            <span className={styles.senderName}>{chat.customRoomName}</span>
-          )}
-          <div className={styles.messageContent}>{message.messageContent}</div>
-          <span className={styles.messageTime}>
-            {formatDistanceToNow(new Date(message.sendTime), { addSuffix: true, locale: ko })}
-          </span>
-        </div>
-      </div>
-    );
   };
 
   return (
     <div className={styles.chatWindow}>
-      <div className={styles.chatHeader}>
-        <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
-        <h2>{chat.customRoomName || chat.roomName}</h2>
-        <span className={styles.status}>Active</span>
-      </div>
-
-      <div className={styles.messages} ref={messagesContainerRef}>
-        {currentMessages.map(renderMessage)}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className={styles.chatInput}>
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && sendChatMessage()}
-          placeholder="메시지를 입력하세요..."
+      <ChatHeader
+        chat={chat}
+        onSearch={handleSearch}
+        onLeaveChat={handleLeaveChat}
+        onClearChat={handleClearChat}
+        onToggleNotifications={handleToggleNotifications}
+      />
+      <div className={styles.messageListContainer} ref={messagesContainerRef}>
+        <MessageList
+          messages={searchTerm ? filteredMessages : currentMessages}
+          chat={chat}
+          currentUserSeq={currentUserSeq}
+          searchTerm={searchTerm}
         />
-        <button onClick={sendChatMessage}>전송</button>
       </div>
+      <ChatInput onSendMessage={sendChatMessage} />
     </div>
   );
 };

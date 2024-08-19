@@ -73,4 +73,8 @@ public class BoardDAO {
 		
 		return mybatis.selectOne("Board.isImportant", data);
 	}
+
+	public List<BoardDTO> getMainNotice() {
+		return mybatis.selectList("Board.getMainNotice");
+	}
 }

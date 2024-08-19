@@ -207,7 +207,11 @@ public class BoardController {
 	public ResponseEntity<Boolean> isImportant(@PathVariable int empSeq, @PathVariable int boardSeq){
 		return ResponseEntity.ok(bServ.isImportant(empSeq, boardSeq));
 	}
-	
+
+	@GetMapping("/main/notice")
+	public ResponseEntity<List<BoardDTO>> getMainNotice(){
+		return ResponseEntity.ok(bServ.getMainNotice());
+	}
 	
 	
 	
