@@ -37,7 +37,7 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
       setMessages(chat.roomSeq, response.data);
       setTimeout(scrollToBottom, 0);
     } catch (error) {
-      console.error('메시지를 가져오는 중 오류 발생:', error);
+      console.error(  '메시지를 가져오는 중 오류 발생:', error);
     }
   }, [chat.roomSeq, setMessages, scrollToBottom]);
 
