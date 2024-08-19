@@ -8,63 +8,67 @@ import { useEffect, useState } from "react";
 import { AdminSideMenu } from './pages/SideMenu/AdminSideMenu';
 import { Admin } from './pages/Admin/Admin';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import {Loading} from "./components/Loading/Loading";
 
 function App() {
-    const userData = sessionStorage.getItem("sessionUser");
-    const adminCheck = sessionStorage.getItem("sessionAdmin");
-    const { sign, setSign, setSessionData, admin, setAdmin } = useMemberStore();
+  const userData = sessionStorage.getItem("sessionUser");
+  const adminCheck = sessionStorage.getItem("sessionAdmin");
+  const { sign, setSign, setSessionData, admin, setAdmin } = useMemberStore();
 
-    // Sidebar toggle
-    const [open, setOpen] = useState(true);
+  // Sidebar toggle
+  const [open, setOpen] = useState(true);
 
-    useEffect(() => {
-        /* Side-Bar toggle */
-        if (localStorage.getItem("sidebar") === "true") setOpen(true);
-        else setOpen(!open);
-    }, []);
+  useEffect(() => {
+    /* Side-Bar toggle */
+    if (localStorage.getItem("sidebar") === "true") setOpen(true);
+    else setOpen(!open);
+  }, []);
 
-    useEffect(() => {
-        const data = JSON.parse(userData);
-        if (data !== null) {
-            setSign(true);
-            setSessionData(data);
-        }
-
-        if (adminCheck !== null && adminCheck === "true") {
-            setAdmin(true);
-        }
-
-        setLoading(false);
-
-    }, [sign, adminCheck]);
-
-    /** 로딩화면 추가 **/
-    const [loading, setLoading] = useState(true);
-    if (loading) {
-        return <Loading />;
+  useEffect(() => {
+    const data = JSON.parse(userData);
+    if (data !== null) {
+      setSign(true);
+      setSessionData(data);
     }
 
-    return (
-        <div className="container">
-            <Router>
-                <ScrollToTop/>
-                { !sign && <Login setSign={ setSign } setAdmin={ setAdmin }/> }
-                { !admin ?
-                    <>
-                        { (sign && !admin) && <SideMenu open={open} setOpen={setOpen}/>  }
-                        { (sign && !admin) && <Home /> }
-                    </>
-                    :
-                    <>
-                        {/* 관리자페이지 */}
-                        { (sign && admin) && <AdminSideMenu open={open} setOpen={setOpen}/>  }
-                        { (sign && admin) && <Admin /> }
-                    </>
-                }
-            </Router>
-        </div>
-    );
+    if (adminCheck !== null && adminCheck === "true") {
+      setAdmin(true);
+    }
+
+    setLoading(false);
+
+  }, [sign, adminCheck]);
+
+  /** 로딩화면 추가 **/
+  const [loading, setLoading] = useState(true);
+  if (loading) {
+    return <Loading />;
+  }
+
+  return (
+      <div className="container">
+        <Router>
+          <ScrollToTop/>
+          { !sign && <Login setSign={ setSign } setAdmin={ setAdmin }/> }
+          { !admin ?
+              <>
+                { (sign && !admin) && <SideMenu open={open} setOpen={setOpen}/>  }
+                { (sign && !admin) && <Home /> }
+              </>
+              :
+              <>
+                {/* 관리자페이지 */}
+                { (sign && admin) && <AdminSideMenu open={open} setOpen={setOpen}/>  }
+                { (sign && admin) && <Admin /> }
+              </>
+          }
+        </Router>
+        <ToastContainer></ToastContainer>
+      </div>
+  );
 }
 
 export default App;

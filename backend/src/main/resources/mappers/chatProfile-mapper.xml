@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ChatProfileMapper">
+    <!-- 특정 사용자의 프로필 정보 조회 -->
+    <select id="getProfile" parameterType="int" resultType="java.util.HashMap">
+        SELECT 
+            e.emp_seq, e.emp_avatar, e.emp_name, e.emp_email, r.role_name,
+            d.dept_name, e.emp_tel, e.emp_birth, r.role_code
+        FROM employee e
+        JOIN department d ON e.dept_code = d.dept_code
+        JOIN role r ON e.role_code = r.role_code
+        WHERE e.emp_seq = #{empSeq}
+    </select>
+
+    <!-- 이름만 가져오기-->
+    <select id="getEmployeeName" parameterType="int" resultType="com.clover.employee.dto.EmployeeDTO">
+        SELECT *
+        FROM EMPLOYEE
+        WHERE emp_seq = #{empSeq}
+    </select>
+
+    <!-- 조직도 조회 -->
+    <select id="getOrganization" resultType="java.util.HashMap">
+        SELECT employee.emp_seq, employee.emp_name, employee.emp_avatar, role.role_name, department.dept_name
+        FROM employee
+        JOIN department ON employee.dept_code = department.dept_code
+        JOIN role ON employee.role_code = role.role_code
+    </select>
+</mapper>
