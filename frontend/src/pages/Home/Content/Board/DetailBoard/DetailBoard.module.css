@@ -4,10 +4,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: white;
+    border-top: 1px solid black;
 }
 
 .container textarea:focus {
-    outline:none;
+    outline: none;
 }
 
 .container button:hover {
@@ -48,12 +50,12 @@
     cursor: pointer;
 }
 
-.titleBox .starFillIcon{
-    fill : rgb(214, 214, 2);
+.titleBox .starFillIcon {
+    fill: rgb(214, 214, 2);
 }
 
-.titleBox .starFillIcon:hover{
-    fill:gray;
+.titleBox .starFillIcon:hover {
+    fill: gray;
     cursor: pointer;
 }
 
@@ -92,41 +94,61 @@
     padding-top: 0.11vh;
 }
 
-.content .fileHeader{
-    height : 40px;
+.content .fileHeader {
+    height: 40px;
     display: flex;
     align-items: center;
-    padding-left : 10px;
+    padding-left: 10px;
     font-weight: bold;
 }
 
-.content .fileHeader .fileLetter{
+.content .fileHeader .fileLetter {
     display: flex;
     align-items: center;
 }
 
-.content .fileHeader .fileLetter:hover{
+.content .fileHeader .fileLetter:hover {
     cursor: pointer;
 }
 
-.content .fileBox .eachFile{
-    background-color: whitesmoke;
+.content .fileBox .eachFile {
+    background-color: white;
     padding-left: 10px;
-    margin-bottom : 5px;
+    margin-bottom: 5px;
     display: inline-block;
-    color : rgb(66, 66, 241)
+    color: rgb(66, 66, 241)
 }
 
-.content .fileBox .eachFile:hover{
+.content .fileBox .eachFile:hover {
     cursor: pointer;
 }
 
 .content .viewCont {
-    padding: 20px 10px 150px 10px;
+    padding: 20px 10px 50px 10px;
+    min-height: 300px;
     font-size: 18px;
     line-height: 30px;
     font-weight: 400;
     word-break: break-all;
+    overflow-x: auto;
+    margin-bottom : 10px;
+}
+
+.content .viewCont::-webkit-scrollbar {
+    width: 10px;
+}
+
+.content .viewCont::-webkit-scrollbar-thumb {
+    background-color: #2f3542;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+.content .viewCont::-webkit-scrollbar-track {
+    background-color: grey;
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;
 }
 
 .buttonBox {
@@ -167,83 +189,83 @@
     margin-right: 10px;
 }
 
-.commentBox{
+.commentBox {
     margin: 20px 0 50px 0;
     width: 67.7vw;
 }
 
 .commentBox .writeCommentBox {
-	height: 140px;
-	border: 1px solid gray;
+    height: 140px;
+    border: 1px solid gray;
 }
 
 .commentBox .writeCommentBox .commentWriter {
-	height: 30px;
-	padding: 5px 0 0 20px;
-	font-weight: bold;
+    height: 30px;
+    padding: 5px 0 0 20px;
+    font-weight: bold;
     display: flex;
     align-items: center;
 }
 
 .commentBox .writeCommentBox .commentContentBox {
-	height: 120px;
-	display: flex;
+    height: 120px;
+    display: flex;
     flex-direction: column;
-	justify-content: center;
+    justify-content: center;
 
 }
 
-.commentBox .writeCommentBox .commentContentBox .innerCommentContentBox{
-    height : 100px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.commentBox .writeCommentBox .commentContentBox .innerCommentContentBox {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .commentBox .writeCommentBox .commentContentBox .innerCommentContentBox .commentContent {
-	font-size: 15px;
-	padding-left: 10px;
-	padding-top: 10px;
-	width: 90%;
+    font-size: 15px;
+    padding-left: 10px;
+    padding-top: 10px;
+    width: 90%;
     height: 80px;
-	resize: none;
+    resize: none;
     border-color: lightgray;
 }
 
 .writeCommentButton {
-	width: 8%;
-	height: 80px;
-	margin-left: 5px;
+    width: 8%;
+    height: 80px;
+    margin-left: 5px;
 }
 
 .commentBox .commentLetter {
-	height: 36px;
+    height: 36px;
     width: 67.7vw;
-	position: relative;
-	margin-top : 40px;
-	font-size: 18px;
-	font-weight: 400;
-	line-height: 36px;
-    padding-left : 10px;
+    position: relative;
+    margin-top: 40px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 36px;
+    padding-left: 10px;
     border-bottom: 1px solid black;
 }
 
-.topButton{
-    position:fixed;
-    right : 0.5%;
-    bottom : 2%;
+.topButton {
+    position: fixed;
+    right: 0.5%;
+    bottom: 2%;
     z-index: 1;
-    color : black;
+    color: black;
     font-size: 18px;
 }
 
-.topButton:hover{
+.topButton:hover {
     cursor: pointer;
 }
 
-.commentCountBox{
-    width : 90%;
-    margin-bottom : 15px;
+.commentCountBox {
+    width: 90%;
+    margin-bottom: 15px;
     display: flex;
     justify-content: end;
     align-items: center;

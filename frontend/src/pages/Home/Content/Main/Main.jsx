@@ -7,7 +7,7 @@ import {Mypage} from "./Mypage/Mypage";
 import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import {roleName, deptName, dateYMD} from "../../../../commons/common";
+import {roleName, deptName, dateYMD, dateSettingOrigin} from "../../../../commons/common";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
 
@@ -58,7 +58,6 @@ export const Main = () => {
 
         /** 회사 공지 목록 **/
         axios.get(`${BaseUrl()}/board/main/notice`).then(res => {
-            console.log("res.data ==== ", res.data);
             setNoticeList(res.data);
         })
 
@@ -67,8 +66,8 @@ export const Main = () => {
 
     const [weekSchedule, setWeekSchedule] = useState({start: "", end: "", title: ""});
     const eventClick = (data) => {
-        const start = dateYMD(data.event._instance.range.start);
-        const end = dateYMD(data.event._instance.range.end);
+        const start = dateSettingOrigin(data.event._instance.range.start);
+        const end = dateSettingOrigin(data.event._instance.range.end);
         const title = data.event._def.title;
         setWeekSchedule({start, end, title});
         setModalState("week");
@@ -128,17 +127,24 @@ export const Main = () => {
                       <div className={styles.notice}>
                           { /* 공지 사항 목록 조회 후 출력 ( 내용은 너무 길면 slice ) */
                               noticeList.map((item, i) => {
+                                  const removeTags = (content) => {
+                                      return content.replace(/<\/?[^>]+(>|$)/g, ""); // 정규식을 이용해 태그 제거
+                                  };
                                   return (
-                                      <>
-                                          <div className={styles.contentDate}>
-                                              작성일 : { dateYMD(item.boardWriteDate) }
-                                          </div>
-                                          <div className={styles.content}>
-                                              <p>제목 : { item.boardTitle }</p>
-                                              <p>작성자 : { item.boardWriter }</p>
-                                              <p>{ item.boardContent.length > 400 ? item.boardContent.slice(0, 400) + " ... " : item.boardContent }</p>
-                                          </div>
-                                      </>
+                                    <>
+                                        <div className={styles.contentDate}>
+                                            작성일 : { dateYMD(item.boardWriteDate) }
+                                        </div>
+                                        <div className={styles.content}>
+                                            <p>제목 : { item.boardTitle }</p>
+                                            <p>작성자 : { item.boardWriter }</p>
+                                            {
+                                                removeTags(item.boardContent).length > 400
+                                                  ? removeTags(item.boardContent).slice(0, 400) + " ... "
+                                                  : removeTags(item.boardContent)
+                                            }
+                                        </div>
+                                    </>
                                   );
                               })
                           }

@@ -33,6 +33,7 @@ const ModifyPost = () => {
     //게시글 내용
     const editorRef = useRef();
     const [content, setContent] = useState();
+    const [previousContent, setPreviousContent] = useState('');
     const [charCount, setCharCount] = useState(0);
     const maxContentLength = 3000;
     const handleContentChange = () => {
@@ -50,13 +51,12 @@ const ModifyPost = () => {
         let length = cleanedContent.length - 1;
 
         if (length > maxContentLength) {
-            const truncatedContent = cleanedContent.slice(0, maxContentLength);
-            instance.setHTML(truncatedContent);
-            length = maxContentLength;
+            instance.setHTML(previousContent);
+        } else {
+            setCharCount(length);
+            setContent(htmlContent);
+            setPreviousContent(htmlContent);
         }
-
-        setCharCount(length);
-        setContent(htmlContent);
     }
 
     useEffect(() => {
@@ -78,6 +78,7 @@ const ModifyPost = () => {
 
     //첨부파일
     const [files, setFiles] = useState([]);
+    const maxFiles = 5;
     //기존 첨부파일
     const [originFiles, setOriginFiles] = useState([]);
     const handleUploadSuccess = (response, file) => {
@@ -87,7 +88,7 @@ const ModifyPost = () => {
     };
     const handleRemove = (file) => {
         // 파일 리스트에서 해당 파일 제거
-        setFiles((prev) => prev.filter((f) => f.name !== file.name));
+        setFiles((prev) => prev.filter((f) => f.url !== file.url));
     };
 
     //기존 이미지 URL 리스트
@@ -103,7 +104,7 @@ const ModifyPost = () => {
             const match = imgTag.match(/src="([^">]+)"/);
             return match ? match[1] : null;
         }));
-    },[]);
+    }, []);
 
     const handleModify = () => {
         if (category === null) {
@@ -129,10 +130,10 @@ const ModifyPost = () => {
                 const addImageUrls = newImageUrls?.filter(imageUrl => !originImageUrls.includes(imageUrl));
 
                 axios.put(`${BaseUrl()}/board`, {
-                    boardlistSeq : category,
+                    boardlistSeq: category,
                     title: title,
                     content: content,
-                    boardSeq : loc.state.boardSeq,
+                    boardSeq: loc.state.boardSeq,
                     deleteFileUrls: deletFiles.map(file => file.url),
                     addFileNames: addFiles.map(file => file.name),
                     addFileUrls: addFiles.map(file => file.url),
@@ -150,9 +151,39 @@ const ModifyPost = () => {
 
     const handleCancel = () => {
         if (window.confirm("수정중인 글은 원래대로 돌아갑니다. 계속하시겠습니까?")) {
-            (category === 0) ? navi("/community") : navi(`/community/board/${loc.state.boardlistSeq}`)
+            (category === 0) ? navi("/community") : navi(`/community/board/${loc.state.boardlistSeq}/detail/${loc.state.boardSeq}`)
         }
     }
+
+    const alertMax = () => {
+        if(files.length >= maxFiles){
+            alert("파일 업로드 최대 개수입니다. 다른 파일을 지운 후 업로드해주세요.");
+        }
+    }
+
+    // 새로고침, 창 닫기 시 페이지 이탈 여부 확인
+    const preventClose = (e) => {
+        e.preventDefault();
+    }
+    useEffect(() => { 
+        (() => { window.addEventListener("beforeunload", preventClose); })(); 
+        return () => { window.removeEventListener("beforeunload", preventClose); }; 
+    }, []);
+
+    //뒤로가기 1회 방지
+    useEffect(() => {
+        // eslint-disable-next-line no-restricted-globals
+        history.pushState(null, "", "");
+
+        const handleClickBrowserBackBtn = () => {
+            alert("주의! 새로고침을 한 번 더 누르면 현재 글 수정이 취소됩니다.");
+        };
+
+        window.addEventListener("popstate", handleClickBrowserBackBtn);
+        return () => {
+            window.removeEventListener("popstate", handleClickBrowserBackBtn);
+        };
+    }, []);
 
     return (
         <div className={styles.container}>
@@ -174,9 +205,9 @@ const ModifyPost = () => {
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
-                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} multiple draggable
-                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
-                    <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
+                <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} onClick={alertMax}
+                    onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} disabled={files.length >= maxFiles}>
+                    <div style={{ lineHeight: '50px', textAlign: 'center', backgroundColor: 'whitesmoke', border: '2px dotted lightgray', borderRadius:'5px'}}>클릭하여 파일을 추가하세요 (최대 5개 파일 업로드 가능)</div>
                 </Uploader>
             </div>
             <div className={styles.editorBox}>

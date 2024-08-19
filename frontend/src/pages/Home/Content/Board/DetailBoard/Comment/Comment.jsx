@@ -122,7 +122,13 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
     //댓글 삭제 (답글들도 함께 삭제)
     const handleDelete = () => {
         if (window.confirm("이 댓글을 삭제하시겠습니까?")) {
-            axios.delete(`${BaseUrl()}/comment/${dto.boardCommentSeq}`).then(resp => { resp.status === 200 && setComments(prev => prev.filter(item => item.boardCommentSeq !== dto.boardCommentSeq)) }
+            setCountComments(prev => (prev - 1 - list.length));
+            axios.delete(`${BaseUrl()}/comment/${dto.boardCommentSeq}`).then(resp => {
+                if (resp.status === 200) {
+                    setList([]);
+                    setComments(prev => prev.filter(item => item.boardCommentSeq !== dto.boardCommentSeq))
+                }
+            }
             );
         }
     }
@@ -173,7 +179,7 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
                 </div>
             }
             {list.map((reple, i) =>
-                <Reply key={i} dto={reple} sessionWriter={sessionWriter} admin={admin} setList={setList} maxReplyLength={maxReplyLength} empName={empName} />
+                <Reply key={i} dto={reple} setCountComments={setCountComments} sessionWriter={sessionWriter} admin={admin} setList={setList} maxReplyLength={maxReplyLength} empName={empName} />
             )}
         </div>
     );

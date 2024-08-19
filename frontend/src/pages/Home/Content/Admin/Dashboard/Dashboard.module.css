@@ -1,12 +1,15 @@
 /* *{border: 1px solid black;} */
+
 .container {
+    width: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
     background-color: #1e1e2f; /* 어두운 배경 색상 */
     color: #ffffff; /* 텍스트 색상 */
-    width: 100%;
+  
 }
 
 .topRow, .middleRow, .bottomRow {
@@ -16,8 +19,15 @@
     justify-content: space-between;
     margin-bottom: 20px;
 }
+.topRow{
+    padding-top:30px;
+}
+.bottomRow{
+    padding-top:50px;
+}
 
-.statItem, .largeStatItem, .smallStatItem {
+
+.statItem, .largeStatItem, .smallStatItem .linestatItem .statItemNew {
     background-color: #292942; /* 카드의 배경색 */
     border: 1px solid #444;
     border-radius: 8px;
@@ -28,11 +38,66 @@
     margin: 10px;
 }
 
-
-
-.statItem {
+.statItemContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* 기존 .statItem 스타일은 그대로 유지 */
+.statItem .statItemNew{
     min-width: 200px;
 }
+
+/* .statTitle과 .statValue의 스타일을 조정할 필요가 있을 수 있습니다. */
+.statItemContent .statTitle {
+    text-align: left;
+    padding-left: 100px; /* 패딩 조정 */
+}
+
+.statItemContent .statValue {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-align: right;
+    padding-right: 50px;
+}
+/* ===================================== */
+
+/* 이번달 신규 입사 */
+.newbox{
+    display: flex;
+}
+.newchartWrapper{
+    display: flex;
+    flex-direction: column;
+    flex:1;
+}
+.newchartWrapper .chartTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.newchartWrapperIcon{
+    flex:1;
+    display: flex;
+    align-items: right;
+    justify-content: right;
+}
+.newchartWrapperIcon .newicon{
+    flex: 1;
+    font-size: 5.0rem;
+    display: flex;
+    color:#f0bbe494;
+}
+.NewMemstatValue{
+    flex:1;
+    text-align: left;
+    font-size: 3rem;
+    color: #ffffff;
+    padding-left: 50px;
+}
+
 
 .largeStatItem {
     flex: 2;
@@ -55,8 +120,57 @@
     text-align: left;
 }
 
+.statTitle{
+    text-align: left;
+    padding-left: 50px;
+}
+
 .statValue {
     font-size: 1.5rem;
     color: #ffffff;
     text-align: right;
 }
+
+/* 성별 원 차트  */
+.statItemLarge .statItem>canvas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 40px;
+}
+
+/* 퇴사 선 차트 */
+.bottomRow{
+    padding-bottom: 60px;
+}
+.linestatItemLarge{
+    width: 1200px;
+    padding-left: 120px;
+}
+.statItemLarge{
+    width: 500px;
+    padding-right: 50px;
+}
+
+.linestatItemLarge .statItem{
+    flex: 2;
+    height: 80%; /* 차트의 높이 */
+    width: 80%; /* 차트의 너비를 설정 */
+    max-width: 1200px; /* 최대 너비 설정 (필요시 조정) */
+    padding-top:50px;
+    margin-bottom:50px;
+    background-color: #292942;
+    border: 1px solid #444; 
+    border-radius: 8px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+}
+.linestatItemLarge .statItem>canvas{
+    margin-bottom: 0px;
+    /* background-color: pink; */
+}
+

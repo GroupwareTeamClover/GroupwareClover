@@ -26,7 +26,7 @@
         WHERE
             emp_seq = ${empSeq}
         AND
-            TRUNC(att_date) between #{start} AND #{end}
+            TRUNC(att_date) BETWEEN TRUNC(TO_DATE(#{start}, 'YYYY-MM-DD')) AND TRUNC(TO_DATE(#{end}, 'YYYY-MM-DD'))
     </select>
 
     <select id="today" resultType="com.clover.attendance.dto.AttendanceDTO">
@@ -37,7 +37,7 @@
         WHERE
             emp_seq = #{empSeq}
         AND
-            TRUNC(att_date) = #{today}
+            TRUNC(att_date) = TRUNC(TO_DATE(#{today}, 'YYYY-MM-DD'))
     </select>
 
     <insert id="arrive">

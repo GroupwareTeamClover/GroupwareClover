@@ -36,6 +36,18 @@ public class AdminMemberController {
 	public ResponseEntity<List<HashMap<String,Object>>> getGender(){
 		return ResponseEntity.ok(adminmemberService.getGender());
 	}
+	@GetMapping("/worker")
+	public ResponseEntity<List<HashMap<String,Object>>> getWorker(){
+		return ResponseEntity.ok(adminmemberService.getWorker());
+	}
+	@GetMapping("/exit")
+	public ResponseEntity<List<EmployeeDTO>> getExit(){
+		return ResponseEntity.ok(adminmemberService.getExit());
+	}
+	@GetMapping("/deptCount")
+	public ResponseEntity<List<HashMap<String,Object>>> getDept(){
+		return ResponseEntity.ok(adminmemberService.getDept());
+	}
 	
 	@PutMapping
 	public ResponseEntity<Void> updateMultiMemState(@RequestBody AdminUpdateMemDTO updto){

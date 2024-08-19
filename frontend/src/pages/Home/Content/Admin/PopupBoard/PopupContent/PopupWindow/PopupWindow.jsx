@@ -96,77 +96,81 @@ export const PopupWindow = ({ setShowPopup }) => {
                         <html>
                         <head>
                            <style>
-                                        @font-face {
-                                            font-family: 'ONE-Mobile-Title';
-                                            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-Title.woff') format('woff');
-                                            font-weight: normal;
-                                            font-style: normal;
-                                        }
-                                        body {
-                                            margin: 0;
-                                            padding: 0;
-                                            background-color: #f0f0f0;
-                                        }
-                                        .popup-container {
-                                            display: flex;
-                                            flex-direction: column;
-                                            height: 100%;
-                                            width: 100%;
-                                        }
-                                        .popup-content {
-                                            display: flex;
-                                            flex-direction: column;
-                                            height: 90%;
-                                            overflow: hidden;
-                                        }
-                                        .header {
-                                            padding: 20px;
-                                            text-align: center;
-                                            background-color: #f8f9fa;
-                                            border-bottom: 1px solid #eaeaea;
-                                        }
-                                        h1 {
-                                            font-size: 1.25em;
-                                            margin: 0;
-                                            color: #007BFF;
-                                        }
-                                        .content {
-                                            padding: 20px;
-                                            text-align: center;
-                                            line-height: 1.6;
-                                            overflow-y: auto;
-                                        }
-                                        .file-header {
-                                            padding: 10px;
-                                            text-align: center;
-                                            background-color: #e9ecef;
-                                            cursor: pointer;
-                                            border-top: 1px solid #eaeaea;
-                                            display: flex;
-                                            justify-content: center;
-                                            align-items: center;
-                                        }
-                                        .file-content {
-                                            padding: 10px;
-                                        }
-                                        .footer {
-                                            height: 10%;
-                                            display: flex;
-                                            justify-content: end;
-                                            align-items: center;
-                                            background-color: #f8f9fa;
-                                            border-top: 1px solid #eaeaea;
-                                        }
-                                        .checkbox-group {
-                                            display: flex;
-                                            justify-content: center;
-                                            align-items: center;
-                                            margin: 0 10px;
-                                        }
-                                        .checkbox-group input[type="checkbox"] {
-                                            margin-right: 10px;
-                                        }
-                                    </style>
+                                @font-face {
+                                    font-family: 'ONE-Mobile-Title';
+                                    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-Title.woff') format('woff');
+                                    font-weight: normal;
+                                    font-style: normal;
+                                }
+                                body {
+                                    margin: 0;
+                                    padding: 0;
+                                    background-color: #f0f0f0;
+                                }
+                                .popup-container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    height: 100%;
+                                    width: 100%;
+                                }
+                                .popup-content {
+                                    display: flex;
+                                    flex-direction: column;
+                                    height: 90%;
+                                    overflow: hidden;
+                                }
+                                .header {
+                                    padding: 20px;
+                                    text-align: center;
+                                    background-color: #f8f9fa;
+                                    border-bottom: 1px solid #eaeaea;
+                                }
+                                h1 {
+                                    font-size: 1.25em;
+                                    margin: 0;
+                                    color: #007BFF;
+                                }
+                                .content {
+                                    height:80%;
+                                    padding: 20px;
+                                    text-align: center;
+                                    line-height: 1.6;
+                                    overflow-y: auto;
+                                    word-break: break-all;
+                                }
+                                .file-header {
+                                    padding: 10px;
+                                    text-align: center;
+                                    background-color: #e9ecef;
+                                    cursor: pointer;
+                                    border-top: 1px solid #eaeaea;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                }
+                                .file-content {
+                                    padding: 10px;
+                                    overflow:auto;
+                                    height:20%;
+                                }
+                                .footer {
+                                    height: 10%;
+                                    display: flex;
+                                    justify-content: end;
+                                    align-items: center;
+                                    background-color: #f8f9fa;
+                                    border-top: 1px solid #eaeaea;
+                                }
+                                .checkbox-group {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    margin: 0 10px;
+                                }
+                                .checkbox-group input[type="checkbox"] {
+                                    margin-right: 10px;
+                                }
+                            </style>
                                     <script>
                                         let isTodayChecked = false;
                                         let isPermanentChecked = false;
@@ -203,22 +207,20 @@ export const PopupWindow = ({ setShowPopup }) => {
                         </head>
                         <body>
                             <div class="popup-container">
-                                <div class="popup-content">
                                     <div class="header">
                                         <h1>${announcement.popTitle || '공지사항'}</h1>
                                     </div>
+                                <div class="popup-content">
                                     <div class="content">
-                                        <div>
-                                            ${announcement.popContent || '내용이 없습니다.'}
-                                        </div>
+                                        ${announcement.popContent || '내용이 없습니다.'}
                                     </div>
                                     ${files.length > 0 ? `
-                                        <div class="file-header" onclick="toggleFileBox()">
-                                            첨부파일 (${files.length}) ▼
-                                        </div>
-                                        <div class="file-content" style="display: none;">
-                                            ${fileContent}
-                                        </div>` : ''}
+                                    <div class="file-header" onclick="toggleFileBox()">
+                                        첨부파일 (${files.length}) ▼
+                                    </div>
+                                    <div class="file-content" style="display: none;">
+                                        ${fileContent}
+                                    </div>` : ''}
                                 </div>
                                 <div class="footer">
                                     <div class="checkbox-group">

@@ -36,7 +36,7 @@ export const Attendance = () => {
       axios.post(`${BaseUrl()}/attendance`, data).then(res => {
         if (res.data === "ok") {
           alert(time + " 출근");
-          setArrive(prev => ({...prev, ...data}));
+          todayAtt();
         } else alert("오류 발생")
       });
     } else {
@@ -68,6 +68,7 @@ export const Attendance = () => {
     });
   }
 
+
   const [myAttendance, setMyAttendance] = useState({
     work_day: 0,
     work_late: 0,
@@ -80,11 +81,15 @@ export const Attendance = () => {
     {attSeq: 0, empSeq: 0, attArrive: "", attLeave: "", attTotal: 0, attSuccess: "", attDate: ""}
   ]);
 
-  useEffect(() => {
-    /** 금일 근태 정보 **/
+  /** 금일 근태 정보 **/
+  const todayAtt = () => {
     axios.get(`${BaseUrl()}/attendance/today/${dateData}`).then(res => {
       if (res.data !== "" && res.data !== null && res.data !== undefined) setArrive(res.data);
     });
+  }
+
+  useEffect(() => {
+    todayAtt();
 
     /** 한달 근태 정보 **/
     axios.get(`${BaseUrl()}/attendance/${year}-${month}`).then(res => {
