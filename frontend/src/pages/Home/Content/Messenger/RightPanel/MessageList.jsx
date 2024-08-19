@@ -12,6 +12,9 @@ const MessageList = ({ messages, chat, currentUserSeq, searchTerm }) => {
     );
   };
 
+  
+  
+
   const renderMessage = (message, index) => {
     const isCurrentUser = message.senderSeq === currentUserSeq;
     return (
@@ -22,7 +25,7 @@ const MessageList = ({ messages, chat, currentUserSeq, searchTerm }) => {
         {!isCurrentUser && (
           <div className={styles.senderInfo}>
             <img 
-              src={chat.customRoomAvatar || '/default-avatar.png'} 
+              src={chat.customRoomAvatar || 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/profile3.png'} 
               alt={chat.customRoomName} 
               className={styles.senderAvatar}
             />

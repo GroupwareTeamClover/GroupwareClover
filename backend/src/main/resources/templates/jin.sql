@@ -21,6 +21,8 @@ CREATE TABLE LastReadMessage (
     CONSTRAINT PK_LastReadMessage PRIMARY KEY (EMP_SEQ, ROOM_SEQ)
 );
 
+CREATE INDEX IDX_LastReadMessage_ROOM_SEQ ON LastReadMessage(ROOM_SEQ);
+
 
 -- 알림정보
 Create table Notifications (
@@ -68,7 +70,7 @@ Create table chatRoom (
     room_create_time timestamp default sysdate not null,
     room_type varchar(20) not null check (room_type in ('private', 'group', 'public')),
     room_description varchar2(255),
-    emp_seq number not null
+    emp_seq number not null,
     room_avatar varchar(255) not null,
 );
 

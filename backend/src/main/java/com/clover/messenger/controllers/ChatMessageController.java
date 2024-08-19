@@ -53,7 +53,7 @@ public class ChatMessageController {
         return ResponseEntity.ok().build();
     }
 
-        /**
+    /**
      * 메시지를 읽음 처리하는 API 엔드포인트
      * @param roomSeq 채팅방 번호
      * @return 처리 결과
