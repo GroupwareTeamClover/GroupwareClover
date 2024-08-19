@@ -32,7 +32,7 @@ jobs:
     - name: Build frontend
       run: |
         cd frontend
-        npm install
+        npm install --force
         CI=false npm run build
 
     - name: Login to DockerHub
