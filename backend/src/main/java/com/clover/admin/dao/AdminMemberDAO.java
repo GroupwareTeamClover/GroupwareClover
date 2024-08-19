@@ -31,6 +31,9 @@ public class AdminMemberDAO {
 	public List<HashMap<String, Object>> getWorker(){
 		return mybatis.selectList("AdminMember.getWorker");
 	}
+	public List<HashMap<String, Object>> getNewMonth(){
+		return mybatis.selectList("AdminMember.getNewMonth");
+	}
 	public List<EmployeeDTO> getExit(){
 		return mybatis.selectList("AdminMember.getExit");
 	}
