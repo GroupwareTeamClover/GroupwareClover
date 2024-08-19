@@ -1,5 +1,5 @@
 import styles from './AddSchedule.module.css'
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useMemberStore} from "../../../../../store/store";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
@@ -8,29 +8,26 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
 
   const { admin } = useMemberStore();
 
+  const [minDateTime, setMinDateTime] = useState('');
+  useEffect(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    setMinDateTime(formattedDateTime);
+  }, []);
+
   /**  일정 추가 데이터 **/
   const defaultInputData = {scheduleContent: "", startDate: "", endDate: ""};
   const [inputData, setInputData] = useState(defaultInputData);
   const handleDate = (e) => {
     const { name, value } = e.target;
     if(name === "scheduleContent" && value.length > 300) return false;
-    if((name === "endHour" || name === "startHour") && value > 12) return false;
-    if((name === "startMinute" || name === "endMinute") && value > 59) return false;
     setInputData(prev => ({ ...prev, [name]: value }));
-  }
-
-  /** 날짜 형식 변환 함수 **/
-  const makeDate = (date, time, hour, minute) => {
-    let hourInt = parseInt(hour, 10);
-    const minuteInt = parseInt(minute, 10);
-
-    if (time === "pm" && hourInt !== 12) {
-      hourInt += 12;
-    } else if (time === "am" && hourInt === 12) {
-      hourInt = 0; // 오전 12시는 00시로 변환
-    }
-    const formattedTime = `${hourInt.toString().padStart(2, '0')}:${minuteInt.toString().padStart(2, '0')}:00`;
-    return `${date}T${formattedTime}`;
   }
 
   /**  일정 추가 핸들러 **/
@@ -81,12 +78,12 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
         <div className={styles.inputData}>
           <div className={styles.insertRow}>
             <span>시작 날짜</span>
-            <input type="datetime-local" name="startDate" value={inputData.startDate || ""}
+            <input type="datetime-local" name="startDate" min={minDateTime} value={inputData.startDate || ""}
                    onChange={handleDate}/>
           </div>
           <div className={styles.insertRow}>
             <span>종료 날짜</span>
-            <input type="datetime-local" name="endDate" value={inputData.endDate || ""}
+            <input type="datetime-local" name="endDate" min={inputData.startDate || minDateTime} value={inputData.endDate || ""}
                    onChange={handleDate}/>
           </div>
           <div className={styles.insertRow}>
