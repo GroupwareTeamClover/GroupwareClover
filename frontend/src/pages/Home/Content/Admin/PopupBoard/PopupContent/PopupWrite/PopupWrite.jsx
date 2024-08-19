@@ -202,9 +202,6 @@ export const PopupWrite = () => {
          // 파일 리스트에서 해당 파일 제거
          setFiles((prev) => prev.filter((f) => f.name !== file.name));
      };
-     
-    // const formData = new FormData(); 
-    // formData.append('file', files); 
 
     return (
         <div className={styles.container}>
