@@ -36,6 +36,14 @@ export const PopupDetail = () => {
         setBoardActive(e.target.value);
     }
 
+    // 컴포넌트가 언마운트될 때 인스턴스 해제
+    useEffect(() => {
+        return () => {
+            if (editorRef.current) {
+                editorRef.current.getInstance().destroy();  // 인스턴스 해제
+            }
+        };
+    }, []);
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminpopup/postInfo/${popSeq}`).then(resp => {
             const data = resp.data;
@@ -86,7 +94,7 @@ export const PopupDetail = () => {
     };
     const handleUploadError = (error, file) => {
         console.error('File upload error:', error);
-        alert('파일 용량이 큽니다. 파일 크기를 확인해주세요.');
+        alert(file.name+'파일 용량이 큽니다. 파일 크기를 확인해주세요.');
         // setUploadError(true); // 에러 상태 설정
         // 실패한 파일을 리스트에서 제거
         handleRemove(file);

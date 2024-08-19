@@ -43,7 +43,8 @@ export const Dashboard = () => {
                 const regularCount = resp.data.find(item => item.WORKER_STATE_CODE === 1)?.COUNT || 0;
                 const irregularCount = resp.data.find(item => item.WORKER_STATE_CODE === 2)?.COUNT || 0;
                 const contractCount = resp.data.find(item => item.WORKER_STATE_CODE === 3)?.COUNT || 0;
-                setWorkerData({ regular: regularCount, irregular: irregularCount , contract: contractCount});
+                const adminCount = resp.data.find(item => item.WORKER_STATE_CODE === 0)?.COUNT || 0;
+                setWorkerData({ regular: regularCount, irregular: irregularCount , contract: contractCount, admin: adminCount});
             })
             .catch(error => console.error('Error fetching data:', error));
     }, []);
@@ -184,6 +185,10 @@ export const Dashboard = () => {
                         <div className={styles.statTitle}>비정규직</div>
                         <div className={styles.statValue}>{workerData.irregular}</div>
                     </div>
+                    <div className={styles.statItemContent}>
+                        <div className={styles.statTitle}>관리자</div>
+                        <div className={styles.statValue}>{workerData.admin}</div>
+                    </div>
                 </div>
                 <div className={styles.statItem}>
                     <div className={styles.newbox}>
@@ -194,6 +199,9 @@ export const Dashboard = () => {
                         <div className={styles.newchartWrapperIcon}>
                             <FaUserPlus className={styles.newicon} /> 
                         </div>
+                    </div>
+                    <div className={styles.statValue} style={{ color: '#ffffff00', textAlign:'left', fontSize:'20px'}}>
+                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((empData.newMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
                     </div>
                     <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
                         Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((empData.newMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
@@ -210,6 +218,9 @@ export const Dashboard = () => {
                             <FaSignOutAlt  className={styles.newicon} /> 
                         </div>
                         
+                    </div>
+                    <div className={styles.statValue} style={{ color: '#ffffff00', textAlign:'left', fontSize:'20px'}}>
+                        Monthly Employee Turnover Rate &nbsp; {empData.ingMem !== 0 ? ((empData.outMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
                     </div>
                     <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
                         Monthly Employee Turnover Rate &nbsp; {empData.ingMem !== 0 ? ((empData.outMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}

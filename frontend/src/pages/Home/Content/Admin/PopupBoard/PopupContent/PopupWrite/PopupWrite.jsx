@@ -24,6 +24,16 @@ export const PopupWrite = () => {
    const [monthlyDay, setMonthlyDay] =  useState(1);               // monthly
    const [weeklyDay, setWeeklyDay] = useState('MONDAY');                  // weekly
 
+     // 컴포넌트가 언마운트될 때 인스턴스 해제
+     useEffect(() => {
+        return () => {
+            if (editorRef.current) {
+                editorRef.current.getInstance().destroy();  // 인스턴스 해제
+            }
+        };
+    }, []);
+
+
     // 현재 날짜
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식으로 현재 날짜를 구하는 거!
 
@@ -193,7 +203,7 @@ export const PopupWrite = () => {
      };
     const handleUploadError = (error, file) => {
         console.error('File upload error:', error);
-        alert('파일 용량이 큽니다. ');
+        alert( file.name +'파일 용량이 큽니다. ');
         // setUploadError(true); // 에러 상태 설정
         // 실패한 파일을 리스트에서 제거
         handleRemove(file);
