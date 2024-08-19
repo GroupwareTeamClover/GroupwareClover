@@ -2,10 +2,12 @@ package com.clover.approval.controllers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,9 @@ import com.clover.approval.dto.ParticipantsLineDTO;
 import com.clover.approval.factory.DocumentFactory;
 import com.clover.approval.services.DocumentService;
 import com.clover.approval.services.LineService;
+import com.clover.commons.dto.AttachmentDTO;
+import com.clover.commons.services.AttachmentService;
+import com.clover.commons.services.S3Service;
 import com.clover.employee.services.EmployeeService;
 
 import jakarta.servlet.http.HttpSession;
@@ -47,6 +52,12 @@ public class DocumentController {
 	@Autowired
 	private HttpSession session;
 	
+	@Autowired
+    private S3Service s3Serv;
+	
+	@Autowired
+	private AttachmentService attServ;
+	
 	//insert-문서,결재자,참조/열람자,양식정보까지 && 임시저장
 	@PostMapping
 	public ResponseEntity<Integer> insertData(@RequestBody InsertMappingDTO insertMappingDTO) {
@@ -56,25 +67,12 @@ public class DocumentController {
 	    // 팩토리 패턴을 사용하여 적절한 DocumentDTO 생성
 	    DocumentDTO document = insertMappingDTO.getDocument();
 	    DocumentDTO typeDocument = DocumentFactory.createDocument(insertMappingDTO.getDocType());
-	    
+        String content=(String) insertMappingDTO.getDocData().get("bsContent");
 	    if (typeDocument instanceof BusinessDTO) {
 	        BusinessDTO TypeDocDTO = (BusinessDTO) typeDocument;
 	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
 	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
 	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
-	        
-	        // 날짜 문자열이 null이 아닌지 확인
-//	        String dateStr = (String) insertMappingDTO.getDocData().get("bsWriteDate");
-//	        if (dateStr != null && !dateStr.trim().isEmpty()) {  // null 및 빈 문자열 체크
-//	            try {
-//	                Date parsedDate = dateFormat.parse(dateStr);
-//	                TypeDocDTO.setBsWriteDate(parsedDate);
-//	            } catch (ParseException e) {
-//	                e.printStackTrace();
-//	            }
-//	        } else {
-//	            TypeDocDTO.setBsWriteDate(null);
-//	        }
 	        
 	        // 날짜 처리
 	        Object bsWriteDate = insertMappingDTO.getDocData().get("bsWriteDate");
@@ -105,6 +103,37 @@ public class DocumentController {
 	        TypeDocDTO.setParentSeq((int) insertMappingDTO.getDocData().get("parentSeq"));
 	        documentService.insertDoc(document, insertMappingDTO.getApvline(), insertMappingDTO.getPline(), TypeDocDTO);
 	    }
+	    
+		//첨부파일명, 첨부파일URL, 이미지URL 데이터 받아오기
+		List<String> fileNames = (List<String>) insertMappingDTO.getFileData().getOrDefault("fileNames", new ArrayList<>());
+	    List<String> fileUrls = (List<String>) insertMappingDTO.getFileData().getOrDefault("fileUrls", new ArrayList<>());
+	    List<String> images = (List<String>) insertMappingDTO.getFileData().getOrDefault("images", new ArrayList<>());
+		System.out.println(insertMappingDTO.getFileData());
+	    System.out.println(fileNames);
+		System.out.println(fileUrls);
+		System.out.println(images);
+	    //첨부파일이 있을 경우
+	    if (fileNames.size() > 0) {
+			for (int i = 0; i < fileNames.size(); i ++) {
+				//파일 주소 변환 후 DB에 등록
+				String newFilePath = "posts/" + document.getDocSeq() + "/" + UUID.randomUUID() + "_" + fileNames.get(i);
+				String newFileUrl = s3Serv.moveFile(newFilePath, fileUrls.get(i));
+				
+				attServ.insertFile(new AttachmentDTO(0, fileNames.get(i), newFileUrl, "approval", document.getDocSeq()));
+			}
+		}
+		//첨부 이미지가 있을 경우
+		if (images.size() > 0) {
+			for (int i = 0; i < images.size(); i ++) {
+				String newImagePath = "images/posts/" + document.getDocSeq() + "/" + UUID.randomUUID() + "_image" + (i+1); 
+				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
+				String newImageUrl = s3Serv.moveFile(newImagePath, images.get(i));
+				//변환된 주소로 글 내용을 바꾸고 반환
+				content = attServ.updateImageUrl(images.get(i), newImageUrl, content);
+			}
+			// 최종적으로 업데이트된 글내용을 DB에 업데이트
+			attServ.updateContent(content, document.getDocSeq(), "Document");
+		}
 
 	    return ResponseEntity.ok(document.getDocSeq());
 	}
