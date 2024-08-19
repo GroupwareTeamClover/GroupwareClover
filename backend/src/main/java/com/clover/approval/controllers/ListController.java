@@ -60,7 +60,12 @@ public class ListController {
     public ResponseEntity<PageDocumentList> getFinishedDocuments(
     		@RequestParam(value = "cpage", defaultValue = "1") int cpage, 
         @RequestParam(value = "recordCountPerPage") int recordCountPerPage, //고정값: 한페이지 몇개글
-        @RequestParam(value = "naviCountPerPage") int naviCountPerPage) { //고정값: 페이지번호 자체
+        @RequestParam(value = "naviCountPerPage") int naviCountPerPage,//고정값: 페이지번호 자체
+        @RequestParam(value = "searchType") String searchType,
+        @RequestParam(value = "keyword") String keyword) { 
+    	
+    	System.out.println("searchType"+ searchType);
+    	System.out.println("keyword"+ keyword);
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
@@ -70,12 +75,12 @@ public class ListController {
     	
     	type="기안문서함";
         // 전체게시글 수
-        int recordTotalCount = listService.getRecordTotalCount(type, empSeq);
+        int recordTotalCount = listService.getRecordTotalCount(type, empSeq, searchType, keyword);
         System.out.println(recordTotalCount);
         
         // 페이지에 맞는 list 가지고 오기, 전체 문서 수 가져오기 (총 페이지 계산에 사용)
 		//컬럼 시작점, 컬럼 끝점 
-       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage);
+       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage, searchType, keyword);
        for(DocumentDTO dto:list) {
     	   System.out.println(dto.getDocSeq());
        }
@@ -89,7 +94,9 @@ public class ListController {
     public ResponseEntity<PageDocumentList> getTempDocuments(
     		@RequestParam(value = "cpage", defaultValue = "1") int cpage, 
         @RequestParam(value = "recordCountPerPage") int recordCountPerPage, //고정값: 한페이지 몇개글
-        @RequestParam(value = "naviCountPerPage") int naviCountPerPage) { //고정값: 페이지번호 자체
+        @RequestParam(value = "naviCountPerPage") int naviCountPerPage,
+        @RequestParam(value = "searchType") String searchType,
+        @RequestParam(value = "keyword") String keyword) { //고정값: 페이지번호 자체
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
@@ -99,12 +106,12 @@ public class ListController {
     	
     	type="임시문서함";
         // 전체게시글 수
-        int recordTotalCount = listService.getRecordTotalCount(type, empSeq);
+        int recordTotalCount = listService.getRecordTotalCount(type, empSeq, searchType, keyword);
         System.out.println(recordTotalCount);
         
         // 페이지에 맞는 list 가지고 오기, 전체 문서 수 가져오기 (총 페이지 계산에 사용)
 		//컬럼 시작점, 컬럼 끝점 
-       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage);
+       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage, searchType, keyword);
        for(DocumentDTO dto:list) {
     	   System.out.println(dto.getDocSeq());
        }
@@ -118,7 +125,9 @@ public class ListController {
     public ResponseEntity<PageDocumentList> getApprovalDocuments(
     		@RequestParam(value = "cpage", defaultValue = "1") int cpage, 
         @RequestParam(value = "recordCountPerPage") int recordCountPerPage, //고정값: 한페이지 몇개글
-        @RequestParam(value = "naviCountPerPage") int naviCountPerPage) { //고정값: 페이지번호 자체
+        @RequestParam(value = "naviCountPerPage") int naviCountPerPage,
+        @RequestParam(value = "searchType") String searchType,
+        @RequestParam(value = "keyword") String keyword) { //고정값: 페이지번호 자체
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
@@ -128,12 +137,12 @@ public class ListController {
     	
     	type="결재문서함";
         // 전체게시글 수
-        int recordTotalCount = listService.getRecordTotalCount(type, empSeq);
+        int recordTotalCount = listService.getRecordTotalCount(type, empSeq, searchType, keyword);
         System.out.println(recordTotalCount);
         
         // 페이지에 맞는 list 가지고 오기, 전체 문서 수 가져오기 (총 페이지 계산에 사용)
 		//컬럼 시작점, 컬럼 끝점 
-       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage);
+       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage, searchType, keyword);
        for(DocumentDTO dto:list) {
     	   System.out.println(dto.getDocSeq());
        }
@@ -147,7 +156,9 @@ public class ListController {
     public ResponseEntity<PageDocumentList> getPartDocuments(
     		@RequestParam(value = "cpage", defaultValue = "1") int cpage, 
         @RequestParam(value = "recordCountPerPage") int recordCountPerPage, //고정값: 한페이지 몇개글
-        @RequestParam(value = "naviCountPerPage") int naviCountPerPage) { //고정값: 페이지번호 자체
+        @RequestParam(value = "naviCountPerPage") int naviCountPerPage,
+        @RequestParam(value = "searchType") String searchType,
+        @RequestParam(value = "keyword") String keyword) { //고정값: 페이지번호 자체
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
@@ -157,12 +168,12 @@ public class ListController {
     	
     	type="참조/열람문서함";
         // 전체게시글 수
-        int recordTotalCount = listService.getRecordTotalCount(type, empSeq);
+        int recordTotalCount = listService.getRecordTotalCount(type, empSeq, searchType, keyword);
         System.out.println(recordTotalCount);
         
         // 페이지에 맞는 list 가지고 오기, 전체 문서 수 가져오기 (총 페이지 계산에 사용)
 		//컬럼 시작점, 컬럼 끝점 
-       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage);
+       List<DocumentDTO> list = listService.getPageDocuments(type, empSeq, cpage*recordCountPerPage-(recordCountPerPage-1),cpage*recordCountPerPage, searchType, keyword);
        for(DocumentDTO dto:list) {
     	   System.out.println(dto.getDocSeq());
        }

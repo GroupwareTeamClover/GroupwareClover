@@ -12,62 +12,63 @@ import com.clover.approval.dto.DocumentDTO;
 
 @Repository
 public class ListDAO {
-	
+
 	@Autowired
 	private SqlSession mybatis;
 	
-	//기안문서함
-	public int getFinishedRecordTotalCount(int empSeq) {
-	   return mybatis.selectOne("DocumentList.countFinishedDocuments",empSeq);
-	}
-	    
-	 public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end) {
-	        Map<String, Integer> map = new HashMap<>();
-	        map.put("empSeq", empSeq);
-	        map.put("start", start);
-	        map.put("end", end);
-	        return mybatis.selectList("DocumentList.getFinishedPageDocuments", map);
-	 }
-
-	//임시문서함
-	public int getTempRecordTotalCount(int empSeq) {
-	   return mybatis.selectOne("DocumentList.countTempDocuments",empSeq);
+	//반복되는 코드 공통 메소드
+	private int getRecordTotalCount(int empSeq, String searchType, String keyword, String countQueryId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("empSeq", empSeq);
+        map.put("searchType", searchType);
+        map.put("keyword", keyword);
+	    return mybatis.selectOne(countQueryId, map);
 	}
 	
-	 public List<DocumentDTO> getTempPageDocuments(int empSeq, int start, int end) {
-	        Map<String, Integer> map = new HashMap<>();
-	        map.put("empSeq", empSeq);
-	        map.put("start", start);
-	        map.put("end", end);
-	        return mybatis.selectList("DocumentList.getTempPageDocuments", map);
-	 }
-		 
-		 
-	//결재문서함
-	public int getApprovalRecordTotalCount(int empSeq) {
-	   return mybatis.selectOne("DocumentList.countApprovalDocuments",empSeq);
-	}
-			    
-	 public List<DocumentDTO> getApprovalPageDocuments(int empSeq, int start, int end) {
-	       Map<String, Integer> map = new HashMap<>();
-	       map.put("empSeq", empSeq);
-		   map.put("start", start);
-	       map.put("end", end);
-	       return mybatis.selectList("DocumentList.getApprovalPageDocuments", map);
-	 }
-			
-			 
-	//참조/열람문서함
-	public int getPartRecordTotalCount(int empSeq) {
-			  return mybatis.selectOne("DocumentList.countPartDocuments",empSeq);
-	}
-				    
-	public List<DocumentDTO> getPartPageDocuments(int empSeq, int start, int end) {
-	    Map<String, Integer> map = new HashMap<>();
+	private List<DocumentDTO> getPageDocuments(int empSeq, int start, int end, String searchType, String keyword, String listQueryId) {
+		Map<String, Object> map = new HashMap<>();
 	    map.put("empSeq", empSeq);
 	    map.put("start", start);
-       map.put("end", end);
-      return mybatis.selectList("DocumentList.getPartPageDocuments", map);
-	 }
+	    map.put("end", end);
+	    map.put("searchType", searchType);
+	    map.put("keyword", keyword);
+	    return mybatis.selectList(listQueryId, map);
+	}
+
+	// 기안문서함
+	public int getFinishedRecordTotalCount(int empSeq, String searchType, String keyword) {
+		return getRecordTotalCount(empSeq, searchType, keyword, "DocumentList.countFinishedDocuments");
+	}
+
+	public List<DocumentDTO> getFinishedPageDocuments(int empSeq, int start, int end, String searchType, String keyword) {
+		return getPageDocuments(empSeq, start, end, searchType, keyword, "DocumentList.getFinishedPageDocuments");
+	}
+
+	// 임시문서함
+	public int getTempRecordTotalCount(int empSeq, String searchType, String keyword) {
+		return getRecordTotalCount(empSeq, searchType, keyword, "DocumentList.countTempDocuments");
+	}
+
+	public List<DocumentDTO> getTempPageDocuments(int empSeq, int start, int end, String searchType, String keyword) {
+		return getPageDocuments(empSeq, start, end, searchType, keyword, "DocumentList.getTempPageDocuments");
+	}
+
+	// 결재문서함
+	public int getApprovalRecordTotalCount(int empSeq, String searchType, String keyword) {
+		return getRecordTotalCount(empSeq, searchType, keyword, "DocumentList.countApprovalDocuments");
+	}
+
+	public List<DocumentDTO> getApprovalPageDocuments(int empSeq, int start, int end, String searchType, String keyword) {
+		return getPageDocuments(empSeq, start, end, searchType, keyword, "DocumentList.getApprovalPageDocuments");
+	}
+
+	// 참조/열람문서함
+	public int getPartRecordTotalCount(int empSeq, String searchType, String keyword) {
+		return getRecordTotalCount(empSeq, searchType, keyword, "DocumentList.countPartDocuments");
+	}
+
+	public List<DocumentDTO> getPartPageDocuments(int empSeq, int start, int end, String searchType, String keyword) {
+		return getPageDocuments(empSeq, start, end, searchType, keyword, "DocumentList.getPartPageDocuments");
+	}
 
 }

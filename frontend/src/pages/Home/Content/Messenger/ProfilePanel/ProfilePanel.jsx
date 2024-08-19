@@ -56,7 +56,7 @@ const ProfilePanel = ({ selectedProfile, onChatStart }) => {
         <div className={styles.profilePanel}>
             <div className={styles.profileHeader}>
                 <div className={styles.profilePicture}>
-                    <img src={profile.EMPAVATAR || sessionData.empAvatar} alt={profile.EMP_NAME} />
+                    <img src={profile.EMP_AVATAR} alt={profile.EMP_NAME} />
                 </div>
             </div>
             <div className={styles.profileName}>

@@ -144,7 +144,7 @@ export const Main=()=>{
                 </div>
             </div>
             <div className={styles.ingBox}>
-                <div className={styles.listheader}><h4 className={styles.headerText}>기안 진행 문서</h4></div>
+                <div className={styles.listheader}><h3 className={styles.headerText}>기안 진행 문서</h3></div>
                 <div className={styles.tableWrapper}>
                     <table className={styles.table}>
                         <thead className={styles.thead}>

@@ -91,6 +91,13 @@ public class ChatMessageDTO {
         this.receiverSeq = receiverSeq;
     }
 
+    public ChatMessageDTO(int roomSeq, String messageContent, String messageType) {
+        this.roomSeq = roomSeq;
+        this.messageContent = messageContent;
+        this.messageType = messageType;
+        this.sendTime = new Timestamp(System.currentTimeMillis());
+    }
+
 
     @Override
     public String toString() {
@@ -105,4 +112,6 @@ public class ChatMessageDTO {
                 ", receiverSeq=" + receiverSeq +
                 '}';
     }
+
+
 }

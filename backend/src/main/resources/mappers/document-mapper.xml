@@ -24,17 +24,17 @@
     </selectKey>
 </insert>
 	
-	<insert id="insertBusiness">
-	    insert into business
-	    values(business_sequence.nextval, #{bsTitle}, #{bsContent},
-	            <if test="bsWriteDate == null">
-	                SYSDATE
-	            </if>
-	            <if test="bsWriteDate != null">
-	                #{bsWriteDate}
-	            </if>,
-	            #{parentSeq})
-	</insert>
+<insert id="insertBusiness">
+    insert into business
+    values(business_sequence.nextval, #{bsTitle}, #{bsContent},
+        <if test="bsWriteDate == null">
+            null,
+        </if>
+        <if test="bsWriteDate != null">
+            #{bsWriteDate},
+        </if>
+        #{parentSeq})
+</insert>
 	
 	<select id="selectDoc" resultType="com.clover.approval.dto.DocumentDTO">
 		select doc.*, e.EMP_NAME, d.DEPT_NAME, r.ROLE_NAME 

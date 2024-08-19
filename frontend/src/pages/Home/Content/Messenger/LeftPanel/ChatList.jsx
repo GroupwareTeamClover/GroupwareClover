@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react';
+import axios from 'axios';
+import { BaseUrl } from '../../../../../commons/config';
 import styles from '../Messenger.module.css';
 import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage, connectWebSocket } from '../../../../../commons/websocket';
@@ -28,7 +30,7 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
     };
   }, [addChatRoom, updateChatRoom]);
 
-  const handleChatSelect = (chat) => {
+  const handleChatSelect = async (chat) => {
     setSelectedChat(chat);
     onChatSelect(chat);
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
@@ -39,7 +41,12 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
       senderName: sessionUser.empName
     });
     // 읽음 처리
-    updateChatRoom(chat.roomSeq, { unreadCount: 0 });
+    try {
+      await axios.post(`${BaseUrl()}/chat/messages/read/${chat.roomSeq}`);
+      updateChatRoom(chat.roomSeq, { unreadCount: 0 });
+    } catch (error) {
+      console.error('메시지 읽음 처리 오류:', error);
+    }
   };
 
   const formatMessageTime = (time) => {
@@ -52,6 +59,8 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
       return format(messageDate, 'MM/dd');
     }
   };
+
+  const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
 
   return (
     <div className={styles.chatList}>
@@ -76,7 +85,7 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
           </div>
           <div className={styles.chatMeta}>
             <span className={styles.time}>{formatMessageTime(chat.lastMessageTime)}</span>
-            {chat.unreadCount > 0 && (
+            {chat.unreadCount > 0 && chat.lastMessage.senderSeq !== currentUserSeq && (
               <span className={styles.unreadCount}>{chat.unreadCount}</span>
             )}
           </div>
