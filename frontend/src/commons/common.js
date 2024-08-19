@@ -123,17 +123,26 @@ export const dateYMD = (timestamp) => {
   let year = today.getFullYear();
   let month = ('0' + (today.getMonth() + 1)).slice(-2);
   let day = ('0' + today.getDate()).slice(-2);
-  let dateData = `${year}-${month}-${day}`;
-  return dateData;
+  return `${year}-${month}-${day}`;
 }
+export const dateSettingOrigin = (date) => {
+  const newDate = new Date(date);
+
+  const isoString = newDate.toISOString().slice(0, 19).replace('T', ' ');
+
+  const [datePart, timePart] = isoString.split(' ');
+  const [hour, minute] = timePart.split(':');
+
+  const formattedTime = `${hour}시 ${minute}분`;
+  return `${datePart} ${formattedTime}`;
+}
+
 
 export const dateSetting = (date) => {
   const newDate = new Date(date);
   // 원하는 형식으로 포맷
   const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
-  const formattedDate = newDate.toLocaleString('ko-KR', options);
-  console.log(formattedDate); // 2024.08.11. 09:00
-  return formattedDate;
+  return newDate.toLocaleString('ko-KR', options);
 }
 
 // =============================== [ 분 단위 시간으로 변환 ] ===============================
