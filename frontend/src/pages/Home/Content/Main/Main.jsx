@@ -127,17 +127,24 @@ export const Main = () => {
                       <div className={styles.notice}>
                           { /* 공지 사항 목록 조회 후 출력 ( 내용은 너무 길면 slice ) */
                               noticeList.map((item, i) => {
+                                  const removeTags = (content) => {
+                                      return content.replace(/<\/?[^>]+(>|$)/g, ""); // 정규식을 이용해 태그 제거
+                                  };
                                   return (
-                                      <>
-                                          <div className={styles.contentDate}>
-                                              작성일 : { dateYMD(item.boardWriteDate) }
-                                          </div>
-                                          <div className={styles.content}>
-                                              <p>제목 : { item.boardTitle }</p>
-                                              <p>작성자 : { item.boardWriter }</p>
-                                              <p>{ item.boardContent.length > 400 ? item.boardContent.slice(0, 400) + " ... " : item.boardContent }</p>
-                                          </div>
-                                      </>
+                                    <>
+                                        <div className={styles.contentDate}>
+                                            작성일 : { dateYMD(item.boardWriteDate) }
+                                        </div>
+                                        <div className={styles.content}>
+                                            <p>제목 : { item.boardTitle }</p>
+                                            <p>작성자 : { item.boardWriter }</p>
+                                            {
+                                                removeTags(item.boardContent).length > 400
+                                                  ? removeTags(item.boardContent).slice(0, 400) + " ... "
+                                                  : removeTags(item.boardContent)
+                                            }
+                                        </div>
+                                    </>
                                   );
                               })
                           }

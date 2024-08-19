@@ -10,7 +10,7 @@
 .side{
     padding-top: 30px;
     flex:1;
-     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: center; 
     border-right: 0.5px solid gray;
