@@ -18,10 +18,12 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     isTempInsert, setIsTempInsert,
     isTempEmergency, setIsTempEmergency,
     isTempTemp, setIsTempTemp,
-    isTempCancle, setIsTempCancle
+    isTempCancle, setIsTempCancle, files
 })=>{  
     const navi = useNavigate();
     const [isContentLoaded, setIsContentLoaded] = useState(false);
+    const [fileData, setFileData]=useState({});
+
 
     //********************************write 시 코드******************************************/
     const {cloneDocCode, cloneEmpInfo, isModalComplete, setIsModalComplete} =useApprovalStore();
@@ -82,6 +84,8 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     useEffect(() => {
         // 의존성 배열에 필요한 상태만 포함
         setBusiness((prevBusiness) => {
+           
+
             if (
                 prevBusiness.document !== documentDTO ||
                 prevBusiness.docData !== docData ||
@@ -93,12 +97,15 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                     "apvline": apvLineDTOs,
                     "pline": participantsLineDTOs,
                     "docType": 'business', // 문서 타입
-                    "docData": docData
+                    "docData": docData,
+                    "fileData": fileData
                 };
             }
+
+            console.log('업데이트된 business 객체:', prevBusiness);
             return prevBusiness;
         });
-    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData]);
+    }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData, fileData]);
 
     // 결재양식, 라인선택 후 모달 확인 클릭시 
     // 초기화
@@ -132,7 +139,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 });
             }
         }
-    }, [isInsert]);
+    }, [isInsert, business]);
 
     //임시저장 insert할 때 사용
     useEffect(() => {
@@ -274,6 +281,35 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 }
             };
     }, []);
+
+    
+    useEffect(() => {
+
+        const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
+            const match = imgTag.match(/src="([^">]+)"/);
+            return match ? match[1] : null;
+        });
+        
+        if ((files && files.length > 0) || imageUrls) { // files가 비어 있지 않을 때만 실행         
+            console.log(files);
+            console.log()
+            // 새로운 fileData를 생성
+            const updatedFileData = {
+                fileNames: Array.isArray(files) ? files.map(file => file.name) : [], // files가 배열인지 확인하고 map을 사용
+                fileUrls: Array.isArray(files) ? files.map(file => file.url) : [],   // files가 배열인지 확인하고 map을 사용
+                images:  imageUrls
+            };
+
+            // fileData 상태를 업데이트
+            setFileData(prev => ({
+                ...prev, // 이전 상태를 유지
+                ...updatedFileData, // 새로운 파일 데이터를 추가
+            }));
+        }   
+    }, [files, content]);
+
+
+
 
  
 

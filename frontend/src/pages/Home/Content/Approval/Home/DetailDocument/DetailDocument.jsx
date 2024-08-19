@@ -104,6 +104,9 @@ export const DetailDocument = ({type}) => {
     //DB에서 정보 가져오는함수
     const handleGetAll=()=>{
         if(id!==''){
+            axios.get(`${BaseUrl()}/attachment/${'approval'}/${id}`).then(resp => {
+                setFiles(resp.data);
+            });
             axios.get(`${BaseUrl()}/approval/document/${id}`, document).then((resp)=>{
                 // console.log(`detail접근확인`);
                 console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
@@ -415,6 +418,42 @@ export const DetailDocument = ({type}) => {
     useEffect(()=>{
         console.log(totalLineInfo)
     },[totalLineInfo])
+
+    //첨부파일    
+    const [files, setFiles] = useState([]);
+
+     //첨부파일 조회 및 다운로드
+     const [isFileBoxOpen, setIsFileBoxOpen] = useState(false);
+     const handleFileBox = () => {
+         setIsFileBoxOpen(prev => !prev);
+     }
+
+      //파일 다운로드
+    const handleDownload = async (fileUrl, fileName) => {
+        try {
+            const response = await axios.get(`${BaseUrl()}/attachment/download`, {
+                params: { fileUrl: fileUrl },
+                responseType: 'blob',
+                headers: {
+                    'Content-Type': 'application/octet-stream'
+                }
+            });
+
+            const blob = new Blob([response.data], { type: 'application/octet-stream' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('다운로드 중 에러 발생.');
+        }
+    }
+
+ 
   
    
     return (
@@ -434,6 +473,8 @@ export const DetailDocument = ({type}) => {
                 {isTempMenu && <TempMenu isTempEmergency={isTempEmergency} setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
             </div>
             <div className={styles.detail}>
+                {/* left와 side 섹션을 감싸는 래퍼 추가 */}
+                <div className={styles.contentWrapper}>
                 {/* 왼쪽 */}
                 <div className={styles.left}>
                     <div className={styles.test}>
@@ -483,6 +524,23 @@ export const DetailDocument = ({type}) => {
                         </div>
                     </div> 
                     </div>
+                    </div>
+                        {files.length > 0 &&
+                        ((isFileBoxOpen) ? <div className={styles.fileHeader}>
+                            <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▲</div>
+                        </div> : <div className={styles.fileHeader}>
+                            <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▼</div>
+                        </div>)
+                    }
+                    <div className={styles.fileBox}>
+                        {isFileBoxOpen && files.map((file, i) => {
+                            return (
+                                <>
+                                    <p className={styles.eachFile} key={i} onClick={() => { handleDownload(file.attachmentSysname, file.attachmentOriname) }}>{i + 1}. {file.attachmentOriname}</p>
+                                </>
+                            );
+                        })
+                        }
                     </div>
                 </div>
                 {/* 오른쪽 */}
@@ -577,6 +635,7 @@ export const DetailDocument = ({type}) => {
                         </div>
                     </div>
                 </div>
+            </div>    
             </div>
 
                    
