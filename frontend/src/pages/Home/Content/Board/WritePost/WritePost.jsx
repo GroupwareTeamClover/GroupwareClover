@@ -177,7 +177,7 @@ const WritePost = () => {
                 />
             </div>
             <div className={styles.title}>
-                <input type="text" placeholder="제목을 입력해 주세요 (최대 30자까지 입력 가능)"
+                <input type="text" placeholder="제목을 입력해 주세요 (최대 30자까지 입력 가능)" spellCheck={false}
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
@@ -188,7 +188,7 @@ const WritePost = () => {
             </div>
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent=""
-                />
+                placeHolder="최대 3000자까지 작성 가능하며 공백, 줄바꿈 제외 최소 한 글자 이상 입력해야 합니다."/>
                 <div className={styles.charCountBox}>{charCount}/{maxContentLength}자</div>
             </div>
             <div className={styles.btnBox}>

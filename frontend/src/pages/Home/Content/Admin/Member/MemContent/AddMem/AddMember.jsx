@@ -35,6 +35,7 @@ export const AddMember = ()=>{
             setFiltered(resp.data);
             setstoremembers(false);
             setIsLoading(false);
+            setKeyword("")
 
             // empStateCode가 1인 갯수(승인완료)
             const countState1 = resp.data.filter(mem => mem.empStateCode !== 0).length;

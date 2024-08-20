@@ -20,6 +20,13 @@ public class CustomHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         
+        String requestUri = request.getRequestURI();
+
+        // WebSocket 요청이거나 chat 관련 요청이면 무시하도록 처리
+        if (requestUri.startsWith("/ws") || requestUri.contains("chat")) {
+            return true; // WebSocket 또는 chat 요청의 경우 처리하지 않고 통과시킴
+        }
+        
         HttpSession session = request.getSession(false); // false를 사용하여 세션이 없으면 새로 생성하지 않음
 
         if (session == null || session.getAttribute("cloverSeq") == null) {

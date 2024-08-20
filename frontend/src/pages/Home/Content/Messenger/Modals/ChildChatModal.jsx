@@ -5,29 +5,47 @@ import RightPanel from '../RightPanel/RightPanel';
 import { useChatStore } from '../../../../../store/messengerStore';
 
 const ChildChatModal = ({ isOpen, onClose }) => {
-  const [selectedChat, setSelectedChat] = useState(null);
+  const [openChatModals, setOpenChatModals] = useState([]);
   const { chatRooms, setSelectedChat: setStoreSelectedChat } = useChatStore();
 
   const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
     setStoreSelectedChat(chat);
+    setOpenChatModals((prevModals) => [...prevModals, chat]);
+  };
+
+  const handleCloseChatModal = (chatSeq) => {
+    setOpenChatModals((prevModals) =>
+      prevModals.filter((modalChat) => modalChat.roomSeq !== chatSeq)
+    );
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>
-          &times;
-        </button>
-        {!selectedChat ? (
+    <>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContent}>
+          <button className={styles.closeButton} onClick={onClose}>
+            &times;
+          </button>
           <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} />
-        ) : (
-          <RightPanel selectedChat={selectedChat} />
-        )}
+        </div>
       </div>
-    </div>
+
+      {openChatModals.map((chat) => (
+        <div key={chat.roomSeq} className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <button
+              className={styles.closeButton}
+              onClick={() => handleCloseChatModal(chat.roomSeq)}
+            >
+              &times;
+            </button>
+            <RightPanel selectedChat={chat} />
+          </div>
+        </div>
+      ))}
+    </>
   );
 };
 

@@ -40,6 +40,10 @@ public class AdminMemberController {
 	public ResponseEntity<List<HashMap<String,Object>>> getWorker(){
 		return ResponseEntity.ok(adminmemberService.getWorker());
 	}
+	@GetMapping("/countNewMonth")
+	public ResponseEntity<List<HashMap<String,Object>>> getNewMonth(){
+		return ResponseEntity.ok(adminmemberService.getNewMonth());
+	}
 	@GetMapping("/exit")
 	public ResponseEntity<List<EmployeeDTO>> getExit(){
 		return ResponseEntity.ok(adminmemberService.getExit());

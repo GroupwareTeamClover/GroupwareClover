@@ -39,8 +39,12 @@ public class AttachmentDAO {
 		mybatis.delete("Attachment.deleteFile", fileUrl);
 	}
 	
-	public void deleteFiles(int seq) {
-		mybatis.delete("Attachment.deleteAllFile", seq);
+	public void deleteFiles(int seq, String domain) {
+		HashMap<String, Object> data = new HashMap<>();
+		data.put("seq", seq);
+		data.put("domain", domain);
+		
+		mybatis.delete("Attachment.deleteAllFile", data);
 	}
 	
 }
