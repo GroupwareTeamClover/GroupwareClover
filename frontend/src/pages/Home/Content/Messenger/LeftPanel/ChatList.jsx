@@ -37,16 +37,13 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
       }
     };
 
-    const disconnect = connectWebSocket(handleMessage);
-
     // 15초마다 채팅방 목록 갱신
-    const intervalId = setInterval(refreshChatRooms, 3000);
+    const intervalId = setInterval(refreshChatRooms, 5000);
 
     return () => {
-      if (disconnect) disconnect();
       clearInterval(intervalId);
     };
-  }, [addChatRoom, updateChatRoom, refreshChatRooms, chatRooms]);
+  }, [addChatRoom, updateChatRoom, refreshChatRooms]);
 
   const handleChatSelect = async (chat) => {
     setSelectedChat(chat);
@@ -99,11 +96,12 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
           </div>
           <div className={styles.chatInfo}>
             <h4>{chat.customRoomName || chat.roomName}</h4>
-            <p>
+            <p>{chat.lastMessage}</p>
+            {/* <p>
               {chat.lastMessage.length > 8 
                 ? `${chat.lastMessage.substring(0, 8)}...` 
                 : chat.lastMessage}
-            </p>
+            </p> */}
           </div>
           <div className={styles.chatMeta}>
             <span className={styles.time}>{formatMessageTime(chat.lastMessageTime)}</span>

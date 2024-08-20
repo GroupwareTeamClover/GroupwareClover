@@ -73,6 +73,7 @@ const IndividualOrganization = ({ onClose }) => {
     }, [searchInput, folderData]);
 
     const adjustFolderProps = (folder) => {
+        console.log('Folder object:', JSON.stringify(folder, null, 2));
         return {
             ...folder,
             children: folder.children.map(child => ({
