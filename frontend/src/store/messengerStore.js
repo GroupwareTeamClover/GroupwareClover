@@ -47,11 +47,19 @@ export const useChatStore = create((set, get) => ({
   // 구조: { roomSeq1: [messages], roomSeq2: [messages], ... }
   messages: {},
   addMessage: (roomSeq, message) => set((state) => {
-    // 현재 사용자의 ID를 가져옴
-    const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser'))?.empSeq;
 
+    const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser'))?.empSeq;
+    const selectedChatRoomSeq = get().selectedChat?.roomSeq;
+  
+    console.log('알림 조건:', {
+      senderSeq: message.senderSeq,
+      currentUserSeq,
+      selectedChatRoomSeq,
+      messageRoomSeq: roomSeq
+    });
+  
     // 메시지 발신자가 현재 사용자가 아니고, 선택된 채팅방이 아닌 경우에만 알림을 표시
-    if (message.senderSeq !== currentUserSeq && roomSeq !== get().selectedChat?.roomSeq) {
+    if (message.senderSeq !== currentUserSeq && roomSeq !== selectedChatRoomSeq) {
       toast.info(`새 메시지: ${message.messageContent}`, {
         position: "top-right",
         autoClose: 5000,
@@ -61,7 +69,7 @@ export const useChatStore = create((set, get) => ({
         draggable: true,
       });
     }
-
+  
     return {
       messages: {
         ...state.messages,
