@@ -6,7 +6,7 @@ import { useChatStore } from '../../../../../store/messengerStore';
 
 const ChildChatModal = ({ isOpen, onClose }) => {
   const [openChatModals, setOpenChatModals] = useState([]);
-  const { chatRooms, setSelectedChat: setStoreSelectedChat } = useChatStore();
+  const { chatRooms, setSelectedChat: setStoreSelectedChat, updateChatRoom } = useChatStore();
 
   const handleChatSelect = (chat) => {
     setStoreSelectedChat(chat);
@@ -28,7 +28,7 @@ const ChildChatModal = ({ isOpen, onClose }) => {
           <button className={styles.closeButton} onClick={onClose}>
             &times;
           </button>
-          <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} />
+          <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
         </div>
       </div>
 

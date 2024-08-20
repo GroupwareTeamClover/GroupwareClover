@@ -19,6 +19,9 @@ public class CustomHandlerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getRequestURI().startsWith("/ws")) {
+            return true; // WebSocket 요청은 처리하지 않음
+        }
                 
         HttpSession session = request.getSession(false); // false를 사용하여 세션이 없으면 새로 생성하지 않음
 

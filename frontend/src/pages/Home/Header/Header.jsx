@@ -17,7 +17,7 @@ export const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { sessionData, setSign, setAdmin } = useMemberStore();
-  const { chatRooms, setChatRooms } = useChatStore();
+  const { chatRooms, setChatRooms, updateChatRoom} = useChatStore();
 
   useEffect(() => {
     const fetchChatRooms = async () => {
@@ -86,7 +86,8 @@ export const Header = () => {
       <ChildChatModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
-        chatRooms={chatRooms} 
+        chatRooms={chatRooms}
+        updateChatRoom={updateChatRoom}        
       />
     </div>
   );

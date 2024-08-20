@@ -78,6 +78,7 @@ const IndividualOrganization = ({ onClose }) => {
             ...folder,
             children: folder.children.map(child => ({
                 ...child,
+                // avatar : child.avatar, folder안에 img 넣어줘야함.
                 name: child.name,
                 children: []
             }))

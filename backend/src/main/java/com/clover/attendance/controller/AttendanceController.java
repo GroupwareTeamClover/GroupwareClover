@@ -20,9 +20,8 @@ public class AttendanceController {
     @Autowired
     HttpSession session;
 
-    @GetMapping("/{month}")
-    public ResponseEntity<Map<String, Object>> getMyAttendance(@PathVariable String month){
-        int empSeq = (int) session.getAttribute("cloverSeq");
+    @GetMapping("/{empSeq}/{month}")
+    public ResponseEntity<Map<String, Object>> getMyAttendance(@PathVariable int empSeq, @PathVariable String month){
         Map<String, Object> map = attendanceService.getMyAtt(empSeq, month);
         return ResponseEntity.ok(map);
     }

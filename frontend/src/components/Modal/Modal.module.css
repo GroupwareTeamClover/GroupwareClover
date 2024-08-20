@@ -16,6 +16,7 @@
     padding: 20px;
     border-radius: 8px;
     width: 80%;
+    min-width: 485px;
     max-width: 500px;
     position: relative;
     z-index: 1000;
