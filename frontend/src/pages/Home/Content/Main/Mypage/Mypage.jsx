@@ -3,7 +3,14 @@ import default_image from "../../../../../images/default_avatar.jpg";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
-import {validateEmail, validatePassword, validatePhone} from "../../../../../commons/common";
+import {
+  failAlert,
+  successAlert,
+  timeAlert,
+  validateEmail,
+  validatePassword,
+  validatePhone
+} from "../../../../../commons/common";
 import {useMemberStore} from "../../../../../store/store";
 
 export const Mypage = ({ empSeq, closeModal }) => {
@@ -50,9 +57,9 @@ export const Mypage = ({ empSeq, closeModal }) => {
   const [changeAvatar, setChangeAvatar] = useState(sessionData.empAvatar);
 
   // input(type:file)을 커스텀하기위해 사용
-  const reviewAvatart = React.useRef(null);
+  const reviewAvatar = React.useRef(null);
   const handleFileClick = () => {
-    reviewAvatart.current.click();
+    reviewAvatar.current.click();
   }
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -94,7 +101,7 @@ export const Mypage = ({ empSeq, closeModal }) => {
     /** 프로필 사진 업데이트 **/
     if(updateSelectForm === 1) {
       if(!selectedFile) {
-        alert("선택된 이미지 파일이 없습니다.");
+        failAlert("", "선택된 이미지 파일이 없습니다.");
         return false;
       }
 
@@ -120,13 +127,13 @@ export const Mypage = ({ empSeq, closeModal }) => {
       if (validateEmail(updateData.empEmail) && validatePhone(updateData.empTel)) {
         axios.put(`${BaseUrl()}/employee`,updateData).then(res => {
           if(res.data === "ok"){
-            alert("변경 성공");
+            successAlert("", "정보 변경 완료");
             setDataState(prev => !prev);
             setUpdateForm(false);
           }
         });
       } else {
-        alert("변경 실패!! \n작성 내용을 확인하세요");
+        failAlert("", "작성 내용을 확인하세요");
       }
     }
 
@@ -138,12 +145,12 @@ export const Mypage = ({ empSeq, closeModal }) => {
         delete changePw.check;
         axios.put(`${BaseUrl()}/employee/${empSeq}`, changePw).then(res => {
           if(res.data === "ok") {
-            alert("비밀번호 변경이 완료되었습니다.");
+            timeAlert("비밀번호 변경 완료");
             closeModal();
           }
         });
       } else {
-        alert("패스워드를 확인해주세요");
+        failAlert("", "패스워드를 확인해주세요");
       }
     }
 
@@ -210,7 +217,7 @@ export const Mypage = ({ empSeq, closeModal }) => {
                 <img src={changeAvatar} />
               </div>
               <div className={styles.reviewController}>
-                <input type="file" ref={reviewAvatart} style={{ display : "none" }} onChange={handleFileChange}/>
+                <input type="file" ref={reviewAvatar} style={{ display : "none" }} onChange={handleFileChange}/>
                 <button onClick={handleFileClick}>이미지 찾기</button>
               </div>
             </div>
