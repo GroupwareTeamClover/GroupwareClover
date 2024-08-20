@@ -1,0 +1,69 @@
+.folderContainer {
+    margin-bottom: 20px;
+}
+
+.folderHeader {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 18px; 
+    color: #4CAF50; 
+}
+
+.headerText {
+    margin-left: 10px;
+}
+
+.folderContent {
+    padding-left: 20px;
+    border-left: 2px solid #ddd;
+}
+
+.childItem {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 15px; 
+    color: #555;
+    transition: all 0.3s ease; 
+}
+
+.childItem:hover {
+    background-color: #e0f7e9; 
+}
+
+.selected {
+    background-color: #c8e6c9;
+}
+
+.avatar {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.childInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.childName {
+    font-weight: bold;
+    font-size: 15px;
+    color: #333;
+}
+
+.childRole {
+    font-size: 13px;
+    color: #888;
+}
+
+.fileIcon {
+    margin-right: 10px;
+    color: #666;
+}

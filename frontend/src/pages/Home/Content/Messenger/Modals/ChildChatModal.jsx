@@ -1,4 +1,6 @@
+// ChildChatModal.jsx
 import React, { useState } from 'react';
+import DragModal from '../../../../../components/Modal/DragModal';
 import styles from './ChildChatModal.module.css';
 import ChatList from '../LeftPanel/ChatList';
 import RightPanel from '../RightPanel/RightPanel';
@@ -23,27 +25,14 @@ const ChildChatModal = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <button className={styles.closeButton} onClick={onClose}>
-            &times;
-          </button>
-          <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
-        </div>
-      </div>
+      <DragModal isOpen={isOpen} onClose={onClose}>
+        <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
+      </DragModal>
 
       {openChatModals.map((chat) => (
-        <div key={chat.roomSeq} className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button
-              className={styles.closeButton}
-              onClick={() => handleCloseChatModal(chat.roomSeq)}
-            >
-              &times;
-            </button>
-            <RightPanel selectedChat={chat} />
-          </div>
-        </div>
+        <DragModal key={chat.roomSeq} isOpen={true} onClose={() => handleCloseChatModal(chat.roomSeq)}>
+          <RightPanel selectedChat={chat} />
+        </DragModal>
       ))}
     </>
   );
