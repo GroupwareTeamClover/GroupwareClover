@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {useMemberStore} from "../../../../../store/store";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
+import {failAlert, timeAlert} from "../../../../../commons/common";
 
 export const AddSchedule = ({ closeModal, setDataChange }) => {
 
@@ -34,29 +35,27 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
   /**  일정 추가 핸들러 **/
   const handleInsertSchedule = () => {
     if(inputData.scheduleContent === "" || inputData.startDate === "" || inputData.endDate === "") {
-      alert("내용을 전부 입력하세요");
+      failAlert("","내용을 전부 입력하세요");
       return false;
     }
 
     if(inputData.startDate > inputData.endDate) {
-      alert("종료 날짜는 시작 날짜 이후만 됩니다.");
+      failAlert("","종료 날짜는 시작 날짜 이후로 지정해야합니다.");
       return false;
     }
 
     if(inputData.scheduleContent.length > 300) {
-      alert("내응은 300자 이내로 작성해야 합니다.");
+      failAlert("","내응은 300자 이내로 작성해야 합니다.");
       return false;
     }
 
     let dept = 1;
     if(select) dept = 0;
-
     const data = {
       scheduleContent : inputData.scheduleContent,
       startDate : inputData.startDate,
       endDate: inputData.endDate,
       deptCode: dept
-
     }
 
     axios.post(`${BaseUrl()}/schedule`, data).then(res => {
@@ -64,6 +63,7 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
         closeModal();
         setDataChange(prev => !prev);
         setInputData(defaultInputData);
+        timeAlert("일정 추가 완료!");
       }
     });
 

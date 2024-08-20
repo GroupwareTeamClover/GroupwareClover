@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../../components/Modal/Modal";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
-import {dateYMD, workTime} from "../../../../../commons/common";
+import {dateYMD, failAlert, successAlert, timeAlert, workTime} from "../../../../../commons/common";
 
 export const Attendance = () => {
   let today = new Date();
@@ -35,12 +35,12 @@ export const Attendance = () => {
       let data = {attArrive: time};
       axios.post(`${BaseUrl()}/attendance`, data).then(res => {
         if (res.data === "ok") {
-          alert(time + " 출근");
+          successAlert("출근 처리가 완료되었습니다.");
           todayAtt();
-        } else alert("오류 발생")
+        } else failAlert("Error!!","출근 처리 중 오류 발생");
       });
     } else {
-      alert("이미 출근버튼을 누르셨습니다.");
+      failAlert("", "이미 출근이 완료되었습니다.");
     }
   }
 
@@ -56,18 +56,15 @@ export const Attendance = () => {
     const workHours = Math.floor(workTime / 60);
     const workMinutes = workTime % 60;
 
-    alert(time + " 퇴근\n" + workHours + "시간 " + workMinutes + "분 만큼 일하심");
-
     setArrive(prev => {
       const data = {...prev, attLeave: `${hours}:${minutes}`, attTotal: workTime, attSuccess: "Y"};
       axios.put(`${BaseUrl()}/attendance`, data).then(res => {
-        if (res.data === "ok") alert("퇴근 처리 완료");
-        else alert("퇴근 처리 중 오류 발생");
+        if (res.data === "ok") successAlert("퇴근 처리가 완료되었습니다.", `오늘 업무 시간 : ${workHours}시간 ${workMinutes}분`);
+        else failAlert("Error!!","퇴근 처리 중 오류 발생");
       });
       return data;
     });
   }
-
 
   const [myAttendance, setMyAttendance] = useState({
     work_day: 0,
@@ -88,12 +85,9 @@ export const Attendance = () => {
     });
   }
 
-  useEffect(() => {
-    todayAtt();
-
-    /** 한달 근태 정보 **/
+  /** 한달 근태 정보 **/
+  const monthAtt = () => {
     axios.get(`${BaseUrl()}/attendance/${year}-${month}`).then(res => {
-
       if (res.data !== "" && res.data !== null && res.data !== undefined) {
         const hour = Math.floor(res.data.count.work_total_time / 60);
         const minute = res.data.count.work_total_time % 60;
@@ -108,10 +102,16 @@ export const Attendance = () => {
         setAttendanecList(res.data.list);
       }
     });
+  }
 
-    /** 한달 근태 리스트 **/
-
+  useEffect(() => {
+    todayAtt();
   }, []);
+
+  useEffect(() => {
+    monthAtt();
+  }, [arrive]);
+
 
   return (
     <div className={styles.attendance}>
