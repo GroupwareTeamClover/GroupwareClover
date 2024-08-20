@@ -108,7 +108,7 @@ public class BoardController {
 	public ResponseEntity<Void> deletePost(@PathVariable int boardSeq){
 		bServ.deletePost(boardSeq);
 		//해당 게시글의 첨부파일 삭제 (DB)
-		attServ.deleteFiles(boardSeq);
+		attServ.deleteFiles(boardSeq, "board");
 		//해당 게시글의 첨부된 이미지, 파일 삭제(S3)
 		s3Serv.deleteFiles("posts/" + boardSeq + "/");
 		s3Serv.deleteFiles("images/posts/" + boardSeq + "/");

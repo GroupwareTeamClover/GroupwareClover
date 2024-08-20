@@ -1,11 +1,11 @@
-.container{
-	flex:7;
+.container {
+	flex: 7;
 	margin: 0 auto 0 auto;
 	width: 67.7vw;
-	min-height: 500px;
-	padding : 50px;
-	background-color: white;
-    border-top: 1px solid black;
+	min-height: 54.88vh;
+	padding: 5.5vh 2.6vw;
+	background-color: rgb(223, 82, 82);
+	border-top: 1px solid black;
 }
 
 .container input[type="text" i] {
@@ -14,29 +14,29 @@
 }
 
 .container h3 {
-	font-size: 26px;
-	line-height: 34px;
+	font-size: 1.625rem;
+	line-height: 3.73vh;
 	font-weight: 300;
-	padding-bottom: 20px;
-	padding-left: 20px;
+	padding-bottom: 2.195vh;
+	padding-left: 1.04vw;
 }
 
 .container .categoryBox {
 	position: relative;
-	padding-left: 20px;
+	padding-left: 1.04vw;
 	border-top: 1px solid #8b8a8a;
-	height: 70px;
+	height: 7.7vh;
 	display: flex;
 	align-items: center;
 }
 
-.container .categoryBox .category{
+.container .categoryBox .category {
 	height: 50%;
-	width : 200px;
+	width: 10.4vw;
 }
 
-.category option{
-	height : 200px;
+.category option {
+	height: 21.954vh;
 }
 
 .container .title {
@@ -45,65 +45,66 @@
 
 .container .title input {
 	width: 100%;
-	height: 70px;
-	line-height: 70px;
+	height: 7.7vh;
+	line-height: 7.7vh;
 	border: none;
-	font-size: 16px;
-	text-indent: 20px;
+	font-size: 1rem;
+	text-indent: 1.04vw;
 	background-color: transparent;
 }
 
-.container .title input:focus{
-    outline: none;
+.container .title input:focus {
+	outline: none;
 }
 
 .container .fileBox {
 	width: 100%;
 	border-top: 1px solid #d3d3d3;
-	padding : 10px 0;
-	min-height : 50px;
+	padding: 1.1vh 0;
+	min-height: 5.5vh;
 }
 
 .container .editorBox {
-    min-height: 500px;
+	min-height: 54.9vh;
 	position: relative;
 	z-index: 1;
 }
 
 .container .btnBox {
-	margin-top: 25px;
+	margin-top: 2.744vh;
 	display: flex;
 	justify-content: center;
 }
 
-.container .btnBox button:hover{
+.container .btnBox button:hover {
 	cursor: pointer;
 }
 
 .container .btnBox .cancelBtn {
-	width: 160px;
-	height: 45px;
+	width: 8.3vw;
+	height: 4.94vh;
 	background: gray;
 	color: #fff;
-	border: 1px solid #888;;
-	font-size: 13px;
+	border: 1px solid #888;
+	;
+	font-size: 0.813rem;
 	font-weight: bold;
-	margin-right: 10px;
+	margin-right: 0.52vw;
 }
 
 .container .btnBox .writeBtn {
-	width: 160px;
-	height: 45px;
+	width: 8.3vw;
+	height: 4.94vh;
 	background: #3392ff;
 	color: white;
 	border: 1px solid #1A6ED8;
-	font-size: 13px;
+	font-size: 0.813rem;
 	font-weight: bold;
 }
 
-.charCountBox{
+.charCountBox {
 	display: flex;
 	justify-content: end;
-	padding-right: 5px;
-	margin-top:5px;
+	padding-right: 0.26vw;
+	margin-top: 0.55vh;
 }

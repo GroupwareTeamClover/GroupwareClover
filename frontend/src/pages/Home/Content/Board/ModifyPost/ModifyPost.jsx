@@ -214,7 +214,7 @@ const ModifyPost = () => {
             </div>
             <div className={styles.editorBox}>
                 <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent={loc.state.boardContent}
-                    placeHolder="글 내용을 입력해주세요. (최대 3000자까지 입력 가능)" />
+                    placeHolder="최대 3000자까지 작성 가능하며 공백, 줄바꿈 제외 최소 한 글자 이상 입력해야 합니다." />
                 <div className={styles.charCountBox}>{charCount}/{maxContentLength}자</div>
             </div>
             <div className={styles.btnBox}>

@@ -1,7 +1,7 @@
-.container{
-    padding: 20px 0 5px 20px;
+.container {
+	padding: 2.1954vh 0 0.55vh 1.04vw;
 	border-top: 1px solid #d3d3d3;
-    margin-top:10px;
+	margin-top: 1.1vh;
 	font-family: monospace;
 }
 
@@ -12,55 +12,55 @@
 
 .reply .replyWriter {
 	font-weight: bold;
-	font-size: 16px;
+	font-size: 1rem;
 }
 
 .reply .replyContent {
-	padding-top: 20px;
-	padding-right : 60px;
-	font-size: 16px;
+	padding-top: 2.2vh;
+	padding-right: 3.125vw;
+	font-size: 1rem;
 	word-break: break-all;
 	white-space: pre-wrap;
 }
 
 .reply .replyDateBox {
-	margin-top: 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	margin-top: 3.293vh;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
-.reply .replyDateBox .replyDate{
-    color: #6a6e76;
+.reply .replyDateBox .replyDate {
+	color: #6a6e76;
 }
 
-.replyModifyButton{
-    margin : 0 0 4px 10px;
+.replyModifyButton {
+	margin: 0 0 0.44vh 0.52vw;
 }
 
-.replyDeleteButton{
-    margin : 0 0 4px 0;
+.replyDeleteButton {
+	margin: 0 0 0.44vh 0;
 }
 
-.modifyInput{
-	width : 100%;
+.modifyInput {
+	width: 100%;
 	background-color: transparent;
-	font-size: 16px;
+	font-size: 1rem;
 	resize: none;
-	border : 0;
+	border: 0;
 }
 
-.modifyInput:focus{
+.modifyInput:focus {
 	outline: none;
 }
 
-.modifyButtonBox{
-	width:95%;
+.modifyButtonBox {
+	width: 95%;
 	display: flex;
 	justify-content: end;
 	align-items: center;
 }
 
-.charCount{
-	margin-right : 10px;
+.charCount {
+	margin-right: 0.52vw;
 }
