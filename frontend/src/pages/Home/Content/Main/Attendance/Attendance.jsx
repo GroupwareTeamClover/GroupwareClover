@@ -5,6 +5,7 @@ import {Modal} from "../../../../../components/Modal/Modal";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {dateYMD, failAlert, successAlert, timeAlert, workTime} from "../../../../../commons/common";
+import {useMemberStore} from "../../../../../store/store";
 
 export const Attendance = () => {
   let today = new Date();
@@ -15,7 +16,8 @@ export const Attendance = () => {
   let dayOfWeek = daysOfWeek[today.getDay()];
   let dateData = `${year}-${month}-${day}`;
 
-  const [date, setDate] = useState({ year, month, day });
+  const [date, setDate] = useState({ year, month});
+  const {sessionData} = useMemberStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -87,7 +89,7 @@ export const Attendance = () => {
 
   /** 한달 근태 정보 **/
   const monthAtt = () => {
-    axios.get(`${BaseUrl()}/attendance/${date.year}-${date.month}`).then(res => {
+    axios.get(`${BaseUrl()}/attendance/${sessionData.empSeq}/${date.year}-${date.month}`).then(res => {
       if (res.data !== "" && res.data !== null && res.data !== undefined) {
           const hour = Math.floor(res.data.count.work_total_time / 60);
           const minute = res.data.count.work_total_time % 60;
