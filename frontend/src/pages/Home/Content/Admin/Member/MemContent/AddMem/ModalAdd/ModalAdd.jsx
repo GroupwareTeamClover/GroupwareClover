@@ -38,7 +38,7 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
             axios.put(`${BaseUrl()}/adminaddmem`, requestData)
             .then((resp)=>{
                 console.log("수정 결과: "+resp.data)
-                alert("굿");
+                alert("승인되었습니다. ");
                 resetCheckboxes();
                 setstoremembers(true);
                 closeModal();

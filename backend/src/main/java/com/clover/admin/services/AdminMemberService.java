@@ -30,6 +30,9 @@ public class AdminMemberService {
 	public List<HashMap<String,Object>> getWorker(){
 		return adminmemberDAO.getWorker();
 	}
+	public List<HashMap<String,Object>> getNewMonth(){
+		return adminmemberDAO.getNewMonth();
+	}
 	public List<EmployeeDTO> getExit(){
 		return adminmemberDAO.getExit();
 	}

@@ -5,6 +5,7 @@ import { MemMain } from './MemContent/MemMain/MemMain';
 import {Route, Routes} from "react-router-dom";
 import { AddMember } from './MemContent/AddMem/AddMember';
 import { Address } from '../../Address/Address';
+import {AttendMem} from '../Member/MemContent/AttendMem/AttendMem';
 
 
 export const Member = () => {
@@ -26,6 +27,8 @@ export const Member = () => {
           <Routes>
             <Route path="/*" element={ <MemMain /> } />
             <Route path="/addmem/*" element={<AddMember/>}/>
+            <Route path="/attend/*" element={<AttendMem/>}/>
+
           </Routes>
         </div>
       </div>

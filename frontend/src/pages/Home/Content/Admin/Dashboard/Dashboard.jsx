@@ -24,6 +24,7 @@ export const Dashboard = () => {
     const [genderData, setGenderData] = useState({ male: 0, female: 0 });
     const [workerData, setWorkerData] = useState({ regular: 0, irregular: 0 , contract:0});
     const [empData, setEmpData] = useState({ newMem: 0, ingMem: 0 , outMem:0});
+    const [newMemMonth, setNewMonth] = useState(0);
     const [exitData, setExitData] = useState([]);
     const [deptData, setDeptData] = useState({ '총무':0, '인사':0, '사무':0, '유통':0, '경영':0, '미정':0})
 
@@ -59,6 +60,15 @@ export const Dashboard = () => {
                 setEmpData({ newMem: newMemCount, ingMem: ingMemCount , outMem: outMemCount});
             })
             .catch(error => console.error('Error fetching data:', error));        
+        
+        axios.get(`${BaseUrl()}/adminmember/countNewMonth`)
+            .then((resp) => {
+                console.log(resp.data)
+                const newMemMonthCount = resp.data[0]?.COUNT || 0;
+                console.log("newMemMonth"+ newMemMonthCount)
+                setNewMonth(newMemMonthCount);
+            })
+            .catch(error => console.error('Error fetching data:', error));      
     }, []);
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/deptCount`)
@@ -194,17 +204,17 @@ export const Dashboard = () => {
                     <div className={styles.newbox}>
                         <div className={styles.newchartWrapper}>
                             <div className={styles.chartTitle}> 이번달 신규 입사</div>
-                            <div className={styles.NewMemstatValue}>{empData.newMem}</div>
+                            <div className={styles.NewMemstatValue}><a href='/member/addmem' style={{color:'white', textDecoration:'none'}}>{newMemMonth}</a></div>
                         </div>
                         <div className={styles.newchartWrapperIcon}>
                             <FaUserPlus className={styles.newicon} /> 
                         </div>
                     </div>
                     <div className={styles.statValue} style={{ color: '#ffffff00', textAlign:'left', fontSize:'20px'}}>
-                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((empData.newMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
+                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((newMemMonth.newMemMonth / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
                     </div>
                     <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
-                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((empData.newMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
+                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((newMemMonth / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
                     </div>
                 </div>
                 
