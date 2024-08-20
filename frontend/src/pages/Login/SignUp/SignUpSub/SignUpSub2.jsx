@@ -59,6 +59,7 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       // 계정 조회 성공
       // const data = {
       //   to_name: exists.empName,
+      //   to_email: exists.empEmail,
       //   message: ranNumber
       // }
       // sendEmail(data);

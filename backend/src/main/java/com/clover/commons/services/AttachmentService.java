@@ -39,8 +39,8 @@ public class AttachmentService {
 	}
 	
 	//[첨부파일]DB에서 해당 글번호에 딸린 첨부파일 전부 삭제
-	public void deleteFiles(int seq) {
-		attDao.deleteFiles(seq);
+	public void deleteFiles(int seq, String domain) {
+		attDao.deleteFiles(seq, domain);
 	}
 
 }

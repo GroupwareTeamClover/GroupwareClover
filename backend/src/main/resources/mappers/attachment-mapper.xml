@@ -17,6 +17,6 @@
  	</delete>
  	
  	<delete id="deleteAllFile">
- 		delete from attachment where attachment_parent_seq = #{seq}
+ 		delete from attachment where attachment_parent_seq = #{seq} and attachment_from = #{domain}
  	</delete>
 </mapper>
