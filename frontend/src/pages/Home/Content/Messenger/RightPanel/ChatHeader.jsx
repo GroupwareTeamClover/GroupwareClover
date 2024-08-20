@@ -20,7 +20,7 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
     if (!isSearching) {
       setSearchTerm('');
     } else {
-      onSearch(''); // Clear search when closing
+      onSearch(''); 
     }
   };
 

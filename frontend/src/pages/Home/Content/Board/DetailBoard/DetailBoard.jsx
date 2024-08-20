@@ -10,6 +10,7 @@ import { format } from 'date-fns/format';
 import { useMemberStore } from '../../../../../store/store';
 import Comment from './Comment/Comment';
 import 'rsuite/Popover/styles/index.css';
+import { Button } from 'rsuite';
 
 const DetilBoard = () => {
     const { sessionData, admin } = useMemberStore();
@@ -94,7 +95,7 @@ const DetilBoard = () => {
     //게시글 삭제
     const handleDelete = () => {
         if (window.confirm("정말로 이 글을 삭제하시겠습니까?")) {
-            axios.delete(`${BaseUrl()}/board/post`, {params : {boardlistSeq : boardlistSeq, boardSeq : boardSeq}}).then(resp => {
+            axios.delete(`${BaseUrl()}/board/post`, { params: { boardlistSeq: boardlistSeq, boardSeq: boardSeq } }).then(resp => {
                 if (resp.status === 200) {
                     navi(`/community/board/${boardlistSeq}`);
                 } else {
@@ -244,7 +245,9 @@ const DetilBoard = () => {
                             <textarea
                                 placeholder={`최대 ${maxCommentLength}자까지 작성 가능하며 공백, 줄바꿈 제외 최소 한 글자 이상 입력해야 합니다.`}
                                 className={styles.commentContent} onChange={handleCommentChange} value={comment} maxLength={maxCommentLength}></textarea>
-                            <button type="button" className={styles.writeCommentButton} onClick={handleWriteComment}>등록</button>
+                            <Button color="cyan" appearance="primary" onClick={handleWriteComment} className={styles.writeCommentButton}>
+                                등록
+                            </Button>
                         </div>
                         <div className={styles.commentCountBox}>{commentCount}/1000자</div>
                     </div>
