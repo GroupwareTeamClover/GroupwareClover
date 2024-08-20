@@ -72,8 +72,6 @@ Create table chatRoom (
     room_description varchar2(255),
     emp_seq number not null,
     room_avatar varchar(255) not null,
-    last_message CLOB,
-    last_message_time TIMESTAMP DEFAULT sysdate
 );
 
 Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
