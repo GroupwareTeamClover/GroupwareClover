@@ -22,7 +22,7 @@
     width : 9.42vw;
     height : 5.66vh;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1.25rem;
     background-color: skyblue;
     margin: 4.3vh 0 2.9vh 0;
     transition-duration: 0.3s;
@@ -35,7 +35,7 @@
 }
 
 .board{
-    font-size: 16px;
+    font-size: 1rem;
     display: flex;
     align-items: center;
     text-indent : 0.65vw;
@@ -49,8 +49,8 @@
 }
 
 .eachBoard{
-    font-size: 14px;
-    padding-left: 3.26vw;
+    font-size: 0.875rem;
+    padding-left: 2.5vw;
     margin : 0.3vh 0.26vw;
     height: 3.5vh;
     display: flex;

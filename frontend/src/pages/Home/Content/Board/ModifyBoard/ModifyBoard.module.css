@@ -1,248 +1,246 @@
-.container{
-    flex:7;
+.container {
+    flex: 7;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding-bottom: 80px;
-    padding-left: 30px;
+    padding-bottom: 8.78vh;
+    padding-left: 1.5625vw;
     background-color: white;
     border-top: 1px solid black;
 }
 
-.header{
-    width: 650px;
-    font-size: 40px;
-    flex:2;
+.header {
+    width: 33.854vw;
+    font-size: 2.5rem;
+    flex: 2;
     display: flex;
     align-items: center;
-    padding-left : 40px;
+    padding-left: 2.08vw;
 }
 
-.titleBox{
-    flex:1;
-    width: 650px;
+.titleBox {
+    flex: 1;
+    width: 33.854vw;
     display: flex;
     align-items: center;
-    padding-left: 20px;
-    margin-top : 10px;
+    padding-left: 1.04vw;
+    margin-top: 1.1vh;
 }
 
-.titleBox .titleLetter{
-    font-size: 20px;
+.titleBox .titleLetter {
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
-.titleBox input{
-    height: 40px;
-    width: 500px;
-    font-size: 20px;
-    text-indent: 5px;
-    margin-left : 10px;
-    outline : none;
+.titleBox input {
+    height: 4.4vh;
+    width: 26.04vw;
+    font-size: 1.25rem;
+    text-indent: 0.26vw;
+    margin-left: 0.52vw;
+    outline: none;
 }
 
-.typeBox{
-    flex:1;
-    width: 650px;
+.typeBox {
+    flex: 1;
+    width: 33.854vw;
     display: flex;
     align-items: center;
-    font-size: 20px;
-    padding-left: 20px;
-    margin-top:10px;
+    font-size: 1.25rem;
+    padding-left: 1.04vw;
+    margin-top: 1.1vh;
 }
 
-.typeBox .typeLetter{
+.typeBox .typeLetter {
     font-weight: bold;
-    font-size: 20px;
+    font-size: 1.25rem;
 }
 
-.typeBox input{
-    margin-right: 10px;
+.typeBox input {
+    margin-right: 0.52vw;
 }
 
-.typeBox label{
-    margin-right : 15px;
-    margin-left: 15px;
+.typeBox label {
+    margin: 0 0.78vw;
 }
 
-.memberBox{
-    flex:8;
+.memberBox {
+    flex: 8;
 }
 
-.memberBox .memberLetter{
-    height : 10%;
-    font-size: 20px;
+.memberBox .memberLetter {
+    height: 10%;
+    font-size: 1.25rem;
     font-weight: bold;
     display: flex;
     align-items: center;
-    padding-left: 20px;
-    margin-top : 10px;
+    padding-left: 1.04vw;
+    margin-top: 1.1vh;
 }
 
-.memberBox .memberLetter .memberLetterCaution{
-    font-size: 14px;
-    color : red;
-    margin-left : 10px;
+.memberBox .memberLetter .memberLetterCaution {
+    font-size: 0.875rem;
+    color: red;
+    margin-left: 0.52vw;
 }
 
-.memberBox .memberBoxLayout{
-    height : 90%;
-    padding : 5px 0 5px 20px;
+.memberBox .memberBoxLayout {
+    height: 90%;
+    padding: 0.55vh 0 0.55vh 1.04vw;
 }
 
-.memberBox .addMemberBox{
-    height : 100%;
-    width : 650px;
+.memberBox .addMemberBox {
+    height: 100%;
+    width: 33.854vw;
     background-color: white;
     border: 1px solid black;
 }
 
-.memberBox .addMemberBox .addMemberBtn{
+.memberBox .addMemberBox .addMemberBtn {
     height: 15%;
     background-color: lightgray;
     display: flex;
     align-items: center;
-    font-size: 20px;
-    padding-left: 20px;
+    font-size: 1.25rem;
+    padding-left: 1.04vw;
     border-bottom: 1px solid black;
 }
 
-.memberBox .addMemberBox .addMemberBtn:hover{
+.memberBox .addMemberBox .addMemberBtn:hover {
     cursor: pointer;
     font-weight: bold;
 }
 
-.memberBox .addMemberBox .addMemberBtn .addMemberLetter{
-    margin-left: 5px;
+.memberBox .addMemberBox .addMemberBtn .addMemberLetter {
+    margin-left: 0.26vw;
 }
 
-.memberBox .addMemberBox .addMemberList{
-    height : 85%;
+.memberBox .addMemberBox .addMemberList {
+    height: 85%;
     overflow-y: auto;
 }
 
-.memberBox .addMemberBox .addMemberList .eachAdded{
+.memberBox .addMemberBox .addMemberList .eachAdded {
     height: 20%;
     display: flex;
-    font-size: 24px;
+    font-size: 1.5rem;
     align-items: center;
     justify-content: space-between;
-    padding-left: 10px;
+    padding-left: 0.52vw;
     border-bottom: 1px solid lightgray;
 }
 
-.delBtn{
-    width : 30px;
-    margin-right: 10px;
+.delBtn {
+    width: 1.5625vw;
+    margin-right: 0.52vw;
     display: flex;
     justify-content: center;
-    color:red;
+    color: red;
 }
 
-.delBtn:hover{
+.delBtn:hover {
     cursor: pointer;
 }
 
-.activeBox{
-    flex:1;
-    width:650px;
+.activeBox {
+    flex: 1;
+    width: 33.854vw;
     display: flex;
     align-items: center;
-    font-size: 20px;
-    padding-left: 20px;
+    font-size: 1.25rem;
+    padding-left: 1.04vw;
 }
 
-.activeBox .activeLetter{
-    font-size: 20px;
+.activeBox .activeLetter {
+    font-size: 1.25rem;
     font-weight: bold;
 }
 
-.activeBox input{
-    margin-top: 40px;
-    margin-right: 10px;
+.activeBox input {
+    margin-top: 4.39vh;
+    margin-right: 0.52vw;
 }
 
-.activeBox label{
-    margin-right : 15px;
-    margin-left: 15px;
+.activeBox label {
+    margin : 0 0.78vw;
 }
 
-.modalHeader{
-    margin-top : 20px;
-    font-size: 32px;
+.modalHeader {
+    margin-top: 2.2vh;
+    font-size: 2rem;
 }
 
-.modalContent{
-    height: 400px;
+.modalContent {
+    height: 43.9vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    margin-top : 10px;
-    border-top : 1px solid lightgray;
-    border-bottom : 1px solid lightgray;
+    margin-top: 1.1vh;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
 }
 
-.buttonBox{
-    height : 50px;
+.buttonBox {
+    height: 5.5vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top : 15px;
+    margin-top: 1.65vh;
 }
 
-.buttonBox button{
-    height : 80%;
-    width : 100px;
+.buttonBox button {
+    height: 80%;
+    width: 5.2vw;
     background-color: skyblue;
-    border : 1px solid black;
-    font-size: 20px;
+    border: 1px solid black;
+    font-size: 1.25rem;
     font-weight: 600;
 }
 
-.buttonBox button:hover{
+.buttonBox button:hover {
     cursor: pointer;
 }
 
-.mainButtonBox{
-    height : 50px;
-    width : 680px;
+.mainButtonBox {
+    height: 5.5vh;
+    width: 35.42vw;
     display: flex;
     align-items: center;
     justify-content: end;
 }
 
-.mainButtonBox .cancelButton{
+.mainButtonBox .cancelButton {
     height: 80%;
-    width : 100px;
+    width: 5.21vw;
     background-color: lightgray;
     font-weight: 600;
-    font-size: 16px;
-    margin-right: 20px;
+    font-size: 1rem;
+    margin-right: 1.04vw;
 }
 
-.mainButtonBox .createButton{
+.mainButtonBox .createButton {
     height: 80%;
-    width : 100px;
+    width: 5.21vw;
     background-color: rgb(46, 46, 222);
     font-weight: 600;
-    font-size: 16px;
-    color : white;
+    font-size: 1rem;
+    color: white;
 }
 
-.mainButtonBox button:hover{
+.mainButtonBox button:hover {
     cursor: pointer;
 }
 
-.eachDept{
-    font-size: 24px;
+.eachDept {
+    font-size: 1.5rem;
     font-weight: bold;
-    text-indent: 10px;
-    padding : 5px 0;
+    text-indent: 0.52vw;
+    padding: 0.55vh 0;
     border-bottom: 1px solid black;
     background-color: lightblue;
 }
 
-.eachInfo{
-    margin-left: 10px;
+.eachInfo {
+    margin-left: 0.52vw;
     display: inline;
 }
