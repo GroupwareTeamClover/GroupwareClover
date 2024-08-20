@@ -30,7 +30,7 @@ public class HttpSessionInterceptor implements HandshakeInterceptor {
             if (session.getAttribute("cloverSeq") == null) {
                 return false; // 로그인되지 않은 경우 연결 거부
             }
-            
+            System.out.println("Http Interceptor 로그인 확인");
         }
         return true;
     }

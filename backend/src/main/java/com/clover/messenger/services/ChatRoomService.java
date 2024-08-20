@@ -234,4 +234,15 @@ public class ChatRoomService {
     public void updateLastAccessTime(int empSeq, int roomSeq) {
         chatRoomDAO.updateLastAccessTime(empSeq, roomSeq);
     }
+
+    @Transactional
+    public ChatRoomDTO updateRoomLastMessage(int roomSeq, ChatMessageDTO lastMessage) {
+        ChatRoomDTO room = chatRoomDAO.getRoomById(roomSeq, lastMessage.getSenderSeq()); 
+        if (room != null) {
+            room.setLastMessage(lastMessage.getMessageContent());
+            room.setLastMessageTime(lastMessage.getSendTime());
+            chatRoomDAO.updateRoom(room);
+        }
+        return room;
+    }
 }

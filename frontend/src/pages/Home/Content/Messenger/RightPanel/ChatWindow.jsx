@@ -21,7 +21,7 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
 
   // 현재 채팅방의 메시지와 현재 사용자 정보를 가져옵니다.
   const currentMessages = messages[chat.roomSeq] || [];
-  const currentUser = JSON.parse(sessionStorage.getItem('sessionUser'));
+  const currentUserSeq = JSON.parse(sessionStorage.getItem('sessionUser')).empSeq;
 
   // 메시지 목록을 스크롤 맨 아래로 이동시키는 함수입니다.
   const scrollToBottom = useCallback(() => {
@@ -85,13 +85,11 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
       roomSeq: chat.roomSeq,
       messageContent,
       messageType: 'CHAT',
-      senderSeq: currentUser.empSeq,
-      senderName: currentUser.empName,
-      senderAvatar: currentUser.empAvatar,
+      senderSeq: currentUserSeq,
       sendTime: new Date().toISOString()
     };
     sendMessage("/app/chat.sendMessage", message);
-  }, [chat.roomSeq, currentUser]);
+  }, [chat.roomSeq, currentUserSeq]);
 
   // 채팅방 나가기, 대화 내용 삭제, 알림 설정 변경 핸들러
   const handleLeaveChat = () => onLeaveChat(chat.roomSeq);
@@ -124,7 +122,7 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
         <MessageList
           messages={searchTerm ? filteredMessages : currentMessages}
           chat={chat}
-          currentUserSeq={currentUser.empSeq}
+          currentUserSeq={currentUserSeq}
           searchTerm={searchTerm}
         />
       </div>

@@ -45,6 +45,9 @@ public class ChatMessageWebSocketController {
         // 채팅방의 모든 사용자에게 메시지 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getRoomSeq(), savedMessage);
 
+        // 채팅방 정보 업데이트 (마지막 메시지, 시간 등)
+        ChatRoomDTO updatedRoom = chatRoomService.updateRoomLastMessage(chatMessage.getRoomSeq(), savedMessage);
+        messagingTemplate.convertAndSend("/topic/roomUpdate/" + chatMessage.getRoomSeq(), updatedRoom);
        
         // 읽지 않은 메시지 수 업데이트
         updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);

@@ -57,9 +57,7 @@ Create table ChatMessage (
     message_type varchar(20) not null,
     send_time timestamp not null,
     room_seq number not null,
-    sender_seq number not null,
-    sender_name varchar(30),
-    sender_avatar varchar(1000)
+    sender_seq number not null
 );
 ALTER TABLE ChatMembers ADD last_access_time TIMESTAMP;
 Create sequence message_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
