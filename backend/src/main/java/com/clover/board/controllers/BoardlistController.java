@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clover.board.dto.BoardlistDTO;
 import com.clover.board.services.BoardlistService;
+import com.clover.commons.services.AttachmentService;
+import com.clover.commons.services.S3Service;
 import com.google.gson.Gson;
 
 @RestController
@@ -26,7 +28,13 @@ public class BoardlistController {
 	private BoardlistService blServ;
 
 	@Autowired
-	Gson gson = new Gson();
+	private Gson gson = new Gson();
+	
+	@Autowired
+	private S3Service s3Serv;
+	
+	@Autowired
+	private AttachmentService attServ;
 
 	@GetMapping("members")
 	public ResponseEntity<String> getMemberList() {
@@ -82,6 +90,12 @@ public class BoardlistController {
 	@DeleteMapping("/{seq}")
 	public ResponseEntity<Void> delete(@PathVariable int seq){
 		blServ.deleteBoard(seq);
+		//DB에서 해당 게시판의 모든 게시글의 첨부파일 삭제
+		attServ.deleteFilesByBoardlistSeq(seq);
+		//s3에서 해당 게시판의 모든 게시글의 이미지, 첨부파일 삭제
+		s3Serv.deleteFiles("posts/" + seq + "/");
+		s3Serv.deleteFiles("images/posts/" + seq + "/");
+		
 		return ResponseEntity.ok().build();
 	}
 	
