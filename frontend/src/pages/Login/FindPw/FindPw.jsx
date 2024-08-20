@@ -39,7 +39,7 @@ export const FindPw = ({closeModal}) => {
         // 계정 조회 성공
         const data = {
           to_name: exists.empName,
-          email: exists.empEmail,
+          to_email: exists.empEmail,
           message: ranNumber
         }
         sendEmail(data);
