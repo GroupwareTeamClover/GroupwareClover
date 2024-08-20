@@ -6,7 +6,7 @@ import { BaseUrl } from '../../../../../../../../commons/config';
 
 export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
     const {storemembers, setstoremembers} = useMemStore();
-    const [members, setMembers]= useState([]);  
+    const [members, setMembers]= useState([{}]);  
     // const [modalEmail, setModalEmail] = useState([]);
     const [updatedStatus, setUpdatedStatus] = useState({dept:0,role:0,worker_state:0});
     const closeModal = () => setIsModalOpen(false);
@@ -28,13 +28,16 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
       
         console.log(updatedStatus)
         console.log(members)
+        const empSeqList = members.map(member => member.EMP_SEQ);
+        const empEmailList = members.map(member => member.EMP_EMAIL);
         // console.log(modalEmail)
         const { dept, role, worker_state } = updatedStatus;
         const requestData = {
             dept: updatedStatus.dept,
             role: updatedStatus.role,
             worker_state: updatedStatus.worker_state,
-            empSeqList: members
+            empSeqList: empSeqList,   // `EMP_SEQ` 리스트
+            empEmailList: empEmailList
         };
 
         if (!dept || !role || !worker_state) {
@@ -49,6 +52,10 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
                 closeModal();
             }
             )
+            .catch((error) => {
+                console.error("수정 중 오류 발생:", error);
+                alert("승인 처리 중 오류가 발생했습니다.");
+            });
         }
         
     }
