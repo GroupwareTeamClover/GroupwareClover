@@ -200,7 +200,7 @@ export const Calendar = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         { modalDisplay === "detail" && <DetailSchedule closeModal={closeModal} setDataChange={setDataChange}/> }
         { modalDisplay === "insert" && <AddSchedule closeModal={closeModal} setDataChange={setDataChange}/> }
-        { modalDisplay === "select" && <SelectSchedule closeModal={closeModal} eventData={eventData}/> }
+        { modalDisplay === "select" && <SelectSchedule eventData={eventData}/> }
       </Modal>
 
     </div>

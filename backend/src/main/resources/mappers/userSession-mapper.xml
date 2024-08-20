@@ -42,7 +42,7 @@
         SELECT us.emp_seq, us.emp_name, us.emp_avatar
         FROM userSession us
         WHERE us.dept_code = #{deptCode}
-        AND us.last_activity_time <![CDATA[>]]> sysdate - INTERVAL '5' MINUTE
+        AND us.last_activity_time <![CDATA[>]]> sysdate - INTERVAL '30' MINUTE
     </select>    
  	
  	
