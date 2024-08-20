@@ -51,18 +51,26 @@ export const ChatMain = () => {
       switch (message.type) {
         case 'CHAT':
           addMessage(message.roomSeq, message);
+          updateChatRoom(message.roomSeq, {
+            lastMessage: message.messageContent,
+            lastMessageTime: message.sendTime,
+            unreadCount: (chatRooms.find(room => room.roomSeq === message.roomSeq)?.unreadCount || 0) + 1
+          });
           break;
         case 'USER_STATUS':
           setOnlineUsers(message.onlineUsers);
           break;
         case 'UNREAD_COUNT_UPDATE':
           updateUnreadCount(message.roomSeq, message.unreadCount);
-        break;          
+          break;
+        case 'CHAT_ROOMS_UPDATE':
+          setChatRooms(message.rooms);
+          break;
         case 'NEW_CHAT_ROOM':
         case 'CREATE_ONE_ON_ONE_CHAT':
         case 'CREATE_GROUP_CHAT':
-              handleChatCreated(message.room);
-              break;
+          handleChatCreated(message.room);
+          break;
         default:
           console.log('알 수 없는 메시지 타입:', message.type);
       }
@@ -71,11 +79,12 @@ export const ChatMain = () => {
     // WebSocket 연결
     connectWebSocket(handleReceivedMessage);
 
-    // 컴포넌트 언마운트 시 WebSocket 연결 해제
-    return () => {
-      disconnectWebSocket();
-    };
-  }, [addMessage, setOnlineUsers, addChatRoom, updateUnreadCount]);
+    // 컴포넌트 언마운트 시 WebSocket 연결 해제 제거
+    // return () => {
+    //   disconnectWebSocket();
+    // };
+  }, [addMessage, setOnlineUsers, addChatRoom, updateUnreadCount, setChatRooms, updateChatRoom, chatRooms]);
+
 
   // 채팅방 목록을 서버로부터 가져오는 함수
   const fetchChatRooms = useCallback(async () => {
@@ -170,6 +179,7 @@ export const ChatMain = () => {
         <ChatList
           chatRooms={chatRooms}
           onChatSelect={setSelectedChat}
+          updateChatRoom={updateChatRoom}
         />
       </div>
       {/* 오른쪽 패널: 선택된 채팅방 또는 안내 메시지 */}

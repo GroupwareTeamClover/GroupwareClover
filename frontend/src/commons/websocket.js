@@ -81,6 +81,12 @@ stompClient.connect(headers, () => {
       onMessageReceived(message);
     });
 
+    // 채팅방 목록 업데이트를 위한 새로운 구독 추가
+    stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/chatRoomsUpdate`, (payload) => {
+      const message = JSON.parse(payload.body);
+      onMessageReceived({ type: 'CHAT_ROOMS_UPDATE', rooms: message });
+    });    
+
     // 채팅방 나가기, 대화 내용 삭제, 알림 설정 변경을 위한 구독
     stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/chatRoomUpdates`, (payload) => {
       const message = JSON.parse(payload.body);

@@ -6,47 +6,8 @@ import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage, connectWebSocket } from '../../../../../commons/websocket';
 import { format } from 'date-fns';
 
-const ChatList = ({ chatRooms, onChatSelect }) => {
-  const { setSelectedChat, addChatRoom, updateChatRoom, setChatRooms } = useChatStore();
-
-  // 채팅방 목록을 갱신하는 함수
-  const refreshChatRooms = useCallback(async () => {
-    try {
-      const response = await axios.get(`${BaseUrl()}/chat/rooms`);
-      const roomsWithUnreadCounts = await Promise.all(response.data.map(async (room) => {
-        const unreadCountResponse = await axios.get(`${BaseUrl()}/chat/messages/unread/${room.roomSeq}`);
-        return { ...room, unreadCount: unreadCountResponse.data };
-      }));
-      setChatRooms(roomsWithUnreadCounts);
-    } catch (error) {
-      console.error('채팅방 목록 갱신 오류:', error);
-    }
-  }, [setChatRooms]);
-
-  useEffect(() => {
-    const handleMessage = (message) => {
-      if (message.type === 'NEW_CHAT_ROOM') {
-        console.log("새로운 채팅방 생성됨:", message.room);
-        addChatRoom(message.room);
-      } else if (message.type === 'CHAT') {
-        updateChatRoom(message.roomSeq, {
-          lastMessage: message.messageContent,
-          lastMessageTime: message.sendTime,
-          unreadCount: (chatRooms.find(room => room.roomSeq === message.roomSeq)?.unreadCount || 0) + 1
-        });
-      }
-    };
-
-    // 5초마다 채팅방 목록 갱신
-    const intervalId = setInterval(refreshChatRooms, 500000);
-
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [addChatRoom, updateChatRoom, refreshChatRooms]);
-
+const ChatList = ({ chatRooms, onChatSelect, updateChatRoom }) => {
   const handleChatSelect = async (chat) => {
-    setSelectedChat(chat);
     onChatSelect(chat);
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
     sendMessage("/app/chat.addUser", {
@@ -96,12 +57,13 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
           </div>
           <div className={styles.chatInfo}>
             <h4>{chat.customRoomName || chat.roomName}</h4>
-            <p>{chat.lastMessage}</p>
-            {/* <p>
-              {chat.lastMessage.length > 8 
-                ? `${chat.lastMessage.substring(0, 8)}...` 
-                : chat.lastMessage}
-            </p> */}
+            <p>
+              {chat.lastMessage ? (
+                chat.lastMessage.length > 8 
+                  ? `${chat.lastMessage.substring(0, 8)}...` 
+                  : chat.lastMessage
+              ) : ''}
+            </p>
           </div>
           <div className={styles.chatMeta}>
             <span className={styles.time}>{formatMessageTime(chat.lastMessageTime)}</span>
