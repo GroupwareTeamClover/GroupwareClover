@@ -27,9 +27,9 @@ public class AttendanceController {
         return ResponseEntity.ok(map);
     }
 
-    @GetMapping("/members/{month}")
-    public ResponseEntity<List<Map<String, Object>>> getMembersAttendance(@PathVariable String month) {
-        List<Map<String, Object> > map = attendanceService.getMembersAtt(month);
+    @GetMapping("/members/{select}/{month}")
+    public ResponseEntity<List<Map<String, Object>>> getMembersAttendance(@PathVariable int select, @PathVariable String month) {
+        List<Map<String, Object> > map = attendanceService.getMembersAtt(select, month);
         return ResponseEntity.ok(map);
     }
 
