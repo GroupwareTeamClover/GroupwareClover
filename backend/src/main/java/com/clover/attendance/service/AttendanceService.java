@@ -8,6 +8,7 @@ import com.clover.employee.dto.EmployeeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,24 +43,32 @@ public class AttendanceService {
         return result;
     }
 
-    public List<Map<String, Object>> getMembersAtt(String month) {
+    public List<Map<String, Object>> getMembersAtt(int deptCode, String month) {
         Map<String, Object> map = new HashMap<>();
         String[] range = dateFormat.getMonthRange(month);
         map.put("start", range[0]);
         map.put("end", range[1]);
 
+        List<Map<String, Object>> resultList = new ArrayList<>();
         // 전체 멤버 조회
-        List<EmployeeDTO> list = employeeDAO.getMembersInfo();
-        for (EmployeeDTO dto : list) {
+        List<Map<String, Object>> list = employeeDAO.getMembersInfo(deptCode);
+        for (Map<String, Object> dto : list) {
             // 멤버 별 카운트 조회
-            map.put("empSeq", dto.getEmpSeq());
+            map.put("empSeq", dto.get("empSeq"));
             Map<String, Object> attCount = attendanceDAO.getMyAtt(map);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("empSeq", dto.get("empSeq"));
+            result.put("empName", dto.get("empName"));
+            result.put("roleCode", dto.get("roleCode"));
+            result.put("roleName", dto.get("roleName"));
+            result.put("deptName", dto.get("deptName"));
+            result.put("attCount", attCount);
+
+            resultList.add(result);
         }
 
-
-        // 총 카운트 정보
-        List<Map<String, Object>> attCount = null;
-        return attCount;
+        return resultList;
     }
 
     public AttendanceDTO todayAtt(String today, int empSeq) {
