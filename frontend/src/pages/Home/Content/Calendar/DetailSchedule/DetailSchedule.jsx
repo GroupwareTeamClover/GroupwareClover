@@ -1,5 +1,5 @@
 import styles from './DetailSchedule.module.css'
-import {dateSetting, dateYMD} from "../../../../../commons/common";
+import {confirmAlert, dateSetting, dateYMD, failAlert, timeAlert} from "../../../../../commons/common";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
@@ -33,16 +33,19 @@ export const DetailSchedule = ({setDataChange}) => {
 
   /** 일정 삭제 핸들러 **/
   const handleScheduleDelete = (seq) => {
-    if(window.confirm("일정을 삭제합니까?")){
-      axios.delete(`${BaseUrl()}/schedule/${seq}`).then(res => {
-        if(res.data === "ok"){
-          setScheduleDetail({});
-          const selectList = scheduleSelectList.filter(item => item.scheduleSeq !== seq)
-          setScheduleSelectList(selectList);
-          setDataChange(prev => !prev);
-        }
-      });
-    }
+    confirmAlert("일정을 삭제 하시겠습니까?").then(res => {
+      if (res.isConfirmed) {
+        axios.delete(`${BaseUrl()}/schedule/${seq}`).then(res => {
+          if (res.data === "ok") {
+            setScheduleDetail({});
+            const selectList = scheduleSelectList.filter(item => item.scheduleSeq !== seq)
+            setScheduleSelectList(selectList);
+            setDataChange(prev => !prev);
+            timeAlert("일정 삭제 완료!");
+          }
+        });
+      }
+    });
   }
 
   /** 일정 수정 폼 변경 **/
@@ -59,17 +62,17 @@ export const DetailSchedule = ({setDataChange}) => {
   const handleScheduleUpdate = () => {
 
     if(updateData.title === "" || updateData.start === "" || updateData.end === "") {
-      alert("내용을 전부 입력하세요");
+      failAlert("","내용을 전부 입력하세요");
       return false;
     }
 
     if(updateData.start > updateData.end) {
-      alert("종료 날짜는 시작 날짜 이후만 됩니다.");
+      failAlert("","종료 날짜는 시작 날짜 이후로 지정해야합니다.");
       return false;
     }
 
     if(updateData.title.length > 300) {
-      alert("내응은 300자 이내로 작성해야 합니다.");
+      failAlert("","내응은 300자 이내로 작성해야 합니다.");
       return false;
     }
 
@@ -92,7 +95,8 @@ export const DetailSchedule = ({setDataChange}) => {
         setUpdateForm(false);
         setUpdateData({});
         setDataChange(prev => !prev);
-        alert("수정완료");
+
+        timeAlert("일정 수정 완료!");
       }
     });
   }
