@@ -7,23 +7,28 @@ import { BaseUrl } from '../../../../../../../../commons/config';
 export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
     const {storemembers, setstoremembers} = useMemStore();
     const [members, setMembers]= useState([]);  
+    // const [modalEmail, setModalEmail] = useState([]);
     const [updatedStatus, setUpdatedStatus] = useState({dept:0,role:0,worker_state:0});
     const closeModal = () => setIsModalOpen(false);
     const checkedCount = checkedMems.length;
 
     useEffect(()=>{
         setMembers(checkedMems)
+        console.log(checkedMems)
+        // setModalEmail(modalEmail)
     },[checkedMems])
 
     const handleChangeStatus = (e)=>{
         const {name, value} = e.target;
         setUpdatedStatus(prev=>({...prev, [name]:value}))
+
     }
     
     const handleSave = () => {
       
         console.log(updatedStatus)
         console.log(members)
+        // console.log(modalEmail)
         const { dept, role, worker_state } = updatedStatus;
         const requestData = {
             dept: updatedStatus.dept,

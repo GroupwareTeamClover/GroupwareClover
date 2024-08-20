@@ -9,6 +9,7 @@ import { Member } from '../Home/Content/Admin/Member/Member';
 import { Popup } from '../Home/Content/Admin/PopupBoard/Popup';
 import { Log } from '../Home/Content/Admin/Log/Log';
 import {Calendar} from '../Home/Content/Calendar/Calendar';
+import { Deptmap } from '../Home/Content/Admin/DeptMap/Deptmap';
 
 
 export const AdminContent = () => {
@@ -25,6 +26,7 @@ export const AdminContent = () => {
           <Route path="/member/*" element={<Member/>}/>
           <Route path="/popup/*" element={<Popup/>}/>
           <Route path="/log/*" element={<Log/>}/>
+          <Route path="/deptmap/*" element={<Deptmap/>}/>
         </Routes>
     </div>
   );

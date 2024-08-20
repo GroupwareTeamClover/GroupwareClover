@@ -28,6 +28,11 @@ export const MemMain = () => {
     const [roleCode, setRoleCode] = useState("100");
     const [workerStateCode, setWorkerStateCode] = useState("100");
     const [empStateCode, setEmpStateCode] = useState("100");
+    //
+    const [deptName, setDeptName] = useState([]);
+    const [roleName, setRoleName] = useState([]);
+    const [workName, setWorkName] = useState([]);
+    const [empState, setEmpState] = useState([]);
 
 
     // 사원 수 출력 함수
@@ -67,7 +72,35 @@ export const MemMain = () => {
         });
     },[storemembers]);
 
-  
+      // 서버에서 부서코드-이름 데이터를 가져옴
+      useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
+            setDeptName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
+            setRoleName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
+            setWorkName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
+            setEmpState(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
 
     // 서버에서 사원 수 데이터를 가져옴
     useEffect(()=>{
@@ -108,7 +141,7 @@ export const MemMain = () => {
     
         const enabledValues = filtered
             .slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
-            .map(mem => mem.empSeq);
+            .map(mem => mem.EMP_SEQ);
     
         checkboxRef.current.forEach((checkbox, i) => {
             const mem = filtered[i + currentPage * PER_PAGE];
@@ -117,7 +150,7 @@ export const MemMain = () => {
             }
         });
     
-        setCheckedMems(checked ? enabledValues.filter((empSeq, i) => {
+        setCheckedMems(checked ? enabledValues.filter((EMP_SEQ, i) => {
             const mem = filtered[i + currentPage * PER_PAGE];
             return mem.empStateCode !== 0;
         }) : []);
@@ -175,8 +208,8 @@ export const MemMain = () => {
     // 상태변경 옵션 조건부 렌더링
     const renderStatusOptions = () => {
         const hasRetired = checkedMems.some(memSeq => {
-            const mem = members.find(m => m.empSeq == memSeq);
-            return mem && mem.empStateCode === 2; // empStateCode가 2인 직원 (퇴사자) 확인
+            const mem = members.find(m => m.EMP_SEQ == memSeq);
+            return mem && mem.EMP_STATE_CODE === 2; // empStateCode가 2인 직원 (퇴사자) 확인
         });
 
         if (hasRetired) {
@@ -209,7 +242,7 @@ export const MemMain = () => {
             empNameRef.current.value = '';
         } else {
             // 검색어가 있는 경우 필터링
-            let result = members.filter((data) => data.empName.includes(keyword));
+            let result = members.filter((data) => data.EMP_NAME.includes(keyword));
             setFiltered(result);
             setDeptCode("100");
             setRoleCode("100");
@@ -251,20 +284,20 @@ export const MemMain = () => {
     // 셀렉트 선택
     const applyFilters = () => {
         // let result = members;
-        let result = members.filter((data) => data.empName.includes(keyword));;
+        let result = members.filter((data) => data.EMP_NAME.includes(keyword));;
 
         // 필터 조건에 따라 데이터 필터링
         if (deptCode !== "100") {
-            result = result.filter(data => data.deptCode === parseInt(deptCode));
+            result = result.filter(data => data.DEPT_CODE === parseInt(deptCode));
         }
         if (roleCode !== "100") {
-            result = result.filter(data => data.roleCode === parseInt(roleCode));
+            result = result.filter(data => data.ROLE_CODE === parseInt(roleCode));
         }
         if (workerStateCode !== "100") {
-            result = result.filter(data => data.workerStateCode === parseInt(workerStateCode));
+            result = result.filter(data => data.WORKER_STATE_CODE === parseInt(workerStateCode));
         }
         if (empStateCode !== "100") {
-            result = result.filter(data => data.empStateCode === parseInt(empStateCode));
+            result = result.filter(data => data.EMP_STATE_CODE === parseInt(empStateCode));
         }
         
         setFiltered(result);
@@ -342,45 +375,42 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}>
                                     <select name='deptCode' value={deptCode} onChange={handleInputChange}>
                                         <option value='100'>부서</option>
-                                        <option value='1'>총무</option> 
-                                        <option value='2'>인사</option> 
-                                        <option value='3'>사무</option> 
-                                        <option value='4'>유통</option> 
-                                        <option value='5'>경영</option> 
-                                        <option value='99'>미정</option> 
+                                        {deptName.map(dept =>(
+                                            <option key={dept.DEPT_CODE} value={dept.DEPT_CODE}>
+                                                {dept.DEPT_NAME}
+                                            </option>
+                                        ))}
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>
                                     <select name='roleCode' value={roleCode} onChange={handleInputChange}>
                                         <option value='100'>직위</option>
-                                        <option value='1'>사장</option> 
-                                        <option value='2'>부사장</option> 
-                                        <option value='3'>이사</option> 
-                                        <option value='4'>부장</option> 
-                                        <option value='5'>차장</option> 
-                                        <option value='6'>과장</option> 
-                                        <option value='7'>대리</option> 
-                                        <option value='8'>사원</option> 
-                                        <option value='9'>인턴</option> 
-                                        <option value='99'>미정</option> 
+                                        {roleName.map(role =>(
+                                            <option key={role.ROLE_CODE} value={role.ROLE_CODE}>
+                                                {role.ROLE_NAME}
+                                            </option>
+                                        ))}
                                     </select>   
                                 </td>
                                 <td className={styles.theadtd}>
                                     <select name="workerStateCode" value={workerStateCode} onChange={handleInputChange}>
                                         <option value='100'>사용자그룹</option>
-                                        <option value='1'>정규직</option> 
-                                        <option value='2'>비정규직</option> 
-                                        <option value='3'>계약직</option> 
-                                        <option value='0'>관리자</option> 
-                                        <option value='99'>미정</option> 
+                                        {workName.map(work =>(
+                                            <option key={work.WORKER_STATE_CODE} value={work.WORKER_STATE_CODE}>
+                                                {work.WORKER_STATE_NAME}
+                                            </option>
+                                        ))}
                                     </select>
                                 </td>
                                 <td className={styles.theadtd}>이메일</td>
                                 <td className={styles.theadtd}>
                                     <select name='empStateCode' value={empStateCode} onChange={handleInputChange}>
                                         <option value='100'>계정상태</option>
-                                        <option value='1'>재직중</option>
-                                        <option value='2'>퇴사</option>
+                                        {empState.map(emp =>(
+                                            <option key={emp.EMP_STATE_CODE} value={emp.EMP_STATE_CODE}>
+                                                {emp.EMP_STATE_NAME}
+                                            </option>
+                                        ))}
                                         {/* <option value='0'>가입대기</option> */}
                                         {/* <option>휴면</option> */}
                                     </select>
@@ -400,26 +430,26 @@ export const MemMain = () => {
                                 filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
                                     <tr key={i}>
                                     <td className={styles.theadtd}>
-                                        {mem.empStateCode === 0 ? (
-                                            <input type="checkbox" disabled></input>
-                                        ) : (
-                                            <input type="checkbox" name="emp_seq" value={mem.empSeq} onClick={handleCheckBox} ref={data => checkboxRef.current[i] = data}></input>
-                                        )}
+                                      
+                                            <input type="checkbox" name="emp_seq" value={mem.EMP_SEQ} onClick={handleCheckBox} ref={data => checkboxRef.current[i] = data}></input>
+                                       
                                     </td>
                                     <td className={styles.theadtd}>
-                                        {mem.empName}
+                                        {mem.EMP_NAME}
                                     </td>
                                     <td className={styles.theadtd}>
-                                    {
+                                        {mem.DEPT_NAME}
+                                    {/* {
                                                 mem.deptCode === 1 ? '총무' : 
                                                 mem.deptCode === 2 ? '인사' : 
                                                 mem.deptCode === 3 ? '사무' : 
                                                 mem.deptCode === 4 ? '유통' : 
                                                 mem.deptCode === 5 ? '경영' : '미정'
-                                            } 
+                                            }  */}
                                     </td>
                                     <td className={styles.theadtd}>
-                                    {
+                                        {mem.ROLE_NAME}
+                                    {/* {
                                                 mem.roleCode === 1 ? '사장' :
                                                 mem.roleCode === 2 ? '부사장' :
                                                 mem.roleCode === 3 ? '이사' :
@@ -429,27 +459,27 @@ export const MemMain = () => {
                                                 mem.roleCode === 7 ? '대리' :
                                                 mem.roleCode === 8 ? '사원' :
                                                 mem.roleCode === 9 ? '인턴' : '미정'
-                                            } 
+                                            }  */}
                                     </td>
                                     <td className={styles.theadtd}>
-                                    {
+                                        {mem.WORKER_STATE_NAME}
+                                    {/* {
                                                 mem.workerStateCode === 0 ? '관리자' :
                                                 mem.workerStateCode === 1 ? '정규직' :
                                                 mem.workerStateCode === 2 ? '비정규직' :
                                                 mem.workerStateCode === 3 ? '계약직' : '미정'
-                                            } 
+                                            }  */}
                                     </td>
                                     <td className={styles.theadtd}>
-                                        {mem.empEmail}
+                                        {mem.EMP_EMAIL}
                                     </td>
                                     <td className={styles.theadtd}>
-                                        {
+                                        {mem.EMP_STATE_NAME}
+                                        {/* {
                                         mem.empStateCode === 0 ? '가입대기': 
                                         mem.empStateCode === 1 ? '재직중': 
                                         mem.empStateCode === 2 ? '퇴사':  '알수없음'
-
-                                        
-                                        }
+                                        } */}
                                     </td>
                                 </tr>
                                 ))

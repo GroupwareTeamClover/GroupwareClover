@@ -22,6 +22,7 @@ export const AddMember = ()=>{
     const [newMem, setNewMem] = useState([{ }]);
     const [filtered, setFiltered] = useState(newMem);
     const [modalMems, setModalMems] = useState([]); // 모달에 전달할 props 설정.
+    const [modalEmail, setModalEmail] = useState([]);
     const [checkedMems, setCheckedMems] = useState([]); // 체크박스 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -124,6 +125,7 @@ export const AddMember = ()=>{
     const handleModalChange = () => {
         if (checkedMems.length !== 0) {
             setModalMems(checkedMems);  // 선택된 사원들을 모달에 전달할 리스트에 저장
+            
             openModal();  // 모달 열기
         } else {
             alert("변경할 사원을 선택해주세요.");

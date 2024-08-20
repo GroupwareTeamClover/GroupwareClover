@@ -18,9 +18,23 @@ public class AdminMemberDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
-	public List<EmployeeDTO> getAllData(){
+	public List<HashMap<String, Object>> getAllData(){
 		return mybatis.selectList("AdminMember.getAllData");
 	}
+	public List<HashMap<String, Object>> getAllDept(){
+		return mybatis.selectList("AdminMember.getAllDept");
+	}
+	public List<HashMap<String, Object>> getAllRole(){
+		return mybatis.selectList("AdminMember.getAllRole");
+	}
+	public List<HashMap<String, Object>> getAllWork(){
+		return mybatis.selectList("AdminMember.getAllWork");
+	}
+	public List<HashMap<String, Object>> getAllEmp(){
+		return mybatis.selectList("AdminMember.getAllEmp");
+	}
+	
+	
 	
 	public List<HashMap<String, Object>> getCountMem(){
 		return mybatis.selectList("AdminMember.getCountMem");
