@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import styles from './Deptmap.module.css'
 import { BaseUrl } from "../../../../../commons/config";
 import { FaSearch } from "react-icons/fa";
-import { Folder } from "../../../../../components/Folder/Folder";
 import { useLocation } from "react-router-dom";
+import { Folderdept } from "./Folderdept";
+import { Pagination } from "../../../../../components/Pagination/Pagination";
 
 export const Deptmap=()=>{
     
@@ -15,6 +16,16 @@ export const Deptmap=()=>{
     const [searchInput, setSearchInput] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [selectedFolder, setSelectedFolder] = useState(null);
+    const [selectedChild, setSelectedChild] = useState(null);
+ // Pagingation
+ const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
+//  const pageCount = Math.ceil(selectedFolder.children.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
+ const [currentPage, setCurrentPage] = useState(0);
+ const handlePageChange = ({selected}) => {
+    setCurrentPage(selected);
+    window.scrollTo(0,320); // 페이지 변경 시 스크롤 맨 위로 이동
+};
 
 
     const location = useLocation();
@@ -22,7 +33,7 @@ export const Deptmap=()=>{
     console.log("headerTxt"+ state?.type)
   
     // 상태에 따라 header 내용 설정
-    const headerText = state?.type || '접속 로그 관리';
+    const headerText = state?.type || '조직도';
   
   
 
@@ -45,21 +56,29 @@ export const Deptmap=()=>{
             setIsLoading(false);
         });
     }, []);
+    
+    useEffect(() => {
+        if (selectedFolder) {
+            setCurrentPage(0); 
+        }
+    }, [selectedFolder]);
+
 
     const handleSearchData = (e) => {
         setSearchInput(e.target.value);
     }
 
-    const handleItemClick = (item) => {
-        setSelectedItem({ children: item });
-        setSelectedEmployee({
-            seq: item.seq,
-            name: item.name,
-            role: item.role,
-            avatar: item.avatar
-        });
-        // setIsModalOpen(true);
+    const handleFolderClick = (folder) => {
+        setSelectedFolder(folder);
     };
+
+    const handleItemClick = (item) => {
+        const parentFolder = folderData.find(folder => folder.children.some(child => child.seq === item.seq));
+        if (parentFolder) {
+            setSelectedFolder(parentFolder);
+        }
+    };
+
 
     useEffect(() => {
         const filterFolders = (data, query) => {
@@ -94,13 +113,14 @@ export const Deptmap=()=>{
         };
     };
 
- 
+    
+  // 페이지네이션을 위해 selectedFolder가 null이 아닐 때만 계산
+  const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PER_PAGE) : 0;
+
 
     return (
-       
-        // 
         <div className={styles.container}>
-             <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
+            <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
             <div className={styles.content}>
                 <div className={styles.searchBox}>
                     <div className={styles.searchLine}>
@@ -120,12 +140,11 @@ export const Deptmap=()=>{
                             <p>로딩 중...</p>
                         ) : filteredData.length > 0 ? (
                             filteredData.map((folder, index) => (
-                                <Folder
+                                <Folderdept
                                     key={index}
                                     folder={adjustFolderProps(folder)}
-                                    onItemClick={handleItemClick}
-                                    selectedItem={selectedItem}
-                                    setSelectedItem={setSelectedItem}
+                                   onItemClick={handleItemClick}
+                                    onFolderClick={handleFolderClick}
                                 />
                             ))
                         ) : (
@@ -133,10 +152,48 @@ export const Deptmap=()=>{
                         )}
                     </div>
                 </div>
+                <div className={styles.deptlist}>
+                    {selectedFolder && (
+                        <div className={styles.tableBox}>
+                            <h4>{selectedFolder.name}</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>아바타</th>
+                                        <th>이름</th>
+                                        <th>역할</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {selectedFolder.children
+                                    .slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
+                                    .map(child => (
+                                        <tr key={child.seq}>
+                                            <td><img src={child.avatar} alt={child.name} width="50" /></td>
+                                            <td>{child.name}</td>
+                                            <td>{child.role}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                    <div className={styles.pagination}>
+                        {/* 페이지네이션 */}
+                        {pageCount > 0 && (
+                            <Pagination
+                            pageCount={pageCount}
+                            onPageChange={handlePageChange}
+                            currentPage={currentPage}
+                            />
+                            )}
+                    </div>
+                </div>
+                
             </div>
-           
         </div>
     );
+    
 
 
 }
