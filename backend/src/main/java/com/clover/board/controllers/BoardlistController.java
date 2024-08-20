@@ -89,12 +89,13 @@ public class BoardlistController {
 	
 	@DeleteMapping("/{seq}")
 	public ResponseEntity<Void> delete(@PathVariable int seq){
-		blServ.deleteBoard(seq);
 		//DB에서 해당 게시판의 모든 게시글의 첨부파일 삭제
 		attServ.deleteFilesByBoardlistSeq(seq);
 		//s3에서 해당 게시판의 모든 게시글의 이미지, 첨부파일 삭제
 		s3Serv.deleteFiles("posts/" + seq + "/");
 		s3Serv.deleteFiles("images/posts/" + seq + "/");
+		
+		blServ.deleteBoard(seq);
 		
 		return ResponseEntity.ok().build();
 	}

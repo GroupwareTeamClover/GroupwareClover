@@ -23,6 +23,6 @@
  	<delete id="deleteFilesByBoardlistSeq">
  		delete from attachment 
  		where 
- 		attachment_parent_seq in (select board_seq from board where boardlist_seq = #{seq}) and attachment_from = 'board';
+ 		attachment_parent_seq in (select board_seq from board where boardlist_seq = #{seq}) and attachment_from = 'board'
  	</delete>
 </mapper>
