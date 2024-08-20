@@ -59,6 +59,7 @@ const ModifyPost = () => {
         }
     }
 
+    const titleInputRef = useRef(null);
     useEffect(() => {
         axios.get(`${BaseUrl()}/boardlist/categories/${sessionData.empSeq}`).then((resp) => {
             setCategories(resp.data.map((item) => {
@@ -104,6 +105,7 @@ const ModifyPost = () => {
             const match = imgTag.match(/src="([^">]+)"/);
             return match ? match[1] : null;
         }));
+        titleInputRef.current.focus();
     }, []);
 
     const handleModify = () => {
@@ -156,7 +158,7 @@ const ModifyPost = () => {
     }
 
     const alertMax = () => {
-        if(files.length >= maxFiles){
+        if (files.length >= maxFiles) {
             alert("파일 업로드 최대 개수입니다. 다른 파일을 지운 후 업로드해주세요.");
         }
     }
@@ -165,9 +167,9 @@ const ModifyPost = () => {
     const preventClose = (e) => {
         e.preventDefault();
     }
-    useEffect(() => { 
-        (() => { window.addEventListener("beforeunload", preventClose); })(); 
-        return () => { window.removeEventListener("beforeunload", preventClose); }; 
+    useEffect(() => {
+        (() => { window.addEventListener("beforeunload", preventClose); })();
+        return () => { window.removeEventListener("beforeunload", preventClose); };
     }, []);
 
     //뒤로가기 1회 방지
@@ -201,17 +203,18 @@ const ModifyPost = () => {
                 />
             </div>
             <div className={styles.title}>
-                <input type="text" placeholder="제목을 입력해 주세요 (최대 30자까지 입력 가능)"
+                <input type="text" placeholder="제목을 입력해 주세요 (최대 30자까지 입력 가능)" spellCheck={false} ref={titleInputRef}
                     name="title" className={styles.titleInput} maxLength="30" onChange={handleTitleChange} value={title} />
             </div>
             <div className={styles.fileBox}>
                 <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/temp`} onClick={alertMax}
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} disabled={files.length >= maxFiles}>
-                    <div style={{ lineHeight: '50px', textAlign: 'center', backgroundColor: 'whitesmoke', border: '2px dotted lightgray', borderRadius:'5px'}}>클릭하여 파일을 추가하세요 (최대 5개 파일 업로드 가능)</div>
+                    <div style={{ lineHeight: '50px', textAlign: 'center', backgroundColor: 'whitesmoke', border: '2px dotted lightgray', borderRadius: '5px' }}>클릭하여 파일을 추가하세요 (최대 5개 파일 업로드 가능)</div>
                 </Uploader>
             </div>
             <div className={styles.editorBox}>
-                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent={loc.state.boardContent} />
+                <WebEditor editorRef={editorRef} handleContentChange={handleContentChange} height="600px" defaultContent={loc.state.boardContent}
+                    placeHolder="글 내용을 입력해주세요. (최대 3000자까지 입력 가능)" />
                 <div className={styles.charCountBox}>{charCount}/{maxContentLength}자</div>
             </div>
             <div className={styles.btnBox}>
