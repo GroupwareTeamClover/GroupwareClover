@@ -94,7 +94,7 @@ const DetilBoard = () => {
     //게시글 삭제
     const handleDelete = () => {
         if (window.confirm("정말로 이 글을 삭제하시겠습니까?")) {
-            axios.delete(`${BaseUrl()}/board/${boardSeq}`).then(resp => {
+            axios.delete(`${BaseUrl()}/board/post`, {params : {boardlistSeq : boardlistSeq, boardSeq : boardSeq}}).then(resp => {
                 if (resp.status === 200) {
                     navi(`/community/board/${boardlistSeq}`);
                 } else {
