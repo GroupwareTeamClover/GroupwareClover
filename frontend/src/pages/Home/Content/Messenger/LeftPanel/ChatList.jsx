@@ -37,8 +37,8 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
       }
     };
 
-    // 15초마다 채팅방 목록 갱신
-    const intervalId = setInterval(refreshChatRooms, 5000);
+    // 5초마다 채팅방 목록 갱신
+    const intervalId = setInterval(refreshChatRooms, 500000);
 
     return () => {
       clearInterval(intervalId);

@@ -164,6 +164,7 @@ public class ChatRoomService {
             String role = (empSeq == creatorSeq) ? "ADMIN" : "MEMBER";
             chatRoomDAO.addGroupMember(room.getRoomSeq(), empSeq, role);
         }
+        // chatRoomDAO.updateRoomInfo(room.getRoomSeq(), room);
 
         return room;
     }
