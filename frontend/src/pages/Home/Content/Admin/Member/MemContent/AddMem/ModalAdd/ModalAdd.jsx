@@ -5,12 +5,43 @@ import axios from 'axios';
 import { BaseUrl } from '../../../../../../../../commons/config';
 
 export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
+    const [deptName, setDeptName] = useState([]);
+    const [roleName, setRoleName] = useState([]);
+    const [workName, setWorkName] = useState([]);
+    const [empState, setEmpState] = useState([]);
+    //
     const {storemembers, setstoremembers} = useMemStore();
     const [members, setMembers]= useState([{}]);  
     // const [modalEmail, setModalEmail] = useState([]);
     const [updatedStatus, setUpdatedStatus] = useState({dept:0,role:0,worker_state:0});
     const closeModal = () => setIsModalOpen(false);
     const checkedCount = checkedMems.length;
+
+    // 서버에서 부서코드-이름 데이터를 가져옴
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
+            setDeptName(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
+            setRoleName(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
+            setWorkName(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
+            setEmpState(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
 
     useEffect(()=>{
         setMembers(checkedMems)
@@ -77,12 +108,11 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
                     {
                         <select name='dept' onChange={handleChangeStatus}>
                             <option value=''>부서</option>
-                            <option value='1'>총무</option> 
-                            <option value='2'>인사</option> 
-                            <option value='3'>사무</option> 
-                            <option value='4'>유통</option> 
-                            <option value='5'>경영</option> 
-                            <option value='99'>미정</option> 
+                            {deptName.map(dept =>(
+                                            <option key={dept.DEPT_CODE} value={dept.DEPT_CODE}>
+                                                {dept.DEPT_NAME}
+                                            </option>
+                                        ))}
                         </select>
                     
                     }
@@ -97,16 +127,11 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
                     {
                         <select name='role' onChange={handleChangeStatus}>
                             <option value=''>직위</option>
-                            <option value='1'>사장</option> 
-                            <option value='2'>부사장</option> 
-                            <option value='3'>이사</option> 
-                            <option value='4'>부장</option> 
-                            <option value='5'>차장</option> 
-                            <option value='6'>과장</option> 
-                            <option value='7'>대리</option> 
-                            <option value='8'>사원</option> 
-                            <option value='9'>인턴</option> 
-                            <option value='99'>미정</option> 
+                            {roleName.map(role =>(
+                                            <option key={role.ROLE_CODE} value={role.ROLE_CODE}>
+                                                {role.ROLE_NAME}
+                                            </option>
+                                        ))}
                         </select>
                     }
                 </div>
@@ -119,10 +144,11 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
                     {
                         <select name='worker_state' onChange={handleChangeStatus}>
                             <option value=''>사용자그룹</option>
-                            <option value='1'>정규직</option> 
-                            <option value='2'>비정규직</option> 
-                            <option value='3'>계약직</option> 
-                            <option value='0'>관리자</option> 
+                            {workName.map(work =>(
+                                            <option key={work.WORKER_STATE_CODE} value={work.WORKER_STATE_CODE}>
+                                                {work.WORKER_STATE_NAME}
+                                            </option>
+                                        ))}
                         </select>
                     }
                 </div>
