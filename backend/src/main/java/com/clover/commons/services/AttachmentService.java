@@ -42,5 +42,10 @@ public class AttachmentService {
 	public void deleteFiles(int seq, String domain) {
 		attDao.deleteFiles(seq, domain);
 	}
+	
+	//[게시판 전용. 첨부파일]DB에서 해당 게시판번호의 모든 글에 대한 첨부파일 전부 삭제
+	public void deleteFilesByBoardlistSeq(int seq) {
+		attDao.deleteFilesByBoardlistSeq(seq);
+	}
 
 }

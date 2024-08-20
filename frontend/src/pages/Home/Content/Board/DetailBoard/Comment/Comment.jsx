@@ -157,8 +157,8 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
                                 </>}
                             </div>
                             <div className={styles.commentButtonBox}>
-                                {openWriteReplyBox ? <Button className={styles.openRepleWriteButton} onClick={handleOpenwriteReplyBox} appearance="ghost">답글취소</Button>
-                                    : <Button className={styles.openRepleWriteButton} onClick={handleOpenwriteReplyBox} appearance="ghost">답글쓰기</Button>}
+                                {openWriteReplyBox ? <Button color="green" className={styles.openRepleWriteButton} onClick={handleOpenwriteReplyBox} appearance="ghost">답글취소</Button>
+                                    : <Button color="green" className={styles.openRepleWriteButton} onClick={handleOpenwriteReplyBox} appearance="ghost">답글쓰기</Button>}
                             </div>
                         </>
                     }
@@ -172,7 +172,9 @@ const Comment = ({ sessionWriter, dto, reples, setCountComments, admin, setComme
                             <textarea
                                 placeholder={`최대 ${maxReplyLength}자까지 작성 가능합니다`} ref={replyWriteInput}
                                 className={styles.replyContent} onChange={handleReplyChange} value={reply} maxLength={maxReplyLength}></textarea>
-                            <button type="button" className={styles.writeReplyButton} onClick={handleWriteReply}>등록</button>
+                            <Button color="green" appearance="primary" onClick={handleWriteReply} className={styles.writeReplyButton}>
+                                등록
+                            </Button>
                         </div>
                         <div className={styles.replyCountBox}>{replyCount}/1000자</div>
                     </div>

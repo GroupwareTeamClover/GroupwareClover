@@ -57,8 +57,7 @@
 
 .replyWriteBox .replyWriter {
 	height: 3.293vh;
-	padding: 0.55vh 0 0 1.04vw;
-	font-size: 1rem;
+	padding: 2vh 0 1.5vh 1vw;
 	font-weight: bold;
     display: flex;
     align-items: center;
@@ -69,6 +68,7 @@
 	display: flex;
     flex-direction: column;
 	justify-content: center;
+	padding-bottom : 0.5vh;
 }
 
 .innerReplyContentBox{
@@ -83,14 +83,14 @@
 	padding-left: 0.52vw;
 	padding-top: 1.1vh;
 	width: 90%;
-    height: 8.78vh;
+    height: 8.8vh;
 	resize: none;
     border-color: lightgray;
 }
 
 .writeReplyButton {
 	width: 8%;
-	height: 8.78vh;
+	height: 8.8vh;
 	margin-left: 0.26vw;
 }
 
