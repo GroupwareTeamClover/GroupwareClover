@@ -51,12 +51,12 @@ const ChatInput = ({ onSendMessage, onFileUpload }) => {
     }
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      onFileUpload(file);
-    }
-  };
+  // const handleFileUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     onFileUpload(file);
+  //   }
+  // };
 
   const toggleEmojiPicker = (e) => {
     e.stopPropagation();
@@ -103,7 +103,7 @@ const ChatInput = ({ onSendMessage, onFileUpload }) => {
             </div>
           )}
         </div>
-        <label htmlFor="fileUpload" className={styles.iconButton}>
+        {/* <label htmlFor="fileUpload" className={styles.iconButton}>
           <FaPaperclip />
           <input
             id="fileUpload"
@@ -111,7 +111,7 @@ const ChatInput = ({ onSendMessage, onFileUpload }) => {
             onChange={handleFileUpload}
             style={{ display: 'none' }}
           />
-        </label>
+        </label> */}
         <button onClick={handleSendMessage} className={styles.sendButton}>
           <FaPaperPlane />
         </button>
