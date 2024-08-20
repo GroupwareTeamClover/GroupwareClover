@@ -406,7 +406,9 @@ export const MemMain = () => {
                                 <td className={styles.theadtd}>
                                     <select name='empStateCode' value={empStateCode} onChange={handleInputChange}>
                                         <option value='100'>계정상태</option>
-                                        {empState.map(emp =>(
+                                        {empState
+                                        .filter(emp => emp.EMP_STATE_NAME !== '가입대기')  
+                                        .map(emp =>(
                                             <option key={emp.EMP_STATE_CODE} value={emp.EMP_STATE_CODE}>
                                                 {emp.EMP_STATE_NAME}
                                             </option>

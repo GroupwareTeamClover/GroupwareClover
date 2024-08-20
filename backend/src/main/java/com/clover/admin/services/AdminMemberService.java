@@ -62,6 +62,10 @@ public class AdminMemberService {
 	public List<EmployeeDTO> getAllNew(){
 		return adminmemberDAO.getAllNew();
 	}
+	public List<HashMap<String,Object>> getAllNewName(){
+		return adminmemberDAO.getAllNewName();
+	}
+	
 	public void addMemState(AdminAddMemDTO adddto) {
 		adminmemberDAO.addMem(adddto);
 	}

@@ -83,6 +83,9 @@ public class AdminMemberDAO {
 	public List<EmployeeDTO> getAllNew(){
 		return mybatis.selectList("AdminMember.getAllNew");
 	}
+	public List<HashMap<String, Object>> getAllNewName(){
+		return mybatis.selectList("AdminMember.getAllNewName");
+	}
 	
 	public void addMem(AdminAddMemDTO adddto) {
 		 Map<String, Object> params = new HashMap<>();
