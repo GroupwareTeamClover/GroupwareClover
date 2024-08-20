@@ -11,6 +11,7 @@ public class InsertMappingDTO {
     private List<ParticipantsLineDTO> pline;
     private String docType;
     private Map<String, Object> docData;
+    private Map<String, Object> fileData;
     
 	public InsertMappingDTO() {
 		super();
@@ -19,13 +20,14 @@ public class InsertMappingDTO {
 	
 	//insert용
 	public InsertMappingDTO(DocumentDTO document, List<ApvLineDTO> apvline, List<ParticipantsLineDTO> pline,
-			String docType, Map<String, Object> docData) {
+			String docType, Map<String, Object> docData, Map<String, Object> fileData) {
 		super();
 		this.document = document;
 		this.apvline = apvline;
 		this.pline = pline;
 		this.docType = docType;
 		this.docData = docData;
+		this.fileData=fileData;
 	}
 	
 	//select용
@@ -67,6 +69,16 @@ public class InsertMappingDTO {
 	public void setDocData(Map<String, Object> docData) {
 		this.docData = docData;
 	}
+
+	public Map<String, Object> getFileData() {
+		return fileData;
+	}
+
+	public void setFileData(Map<String, Object> fileData) {
+		this.fileData = fileData;
+	}
+	
+	
 
 }
 

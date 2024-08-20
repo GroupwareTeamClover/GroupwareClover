@@ -6,7 +6,7 @@ import { BaseUrl } from '../../../../../../../../commons/config';
 import { useMemStore } from '../../../../../../../../store/store';
 
 
-export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheckboxes })=>{
+export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheckboxes, setCurrentPage, currentPage })=>{
     
     const {storemembers, setstoremembers} = useMemStore();
     const [members, setMembers]= useState([]);  // 선택한 사원 관련 정보들
@@ -21,7 +21,6 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
         else if(modalState === '계정상태변경'){setUpdateMems({stateCode:'emp_state_code', joinTable:'employee_state', valueCol:'emp_state_name'}) }
         setMembers(checkedMems)
     },[modalState, checkedMems, members])
-    // console.log("modalstate-setStatename: "+updateMems.stateCode +" jointable: "+ updateMems.joinTable +" members : "+members)
 
 
     const handleChangeStatus =(e)=>{
@@ -37,14 +36,15 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
             empSeqList: members
         };      
         
+        console.log(currentPage);
         if(newValue !==''){
-                         // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
-                        console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList)
+            console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList) // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
             axios.put(`${BaseUrl()}/adminmember`, param)    //수정하기
             .then(()=>{
                 setstoremembers(true);
                 closeModal();
                 resetCheckboxes();
+                setCurrentPage(currentPage);
         })
         }else{ alert("수정사항을 선택해주세요.")}
     };
@@ -110,7 +110,6 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                             <option value="">계정상태</option>
                             <option>재직중</option> 
                             <option>퇴사</option> 
-                            {/* <option>가입대기</option>  */}
                         </select>
                         </>
                     }

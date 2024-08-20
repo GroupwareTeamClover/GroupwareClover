@@ -9,16 +9,10 @@
 		join doc_code c on d.doc_code=c.doc_code
 	</select>
 	
-	<insert id="insertDoc">
+<insert id="insertDoc">
     insert into document 
     values(document_sequence.nextval, #{docDetailCode}, #{docStateCode}, #{drafterSeq}, #{egcYn}, 
-        <if test="writeDate == null">
-            SYSDATE
-        </if>
-        <if test="writeDate != null">
-            #{writeDate}
-        </if>,
-        null, #{currentApverSeq}, #{finalApverSeq}, null)
+    SYSDATE, null, #{currentApverSeq}, #{finalApverSeq}, null)
     <selectKey keyProperty="docSeq" resultType="int" order="AFTER">
         select document_sequence.currval from dual
     </selectKey>
@@ -159,7 +153,7 @@
 	</delete>
 	
 	<update id="updateDocState">
-		update document set doc_state_code = 1 where doc_seq=#{seq}
+		update document set doc_state_code = 1, write_date = sysdate where doc_seq=#{seq}
 	</update>
 	
 	<update id="updateDocTypeData">
@@ -182,6 +176,11 @@
 		update document
 		set egc_yn=#{emg}
 		where doc_seq=#{seq}
+	</update>
+	
+		
+	<update id="updateContentWithUrl">
+		update business set bs_content = #{content} where parent_seq = #{seq}
 	</update>
 
 </mapper>

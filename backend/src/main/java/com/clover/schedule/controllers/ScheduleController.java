@@ -27,7 +27,9 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<String> addSchedule(@RequestBody ScheduleDTO dto){
         dto.setEmpSeq((int) session.getAttribute("cloverSeq"));
-        dto.setDeptCode((int) session.getAttribute("cloverDeptCode"));
+        if(dto.getDeptCode() != 0){
+            dto.setDeptCode((int) session.getAttribute("cloverDeptCode"));
+        }
         String result = scheduleService.addSchedule(dto);
         return ResponseEntity.ok(result);
     }

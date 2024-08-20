@@ -8,6 +8,7 @@ import { Approval } from '../Home/Content/Approval/Approval';
 import { Member } from '../Home/Content/Admin/Member/Member';
 import { Popup } from '../Home/Content/Admin/PopupBoard/Popup';
 import { Log } from '../Home/Content/Admin/Log/Log';
+import {Calendar} from '../Home/Content/Calendar/Calendar';
 
 
 export const AdminContent = () => {
@@ -17,6 +18,7 @@ export const AdminContent = () => {
         <Routes>
           <Route path="/" element={ <Dashboard /> } />
           <Route path="/address/*" element={ <Address /> } />
+          <Route path="/calendar/*" element={ <Calendar /> } />
           <Route path="/community/*" element={<Board/> }></Route>
           <Route path="/chat/*" element={ <ChatMain /> } />
           <Route path="/approval/*" element={<Approval/>}/>
