@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.clover.employee.dto.EmployeeDTO;
 import com.clover.messenger.dao.ChatMessageDAO;
 import com.clover.messenger.dto.ChatMessageDTO;
 
@@ -14,9 +15,12 @@ public class ChatMessageService {
 
     @Autowired
     private ChatMessageDAO chatMessageDAO;
-    
+
     @Autowired
     private ChatRoomService chatRoomService;
+
+    @Autowired
+    private ChatProfileService chatProfileService;
 
     /**
      * 특정 채팅방의 메시지 목록을 가져오는 메서드
@@ -35,8 +39,13 @@ public class ChatMessageService {
      */
     @Transactional
     public ChatMessageDTO saveMessage(ChatMessageDTO message) {
+        EmployeeDTO sender = chatProfileService.getEmployeeName(message.getSenderSeq());
+        System.out.println(sender.getEmpName());
+        System.out.println(sender.getEmpAvatar());
+        message.setSenderName(sender.getEmpName());
+        message.setSenderAvatar(sender.getEmpAvatar());
+
         chatMessageDAO.saveMessage(message);
-        chatRoomService.updateRoomLastMessage(message.getRoomSeq(), message);
         return message;
     }
 

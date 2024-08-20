@@ -12,9 +12,6 @@ const MessageList = ({ messages, chat, currentUserSeq, searchTerm }) => {
     );
   };
 
-  
-  
-
   const renderMessage = (message, index) => {
     const isCurrentUser = message.senderSeq === currentUserSeq;
     return (
@@ -25,15 +22,15 @@ const MessageList = ({ messages, chat, currentUserSeq, searchTerm }) => {
         {!isCurrentUser && (
           <div className={styles.senderInfo}>
             <img 
-              src={chat.customRoomAvatar || 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/profile3.png'} 
-              alt={chat.customRoomName} 
+              src={message.senderAvatar || 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/profile3.png'} 
+              alt={message.senderName} 
               className={styles.senderAvatar}
             />
           </div>
         )}
         <div className={styles.messageWrapper}>
-          {!isCurrentUser && (
-            <span className={styles.senderName}>{chat.customRoomName}</span>
+          {!isCurrentUser && chat.roomType === 'group' && (
+            <span className={styles.senderName}>{message.senderName}</span>
           )}
           <div className={styles.messageContent}>
             {highlightSearchTerm(message.messageContent, searchTerm)}
