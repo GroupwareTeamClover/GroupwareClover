@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clover.board.dto.BoardDTO;
 import com.clover.board.services.BoardService;
+import com.clover.board.services.CommentService;
 import com.clover.commons.dto.AttachmentDTO;
 import com.clover.commons.services.AttachmentService;
 import com.clover.commons.services.S3Service;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
 
 @RestController
 @RequestMapping("/board")
@@ -35,6 +35,9 @@ public class BoardController {
 	
 	@Autowired
 	private AttachmentService attServ;
+	
+	@Autowired
+	private CommentService cServ;
 
 	@PostMapping
 	public ResponseEntity<Void> post(@RequestBody HashMap<String, Object> data){
@@ -112,7 +115,8 @@ public class BoardController {
 		//해당 게시글의 첨부된 이미지, 파일 삭제(S3)
 		s3Serv.deleteFiles("posts/" + boardSeq + "/");
 		s3Serv.deleteFiles("images/posts/" + boardSeq + "/");
-		//해당 게시글의 댓글 목록 삭제 (외래키 걸 예정)
+		//해당 게시글의 댓글, 대댓글 목록 삭제(외래키로 처리)
+		
 		return ResponseEntity.ok().build();
 	}
 	
