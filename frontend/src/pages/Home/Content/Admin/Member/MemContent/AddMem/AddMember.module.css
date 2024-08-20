@@ -154,8 +154,8 @@
     width: 90px; /* 이름 열의 너비 */
 }
 .table tbody td:nth-child(2) {
-    text-align: left;
-    padding-left: 20px;
+    /* text-align: left; */
+    padding-left: 0px;
 }
 .table thead td:nth-child(3) {
     width: 90px; /* 부서 열의 너비 */

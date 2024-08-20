@@ -67,7 +67,10 @@ export const AddMember = ()=>{
         const enabledValues = filtered
             .slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
             .filter(mem => mem.EMP_STATE_CODE === 0) 
-            .map(mem => mem.EMP_SEQ);
+            .map(mem => ({
+                EMP_SEQ: mem.EMP_SEQ,
+                EMP_EMAIL: mem.EMP_EMAIL
+            }));
     
         checkboxRef.current.forEach((checkbox, i) => {
             const mem = filtered[i + currentPage * PER_PAGE];
@@ -84,13 +87,28 @@ export const AddMember = ()=>{
     // 개별 체크박스 클릭 처리
     const handleCheckBox = (e) => {
         const {value, checked} = e.target;
-        setCheckedMems(prev => {
-            if(checked){
-                return [...prev, value];
-            } else {
-                return prev.filter(prev => prev != value); 
-            }
-        });
+        const empSeq = parseInt(value, 10);
+        const selectedMember = newMem.find(mem => mem.EMP_SEQ === empSeq);
+    
+        if (selectedMember) {
+            setCheckedMems(prev => {
+                if (checked) {
+                    // 선택된 사원의 EMP_EMAIL이 undefined인지 확인 후 처리
+                    return [...prev, { EMP_SEQ: empSeq, EMP_EMAIL: selectedMember.EMP_EMAIL || '' }];
+                } else {
+                    return prev.filter(mem => mem.EMP_SEQ !== empSeq);
+                }
+            });
+        } else {
+            console.error(`Member with EMP_SEQ ${empSeq} not found.`);
+        }
+        // setCheckedMems(prev => {
+        //     if(checked){
+        //         return [...prev, value];
+        //     } else {
+        //         return prev.filter(prev => prev != value); 
+        //     }
+        // });
     };
     // 체크박스 리셋
     const resetCheckboxes = () => {
@@ -118,7 +136,9 @@ export const AddMember = ()=>{
     };
     // 대기중 버튼 클릭했을때 (사원 하나만 변경)
     const handleModalSelect = (empSeq) => {
-        setModalMems([empSeq]);  // 선택된 사원만 모달에 전달할 리스트에 저장
+        const selectedMember = newMem.find(mem => mem.EMP_SEQ === empSeq);
+        setModalMems([{ EMP_SEQ: empSeq, EMP_EMAIL: selectedMember.EMP_EMAIL }]); // 선택된 사원만 모달에 전달할 리스트에 저장    
+        //setModalMems([empSeq]);  // 선택된 사원만 모달에 전달할 리스트에 저장
         openModal();  // 모달 열기
         resetCheckboxes();
     };
