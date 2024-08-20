@@ -142,13 +142,21 @@
     table-layout: fixed; /* 테이블의 열 너비를 고정 */
 }
 
+.table thead td{
+    background-color: #f1f1f1;
+    height: 40px;
+    font-weight: bold;
+}
 .table thead td:nth-child(1){
     width:30px;    /* checkbox 너비 */
 }
 .table thead td:nth-child(2) {
     width: 90px; /* 이름 열의 너비 */
 }
-
+.table tbody td:nth-child(2) {
+    text-align: left;
+    padding-left: 20px;
+}
 .table thead td:nth-child(3) {
     width: 90px; /* 부서 열의 너비 */
 }

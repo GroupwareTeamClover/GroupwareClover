@@ -12,7 +12,22 @@
 	padding-block: 1px;
 	padding-inline: 2px;
 }
-
+.container .deletebox{
+	text-align: right;
+	padding-bottom: 10px;
+}
+.container .deleteBtn{
+	width: 80px;
+	height: 30px;
+	background-color: #3392ff;
+	color:#F3F8FF;
+	border: none;
+	border-radius: 5px;
+}
+.container .deleteBtn:hover{
+	cursor: pointer;
+	background-color: #85bcfa;
+}
 .container .headbox{
 	display: flex;
 }

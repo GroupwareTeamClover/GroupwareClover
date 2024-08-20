@@ -228,7 +228,10 @@ export const AddMember = ()=>{
                                                     )
                                                 }
                                             </td>
-                                            <td className={styles.theadtd}>{mem.empName} </td>
+                                            <td className={styles.theadtd}>
+                                                {mem.empName} 
+                                                ({mem.empBirth}-{mem.empGender})
+                                            </td>
                                             <td className={styles.theadtd}>
                                                 {
                                                     mem.deptCode === 1 ? '총무' : 

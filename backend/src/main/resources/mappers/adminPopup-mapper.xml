@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="AdminPopup">
+
  <resultMap id="adminPopupResultMap" type="com.clover.admin.dto.AdminPopupDTO">
 	    <result property="popSeq" column="pop_seq"/>
 	    <result property="popTitle" column="pop_title"/>
@@ -55,28 +56,33 @@
 		select * from employee order by emp_seq desc
 	</select>
 	<select id="getAllPop" resultMap="adminPopupResultMap">
-    	SELECT
-		    pb.pop_seq,
-		    pb.pop_title,
-		    pb.emp_id,
-		    e.emp_name,       
-		    pb.pop_content,
-		    pb.pop_is_active,
-		    pb.pop_write_date,
-		    pb.pop_updated_date,
-		    pp.pop_period_seq,
-		    pp.period_type,
-		    pp.start_date,
-		    pp.end_date,
-		    pp.monthly_day,
-		    pp.weekly_day
-		FROM
-		    popup_board pb
-		LEFT JOIN
-		    popup_period pp ON pb.pop_seq = pp.pop_seq
-		LEFT JOIN
-		    employee e ON pb.emp_id = e.emp_id
-	 	ORDER BY pop_is_active desc, pop_seq desc
+    	SELECT 
+    pb.pop_seq, pb.pop_title,  pb.emp_id,  e.emp_name,       
+    --pb.pop_content,
+    pb.pop_is_active,pb.pop_write_date,
+    pb.pop_updated_date,pp.pop_period_seq, pp.period_type, 
+    pp.start_date,pp.end_date,   pp.monthly_day, pp.weekly_day
+FROM
+    popup_board pb
+LEFT JOIN
+    popup_period pp ON pb.pop_seq = pp.pop_seq
+LEFT JOIN
+    employee e ON pb.emp_id = e.emp_id
+ORDER BY 
+    (CASE 
+        WHEN (
+            (pp.PERIOD_TYPE = 'specific' 
+             AND TRUNC(TO_DATE(pp.START_DATE, 'YYYY-MM-DD')) <![CDATA[<= ]]> TRUNC(SYSDATE) 
+             AND TRUNC(TO_DATE(pp.END_DATE, 'YYYY-MM-DD')) >= TRUNC(SYSDATE))
+            OR (pp.PERIOD_TYPE = 'monthly' 
+                AND TO_CHAR(SYSDATE, 'DD') = LPAD(pp.MONTHLY_DAY, 2, '0'))
+            OR (pp.PERIOD_TYPE = 'weekly' 
+                AND TRIM(UPPER(TO_CHAR(SYSDATE, 'DAY', 'NLS_DATE_LANGUAGE=ENGLISH'))) = UPPER(pp.WEEKLY_DAY))
+                AND pb.POP_IS_ACTIVE = 'true'
+        ) THEN 0 ELSE 1
+     END),
+    pb.pop_is_active DESC,
+    pb.pop_seq DESC
 	 	
     	
     </select>
@@ -174,6 +180,15 @@
     <delete id="deletePopup">
     	delete from popup_board where pop_seq = #{newPopSeq}
     </delete>
+    <delete id="deletepop">
+		delete from popup_board where pop_seq = #{popSeq}
+	</delete>
+	<delete id="deleteperiod">
+		delete from popup_period where pop_seq = #{popSeq}
+	</delete>
+	<delete id="deletefile">
+		delete from attachment where ATTACHMENT_FROM='popup' and attachment_parent_seq=#{popSeq}
+	</delete>
 </mapper>
   
   
