@@ -35,8 +35,8 @@ public class EmployeeDAO {
     }
 
     /** 전 직원 기본 정보 조회 **/
-    public List<EmployeeDTO> getMembersInfo() {
-        return mybatis.selectList("Employee.getMembersInfo");
+    public List<Map<String, Object>> getMembersInfo(int deptCode) {
+        return mybatis.selectList("Employee.getMembersInfo", deptCode);
     }
 
     /** 사원 정보 업데이트 **/

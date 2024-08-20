@@ -9,6 +9,11 @@
 .date {
     font-size: 26px;
     font-weight: 800;
+    display: flex;
+}
+
+.date > p {
+    margin: 0 30px;
 }
 
 .date > button {

@@ -6,7 +6,7 @@
 
     <select id="signIn" resultType="com.clover.employee.dto.EmployeeDTO">
         SELECT
-			*
+            *
         FROM
             employee
         WHERE
@@ -30,12 +30,33 @@
             e.annual_leave_day
         FROM
             employee e
-            JOIN
-                DEPARTMENT d ON e.DEPT_CODE = d.DEPT_CODE
+        JOIN
+            DEPARTMENT d ON e.DEPT_CODE = d.DEPT_CODE
             JOIN
                 ROLE r ON e.ROLE_CODE = r.ROLE_CODE
         WHERE
             emp_seq = #{empSeq}
+    </select>
+
+    <select id="getMembersInfo" resultType="java.util.HashMap">
+        SELECT
+            e.emp_seq AS "empSeq",
+            e.emp_name AS "empName",
+            r.role_name AS "roleName",
+            e.role_code AS "roleCode",
+            e.dept_code AS "deptCode",
+            d.dept_name AS "deptName"
+        FROM
+            employee e
+            JOIN
+                DEPARTMENT d ON e.DEPT_CODE = d.DEPT_CODE
+            JOIN
+                ROLE r ON e.ROLE_CODE = r.ROLE_CODE
+        <if test='deptCode != 0'>
+            WHERE e.dept_code = #{deptCode}
+        </if>
+        ORDER BY
+            e.dept_code, e.role_code
     </select>
 
     <select id="existsId" resultType="Integer">
@@ -113,11 +134,11 @@
             employee
         WHERE
             emp_email = #{empEmail}
-        <if test='empName != null and empName != ""'>
-            AND emp_name = #{empName}
-        </if>
-        <if test='empId != null and empId != ""'>
-            AND emp_id = #{empId}
-        </if>
+            <if test='empName != null and empName != ""'>
+                AND emp_name = #{empName}
+            </if>
+            <if test='empId != null and empId != ""'>
+                AND emp_id = #{empId}
+            </if>
     </select>
 </mapper>
