@@ -112,6 +112,23 @@
     align-items: center;
 }
 
+.detailTitle > h2 {
+    margin: 0 25px;
+}
+
+.detailTitle > button {
+    font-size: 18px;
+    font-weight: 900;
+    background-color: transparent;
+    border: none;
+    color: darkgray;
+}
+
+.detailTitle > button:hover {
+    cursor: pointer;
+    color: black;
+}
+
 .detailContent {
     height: 30%;
     display: flex;
@@ -189,6 +206,15 @@
 .outsideContent > p {
     margin-right: 20px;
     font-size: 16px;
+}
+
+.noWork {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 900;
 }
 
 .outsideWork::-webkit-scrollbar {
