@@ -31,7 +31,6 @@ export const AttendMem = () =>{
   const [employees, setEmployees] = useState([]);
   useEffect(() => {
     axios.get(`${BaseUrl()}/attendance/members/${select}/${year}-${month}`).then(res => {
-      console.log("res.data ==== ", res.data);
       setEmployees(res.data);
       setFiltered(res.data);
     });
