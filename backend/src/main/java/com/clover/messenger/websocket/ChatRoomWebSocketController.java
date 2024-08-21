@@ -49,6 +49,14 @@ public class ChatRoomWebSocketController {
         // 채팅방의 모든 사용자에게 새 사용자 입장 메시지와 업데이트된 채팅방 정보를 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getRoomSeq(), 
             Map.of("joinMessage", joinMessage, "updatedRoom", updatedRoom));
+        
+        // joinMessag는 위에서 참고 채팅방을 업데이트하는 것은 밑의 sendChatRoomsUpdate를 참고
+            List<Integer> roomMembers = chatRoomService.getRoomMembers(chatMessage.getRoomSeq());
+            for (Integer memberSeq : roomMembers) {
+                sendChatRoomsUpdate(memberSeq);
+            }    
+
+
     }
 
     /**
@@ -56,10 +64,15 @@ public class ChatRoomWebSocketController {
      * @param message 채팅방 퇴장 정보를 포함한 메시지 객체
      */
     @MessageMapping("/chat.leaveRoom")
-    public void leaveRoom(@Payload ChatMessageDTO message) {
+    public void leaveRoom(@Payload ChatMessageDTO message, SimpMessageHeaderAccessor headerAccessor) {
         // 채팅방을 떠난 사용자 정보를 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + message.getRoomSeq(), 
             new ChatMessageDTO(message.getRoomSeq(), message.getSenderSeq() + "님이 채팅방을 나갔습니다.", "LEAVE"));
+
+            List<Integer> roomMembers = chatRoomService.getRoomMembers(message.getRoomSeq());
+            for (Integer memberSeq : roomMembers) {
+                sendChatRoomsUpdate(memberSeq);
+            }    
     }
     
     /**
@@ -67,10 +80,14 @@ public class ChatRoomWebSocketController {
      * @param message 대화 내용 삭제 정보를 포함한 메시지 객체
      */
     @MessageMapping("/chat.clearHistory")
-    public void clearHistory(@Payload ChatMessageDTO message) {
+    public void clearHistory(@Payload ChatMessageDTO message, SimpMessageHeaderAccessor headerAccessor) {
         // 대화 내용 삭제 알림을 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + message.getRoomSeq(), 
             new ChatMessageDTO(message.getRoomSeq(), "대화 내용이 삭제되었습니다.", "CLEAR"));
+        List<Integer> roomMembers = chatRoomService.getRoomMembers(message.getRoomSeq());
+            for (Integer memberSeq : roomMembers) {
+                sendChatRoomsUpdate(memberSeq);
+        }                
     }
 
     private void sendChatRoomsUpdate(int empSeq) {
