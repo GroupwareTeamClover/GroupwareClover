@@ -42,7 +42,27 @@ export const confirmAlert = (title, text) => {
   })
 }
 
-//
+// 조그마한 Alert
+export const smallAlert = (text) => {
+	Swal.fire({
+		// position:" top",
+		text,
+    confirmButtonColor: "#3085d6",
+    confirmButtonText: "확인"
+	});
+} 
+export const smallConfirmAlert = (text) => {
+	return Swal.fire({
+		// position:" top",
+		text,
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "gray",
+    confirmButtonText: "확인",
+    cancelButtonText: "취소",
+    reverseButtons: true
+	});
+} 
 
 export const validateUserId = (userId) => {
   let regex = /^(?=.*[a-zA-Z])([a-zA-Z0-9]{6,12})$/;

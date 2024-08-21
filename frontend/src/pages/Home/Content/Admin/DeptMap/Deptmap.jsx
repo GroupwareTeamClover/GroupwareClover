@@ -54,6 +54,7 @@ export const Deptmap=()=>{
             setFilteredData(newFolderData);
             setIsLoading(false);
         });
+        
     }, []);
     
     useEffect(() => {
@@ -61,6 +62,8 @@ export const Deptmap=()=>{
             setCurrentPage(0); 
         }
     }, [selectedFolder]);
+
+    
 
 
     const handleSearchData = (e) => {
@@ -123,6 +126,17 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
     const handleAddDept =()=>{
         openModal(); 
     }
+    // const handleAddDept = () => {
+    //     if (!deptCode) {
+    //         // Find the minimum available deptCode
+    //         let minDeptCode = 1;
+    //         while (existingDeptCodes.includes(minDeptCode)) {
+    //             minDeptCode++;
+    //         }
+    //         setDeptCode(minDeptCode);
+    //     }
+    //     openModal();
+    // };
     
   
 
@@ -132,7 +146,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
             <div className={styles.content}>
                 <div className={styles.searchBox}>
                     <div className={styles.addDept} onClick={handleAddDept}>
-                        {/* 부서 &nbsp;<FaRegPlusSquare size={20}/>  */}
+                        부서 &nbsp;<FaRegPlusSquare size={20}/> 
                     </div>
                     <div className={styles.searchLine}>
                         <div className={styles.inputBox}>

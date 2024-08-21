@@ -21,8 +21,9 @@ export const Mypage = ({ empSeq, closeModal }) => {
   /** 생년월일 형식 변환하여 출력 **/
   const changeBirth = (birth) => {
     if (birth !== undefined) {
+      console.log("birth.slice(0.2) ==== ", birth.slice(0, 2));
       let year = "";
-      if (parseInt(birth) > 40) year = `19${birth.slice(0, 2)}`;
+      if (parseInt(birth.slice(0, 2)) > 40) year = `19${birth.slice(0, 2)}`;
       else year = `20${birth.slice(0, 2)}`;
       return year + "년 " + birth.slice(2, 4) + "월 " + birth.slice(4, 6) + "일";
     }

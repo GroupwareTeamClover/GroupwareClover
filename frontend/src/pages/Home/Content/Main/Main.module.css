@@ -178,6 +178,7 @@
     font-weight: 800;
     background-color: var(--btn-color);
     color: var(--font-color);
+    margin: 0 10px;
 }
 
 .InfoBox > button:hover {

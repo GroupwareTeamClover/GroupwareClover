@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useMemberStore } from '../../../../../../../store/store';
 import WebEditor from '../../../../../../../components/WebEditor/WebEditor';
+import { smallAlert, smallConfirmAlert } from '../../../../../../../commons/common';
 
 export const PopupWrite = () => {
 
@@ -40,14 +41,14 @@ export const PopupWrite = () => {
     // 유효성 검사: 시작일이 오늘보다 이전일 경우
     useEffect(() => {
         if (specificStartDate && specificStartDate < today) {
-            alert("시작일은 오늘보다 이전일 수 없습니다.");
+            smallAlert("시작일은 오늘보다 이전일 수 없습니다.");
             setSpecificStartDate(''); // 시작일을 초기화
         }
     }, [specificStartDate, today]);
     // 시작일과 종료일 유효성 검사
     useEffect(() => {
         if (specificStartDate && specificEndDate && specificEndDate < specificStartDate) {
-            alert("종료일은 시작일보다 전일 수 없습니다.");
+            smallAlert("종료일은 시작일보다 전일 수 없습니다.");
             setSpecificEndDate('');  // 종료일을 초기화
         }
     }, [specificStartDate, specificEndDate]);
@@ -75,11 +76,11 @@ export const PopupWrite = () => {
 
     const handleSubmit = () => {
         if (title.trim() === "") {
-            alert("제목을 입력해주세요!");
+            smallAlert("제목을 입력해주세요!");
             return;
         } 
         if (uploadError) {
-            alert("파일 용량이 큽니다. 모든 파일이 성공적으로 업로드되었는지 확인해주세요.");
+            smallAlert("파일 용량이 큽니다. 모든 파일이 성공적으로 업로드되었는지 확인해주세요.");
             return;
         }
 
@@ -91,33 +92,33 @@ export const PopupWrite = () => {
         const strippedContent = textContent.trim();
 
         if (!hasImage && strippedContent === "") {
-                alert("내용을 입력해주세요!");
+            smallAlert("내용을 입력해주세요!");
                 return;
             }
             if (!periodType) {
-                alert("공지기간을 선택해주세요!");
+                smallAlert("공지기간을 선택해주세요!");
                 return;
             }
             if (periodType === 'specific') {
                 if (!specificStartDate || !specificEndDate) {
-                    alert("특정 기간의 시작일과 종료일을 모두 선택해주세요!");
+                    smallAlert("특정 기간의 시작일과 종료일을 모두 선택해주세요!");
                     return;
                 }
             } else if (periodType === 'monthly') {
                 if (!monthlyDay) {
-                    alert("매월 반복의 날짜를 선택해주세요!");
+                    smallAlert("매월 반복의 날짜를 선택해주세요!");
                     return;
                 }
             } else if (periodType === 'weekly') {
                 if (!weeklyDay) {
-                    alert("매주 반복의 요일을 선택해주세요!");
+                    smallAlert("매주 반복의 요일을 선택해주세요!");
                     return;
                 }
             }
 
             // 활성화 여부가 선택되었는지 확인
             if (!boardActive) {
-                alert("활성화 여부를 선택해주세요!");
+                smallAlert("활성화 여부를 선택해주세요!");
                 return;
             }
 
@@ -152,24 +153,29 @@ export const PopupWrite = () => {
             axios.post(`${BaseUrl()}/adminpopup`, payload)
                 .then(resp =>{
                     if(resp.status ===200){
-                        alert("공지팝업이 등록되었습니다.");
+                        smallAlert("공지팝업이 등록되었습니다.");
                         navi('/popup', {state:{type: '팝업공지글 목록'}}); 
                     }else {
-                        alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+                        smallAlert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
                     }
                 })
                 .catch(error=>{
                     console.log("서버오류: ", error);
-                    alert("서버에 문제 발생.")
+                    smallAlert("서버에 문제 발생.")
                 })
 
         }
     
 
     const handleCancel = () => {
-        const confirm = window.confirm("글 작성을 취소하시겠습니까?");
-        if(confirm){  navi('/popup', {state:{type: '팝업공지글 목록'}}); }
-        else{return false}
+        smallConfirmAlert("글 작성을 취소하시겠습니까?").then((result)=>{
+            if(result.isConfirmed){
+                navi('/popup', {state:{type: '팝업공지글 목록'}}); 
+            }else{return false}
+        })
+        // const confirm = window.confirm("글 작성을 취소하시겠습니까?");
+        // if(confirm){  navi('/popup', {state:{type: '팝업공지글 목록'}}); }
+        // else{return false}
     }
 
      //첨부파일
@@ -202,7 +208,7 @@ export const PopupWrite = () => {
      };
     const handleUploadError = (error, file) => {
         console.error('File upload error:', error);
-        alert( file.name +'파일 용량이 큽니다. ');
+        smallAlert( file.name +'파일 용량이 큽니다. ');
         setUploadError(true); // 에러 상태 설정
         // 실패한 파일을 리스트에서 제거
         handleRemove(file);

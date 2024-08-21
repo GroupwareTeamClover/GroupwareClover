@@ -8,7 +8,7 @@ import WebEditor from '../../../../../../../components/WebEditor/WebEditor';
 import { Uploader } from 'rsuite';
 import { useParams } from 'react-router-dom';
 import {format} from 'date-fns';
-import { confirmAlert } from '../../../../../../../commons/common';
+import { confirmAlert, smallConfirmAlert } from '../../../../../../../commons/common';
 
 
 export const PopupDetail = () => {
@@ -79,12 +79,20 @@ export const PopupDetail = () => {
     }, [popSeq]);
 
     const handleDelete=()=>{
-        const confirm = window.confirm("글 삭제를 하시겠습니까?");
-        if(confirm){  axios.delete(`${BaseUrl()}/adminpopup/deletepop/${popSeq}`).then(resp => {
-            console.log(resp.data);
-            navi('/popup', {state:{type: '팝업공지글 목록'}});
-        }) }
-        else{return false}
+        smallConfirmAlert("글 삭제를 하시겠습니까?").then((result)=>{
+            if(result.isConfirmed){
+                axios.delete(`${BaseUrl()}/adminpopup/deletepop/${popSeq}`).then(resp => {
+                        console.log(resp.data);
+                        navi('/popup', {state:{type: '팝업공지글 목록'}});
+                })}
+            else{return false}
+        })
+        // const confirm = window.confirm("글 삭제를 하시겠습니까?");
+        // if(confirm){  axios.delete(`${BaseUrl()}/adminpopup/deletepop/${popSeq}`).then(resp => {
+        //     console.log(resp.data);
+        //     navi('/popup', {state:{type: '팝업공지글 목록'}});
+        // }) }
+        // else{return false}
         
     }
 
@@ -116,9 +124,14 @@ export const PopupDetail = () => {
         setAddFileUrls(prev => prev.filter(url => url !== file.url)); // remove URL from addFileUrls
     };
     const handleCancel = () => {
-        const confirm = window.confirm("글 작성을 취소하시겠습니까?");
-        if(confirm){  navi('/popup', {state:{type: '팝업공지글 목록'}}); }
-        else{return false}
+        smallConfirmAlert("글 작성을 취소하시겠습니까?").then((result)=>{
+            if(result.isConfirmed){
+                navi('/popup', {state:{type: '팝업공지글 목록'}}); 
+            }else{return false}
+        })
+        // const confirm = window.confirm("글 작성을 취소하시겠습니까?");
+        // if(confirm){  navi('/popup', {state:{type: '팝업공지글 목록'}}); }
+        // else{return false}
        
     };
 

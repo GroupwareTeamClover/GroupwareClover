@@ -1,10 +1,10 @@
-import styles from './Loading.module.css'
+import styles from './Loading.module.css';
+import loading from '../../images/loading.gif';
 
 export const Loading = () => {
     return (
         <div className={styles.container}>
-            <div className={styles.spinner}></div>
-            <p>잠시만 기다려주세요..</p>
+          <img src={loading} alt="loading" className={styles.loading}/>
         </div>
     );
 }
