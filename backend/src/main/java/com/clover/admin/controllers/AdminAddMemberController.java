@@ -1,5 +1,6 @@
 package com.clover.admin.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ public class AdminAddMemberController {
 	@GetMapping
 	public ResponseEntity<List<EmployeeDTO>> getAllNew(){
 		return ResponseEntity.ok(adminmemberService.getAllNew());
+	}
+	@GetMapping("/newname")
+	public ResponseEntity<List<HashMap<String,Object>>> getAllNewName(){
+		return ResponseEntity.ok(adminmemberService.getAllNewName());
 	}
 	
 	@PutMapping
