@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import styles from '../../../../../components/Folder/Folder.module.css'
+import styles from './Folderdept.module.css'
 import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder, FaUser, FaBuilding, FaRegBuilding  } from "react-icons/fa";
 import { CiFileOn } from "react-icons/ci";
 
@@ -30,8 +30,10 @@ export const Folderdept = ({ folder, level = 0, onItemClick, selectedItem, setSe
     return (
         <div className={styles.folderContainer} style={{ marginLeft: `${level * 20}px` }}>
             <div className={styles.folderHeader} onClick={() => { handleToggle(); onFolderClick(folder); }}>
-                {folder.children && folder.children.length > 0 && (
+            {folder.children && folder.children.length > 0 ? (
                     isExpanded ? <FaRegMinusSquare /> : <FaRegPlusSquare />
+                ) : (
+                    <FaRegPlusSquare /> // 자식이 없는 경우에도 플러스 아이콘 유지
                 )}
                 <span><FaRegBuilding /></span><span className={styles.headerText}>{folder.name}</span>
             </div>

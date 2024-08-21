@@ -5,7 +5,7 @@ import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
 import { smallAlert, smallConfirmAlert } from '../../../../../../commons/common';
 
-export const ModalDept =({setIsModalOpen})=>{
+export const ModalDept =({setIsModalOpen, onDeptAdded })=>{
 
     const [deptName, setDeptName] = useState();
     const [deptCode, setDeptCode] = useState();
@@ -43,20 +43,21 @@ export const ModalDept =({setIsModalOpen})=>{
             }
             setDeptCode(minDeptCode);
             // handleAxios(deptName, minDeptCode);
-            smallAlert("부서명: "+deptName+", 부서코드: "+minDeptCode+"인 부서가 추가되었습니다.").then(
-                handleAxios(deptName, minDeptCode)
-            );
+            
+            axios.post(`${BaseUrl()}/adminmember/addDept`, {deptName, minDeptCode}).then((resp)=>{
+                console.log("됨?"+deptName)
+                const newDept = { name: deptName, children: [] };
+                onDeptAdded(newDept);
+                closeModal();
+                smallAlert(`부서명: ${deptName}, 부서코드: ${minDeptCode}인 부서가 추가되었습니다.`)
+            })
+            
         }
 
         
     }
     
-    const handleAxios=(deptName, deptCode)=>{
-        console.log(deptName)
-        console.log(deptCode)
-        // smallAlert("부서명: "+deptName+", 부서코드: "+deptCode+"인 부서가 추가되었습니다.");
-        closeModal();
-    }
+    
 
     return(
         <div className={styles.container}>

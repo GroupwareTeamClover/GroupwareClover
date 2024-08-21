@@ -38,7 +38,7 @@ export const Deptmap=()=>{
   
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`${BaseUrl()}/chat/organization`).then((resp) => {
+        axios.get(`${BaseUrl()}/adminmember/organization`).then((resp) => {
             const data = resp.data;
             const departmentMap = data.reduce((acc, current) => {
                 const { DEPT_NAME, EMP_NAME, ROLE_NAME, EMP_SEQ, EMP_AVATAR } = current;
@@ -81,6 +81,11 @@ export const Deptmap=()=>{
         }
     };
 
+    const handleAddNewDept = (newDept) => {
+        const updatedData = [...folderData, newDept];
+        setFolderData(updatedData);
+        setFilteredData(updatedData);
+    };
 
     useEffect(() => {
         const filterFolders = (data, query) => {
@@ -125,20 +130,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
     // 부서 추가 
     const handleAddDept =()=>{
         openModal(); 
-    }
-    // const handleAddDept = () => {
-    //     if (!deptCode) {
-    //         // Find the minimum available deptCode
-    //         let minDeptCode = 1;
-    //         while (existingDeptCodes.includes(minDeptCode)) {
-    //             minDeptCode++;
-    //         }
-    //         setDeptCode(minDeptCode);
-    //     }
-    //     openModal();
-    // };
-    
-  
+    }  
 
     return (
         <div className={styles.container}>
@@ -220,7 +212,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
             </div>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
-                   <ModalDept setIsModalOpen={setIsModalOpen}/>
+                   <ModalDept setIsModalOpen={setIsModalOpen} onDeptAdded={handleAddNewDept}/>
                 </div>
             </Modal>
         </div>
