@@ -35,6 +35,7 @@ public class EmployeeController {
 
     @PostMapping
     public ResponseEntity<String> signUpEmployee(@RequestBody EmployeeDTO dto) {
+        System.out.println("birth ===== " + dto.getEmpBirth());
         String result = employeeService.signUpEmployee(dto);
         return ResponseEntity.ok(result);
     }
