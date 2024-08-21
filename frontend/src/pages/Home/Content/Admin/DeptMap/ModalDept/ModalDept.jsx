@@ -3,7 +3,7 @@ import styles from './ModalDept.module.css'
 import { BiHelpCircle } from 'react-icons/bi';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
-import { smallAlert } from '../../../../../../commons/common';
+import { smallAlert, smallConfirmAlert } from '../../../../../../commons/common';
 
 export const ModalDept =({setIsModalOpen})=>{
 
@@ -13,66 +13,6 @@ export const ModalDept =({setIsModalOpen})=>{
 
     const closeModal = () => setIsModalOpen(false);
 
-    const handleSave = () =>{
-        console.log(deptName);
-        console.log(deptCode);
-        
-        if(!deptName){
-            smallAlert("부서명을 입력하세요.");
-            return;
-        }
-        // 이미존재하는 부서이름
-        let existingDeptName = existingDeptCodes.filter(name => name.DEPT_NAME === deptName);
-        if(existingDeptName){
-            smallAlert("이미 존재 부서명. 다른 부서명 입력바람");
-            return;
-        }
-        // 이미존재하는 부서코드
-        let existingDeptCode = existingDeptCodes.filter(code => code.DEPT_CODE === deptCode);
-        if(deptCode && existingDeptCode){
-            smallAlert("이미 존재 부서코드. 다른 부서코드 입력 또는 자동생성"); 
-            return;
-        } else if(!deptCode){
-            let minDeptCode = 1;
-            while (existingDeptCodes.filter(code=> code.DEPT_CODE === minDeptCode)) {
-                minDeptCode++;
-            }
-            setDeptCode(minDeptCode);
-            console.log(deptCode)
-        }
-            
-         
-        
-    }
-
-//     const handleSave = () => {
-//     if(!deptName){
-//         alert("부서명을 입력하세요.");
-//         return;
-//     }
-
-//     let existingDeptName = existingDeptCodes.some(name => name.DEPT_NAME === deptName);
-//     if(existingDeptName){
-//         alert("이미 존재하는 부서명입니다. 다른 부서명을 입력하세요");
-//         return; // 상태 변경을 중단하고 함수 종료
-//     }
-
-//     let existingDeptCode = existingDeptCodes.some(code => code.DEPT_CODE === deptCode);
-//     if(deptCode && existingDeptCode){
-//         alert("이미 존재하는 부서코드입니다. 다른 부서코드를 입력하시거나 비워주세요");
-//         return; // 상태 변경을 중단하고 함수 종료
-//     } else if (!deptCode) {
-//         let minDeptCode = 1;
-//         while (existingDeptCodes.some(code=> code.DEPT_CODE === minDeptCode)) {
-//             minDeptCode++;
-//         }
-//         setDeptCode(minDeptCode);
-//     }
-    
-//     // 필요한 다른 로직 추가...
-// }
-
-
     useEffect(()=>{
         // 테이블에 존재하는 부서코드, 부서이름 가져오기. (같은 코드, 이름 있으면 막기 위해서)
         axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp) => {
@@ -80,6 +20,43 @@ export const ModalDept =({setIsModalOpen})=>{
             setExistingDeptCodes(resp.data.map(code => ({DEPT_CODE:code.DEPT_CODE, DEPT_NAME:code.DEPT_NAME}))); 
         });
     },[])
+    const handleSave = () => {
+        if(!deptName){
+            smallAlert("부서명을 입력하세요.");
+            return;
+        }
+    
+        let existingDeptName = existingDeptCodes.some(name => name.DEPT_NAME === deptName);
+        if(existingDeptName){
+            smallAlert("이미 존재하는 부서명입니다. 다른 부서명을 입력하세요");
+            return; 
+        }
+    
+        let existingDeptCode = existingDeptCodes.some(code => code.DEPT_CODE === deptCode);
+        if(deptCode && existingDeptCode){
+            smallAlert("이미 존재하는 부서코드입니다. 다른 부서코드를 입력하시거나 비워주세요");
+            return; //
+        } else if (!deptCode) {
+            let minDeptCode = 1;
+            while (existingDeptCodes.some(code=> code.DEPT_CODE === minDeptCode)) {
+                minDeptCode++;
+            }
+            setDeptCode(minDeptCode);
+            // handleAxios(deptName, minDeptCode);
+            smallAlert("부서명: "+deptName+", 부서코드: "+minDeptCode+"인 부서가 추가되었습니다.").then(
+                handleAxios(deptName, minDeptCode)
+            );
+        }
+
+        
+    }
+    
+    const handleAxios=(deptName, deptCode)=>{
+        console.log(deptName)
+        console.log(deptCode)
+        // smallAlert("부서명: "+deptName+", 부서코드: "+deptCode+"인 부서가 추가되었습니다.");
+        closeModal();
+    }
 
     return(
         <div className={styles.container}>
@@ -93,6 +70,7 @@ export const ModalDept =({setIsModalOpen})=>{
                 <div className={styles.statusSelect}>
                     <input type='text' name='deptname' value={deptName ||''} onChange={(e) => setDeptName(e.target.value)}></input>                  
                 </div>
+                {/* <button className={styles.checkBtn}>중복확인</button> */}
             </div>
             <div className={styles.changeStatus}>
                 <div className={styles.statusTitle}>

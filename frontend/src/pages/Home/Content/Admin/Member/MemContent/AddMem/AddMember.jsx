@@ -9,8 +9,8 @@ import { useMemStore } from "../../../../../../../store/store";
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import {format} from 'date-fns';
 import { FaSearch } from "react-icons/fa";
-import { Loader } from "rsuite";
 import { smallAlert } from "../../../../../../../commons/common";
+import { Loading } from "../../../../../../../components/Loading/Loading";
 export const AddMember = ()=>{
     const navi = useNavigate();
     const {storemembers, setstoremembers} = useMemStore();
@@ -163,6 +163,7 @@ export const AddMember = ()=>{
     
     return(
         <div className={styles.container}>
+            {isLoading && <Loading content="글 목록을 불러오는 중입니다.."/>}
             <div className={styles.member_info}>
                 {/* emp table에서 state가 0인 사람 갯수. select count(state) from emp where state=0; */}
                 <div className={styles.member_total}>
@@ -216,14 +217,11 @@ export const AddMember = ()=>{
                         </thead>
                         <tbody className={styles.tbody}>
                             {/* 데이터영역 */}
-                            {isLoading ? (
-                    <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
-                ) : ((filtered.length === 0) ? (
-                        <tr>
-                            <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
-                        </tr>
-                ) : (
-                          
+                            {(filtered.length === 0) ? (
+                                <tr>
+                                    <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
+                                </tr>
+                        ) : (
                             filtered.length > 0 ? (
                                 filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
                                     <tr key={i}>
@@ -265,7 +263,7 @@ export const AddMember = ()=>{
                                     </tr>
                                 )
                             )
-                        )
+                        
                         }
                         </tbody>
                     </table>

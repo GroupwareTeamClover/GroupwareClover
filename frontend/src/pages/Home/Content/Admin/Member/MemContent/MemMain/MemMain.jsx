@@ -8,8 +8,8 @@ import { ModalDelete } from './ModalDelete/ModalDelete';
 import { useMemStore } from '../../../../../../../store/store';
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import { FaSearch } from 'react-icons/fa';
-import { Loader } from 'rsuite';
 import { smallAlert } from '../../../../../../../commons/common';
+import { Loading } from '../../../../../../../components/Loading/Loading';
 
 export const MemMain = () => {
     // 8/8(목)
@@ -317,6 +317,7 @@ export const MemMain = () => {
 
     return (
       <div className={styles.container}>
+        {isLoading && <Loading content="글 목록을 불러오는 중입니다.."/>}
         <div className={styles.member_info}>
             <div className={styles.member_total}>
                 전체 사원 수 : {members.length} 명
@@ -422,9 +423,7 @@ export const MemMain = () => {
                         </thead>
                         <tbody className={styles.tbody}>
                      
-                {isLoading ? (
-                    <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
-                ) : ((filtered.length === 0) ? (
+                {(filtered.length === 0) ? (
                         <tr>
                             <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
                         </tr>
@@ -492,7 +491,7 @@ export const MemMain = () => {
                                 </tr>
                             )
                         )
-                    )
+                    
                     }
                         </tbody>
                     </table>
