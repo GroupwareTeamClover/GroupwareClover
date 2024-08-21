@@ -33,9 +33,13 @@
     border-right: 1px solid #e0e0e0; /* 검색 박스와 리스트 구분 선 */
 }
 .addDept{
+    display: flex;
     padding: 0px 3px 10px 3px;
     /* border-bottom: 1px solid #ddd; */
+}
 
+.addDept:hover{
+    cursor: pointer;
 }
 .searchLine {
     display: flex;

@@ -6,6 +6,8 @@ import { FaRegPlusSquare, FaSearch } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { Folderdept } from "./Folderdept";
 import { Pagination } from "../../../../../components/Pagination/Pagination";
+import { Modal } from "../../../../../components/Modal/Modal";
+import { ModalDept } from "./ModalDept/ModalDept";
 
 export const Deptmap=()=>{
     
@@ -14,7 +16,6 @@ export const Deptmap=()=>{
     const [isLoading, setIsLoading] = useState(true);
     const [selectedItem, setSelectedItem] = useState({ children: {} });
     const [searchInput, setSearchInput] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedChild, setSelectedChild] = useState(null);
@@ -111,18 +112,27 @@ export const Deptmap=()=>{
         };
     };
 
-    
-  // 페이지네이션을 위해 selectedFolder가 null이 아닐 때만 계산
-  const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PER_PAGE) : 0;
+// 페이지네이션을 위해 selectedFolder가 null이 아닐 때만 계산
+const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PER_PAGE) : 0;
 
+ // 모달))----------------------------------------------------
+     const [ isModalOpen, setIsModalOpen ] = useState(false);
+     const openModal = () => setIsModalOpen(true);
+     const closeModal = () => setIsModalOpen(false);
+    // 부서 추가 
+    const handleAddDept =()=>{
+        openModal(); 
+    }
+    
+  
 
     return (
         <div className={styles.container}>
             <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
             <div className={styles.content}>
                 <div className={styles.searchBox}>
-                    <div className={styles.addDept}>
-                        {/* <FaRegPlusSquare /> 부서추가 */}
+                    <div className={styles.addDept} onClick={handleAddDept}>
+                        {/* 부서 &nbsp;<FaRegPlusSquare size={20}/>  */}
                     </div>
                     <div className={styles.searchLine}>
                         <div className={styles.inputBox}>
@@ -194,6 +204,11 @@ export const Deptmap=()=>{
                 </div>
                 
             </div>
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+                <div className={styles.modalForm}>
+                   <ModalDept setIsModalOpen={setIsModalOpen}/>
+                </div>
+            </Modal>
         </div>
     );
     
