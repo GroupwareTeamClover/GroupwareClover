@@ -128,6 +128,16 @@ export const Deptmap=()=>{
         };
     };
 
+    const handleDeptAdded = (newDept) => {
+        // 새로운 부서가 추가되면 기존 부서 목록에 새 부서를 추가합니다.
+        setFolderData(prevData => {
+            // 새로운 부서를 기존 부서 데이터에 추가
+            const updatedData = [...prevData, newDept];
+            setFilteredData(updatedData); // 필터링된 데이터도 업데이트
+            return updatedData;
+        });
+    };
+
 // 페이지네이션을 위해 selectedFolder가 null이 아닐 때만 계산
 const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PER_PAGE) : 0;
 
@@ -221,7 +231,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
             </div>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
-                   <ModalDept setIsModalOpen={setIsModalOpen}/>
+                   <ModalDept setIsModalOpen={setIsModalOpen} onDeptAdded={handleDeptAdded}/>
                 </div>
             </Modal>
         </div>
