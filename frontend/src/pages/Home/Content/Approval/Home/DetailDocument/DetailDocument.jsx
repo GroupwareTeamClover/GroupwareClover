@@ -402,6 +402,8 @@ export const DetailDocument = ({type}) => {
         }
     },[isPartCheck, totalLineInfo])
 
+
+
     // 사이드 메뉴 상태 관리
     const [activeMenu, setActiveMenu] = useState('checkInfo'); // 기본값 설정
 
@@ -648,7 +650,7 @@ export const DetailDocument = ({type}) => {
                                         <>
                                             <div className={styles.modalheader}>반려 사유</div>
                                             <div className={styles.inputBox}>
-                                                <input type="text" placeholder="반려 사유를 입력해주세요." className={styles.inputcss} onChange={handleModalInput}></input>
+                                                <input type="text" placeholder="반려 사유를 입력해주세요 최대(30자)" className={styles.inputcss} onChange={handleModalInput} maxLength="30"></input>
                                             </div>
                                             <div className={styles.modalbtnBox}>
                                                 <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
