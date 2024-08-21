@@ -15,7 +15,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
   /** 입력 데이터 체크 **/
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
-
     if (name === "empTel") {
       setSendData(prev => {
         const data = {...prev, [name]: value};
@@ -91,8 +90,8 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       const res = await axios.post(`${BaseUrl()}/employee`, data);
       if(res.data === "ok"){
         timeAlert("회원가입 완료");
+        // setLoading(false);
         setSignUpState(false);
-        setLoading(false);
       }
     } else {
       //  checkData가 fales 인 부분으로 포커스 이동하는 로직 필요

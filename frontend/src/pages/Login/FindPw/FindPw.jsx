@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../commons/config";
 import {failAlert, sendEmail, successAlert, validatePassword} from "../../../commons/common";
+import {Loading} from "../../../components/Loading/Loading";
 
 export const FindPw = ({closeModal}) => {
 
@@ -12,7 +13,10 @@ export const FindPw = ({closeModal}) => {
   const [exists, setExists] = useState({empId: "", empEmail: ""});
   const [accessNum, setAccessNum] = useState({ code: 0, input: 0});
   const [changePw, setChangePw] = useState({empSeq: 0, empPw: "", pwCheck: "", check: false});
-  
+
+  /** 로딩 상태 **/
+  const [loading, setLoading] = useState(false);
+
   const handleCheckData = (e) => {
     const { name, value } = e.target;
     if(name === "code" || name === "input") setAccessNum(prev => ({ ...prev, [name]:value }));
@@ -31,11 +35,11 @@ export const FindPw = ({closeModal}) => {
     }
 
     const params = { ...exists }
-    // exists 계정 정보 확인 후 있다면 다음 로직 진행
+
+    setLoading(true);
+
     axios.get(`${BaseUrl()}/employee/exists`, {params}).then(res => {
-      // 이메일 인증 후 인증 번호가 맞다면 아이디 요청
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
-      console.log("인증코드 ==== ", ranNumber);
       if(res.data.empSeq > 0) {
         // 계정 조회 성공
         const data = {
@@ -49,7 +53,9 @@ export const FindPw = ({closeModal}) => {
         setInvalidate(true);
       }
       else failAlert("","해당 직원이 존재하지 않습니다.");
-    });
+    }).catch(() => failAlert("","해당 직원이 존재하지 않습니다."));
+
+    setLoading(false);
   }
 
   const handleAccessCode = () => {
@@ -64,14 +70,17 @@ export const FindPw = ({closeModal}) => {
     if(changePw.check){
       delete changePw.pwCheck;
       delete changePw.check;
+      setLoading(true);
       axios.put(`${BaseUrl()}/employee/${changePw.empSeq}`, changePw).then(res => {
         console.log(res.data);
         if(res.data === "ok") {
           successAlert("", "비밀번호 변경이 완료되었습니다.");
           closeModal();
         }
-      });
-    }
+      }).catch(() => failAlert("","비밀번호 변경에 실패했습니다."));
+
+      setLoading(false);
+    } else failAlert("","비밀번호가 유효하지 않습니다");
   }
 
   useEffect(() => {
@@ -83,6 +92,7 @@ export const FindPw = ({closeModal}) => {
 
   return (
     <div className={styles.container}>
+      { loading && <Loading /> }
       <div className={styles.title}>
         <h1>비밀번호 찾기</h1>
       </div>

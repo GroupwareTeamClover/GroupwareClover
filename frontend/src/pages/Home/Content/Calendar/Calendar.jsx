@@ -91,7 +91,8 @@ export const Calendar = () => {
         });
       }
     });
-  }, [select]);
+    console.log("checkSchedule ==== ", JSON.stringify(checkSchedule));
+  }, [select, dataChange]);
 
   /** 이벤트 클릭 **/
   const [eventData, setEventData] = useState({start: "", end: "", title: ""});
@@ -113,18 +114,28 @@ export const Calendar = () => {
 
   /** 선택된 날짜를 형식에 맞게 셋팅 **/
   const selectDayList = (dateStr) => {
-      let selectList = checkSchedule.filter(item => {
-        if (item.date) return item.date === dateStr;
-        else if (item.start && item.end) {
-          const startDate = new Date(item.start);
-          const endDate = new Date(item.end);
-          const selectedDate = new Date(dateStr);
-          return selectedDate >= startDate && selectedDate <= endDate;
-        }
-        return false;
-      });
-    setScheduleSelectList(selectList);
+    // 선택된 날짜를 UTC 기준으로 변환하여 비교 준비
+    const selectedDate = new Date(dateStr);
+    const selectedDateStartOfDay = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate(), 0, 0, 0));
+    const selectedDateEndOfDay = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate(), 23, 59, 59, 999));
 
+    let selectList = checkSchedule.filter(item => {
+      if (item.date) {
+        const itemDate = new Date(item.date);
+        const itemDateStartOfDay = new Date(Date.UTC(itemDate.getUTCFullYear(), itemDate.getUTCMonth(), itemDate.getUTCDate(), 0, 0, 0));
+        const itemDateEndOfDay = new Date(Date.UTC(itemDate.getUTCFullYear(), itemDate.getUTCMonth(), itemDate.getUTCDate(), 23, 59, 59, 999));
+        return itemDateEndOfDay >= selectedDateStartOfDay && itemDateStartOfDay <= selectedDateEndOfDay;
+      }
+      else if (item.start && item.end) {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        return endDate >= selectedDateStartOfDay && startDate <= selectedDateEndOfDay;
+      }
+
+      return false;
+    });
+
+    setScheduleSelectList(selectList);
   }
 
   /** 모달 화면 스테이트 **/
