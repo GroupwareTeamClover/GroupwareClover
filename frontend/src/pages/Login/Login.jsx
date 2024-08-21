@@ -12,12 +12,14 @@ import {useMemberStore} from "../../store/store";
 import { connectWebSocket } from '../../commons/websocket';
 import { useChatStore } from '../../store/messengerStore';
 import {failAlert, successAlert, timeAlert} from "../../commons/common";
+import {Loading} from "../../components/Loading/Loading";
 
 
 export const Login = ({ setSign, setAdmin }) => {
   const { addMessage, setOnlineUsers, addChatRoom } = useChatStore();
   const navi = useNavigate();
 
+  const [loading, setLoading] = useState(false);
   const [ isModalOpen, setIsModalOpen ] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -35,26 +37,25 @@ export const Login = ({ setSign, setAdmin }) => {
   /** Sign-In Event **/
   const handleSignIn = async() => {
     if(params.empId === "" || params.empPw === "") {
-      alert("아이디 또는 비밀번호를 입력하세요");
+      failAlert("", "아이디 또는 비밀번호를 입력하세요");
       return false;
     }
 
     if(saveCheck) localStorage.setItem("saveId", params.empId);
     else localStorage.removeItem("saveId");
 
+    setLoading(true);
+
     const res = await axios.post(`${BaseUrl()}/sign`,params);
-    console.log("res.data ==== ", res.data);
     if(res.status === 200 && res.data.employeeInfo) {
       // 가입 대기 상태 로그인 차단
       if(res.data.employeeInfo.workerStateCode === 99) {
-        alert("가입 대기중입니다. 잠시만 기다려주세요.");
+        failAlert("", "가입 대기중입니다. 잠시만 기다려주세요.");
         return false;
       }
 
       // 응답 데이터에서 employeeInfo와 wsToken을 구조 분해 할당으로 추출
       const {employeeInfo, wsToken} = res.data;
-      console.log("res.data.empDeptCode ==== ", res.data.deptCode);
-      console.log("res.data.empRoleCode ==== ", res.data.roleCode);
 
       // 세션 데이터 제이슨 형식으로 저장
       const sessionData = {
@@ -71,8 +72,6 @@ export const Login = ({ setSign, setAdmin }) => {
       // wsToken을 localStorage에 저장
       localStorage.setItem("wsToken", wsToken);
 
-      console.log(sessionData);
-      console.log(wsToken);
       // WebSocket 연결
       connectWebSocket((payload) => {
         const message = JSON.parse(payload.body);
@@ -105,6 +104,7 @@ export const Login = ({ setSign, setAdmin }) => {
       failAlert("Sgin-In", "로그인 실패");
     }
 
+    setLoading(false);
   }
 
   /** Find id, pw : State에 따른 Modal Change **/
@@ -137,6 +137,7 @@ export const Login = ({ setSign, setAdmin }) => {
 
   return (
     <div className={ styles.container }>
+      { loading && <Loading />}
       { signUpState ?
         <SignUp setSignUpState={setSignUpState}/>
         :
