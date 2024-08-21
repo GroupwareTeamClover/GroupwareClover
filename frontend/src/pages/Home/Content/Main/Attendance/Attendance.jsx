@@ -4,7 +4,8 @@ import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../../components/Modal/Modal";
 import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
-import {dateYMD, workTime} from "../../../../../commons/common";
+import {dateYMD, failAlert, successAlert, timeAlert, workTime} from "../../../../../commons/common";
+import {useMemberStore} from "../../../../../store/store";
 
 export const Attendance = () => {
   let today = new Date();
@@ -14,6 +15,9 @@ export const Attendance = () => {
   let daysOfWeek = ['일', '월', '화', '수', '목', '금', '토'];
   let dayOfWeek = daysOfWeek[today.getDay()];
   let dateData = `${year}-${month}-${day}`;
+
+  const [date, setDate] = useState({ year, month});
+  const {sessionData} = useMemberStore();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
@@ -35,12 +39,12 @@ export const Attendance = () => {
       let data = {attArrive: time};
       axios.post(`${BaseUrl()}/attendance`, data).then(res => {
         if (res.data === "ok") {
-          alert(time + " 출근");
+          successAlert("출근 처리가 완료되었습니다.");
           todayAtt();
-        } else alert("오류 발생")
+        } else failAlert("Error!!","출근 처리 중 오류 발생");
       });
     } else {
-      alert("이미 출근버튼을 누르셨습니다.");
+      failAlert("", "이미 출근이 완료되었습니다.");
     }
   }
 
@@ -49,25 +53,20 @@ export const Attendance = () => {
     today = new Date();
     let hours = ('0' + today.getHours()).slice(-2);
     let minutes = ('0' + today.getMinutes()).slice(-2);
-    let time = `${hours}:${minutes}`
-
     const workStart = arrive.attArrive.split(":");
     const workTime = (hours - workStart[0]) * 60 + (minutes - workStart[1]);
     const workHours = Math.floor(workTime / 60);
     const workMinutes = workTime % 60;
 
-    alert(time + " 퇴근\n" + workHours + "시간 " + workMinutes + "분 만큼 일하심");
-
     setArrive(prev => {
       const data = {...prev, attLeave: `${hours}:${minutes}`, attTotal: workTime, attSuccess: "Y"};
       axios.put(`${BaseUrl()}/attendance`, data).then(res => {
-        if (res.data === "ok") alert("퇴근 처리 완료");
-        else alert("퇴근 처리 중 오류 발생");
+        if (res.data === "ok") successAlert("퇴근 처리가 완료되었습니다.", `오늘 업무 시간 : ${workHours}시간 ${workMinutes}분`);
+        else failAlert("Error!!","퇴근 처리 중 오류 발생");
       });
       return data;
     });
   }
-
 
   const [myAttendance, setMyAttendance] = useState({
     work_day: 0,
@@ -88,30 +87,63 @@ export const Attendance = () => {
     });
   }
 
-  useEffect(() => {
-    todayAtt();
-
-    /** 한달 근태 정보 **/
-    axios.get(`${BaseUrl()}/attendance/${year}-${month}`).then(res => {
-
+  /** 한달 근태 정보 **/
+  const monthAtt = () => {
+    axios.get(`${BaseUrl()}/attendance/${sessionData.empSeq}/${date.year}-${date.month}`).then(res => {
       if (res.data !== "" && res.data !== null && res.data !== undefined) {
-        const hour = Math.floor(res.data.count.work_total_time / 60);
-        const minute = res.data.count.work_total_time % 60;
-        const data = {
-          work_day: res.data.count.work_day,
-          work_late: res.data.count.work_late,
-          work_success: res.data.count.work_success,
-          work_total_hour: hour,
-          work_total_minute: minute
-        }
+          const hour = Math.floor(res.data.count.work_total_time / 60);
+          const minute = res.data.count.work_total_time % 60;
+          const data = {
+            work_day: res.data.count.work_day,
+            work_late: res.data.count.work_late,
+            work_success: res.data.count.work_success,
+            work_total_hour: hour,
+            work_total_minute: minute
+          }
+
         setMyAttendance(data);
         setAttendanecList(res.data.list);
       }
     });
+  }
 
-    /** 한달 근태 리스트 **/
-
+  useEffect(() => {
+    todayAtt();
   }, []);
+
+  useEffect(() => {
+    monthAtt();
+  }, [arrive, date]);
+
+  /** 날짜 변환 **/
+  const handleDateChange = (e) => {
+    const target = e.target.name;
+    if (target === "prev") {
+      setDate(prev => {
+        const currentMonth = parseInt(prev.month, 10); // 숫자로 변환
+        const newMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+        const newYear = currentMonth === 1 ? prev.year - 1 : prev.year;
+        return {
+          ...prev,
+          year: newYear,
+          month: String(newMonth).padStart(2, '0') // 다시 문자열로 변환
+        };
+      });
+    } else if (target === "next") {
+      if (date.year === year && date.month === month) return false;
+      setDate(prev => {
+        const currentMonth = parseInt(prev.month, 10); // 숫자로 변환
+        const newMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+        const newYear = currentMonth === 12 ? prev.year + 1 : prev.year;
+        return {
+          ...prev,
+          year: newYear,
+          month: String(newMonth).padStart(2, '0') // 다시 문자열로 변환
+        };
+      });
+    }
+  }
+
 
   return (
     <div className={styles.attendance}>
@@ -151,33 +183,41 @@ export const Attendance = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <div className={styles.detail}>
           <div className={styles.detailTitle}>
-            <h2>{year}-{month} 근무 현황</h2>
+            <button name="prev" onClick={handleDateChange}>〈</button>
+            <h2>{date.year}-{date.month} 근무 현황</h2>
+            <button name="next" onClick={handleDateChange}>〉</button>
           </div>
           <div className={styles.detailContent}>
             <div className={styles.contentItems}>
               <div>
                 <p>근무일</p>
-                <span>{myAttendance.work_day}</span>
+                <span>{myAttendance.work_day != 0 ? myAttendance.work_day : "-"}</span>
               </div>
               <div>
                 <p>지각</p>
-                <span>{myAttendance.work_late}</span>
+                <span>{myAttendance.work_day != 0 ? myAttendance.work_late : "-"}</span>
               </div>
               <div>
                 <p>결근</p>
-                <span>{myAttendance.work_day - myAttendance.work_success}</span>
+                <span>{myAttendance.work_day != 0 ? myAttendance.work_day - myAttendance.work_success : "-"}</span>
               </div>
               <div>
                 <p>연차</p>
-                <span>{myAttendance.work_day - myAttendance.work_success}</span>
+                <span>{myAttendance.work_day != 0 ? myAttendance.work_day - myAttendance.work_success : "-"}</span>
               </div>
             </div>
             <div className={styles.totalWorkTime}>
-              총 근무시간 : {myAttendance.work_total_hour}시간 {myAttendance.work_total_minute}분
+              {
+                myAttendance.work_day != 0 ?
+                `총 근무시간 : ${myAttendance.work_total_hour}시간 ${myAttendance.work_total_minute}분`
+                :
+                "근무 내용 없음"
+              }
+
             </div>
           </div>
           <div className={styles.outsideWork}>
-                  {attendanceList.length !== 0 &&
+                  {attendanceList.length !== 0 ?
                     attendanceList.map(item => {
                         return (
                           <div className={styles.outsideContent}>
@@ -187,6 +227,10 @@ export const Attendance = () => {
                           </div>
                         );
                     })
+                    :
+                    <div className={styles.noWork}>
+                      근무 내용 없음
+                    </div>
                   }
           </div>
         </div>

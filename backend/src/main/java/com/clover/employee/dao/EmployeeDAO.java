@@ -5,6 +5,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -33,11 +34,16 @@ public class EmployeeDAO {
         return mybatis.selectOne("Employee.getMyInfo", empSeq);
     }
 
+    /** 전 직원 기본 정보 조회 **/
+    public List<Map<String, Object>> getMembersInfo(int deptCode) {
+        return mybatis.selectList("Employee.getMembersInfo", deptCode);
+    }
+
     /** 사원 정보 업데이트 **/
     public int updateEmployee(EmployeeDTO dto) {
         return mybatis.update("Employee.update", dto);
     }
-    
+
     /** 사원 비밀번호 변경 **/
     public int updatePwEmployee(EmployeeDTO dto) {
         return mybatis.update("Employee.updatePw", dto);

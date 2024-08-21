@@ -42,5 +42,4 @@
 		board_comment_content = #{boardCommentContent}, board_comment_write_date = sysdate
 		where board_comment_seq = #{boardCommentSeq}
 	</update>
-	
 </mapper>

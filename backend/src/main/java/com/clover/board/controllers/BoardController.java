@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.clover.board.dto.BoardDTO;
 import com.clover.board.services.BoardService;
+import com.clover.board.services.CommentService;
 import com.clover.commons.dto.AttachmentDTO;
 import com.clover.commons.services.AttachmentService;
 import com.clover.commons.services.S3Service;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators.UUIDGenerator;
 
 @RestController
 @RequestMapping("/board")
@@ -35,6 +35,9 @@ public class BoardController {
 	
 	@Autowired
 	private AttachmentService attServ;
+	
+	@Autowired
+	private CommentService cServ;
 
 	@PostMapping
 	public ResponseEntity<Void> post(@RequestBody HashMap<String, Object> data){
@@ -57,7 +60,7 @@ public class BoardController {
 	    if (fileNames.size() > 0) {
 			for (int i = 0; i < fileNames.size(); i ++) {
 				//파일 주소 변환 후 DB에 등록
-				String newFilePath = "posts/" + newBoardSeq + "/" + UUID.randomUUID() + "_" + fileNames.get(i);
+				String newFilePath = "posts/" + boardlistSeq + "/" + newBoardSeq + "/" + UUID.randomUUID() + "_" + fileNames.get(i);
 				String newFileUrl = s3Serv.moveFile(newFilePath, fileUrls.get(i));
 				
 				attServ.insertFile(new AttachmentDTO(0, fileNames.get(i), newFileUrl, "board", newBoardSeq));
@@ -66,7 +69,7 @@ public class BoardController {
 		//첨부 이미지가 있을 경우
 		if (images.size() > 0) {
 			for (int i = 0; i < images.size(); i ++) {
-				String newImagePath = "images/posts/" + newBoardSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
+				String newImagePath = "images/posts/" + boardlistSeq + "/" + newBoardSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
 				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
 				String newImageUrl = s3Serv.moveFile(newImagePath, images.get(i));
 				//변환된 주소로 글 내용을 바꾸고 반환
@@ -104,15 +107,16 @@ public class BoardController {
 		return ResponseEntity.ok(bServ.getPostInfo(boardSeq));
 	}
 	
-	@DeleteMapping("/{boardSeq}")
-	public ResponseEntity<Void> deletePost(@PathVariable int boardSeq){
+	@DeleteMapping("/post")
+	public ResponseEntity<Void> deletePost(@RequestParam int boardlistSeq, @RequestParam int boardSeq){
 		bServ.deletePost(boardSeq);
 		//해당 게시글의 첨부파일 삭제 (DB)
-		attServ.deleteFiles(boardSeq);
+		attServ.deleteFiles(boardSeq, "board");
 		//해당 게시글의 첨부된 이미지, 파일 삭제(S3)
-		s3Serv.deleteFiles("posts/" + boardSeq + "/");
-		s3Serv.deleteFiles("images/posts/" + boardSeq + "/");
-		//해당 게시글의 댓글 목록 삭제 (외래키 걸 예정)
+		s3Serv.deleteFiles("posts/" + boardlistSeq + "/" + boardSeq + "/");
+		s3Serv.deleteFiles("images/posts/" + boardlistSeq + "/" + boardSeq + "/");
+		//해당 게시글의 댓글, 대댓글 목록 삭제(외래키로 처리)
+		
 		return ResponseEntity.ok().build();
 	}
 	
@@ -152,7 +156,7 @@ public class BoardController {
 	    // 추가된 첨부파일이 있을 경우 
 	    if (addFileNames.size() > 0) {
 			for (int i = 0; i < addFileNames.size(); i ++) {
-				String newFilePath = "posts/" + boardSeq + "/" + UUID.randomUUID() + "_" + addFileNames.get(i);
+				String newFilePath = "posts/" + boardlistSeq + "/" + boardSeq + "/" + UUID.randomUUID() + "_" + addFileNames.get(i);
 				//파일 주소 변환 후 DB에 등록
 				String newFileUrl = s3Serv.moveFile(newFilePath, addFileUrls.get(i));
 				
@@ -162,7 +166,7 @@ public class BoardController {
 		// 추가된 첨부 이미지가 있을 경우
 		if (addImageUrls.size() > 0) {
 			for (int i = 0; i < addImageUrls.size(); i ++) {
-				String newImagePath = "images/posts/" + boardSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
+				String newImagePath = "images/posts/" + boardlistSeq + "/" + boardSeq + "/" + UUID.randomUUID() + "_image" + (i+1); 
 				//이미지 주소 변환 후 글내용에서 예전 image주소들을 찾아 새로운 주소로 변환
 				String newImageUrl = s3Serv.moveFile(newImagePath, addImageUrls.get(i));
 				//변환된 주소로 글 내용을 바꾸고 반환

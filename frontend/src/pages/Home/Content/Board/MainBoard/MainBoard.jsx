@@ -28,7 +28,6 @@ const MainBoard = () => {
     useEffect(() => {
         const fetchBoardInfo = async () => {
             setIsLoading(true);
-            setFiltered([]);
             try {
                 let data;
                 if (boardlistSeq === undefined) {
@@ -50,7 +49,6 @@ const MainBoard = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             setIsLoading(true);
-            setFiltered([]);
             try {
                 const response = await axios.get(`${BaseUrl()}/board/posts/${boardInfo.boardlistSeq}`);
                 setPosts(response.data);
@@ -75,9 +73,9 @@ const MainBoard = () => {
         };
 
         // 일반게시글인 경우 fetchPosts 호출 | 중요게시글인 경우 fetchImportantPosts 호출
-        if (boardInfo.boardlistSeq === 0 ) {
+        if (boardInfo.boardlistSeq === 0) {
             fetchImportantPosts();
-        } else {
+        } else if (boardInfo.boardlistSeq !== -1) {
             fetchPosts();
         }
     }, [boardInfo]);
@@ -121,14 +119,15 @@ const MainBoard = () => {
             <div className={styles.postBox}>
                 {isLoading ? (
                     <div className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></div>
-                ) : ((filtered.length === 0 && posts.length > 0) ? (
-                    <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
                 ) : (
-                    filtered.slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
-                        .map((post, i) => (
-                            <Post key={i} boardlistSeq={boardInfo.boardlistSeq} data={post}/>
-                        ))
-                )
+                    filtered.length === 0 ? (
+                        <div className={styles.loading}>해당 게시판의 글이 없습니다.</div>
+                    ) : (
+                        filtered.slice(currentPage * PER_PAGE, (currentPage + 1) * PER_PAGE)
+                            .map((post, i) => (
+                                <Post key={i} boardlistSeq={boardInfo.boardlistSeq} data={post} />
+                            ))
+                    )
                 )}
             </div>
             <div className={styles.pageNavi}>

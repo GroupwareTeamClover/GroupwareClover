@@ -6,6 +6,7 @@ import axios from 'axios';
 import { FaSearch } from 'react-icons/fa';
 import { Pagination } from '../../../../components/Pagination/Pagination';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Loader } from 'rsuite';
 
 export const Address = () => {
 
@@ -17,12 +18,19 @@ export const Address = () => {
     const [countMem, setCountMem] = useState([{COUNT:0, EMP_STATE_CODE:0}])
     const [checkedMems, setCheckedMems] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+
 
     // select 4가지 useState("100")으로 설정해주기
     const [deptCode, setDeptCode] = useState("100");
     const [roleCode, setRoleCode] = useState("100");
     const [workerStateCode, setWorkerStateCode] = useState("100");
     const [empStateCode, setEmpStateCode] = useState("100");
+    //
+    const [deptName, setDeptName] = useState([]);
+    const [roleName, setRoleName] = useState([]);
+    const [workName, setWorkName] = useState([]);
+    const [empState, setEmpState] = useState([]);
 
  
     // 사원 수 출력 함수
@@ -31,16 +39,16 @@ export const Address = () => {
         data.forEach(item => {
             switch(item.EMP_STATE_CODE) {
                 case 0:  // 가입대기
-                    counts.prev = item['COUNT(*)'];
+                    counts.prev = item['COUNT'];
                     break;
                 case 1:  // 재직중 (정상1)
-                    counts.normal = item['COUNT(*)'];
+                    counts.normal = item['COUNT'];
                     break;
                 case 2:  // 퇴사
-                    counts.out = item['COUNT(*)'];
+                    counts.out = item['COUNT'];
                     break;
                 case 3:  // 휴직 (정상2)
-                    counts.rest = item['COUNT(*)'];
+                    counts.rest = item['COUNT'];
                     break;
                 default:
                     break;
@@ -55,9 +63,40 @@ export const Address = () => {
             setMembers(resp.data);
             setFiltered(resp.data);
             setstoremembers(false);
+            setIsLoading(false);
             console.log(resp.data)
         });
     },[storemembers]);
+     // 서버에서 부서코드-이름 데이터를 가져옴
+     useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
+            setDeptName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
+            setRoleName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
+            setWorkName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
+            setEmpState(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+
 
     // 서버에서 사원 수 데이터를 가져옴
     useEffect(()=>{
@@ -118,56 +157,88 @@ export const Address = () => {
         }
     };
 
-
-    // 이름 검색. 셀렉트 선택
-    const handleSearch = (e) => {
-        const { name, value } = e.target;
-
-        // 선택한 select의 상태를 업데이트하고, 다른 select는 초기화
-        if (name === 'deptCode') {
-            setDeptCode(value);
-            setRoleCode("100");
-            setWorkerStateCode("100");
-            setEmpStateCode("100");
-        } else if (name === 'roleCode') {
-            setRoleCode(value);
-            setDeptCode("100");
-            setWorkerStateCode("100");
-            setEmpStateCode("100");
-        } else if (name === 'workerStateCode') {
-            setWorkerStateCode(value);
-            setDeptCode("100");
-            setRoleCode("100");
-            setEmpStateCode("100");
-        } else if (name === 'empStateCode') {
-            setEmpStateCode(value);
-            setDeptCode("100");
-            setRoleCode("100");
-            setWorkerStateCode("100");
+// 이름 검색 handleNameSearch
+const [keyword, setKeyword]=useState('');
+const handleNameSearch =() =>{
+    if (keyword === "") {
+        // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
+        setFiltered(members);
+        setDeptCode("100");
+        setRoleCode("100");
+        setWorkerStateCode("100");
+        setEmpStateCode("100");
+        empNameRef.current.value = '';
+    } else {
+        // 검색어가 있는 경우 필터링
+        let result = members.filter((data) => data.EMP_NAME.includes(keyword));
+        setFiltered(result);
+        setDeptCode("100");
+        setRoleCode("100");
+        setWorkerStateCode("100");
+        setEmpStateCode("100");
+        // setKeyword("");
         }
     
-        if (value === "") {
-            // 검색어가 빈 문자열일 때 필터링된 데이터를 원본 데이터로 리셋
-            setFiltered(members);
-        } 
-        else if(value=== "100"){
-            setFiltered(members)
-        }
-        else {
-            // 검색어가 있는 경우 필터링
-            let result;
-            if (name === "empName") {
-                result = members.filter((data) => data[name].includes(value));
-            } else {
-                
-                result = members.filter((data) => data[name] === parseInt(value));
-                
-            }
-            setFiltered(result);
-        }
-        setCurrentPage(0); // 페이지를 처음으로 이동
-    };
+    setCurrentPage(0);
     
+}
+
+
+const empNameRef = useRef(null);
+
+const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // 선택한 select의 상태를 업데이트
+    if (name === 'deptCode') {
+        setDeptCode(value);
+    } else if (name === 'roleCode') {
+        setRoleCode(value);
+    } else if (name === 'workerStateCode') {
+        setWorkerStateCode(value);
+    } else if (name === 'empStateCode') {
+        setEmpStateCode(value);
+    }
+
+    // input 필드의 값을 초기화
+    if (empNameRef.current) {
+        empNameRef.current.value = '';
+    }
+   
+    // 필터링을 호출하여 결과를 업데이트
+    applyFilters();
+};
+
+// 셀렉트 선택
+const applyFilters = () => {
+    // let result = members;
+    let result = members.filter((data) => data.EMP_NAME.includes(keyword));;
+
+    // 필터 조건에 따라 데이터 필터링
+    if (deptCode !== "100") {
+        result = result.filter(data => data.DEPT_CODE === parseInt(deptCode));
+    }
+    if (roleCode !== "100") {
+        result = result.filter(data => data.ROLE_CODE === parseInt(roleCode));
+    }
+    if (workerStateCode !== "100") {
+        result = result.filter(data => data.WORKER_STATE_CODE === parseInt(workerStateCode));
+    }
+    if (empStateCode !== "100") {
+        result = result.filter(data => data.EMP_STATE_CODE === parseInt(empStateCode));
+    }
+    
+    setFiltered(result);
+   setCurrentPage(0); // 페이지를 처음으로 이동
+   
+        
+};
+
+useEffect(() => {
+    applyFilters();
+}, [deptCode, roleCode, workerStateCode, empStateCode, members, ]);
+
+
     
     const location = useLocation();
     
@@ -187,7 +258,7 @@ export const Address = () => {
             <div className={styles.container_mini}>
                 <div className={styles.member_info}>
                     <div className={styles.member_total}>
-                        전체 사원 수 : {countMem.normal} 명
+                       전체 재직 사원 수 : {countMem.normal} 명
                     </div>
                 </div>
                 <div className={styles.funcBtn}>                    
@@ -197,14 +268,18 @@ export const Address = () => {
                             type="text"
                             placeholder=" 사원 이름 검색"
                             name="empName"
+                            ref={empNameRef}
+                            value={keyword} 
+                            onChange={(e) => setKeyword(e.target.value)} // 상태 업데이트
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                    handleSearch(e);
+                                    handleNameSearch();
                                 }
                             }}
+                          
                             className={styles.searchInput}
                         />
-                        <button onClick={(e) => handleSearch(e)}>
+                        <button onClick={handleNameSearch}>
                             <FaSearch className={styles.searchLogo} />
                         </button>
                     </div>
@@ -218,29 +293,23 @@ export const Address = () => {
                                     <tr> 
                                         <td className={styles.theadtd}>이름</td>
                                         <td className={styles.theadtd}>
-                                            <select name='deptCode' value={deptCode} onChange={handleSearch}>
+                                            <select name='deptCode' value={deptCode} onChange={handleInputChange}>
                                                 <option value='100'>부서</option>
-                                                <option value='1'>총무</option> 
-                                                <option value='2'>인사</option> 
-                                                <option value='3'>사무</option> 
-                                                <option value='4'>유통</option> 
-                                                <option value='5'>경영</option> 
-                                                <option value='99'>미정</option> 
+                                                {deptName.map(dept =>(
+                                                    <option key={dept.DEPT_CODE} value={dept.DEPT_CODE}>
+                                                        {dept.DEPT_NAME}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </td>
                                         <td className={styles.theadtd}>
-                                            <select name='roleCode' value={roleCode} onChange={handleSearch}>
+                                            <select name='roleCode' value={roleCode} onChange={handleInputChange}>
                                                 <option value='100'>직위</option>
-                                                <option value='1'>사장</option> 
-                                                <option value='2'>부사장</option> 
-                                                <option value='3'>이사</option> 
-                                                <option value='4'>부장</option> 
-                                                <option value='5'>차장</option> 
-                                                <option value='6'>과장</option> 
-                                                <option value='7'>대리</option> 
-                                                <option value='8'>사원</option> 
-                                                <option value='9'>인턴</option> 
-                                                <option value='99'>미정</option> 
+                                                {roleName.map(role =>(
+                                                    <option key={role.ROLE_CODE} value={role.ROLE_CODE}>
+                                                        {role.ROLE_NAME}
+                                                    </option>
+                                                ))}
                                             </select>   
                                         </td>
                                     
@@ -251,41 +320,30 @@ export const Address = () => {
                                 </thead>
                                 <tbody className={styles.tbody}>
                                     {/* 페이지네이션 데이터 영역 */}
-                                    {filtered.length > 0 ? (
+        {isLoading ? (
+                    <tr className={styles.loading}><Loader content="글 목록을 불러오는 중입니다.." vertical /></tr>
+                ) : ((filtered.length === 0) ? (
+                        <tr>
+                            <td colSpan="5" className={styles.noData}>검색 결과가 없습니다.</td>
+                        </tr>
+                ) : (
+                                   filtered.length > 0 ? (
                                         filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
                                             <tr key={i}>
                                             <td className={styles.theadtd}>
-                                                {mem.empName}
+                                                {mem.EMP_NAME}
                                             </td>
                                             <td className={styles.theadtd}>
-                                            {
-                                                        mem.deptCode === 1 ? '총무' : 
-                                                        mem.deptCode === 2 ? '인사' : 
-                                                        mem.deptCode === 3 ? '사무' : 
-                                                        mem.deptCode === 4 ? '유통' : 
-                                                        mem.deptCode === 5 ? '경영' : '미정'
-                                                    } 
+                                                {mem.DEPT_NAME} 
                                             </td>
                                             <td className={styles.theadtd}>
-                                            {
-                                                        mem.roleCode === 1 ? '사장' :
-                                                        mem.roleCode === 2 ? '부사장' :
-                                                        mem.roleCode === 3 ? '이사' :
-                                                        mem.roleCode === 4 ? '부장' :
-                                                        mem.roleCode === 5 ? '차장' :
-                                                        mem.roleCode === 6 ? '과장' :
-                                                        mem.roleCode === 7 ? '대리' :
-                                                        mem.roleCode === 8 ? '사원' :
-                                                        mem.roleCode === 9 ? '인턴' : '미정'
-                                                    } 
+                                                { mem.ROLE_NAME} 
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {mem.empEmail}
+                                                {mem.EMP_EMAIL}
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {
-                                                mem.empTel                                        
-                                                }
+                                                { mem.EMP_TEL }
                                             </td>
                                         </tr>
                                         ))
@@ -293,7 +351,10 @@ export const Address = () => {
                                         <tr>
                                             <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
                                         </tr>
-                                    )}
+                                    )
+                                )
+                            )
+                                    }
                                 </tbody>
                             </table>
                         </div>           
@@ -317,143 +378,5 @@ export const Address = () => {
         </div>
       );
 
-    return (
-      <div className={styles.container}>
-        <div className={styles.member_info}>
-         
-        </div>
-        <div className={styles.funcBtn}>
-            {/* <div className={styles.col_button}> */}
-                {/* <button className={styles.delMemBtn } onClick={handleModalChange} name='ModalForm' value='deleteMem'>가입 승인</button> */}
-                {/* <select name='status' onChange={handleSelectChange}>
-                    <option value="">상태변경</option>
-                    <option value="부서변경">부서변경</option>
-                    <option value="직위변경">직위변경</option>
-                    <option value="사용자그룹변경">사용자그룹변경</option>
-                    <option value="계정상태변경">계정상태변경</option>
-                </select>
-                <button className={styles.changeBtn} onClick={handleModalChange} name='ModalForm' value={status.status}>변경</button>
-            </div>          */}
-            
-            {/* 이름 검색 필드 */}
-            <div className={styles.searchWrapper}>
-                <input
-                    type="text"
-                    placeholder=" 사원 이름 검색"
-                    name="empName"
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            handleSearch(e);
-                        }
-                    }}
-                    className={styles.searchInput}
-                />
-                <button onClick={(e) => handleSearch(e)}>
-                    <FaSearch className={styles.searchLogo} />
-                </button>
-            </div>
-        </div>
-
-
-        <div className={styles.body}>
-            <div className={styles.tableWrapper}>
-                    <table className={styles.table}>
-                        <thead className={styles.thead}>
-                            <tr> 
-                                <td className={styles.theadtd}>이름</td>
-                                <td className={styles.theadtd}>
-                                    <select name='deptCode' value={deptCode} onChange={handleSearch}>
-                                        <option value='100'>부서</option>
-                                        <option value='1'>총무</option> 
-                                        <option value='2'>인사</option> 
-                                        <option value='3'>사무</option> 
-                                        <option value='4'>유통</option> 
-                                        <option value='5'>경영</option> 
-                                        <option value='99'>미정</option> 
-                                    </select>
-                                </td>
-                                <td className={styles.theadtd}>
-                                    <select name='roleCode' value={roleCode} onChange={handleSearch}>
-                                        <option value='100'>직위</option>
-                                        <option value='1'>사장</option> 
-                                        <option value='2'>부사장</option> 
-                                        <option value='3'>이사</option> 
-                                        <option value='4'>부장</option> 
-                                        <option value='5'>차장</option> 
-                                        <option value='6'>과장</option> 
-                                        <option value='7'>대리</option> 
-                                        <option value='8'>사원</option> 
-                                        <option value='9'>인턴</option> 
-                                        <option value='99'>미정</option> 
-                                    </select>   
-                                </td>
-                               
-                                <td className={styles.theadtd}>이메일</td>
-                                <td className={styles.theadtd}>전화번호</td>
-                                
-                            </tr>
-                        </thead>
-                        <tbody className={styles.tbody}>
-                            {/* 페이지네이션 데이터 영역 */}
-                            {filtered.length > 0 ? (
-                                filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
-                                    <tr key={i}>
-                                    <td className={styles.theadtd}>
-                                        {mem.empName}
-                                    </td>
-                                    <td className={styles.theadtd}>
-                                    {
-                                                mem.deptCode === 1 ? '총무' : 
-                                                mem.deptCode === 2 ? '인사' : 
-                                                mem.deptCode === 3 ? '사무' : 
-                                                mem.deptCode === 4 ? '유통' : 
-                                                mem.deptCode === 5 ? '경영' : '미정'
-                                            } 
-                                    </td>
-                                    <td className={styles.theadtd}>
-                                    {
-                                                mem.roleCode === 1 ? '사장' :
-                                                mem.roleCode === 2 ? '부사장' :
-                                                mem.roleCode === 3 ? '이사' :
-                                                mem.roleCode === 4 ? '부장' :
-                                                mem.roleCode === 5 ? '차장' :
-                                                mem.roleCode === 6 ? '과장' :
-                                                mem.roleCode === 7 ? '대리' :
-                                                mem.roleCode === 8 ? '사원' :
-                                                mem.roleCode === 9 ? '인턴' : '미정'
-                                            } 
-                                    </td>
-                                    <td className={styles.theadtd}>
-                                        {mem.empEmail}
-                                    </td>
-                                    <td className={styles.theadtd}>
-                                        {
-                                        mem.empTel                                        
-                                        }
-                                    </td>
-                                </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="7" className={styles.noData}>검색 결과가 없습니다.</td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>           
-        </div>
-        <div className={styles.pagination}>
-         {/* 페이지네이션 */}
-         {pageCount > 0 && (
-            <Pagination
-                pageCount={pageCount}
-                onPageChange={handlePageChange}
-                currentPage={currentPage}
-            />
-            )}
-        </div>
-
-        
-      </div>
-    );
+  
 }

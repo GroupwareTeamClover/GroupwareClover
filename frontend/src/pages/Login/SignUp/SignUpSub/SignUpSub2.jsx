@@ -1,5 +1,5 @@
 import styles from './SignUpSub.module.css'
-import {sendEmail, validateEmail, validatePhone} from '../../../../commons/common'
+import {failAlert, sendEmail, successAlert, timeAlert, validateEmail, validatePhone} from '../../../../commons/common'
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
@@ -46,9 +46,9 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
   const handleCheckCode = () => {
     if(parseInt(accessNum.code) === parseInt(accessNum.input)) {
       setInvalidate(true);
-      alert("인증 완료");
+      successAlert("", "인증이 완료되었습니다.");
     }
-    else alert("인증번호 틀림");
+    else failAlert("", "인증번호를 확인해주세요.");
   }
 
   /** 이메일로 인증번호 발송 **/
@@ -57,15 +57,16 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
       console.log("인증코드 ==== ", ranNumber);
       // 계정 조회 성공
-      // const data = {
-      //   to_name: exists.empName,
-      //   message: ranNumber
-      // }
-      // sendEmail(data);
+      const data = {
+        to_name: exists.empName,
+        to_email: exists.empEmail,
+        message: ranNumber
+      }
+      sendEmail(data);
       setAccessNum(prev => ({ ...prev, code: ranNumber }));
       setEmailCheck(true);
     } else {
-      alert("E-mail을 확인하세요");
+      failAlert("", "E-mail을 확인하세요");
     }
   }
 
@@ -82,12 +83,12 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       delete data.pwCheck;
       const res = await axios.post(`${BaseUrl()}/employee`, data);
       if(res.data === "ok"){
-        alert("회원가입 완료");
+        timeAlert("회원가입 완료");
         setSignUpState(false);
       }
     } else {
       //  checkData가 fales 인 부분으로 포커스 이동하는 로직 필요
-      alert("회원가입 입력창을 확인해주세요");
+      failAlert("", "회원가입 입력창을 확인해주세요");
     }
   }
 

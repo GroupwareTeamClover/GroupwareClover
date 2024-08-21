@@ -44,9 +44,15 @@ stompClient.connect(headers, () => {
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
     if (sessionUser && sessionUser.empSeq) {
       // 개인 채널 구독. 특정 사용자만을 위한 메시지
+      // 타입 변경 1
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/messages`, (payload) => {
-        const message = JSON.parse(payload.body);
-        onMessageReceived(message);
+        const message = JSON.parse(payload.body);        
+        onMessageReceived({
+          ...message,
+          type: 'CHAT',
+          senderAvatar: message.senderAvatar,
+          senderName: message.senderName
+        });
       });
 
       // 개인 새 채팅방 알림 구독
@@ -80,6 +86,12 @@ stompClient.connect(headers, () => {
       const message = JSON.parse(payload.body);
       onMessageReceived(message);
     });
+
+    // 채팅방 목록 업데이트를 위한 새로운 구독 추가
+    stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/chatRoomsUpdate`, (payload) => {
+      const message = JSON.parse(payload.body);
+      onMessageReceived({ type: 'CHAT_ROOMS_UPDATE', rooms: message });
+    });    
 
     // 채팅방 나가기, 대화 내용 삭제, 알림 설정 변경을 위한 구독
     stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/chatRoomUpdates`, (payload) => {
@@ -141,9 +153,15 @@ export const sendMessage = (destination, message) => {
 
 export const subscribeToRoom = (roomSeq, onMessageReceived) => {
     if (stompClient && stompClient.connected) {
+      // 타입 변경 2
       const subscription = stompClient.subscribe(`/topic/room/${roomSeq}`, (payload) => {
         const message = JSON.parse(payload.body);
-        onMessageReceived(message);
+        
+        onMessageReceived({
+          ...message,
+          senderAvatar: message.senderAvatar,
+          senderName: message.senderName
+        });
       });
   
       // 구독한 채팅방 목록 업데이트

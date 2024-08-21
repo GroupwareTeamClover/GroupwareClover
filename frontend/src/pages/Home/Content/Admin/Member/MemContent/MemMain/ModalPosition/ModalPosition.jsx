@@ -6,7 +6,7 @@ import { BaseUrl } from '../../../../../../../../commons/config';
 import { useMemStore } from '../../../../../../../../store/store';
 
 
-export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheckboxes })=>{
+export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheckboxes, setCurrentPage, currentPage })=>{
     
     const {storemembers, setstoremembers} = useMemStore();
     const [members, setMembers]= useState([]);  // 선택한 사원 관련 정보들
@@ -14,6 +14,11 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
     const [updateMems, setUpdateMems] = useState({stateCode:'', joinTable:'', valueCol:''})
     const closeModal = () => setIsModalOpen(false);
     const checkedCount = checkedMems.length;
+    const [deptName, setDeptName] = useState([]);
+    const [roleName, setRoleName] = useState([]);
+    const [workName, setWorkName] = useState([]);
+    const [empState, setEmpState] = useState([]);
+
     useEffect(()=>{
         if(modalState === '부서변경'){setUpdateMems({stateCode:'dept_code', joinTable:'department', valueCol:'dept_name'}) }
         else if(modalState === '직위변경'){setUpdateMems({stateCode:'role_code', joinTable:'role', valueCol:'role_name'}) }
@@ -21,7 +26,32 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
         else if(modalState === '계정상태변경'){setUpdateMems({stateCode:'emp_state_code', joinTable:'employee_state', valueCol:'emp_state_name'}) }
         setMembers(checkedMems)
     },[modalState, checkedMems, members])
-    // console.log("modalstate-setStatename: "+updateMems.stateCode +" jointable: "+ updateMems.joinTable +" members : "+members)
+
+     // 서버에서 부서코드-이름 데이터를 가져옴
+     useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
+            setDeptName(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
+            setRoleName(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
+            setWorkName(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
+            setEmpState(resp.data);
+            console.log(resp.data)
+        });
+    },[]);
 
 
     const handleChangeStatus =(e)=>{
@@ -37,14 +67,15 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
             empSeqList: members
         };      
         
+        console.log(currentPage);
         if(newValue !==''){
-                         // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
-                        console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList)
+            console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList) // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
             axios.put(`${BaseUrl()}/adminmember`, param)    //수정하기
             .then(()=>{
                 setstoremembers(true);
                 closeModal();
                 resetCheckboxes();
+                setCurrentPage(currentPage);
         })
         }else{ alert("수정사항을 선택해주세요.")}
     };
@@ -67,12 +98,11 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                         <>
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">부서</option>
-                            <option>총무</option> 
-                            <option>인사</option> 
-                            <option>사무</option> 
-                            <option>유통</option> 
-                            <option>경영</option> 
-                            <option>미정</option> 
+                            {deptName.map(dept =>(
+                                            <option key={dept.DEPT_CODE} value={dept.DEPT_CODE}>
+                                                {dept.DEPT_NAME}
+                                            </option>
+                                        ))}
                         </select>
                         </>
                     }
@@ -80,16 +110,11 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                         <>
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">직위</option>
-                            <option>사장</option> 
-                            <option>부사장</option> 
-                            <option>이사</option> 
-                            <option>부장</option> 
-                            <option>차장</option> 
-                            <option>과장</option> 
-                            <option>대리</option> 
-                            <option>사원</option> 
-                            <option>인턴</option> 
-                            <option>미정</option> 
+                            {roleName.map(role =>(
+                                <option key={role.ROLE_CODE} value={role.ROLE_CODE}>
+                                    {role.ROLE_NAME}
+                                </option>
+                            ))}
                         </select>
                         </>
                     }
@@ -97,10 +122,11 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                         <>
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">사용자그룹</option>
-                            <option>정규직</option> 
-                            <option>비정규직</option> 
-                            <option>계약직</option> 
-                            <option>관리자</option> 
+                            {workName.map(work =>(
+                                <option key={work.WORKER_STATE_CODE} value={work.WORKER_STATE_CODE}>
+                                    {work.WORKER_STATE_NAME}
+                                </option>
+                            ))}
                         </select>
                         </>
                     }
@@ -108,9 +134,13 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                         <>
                         <select name={modalState} onChange={handleChangeStatus}>
                             <option value="">계정상태</option>
-                            <option>재직중</option> 
-                            <option>퇴사</option> 
-                            {/* <option>가입대기</option>  */}
+                            {empState
+                            .filter(emp => emp.EMP_STATE_NAME !== '가입대기')  
+                            .map(emp =>(
+                                            <option key={emp.EMP_STATE_CODE} value={emp.EMP_STATE_CODE}>
+                                                {emp.EMP_STATE_NAME}
+                                            </option>
+                                        ))}
                         </select>
                         </>
                     }

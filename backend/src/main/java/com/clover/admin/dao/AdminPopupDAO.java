@@ -15,6 +15,13 @@ public class AdminPopupDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
+	public void deletepop(int popSeq) {
+		mybatis.delete("AdminPopup.deletepop",popSeq);
+		mybatis.delete("AdminPopup.deleteperiod",popSeq);
+		mybatis.delete("AdminPopup.deletefile",popSeq);
+
+	}
+	
 	public void createPopup(AdminPopupDTO popupdto) {
 		
 		System.out.println(popupdto.getSpecificStartDate());

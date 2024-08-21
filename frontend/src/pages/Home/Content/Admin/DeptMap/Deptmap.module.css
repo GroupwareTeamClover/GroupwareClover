@@ -1,0 +1,130 @@
+/* 기본 설정 */
+.container {
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+}
+
+.headerText {
+    padding-left: 24px;
+}
+
+/* 컨텐츠 영역 설정 */
+.content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* 검색 박스 설정 */
+.searchBox {
+    /* flex: 1; */
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    border-right: 1px solid #e0e0e0; /* 검색 박스와 리스트 구분 선 */
+}
+.addDept{
+    display: flex;
+    padding: 0px 3px 10px 3px;
+    /* border-bottom: 1px solid #ddd; */
+}
+
+.addDept:hover{
+    cursor: pointer;
+}
+.searchLine {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.inputBox {
+    flex: 1;
+    margin-right: 8px;
+}
+
+.input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.iconBox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.searchContent {
+    flex: 9;
+    overflow-y: auto; 
+}
+
+/* 직원 목록 설정 */
+.deptlist {
+    flex: 8;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto; /* 넘치는 내용을 숨기기 */
+    /* color: rgba(139, 139, 196, 0.726); */
+}
+
+/* 테이블 스타일링 */
+.deptlist table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px; 
+}
+
+.deptlist th, .deptlist td {
+    padding: 3px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.deptlist th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 7px 0px;
+}
+.deptlist th:nth-child(1){
+    width: 10%;
+}
+.deptlist td:nth-child(1){
+    text-align: center;
+}
+
+.deptlist tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.tableBox > h4{
+    padding-bottom: 50px;
+}
+.deptlist img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.tableBox{
+    flex:1;
+}
+/* 페이지네이션 설정 */
+.pagination {
+    flex-shrink: 0; /* 페이지네이션이 압축되지 않도록 설정 */
+    flex:1;
+}

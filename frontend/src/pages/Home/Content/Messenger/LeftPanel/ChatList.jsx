@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../commons/config';
 import styles from '../Messenger.module.css';
@@ -6,32 +6,8 @@ import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage, connectWebSocket } from '../../../../../commons/websocket';
 import { format } from 'date-fns';
 
-const ChatList = ({ chatRooms, onChatSelect }) => {
-  const { setSelectedChat, addChatRoom, updateChatRoom } = useChatStore();
-
-  useEffect(() => {
-    const handleMessage = (message) => {
-      if (message.type === 'NEW_CHAT_ROOM') {
-        console.log("새로운 채팅방 생성됨:", message.room);
-        addChatRoom(message.room);
-      } else if (message.type === 'CHAT') {
-        updateChatRoom(message.roomSeq, {
-          lastMessage: message.messageContent,
-          lastMessageTime: message.sendTime,
-          unreadCount: (chatRooms.find(room => room.roomSeq === message.roomSeq)?.unreadCount || 0) + 1
-        });
-      }
-    };
-
-    const disconnect = connectWebSocket(handleMessage);
-
-    return () => {
-      if (disconnect) disconnect();
-    };
-  }, [addChatRoom, updateChatRoom]);
-
+const ChatList = ({ chatRooms, onChatSelect, updateChatRoom }) => {
   const handleChatSelect = async (chat) => {
-    setSelectedChat(chat);
     onChatSelect(chat);
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
     sendMessage("/app/chat.addUser", {
@@ -70,18 +46,24 @@ const ChatList = ({ chatRooms, onChatSelect }) => {
           className={styles.chatItem}
           onClick={() => handleChatSelect(chat)}
         >
-        <div className={chat.roomType === 'group' ? styles.groupAvatar : styles.avatar}>
-          {chat.roomType === 'group' ? (
-            chat.roomAvatar.split(',').slice(0, 4).map((avatar, index) => (
-              <img key={index} src={avatar.trim()} alt={`Member ${index + 1}`} />
-            ))
-          ) : (
-            <img src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
-          )}
-        </div>
+          <div className={chat.roomType === 'group' ? styles.groupAvatar : styles.avatar}>
+            {chat.roomType === 'group' ? (
+              chat.roomAvatar.split(',').slice(0, 4).map((avatar, index) => (
+                <img key={index} src={avatar.trim()} alt={`Member ${index + 1}`} />
+              ))
+            ) : (
+              <img src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
+            )}
+          </div>
           <div className={styles.chatInfo}>
             <h4>{chat.customRoomName || chat.roomName}</h4>
-            <p>{chat.lastMessage}</p>
+            <p>
+              {chat.lastMessage ? (
+                chat.lastMessage.length > 8 
+                  ? `${chat.lastMessage.substring(0, 8)}...` 
+                  : chat.lastMessage
+              ) : ''}
+            </p>
           </div>
           <div className={styles.chatMeta}>
             <span className={styles.time}>{formatMessageTime(chat.lastMessageTime)}</span>

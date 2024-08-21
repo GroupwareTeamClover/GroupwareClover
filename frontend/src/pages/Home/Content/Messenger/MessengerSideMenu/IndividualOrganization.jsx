@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Organization.module.css';
-import { Folder } from '../../../../../components/Folder/Folder';
+import { ChatFolder } from '../../../../../components/Folder/ChatFolder';
 import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
 import { FaSearch } from "react-icons/fa";
@@ -78,6 +78,8 @@ const IndividualOrganization = ({ onClose }) => {
             children: folder.children.map(child => ({
                 ...child,
                 name: child.name,
+                avatar: child.avatar, // ChatFolder에서 사용
+                role: child.role, // ChatFolder에서 사용
                 children: []
             }))
         };
@@ -112,12 +114,12 @@ const IndividualOrganization = ({ onClose }) => {
                             <p>로딩 중...</p>
                         ) : filteredData.length > 0 ? (
                             filteredData.map((folder, index) => (
-                                <Folder
+                                <ChatFolder // Folder 대신 ChatFolder 사용
                                     key={index}
                                     folder={adjustFolderProps(folder)}
                                     onItemClick={handleItemClick}
                                     selectedItem={selectedItem}
-                                    setSelectedItem={setSelectedItem}
+                                    isFiltered={!!searchInput} // 검색어가 있으면 필터링된 것으로 처리
                                 />
                             ))
                         ) : (

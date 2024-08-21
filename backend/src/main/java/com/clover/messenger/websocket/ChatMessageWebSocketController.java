@@ -8,6 +8,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.clover.messenger.dto.ChatMessageDTO;
+import com.clover.messenger.dto.ChatRoomDTO;
 import com.clover.messenger.dto.ReadMessageDTO;
 import com.clover.messenger.services.ChatMessageService;
 import com.clover.messenger.services.ChatRoomService;
@@ -41,11 +42,16 @@ public class ChatMessageWebSocketController {
         // 메시지를 저장하고 저장된 메시지 객체를 받아옴
         ChatMessageDTO savedMessage = chatMessageService.saveMessage(chatMessage);
 
+        // 읽지 않은 메시지 수 업데이트
+        updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);
+        
+        // 채팅방 목록 업데이트
+        sendChatRoomsUpdate(senderSeq);
+
         // 채팅방의 모든 사용자에게 메시지 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getRoomSeq(), savedMessage);
 
-        // 읽지 않은 메시지 수 업데이트
-        updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);
+
     }
 
     /**
@@ -90,4 +96,13 @@ public class ChatMessageWebSocketController {
             }
         }
     }
+
+    private void sendChatRoomsUpdate(int empSeq) {
+    List<ChatRoomDTO> updatedRooms = chatRoomService.getChatRoomsWithDetails(empSeq);
+    messagingTemplate.convertAndSendToUser(
+        String.valueOf(empSeq),
+        "/queue/chatRoomsUpdate",
+        updatedRooms
+    );
+}
 }

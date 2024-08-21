@@ -1,33 +1,47 @@
 import React, { useState } from 'react';
+import DragModal from '../../../../../components/Modal/DragModal';
 import styles from './ChildChatModal.module.css';
 import ChatList from '../LeftPanel/ChatList';
 import RightPanel from '../RightPanel/RightPanel';
 import { useChatStore } from '../../../../../store/messengerStore';
+import MessengerSideMenu from '../MessengerSideMenu/MessengerSideMenu';
 
 const ChildChatModal = ({ isOpen, onClose }) => {
-  const [selectedChat, setSelectedChat] = useState(null);
-  const { chatRooms, setSelectedChat: setStoreSelectedChat } = useChatStore();
+  const [openChatModals, setOpenChatModals] = useState([]);
+  const { chatRooms, setSelectedChat: setStoreSelectedChat, updateChatRoom } = useChatStore();
 
   const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
     setStoreSelectedChat(chat);
+    setOpenChatModals((prevModals) => [...prevModals, chat]);
+  };
+
+  const handleCloseChatModal = (chatSeq) => {
+    setOpenChatModals((prevModals) =>
+      prevModals.filter((modalChat) => modalChat.roomSeq !== chatSeq)
+    );
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <button className={styles.closeButton} onClick={onClose}>
-          &times;
-        </button>
-        {!selectedChat ? (
-          <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} />
-        ) : (
-          <RightPanel selectedChat={selectedChat} />
-        )}
-      </div>
-    </div>
+    <>
+      <DragModal isOpen={isOpen} onClose={onClose}>
+        <div className={styles.modalBody}>
+          <div className={styles.sideMenu}>
+            <MessengerSideMenu />
+          </div>
+          <div className={styles.chatList}>
+            <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
+          </div>
+        </div>
+      </DragModal>
+
+      {openChatModals.map((chat) => (
+        <DragModal key={chat.roomSeq} isOpen={true} onClose={() => handleCloseChatModal(chat.roomSeq)}>
+          <RightPanel selectedChat={chat} />
+        </DragModal>
+      ))}
+    </>
   );
 };
 

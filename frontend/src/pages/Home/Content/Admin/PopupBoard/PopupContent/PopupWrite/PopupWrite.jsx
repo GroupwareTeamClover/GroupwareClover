@@ -186,9 +186,6 @@ export const PopupWrite = () => {
     };
     
     const handleUploadSuccess = (response, file) => {
-        //  const fileUrl = response;     // 서버에서 받은 파일 url
-        //  setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);  // 파일 리스트에 업로드된 파일 추가
-        //  setUploadError(false);
         const fileUrl = response; // 서버에서 받은 파일 URL
         setFiles(prevFiles => {
             const newFile = { name: file.name, url: fileUrl };
@@ -199,19 +196,33 @@ export const PopupWrite = () => {
             }
             return prevFiles;
         });
-        setUploadError(false);
+        // setUploadError(false);
+         // 파일 업로드 성공 시, 업로드 오류 상태를 체크
+         checkForUploadErrors();
      };
     const handleUploadError = (error, file) => {
         console.error('File upload error:', error);
         alert( file.name +'파일 용량이 큽니다. ');
-        // setUploadError(true); // 에러 상태 설정
+        setUploadError(true); // 에러 상태 설정
         // 실패한 파일을 리스트에서 제거
         handleRemove(file);
     };
-    const handleRemove = (file) => {
-         // 파일 리스트에서 해당 파일 제거
-         setFiles((prev) => prev.filter((f) => f.name !== file.name));
-     };
+   
+     const handleRemove = (file) => {
+        setFiles(prev => {
+            const updatedFiles = prev.filter(f => f.name !== file.name);
+            // 파일 제거 후 업로드 오류 상태를 체크
+            checkForUploadErrors(updatedFiles);
+            return updatedFiles;
+        });
+    };
+
+    // 업로드 오류 상태를 체크하는 함수
+    const checkForUploadErrors = (updatedFiles = files) => {
+        // 업로드 오류가 있는지 확인
+        const hasError = updatedFiles.some(file => file.uploadError); // 파일 객체에 uploadError 속성이 있다고 가정
+        setUploadError(hasError);
+    };
 
     return (
         <div className={styles.container}>

@@ -24,9 +24,26 @@ public class AdminMemberController {
 	
 	
 	@GetMapping
-	public ResponseEntity<List<EmployeeDTO>> getAllData(){
+	public ResponseEntity<List<HashMap<String, Object>>> getAllData(){
 		return ResponseEntity.ok(adminmemberService.getAllData());
 	}
+	@GetMapping("/deptName")
+	public ResponseEntity<List<HashMap<String, Object>>> getAllDept(){
+		return ResponseEntity.ok(adminmemberService.getAllDept());
+	}
+	@GetMapping("/roleName")
+	public ResponseEntity<List<HashMap<String, Object>>> getAllRole(){
+		return ResponseEntity.ok(adminmemberService.getAllRole());
+	}
+	@GetMapping("/workName")
+	public ResponseEntity<List<HashMap<String, Object>>> getAllWork(){
+		return ResponseEntity.ok(adminmemberService.getAllWork());
+	}
+	@GetMapping("/empState")
+	public ResponseEntity<List<HashMap<String, Object>>> getAllEmp(){
+		return ResponseEntity.ok(adminmemberService.getAllEmp());
+	}
+	
 	@GetMapping("/countmem")
 	public ResponseEntity<List<HashMap<String,Object>>> getCountMem(){
 		return ResponseEntity.ok(adminmemberService.getCountMem());
@@ -39,6 +56,10 @@ public class AdminMemberController {
 	@GetMapping("/worker")
 	public ResponseEntity<List<HashMap<String,Object>>> getWorker(){
 		return ResponseEntity.ok(adminmemberService.getWorker());
+	}
+	@GetMapping("/countNewMonth")
+	public ResponseEntity<List<HashMap<String,Object>>> getNewMonth(){
+		return ResponseEntity.ok(adminmemberService.getNewMonth());
 	}
 	@GetMapping("/exit")
 	public ResponseEntity<List<EmployeeDTO>> getExit(){
