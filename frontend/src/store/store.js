@@ -15,6 +15,7 @@ export const useMemberStore = create(set => ({
   setAvatar : param => set(prev => ({ sessionData : { ...prev.sessionData, ...param }})),
   admin: false,
   setAdmin: param => set({admin: param})
+
 }));
 
 export const useBoardStore = create(set => ({

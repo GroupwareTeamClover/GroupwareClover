@@ -12,16 +12,17 @@ import {
   validatePhone
 } from "../../../../../commons/common";
 import {useMemberStore} from "../../../../../store/store";
+import {Loading} from "../../../../../components/Loading/Loading";
 
 export const Mypage = ({ empSeq, closeModal }) => {
 
   const [mypage, setMypage] = useState({});
+  const [loading, setLoading] = useState(false);
   const {sessionData, setAvatar} = useMemberStore();
 
   /** 생년월일 형식 변환하여 출력 **/
   const changeBirth = (birth) => {
     if (birth !== undefined) {
-      console.log("birth.slice(0.2) ==== ", birth.slice(0, 2));
       let year = "";
       if (parseInt(birth.slice(0, 2)) > 40) year = `19${birth.slice(0, 2)}`;
       else year = `20${birth.slice(0, 2)}`;
@@ -108,6 +109,7 @@ export const Mypage = ({ empSeq, closeModal }) => {
 
       const formData = new FormData();
       formData.append("file", selectedFile);
+      setLoading(true);
 
       axios.put(`${BaseUrl()}/employee/profile`,
         formData,
@@ -120,19 +122,20 @@ export const Mypage = ({ empSeq, closeModal }) => {
           setUpdateForm(false);
           setDataState(prev => !prev);
         }
-      });
+      }).catch(() => failAlert("","이미지 변경에 실패했습니다."));
     }
 
     /**전화번호 이메일 정보 업데이트 **/
     if(updateSelectForm === 2) {
       if (validateEmail(updateData.empEmail) && validatePhone(updateData.empTel)) {
+        setLoading(true);
         axios.put(`${BaseUrl()}/employee`,updateData).then(res => {
           if(res.data === "ok"){
             successAlert("", "정보 변경 완료");
             setDataState(prev => !prev);
             setUpdateForm(false);
           }
-        });
+        }).catch(() => failAlert("", "정보 변경에 실패하였습니다."));
       } else {
         failAlert("", "작성 내용을 확인하세요");
       }
@@ -144,17 +147,19 @@ export const Mypage = ({ empSeq, closeModal }) => {
       if(changePw.check){
         delete changePw.pwCheck;
         delete changePw.check;
+        setLoading(true);
         axios.put(`${BaseUrl()}/employee/${empSeq}`, changePw).then(res => {
           if(res.data === "ok") {
             timeAlert("비밀번호 변경 완료");
             closeModal();
           }
-        });
+        }).catch(() => failAlert("","비밀번호 변경에 실패하였습니다"));
       } else {
         failAlert("", "패스워드를 확인해주세요");
       }
     }
 
+    setLoading(false);
   }
 
   /** 전화번호, 이메일 정보 수정 중 취소 **/
@@ -166,14 +171,17 @@ export const Mypage = ({ empSeq, closeModal }) => {
 
   const [dataState, setDataState] = useState(false);
   useEffect(() => {
-    axios.get(`${BaseUrl()}/employee/${empSeq}`).then(res => {
+    setLoading(true);
+    axios.get(`${BaseUrl()}/employee`).then(res => {
       setMypage(res.data);
       setUpdateData({empTel: res.data.EMP_TEL, empEmail: res.data.EMP_EMAIL});
-    })
+    }).catch(() => failAlert("", "정보 조회에 실패하였습니다."));
+    setLoading(false);
   }, [dataState]);
 
   return (
     <div className={styles.container}>
+      { loading && <Loading />}
       <div className={styles.top}>
         <div className={styles.avatar}>
           {(mypage.EMP_AVATAR === null || mypage.EMP_AVATAR === undefined) ?

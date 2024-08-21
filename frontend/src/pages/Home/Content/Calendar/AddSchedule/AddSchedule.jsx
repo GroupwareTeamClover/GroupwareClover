@@ -5,9 +5,16 @@ import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {failAlert, timeAlert} from "../../../../../commons/common";
 
+class Loading extends React.Component {
+  render() {
+    return null;
+  }
+}
+
 export const AddSchedule = ({ closeModal, setDataChange }) => {
 
   const { admin } = useMemberStore();
+  const [loading, setLoading] = useState(false);
 
   /** 오늘보다 이전 날짜 선택 못하도록 상태 관리 **/
   const [minDateTime, setMinDateTime] = useState('');
@@ -57,7 +64,7 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
       endDate: inputData.endDate,
       deptCode: dept
     }
-
+    setLoading(true);
     axios.post(`${BaseUrl()}/schedule`, data).then(res => {
       if(res.data === "ok") {
         closeModal();
@@ -65,9 +72,10 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
         setInputData(defaultInputData);
         timeAlert("일정 추가 완료!");
       }
-    });
+    }).catch(() => failAlert("","일정 추가를 실패하였습니다."));
 
     setSelect(false);
+    setLoading(false);
   }
 
   const [select, setSelect] = useState(false);
@@ -77,6 +85,7 @@ export const AddSchedule = ({ closeModal, setDataChange }) => {
 
   return (
     <div className={styles.modalForm}>
+      { loading && <Loading />}
       <div className={styles.insert}>
         <h2>일정 추가</h2>
         <div className={styles.inputData}>
