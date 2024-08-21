@@ -81,22 +81,30 @@ export const Deptmap=()=>{
         }
     };
 
-    const handleAddNewDept = (newDept) => {
-        const updatedData = [...folderData, newDept];
-        setFolderData(updatedData);
-        setFilteredData(updatedData);
-    };
 
     useEffect(() => {
         const filterFolders = (data, query) => {
             if (!query) return data;
             return data
                 .map(folder => {
-                    const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
-                    const filteredChildren = folder.children.filter(child =>
-                        child.name.toLowerCase().includes(query.toLowerCase()) ||
-                        child.role.toLowerCase().includes(query.toLowerCase())
-                    );
+                    // 폴더 이름이 undefined일 수 있는 경우를 대비하여 기본값을 설정
+                    const folderName = folder.name || '';
+                    const folderMatches = folderName.toLowerCase().includes(query.toLowerCase());
+
+                    // 자식 항목의 필터링
+                    const filteredChildren = folder.children.filter(child => {
+                        const childName = child.name || '';
+                        const childRole = child.role || '';
+                        return childName.toLowerCase().includes(query.toLowerCase()) ||
+                            childRole.toLowerCase().includes(query.toLowerCase());
+                    });
+                    // const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
+                    // const filteredChildren = folder.children.filter(child =>
+                    //     child.name.toLowerCase().includes(query.toLowerCase()) 
+                    //     // ||
+                    //     // child.role.toLowerCase().includes(query.toLowerCase())
+                    // );
+                    
                     
                     if (folderMatches || filteredChildren.length) {
                         return { ...folder, children: filteredChildren.length ? filteredChildren : folder.children, isOpen: true };
@@ -130,7 +138,8 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
     // 부서 추가 
     const handleAddDept =()=>{
         openModal(); 
-    }  
+    }
+  
 
     return (
         <div className={styles.container}>
@@ -212,7 +221,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
             </div>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
-                   <ModalDept setIsModalOpen={setIsModalOpen} onDeptAdded={handleAddNewDept}/>
+                   <ModalDept setIsModalOpen={setIsModalOpen}/>
                 </div>
             </Modal>
         </div>
