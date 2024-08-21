@@ -20,10 +20,10 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
     const [empState, setEmpState] = useState([]);
 
     useEffect(()=>{
-        if(modalState === '부서변경'){setUpdateMems({stateCode:'dept_code', joinTable:'department', valueCol:'dept_name'}) }
-        else if(modalState === '직위변경'){setUpdateMems({stateCode:'role_code', joinTable:'role', valueCol:'role_name'}) }
-        else if(modalState === '사용자그룹변경' ){setUpdateMems({stateCode:'worker_state_code', joinTable:'worker_state', valueCol:'worker_state_name'}) }
-        else if(modalState === '계정상태변경'){setUpdateMems({stateCode:'emp_state_code', joinTable:'employee_state', valueCol:'emp_state_name'}) }
+        if(modalState === '부서변경'){setUpdateMems({stateCode:'DEPT_CODE', joinTable:'department', valueCol:'DEPT_CODE'}) }
+        else if(modalState === '직위변경'){setUpdateMems({stateCode:'ROLE_CODE', joinTable:'role', valueCol:'ROLE_CODE'}) }
+        else if(modalState === '사용자그룹변경' ){setUpdateMems({stateCode:'WORKER_STATE_CODE', joinTable:'worker_state', valueCol:'WORKER_STATE_CODE'}) }
+        else if(modalState === '계정상태변경'){setUpdateMems({stateCode:'EMP_STATE_CODE', joinTable:'employee_state', valueCol:'EMP_STATE_CODE'}) }
         setMembers(checkedMems)
     },[modalState, checkedMems, members])
 
@@ -61,15 +61,17 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
     }
     
     const handleSave = () => {
+        // 변경 안되는 이유
+      
         const param = {
             updateMems,
             newValue,
-            empSeqList: members
+            empSeqList:members            
         };      
         
-        console.log(currentPage);
+        console.log(newValue);
         if(newValue !==''){
-            console.log("update axios param: " +param.updateMems.stateCode +" "+ param.empSeqList) // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
+            console.log("update axios param: " +param.updateMems.stateCode +"dd "+ param.empSeqList) // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
             axios.put(`${BaseUrl()}/adminmember`, param)    //수정하기
             .then(()=>{
                 setstoremembers(true);

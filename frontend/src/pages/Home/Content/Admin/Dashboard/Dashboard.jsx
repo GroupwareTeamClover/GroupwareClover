@@ -211,7 +211,7 @@ export const Dashboard = () => {
                         </div>
                     </div>
                     <div className={styles.statValue} style={{ color: '#ffffff00', textAlign:'left', fontSize:'20px'}}>
-                        Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((newMemMonth.newMemMonth / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
+                        0
                     </div>
                     <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
                         Monthly New Hire Rate &nbsp; {empData.ingMem !== 0 ? ((newMemMonth / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
@@ -230,7 +230,7 @@ export const Dashboard = () => {
                         
                     </div>
                     <div className={styles.statValue} style={{ color: '#ffffff00', textAlign:'left', fontSize:'20px'}}>
-                        Monthly Employee Turnover Rate &nbsp; {empData.ingMem !== 0 ? ((empData.outMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
+                        0
                     </div>
                     <div className={styles.statValue} style={{ color: 'rgba(255, 255, 255, 0.486)', textAlign:'left', fontSize:'20px'}}>
                         Monthly Employee Turnover Rate &nbsp; {empData.ingMem !== 0 ? ((empData.outMem / empData.ingMem)*100).toFixed(2) +'%' : 'N/A'}
