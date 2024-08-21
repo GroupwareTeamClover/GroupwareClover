@@ -7,7 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
-import {dateSettingOrigin, scheduleType} from "../../../../commons/common";
+import {dateSettingOrigin, failAlert, scheduleType} from "../../../../commons/common";
 import {BaseUrl} from "../../../../commons/config";
 import {useMemberStore} from "../../../../store/store";
 import {AddSchedule} from "./AddSchedule/AddSchedule";
@@ -45,8 +45,8 @@ export const Calendar = () => {
     axios.get(`${BaseUrl()}/schedule`).then(res => {
       // 체크된 그룹에 대하여 색상 설정 추가
       setScheduleList(itemAttribute(res.data));
-      setCheckSchedule(itemAttribute(res.data));
-    });
+      selectSchedule();
+    }).catch(() => failAlert("", "스케줄 조회에 실패하였습니다"));
   }
 
   /** 캘린더에 표시될 아이템들의 속성 셋팅 **/
@@ -75,24 +75,29 @@ export const Calendar = () => {
 
   /** 서브사이드바에서 체크된 목록만 캘린더에 표시 **/
   const [checkSchedule, setCheckSchedule] = useState([]);
-  useEffect(() => {
-    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
-    setCheckSchedule([]);
+  const selectSchedule = () => {
+    let filteredSchedules = [];
+
+    // 모든 체크박스 상태에 따라 필터링
     checkBoxKey.forEach(key => {
-      if(select[key] && key === "all") {
-        setCheckSchedule(scheduleList);
-      }
-      if(select[key]){
-        scheduleList.filter(item => {
-          if(item.type === key) {
-            setCheckSchedule(prev => ([ ...prev, item]));
-            return item;
-          }
-        });
+      if (select[key]) {
+        if (key === "all") {
+          filteredSchedules = [...scheduleList];
+        } else {
+          const filteredItems = scheduleList.filter(item => item.type === key);
+          filteredSchedules = [...filteredSchedules, ...filteredItems];
+        }
       }
     });
-    console.log("checkSchedule ==== ", JSON.stringify(checkSchedule));
-  }, [select, dataChange]);
+
+    // 필터링된 결과로 상태 업데이트
+    setCheckSchedule(filteredSchedules);
+  }
+
+  useEffect(() => {
+    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
+    selectSchedule();
+  }, [select, scheduleList]);
 
   /** 이벤트 클릭 **/
   const [eventData, setEventData] = useState({start: "", end: "", title: ""});
