@@ -7,6 +7,7 @@ import { Pagination } from "../../../../../../../components/Pagination/Paginatio
 import { FaLightbulb, FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {format} from 'date-fns';
+import { smallAlert } from "../../../../../../../commons/common";
 
 export const PopupList=()=>{
     const navi = useNavigate();
@@ -62,7 +63,7 @@ export const PopupList=()=>{
     }
     const handleSearch = () => {
         if (searchType === '') {
-            alert("검색 유형을 선택하세요!");
+            smallAlert("검색 유형을 선택하세요!");
         } else {
             if (searchType === 'title') {
                 setFiltered(poplist.filter(post => (post.popTitle == keyword || post.popTitle.includes(keyword))));

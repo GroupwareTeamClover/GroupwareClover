@@ -52,7 +52,7 @@ export const smallAlert = (text) => {
 	});
 } 
 export const smallConfirmAlert = (text) => {
-	Swal.fire({
+	return Swal.fire({
 		// position:" top",
 		text,
     showCancelButton: true,
