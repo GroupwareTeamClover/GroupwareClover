@@ -15,6 +15,10 @@ public class AdminPopupService {
 	@Autowired
 	private AdminPopupDAO adminpopupDAO;
 	
+	public void deletepop(int popSeq) {
+		adminpopupDAO.deletepop(popSeq);
+	}
+	
 	public int createPopup(AdminPopupDTO popupdto) {
 		adminpopupDAO.createPopup(popupdto);
 		int newPopSeq = popupdto.getPopSeq();

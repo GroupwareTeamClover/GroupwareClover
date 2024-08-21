@@ -4,9 +4,33 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="AdminMember">
-	<select id="getAllData" resultType="com.clover.employee.dto.EmployeeDTO">
-		select * from employee where emp_state_code != 0 order by emp_seq desc
+	<select id="getAllData" resultType="java.util.HashMap">
+select employee.emp_seq,employee.emp_state_code,employee.dept_code,employee.role_code,employee.worker_state_code, employee.emp_state_code, employee.emp_name, employee.emp_email, role.role_name, department.dept_name, worker_state.worker_state_name, employee_state.emp_state_name 
+		from employee
+        join department on employee.dept_code = department.dept_code
+        join role on employee.role_code = role.role_code
+        join worker_state on employee.worker_state_code = worker_state.worker_state_code
+        join employee_state on employee.emp_state_code = employee_state.emp_state_code
+        where employee.emp_state_code !=0
+        order by employee.emp_seq desc
+    </select>
+    <select id="getAllDept" resultType="java.util.HashMap">
+		select * from department
 	</select>
+	<select id="getAllRole" resultType="java.util.HashMap">
+		select * from role
+	</select>
+	<select id="getAllWork" resultType="java.util.HashMap">
+		select * from worker_state
+	</select>
+	<select id="getAllEmp" resultType="java.util.HashMap">
+		select * from employee_state
+	</select>
+	
+	
+	
+	
+	
 	<select id="getCountMem" resultType="java.util.HashMap">
 		select emp_state_code, count(*) as count from employee group by emp_state_code
 	</select>
@@ -45,6 +69,26 @@
 	
 	<select id="getAllNew" resultType="com.clover.employee.dto.EmployeeDTO">
 		select * from employee where emp_state_code = 0 or to_char(join_date, 'MM')=to_char(sysdate,'MM') order by emp_seq desc
+	</select>
+	
+	<resultMap id="employeeResultMap" type="java.util.HashMap">
+    	<result property="join_date" column="join_date" javaType="java.sql.Timestamp" />
+    	<result property="leave_date" column="leave_date" javaType="java.sql.Timestamp" />
+    	
+	</resultMap>
+	<select id="getAllNewName" resultMap="employeeResultMap">
+	select 
+		employee.*, 
+		role.role_name, department.dept_name, worker_state.worker_state_name, 
+		employee_state.emp_state_name,
+		CAST(employee.join_date AS TIMESTAMP) AS join_date,
+		CAST(employee.leave_date AS TIMESTAMP) AS leave_date
+    from employee 
+    join department on employee.dept_code=department.dept_code
+    join role on employee.role_code=role.role_code
+     join worker_state on employee.worker_state_code = worker_state.worker_state_code
+    join employee_state on employee.emp_state_code = employee_state.emp_state_code
+    where employee.emp_state_code = 0 or to_char(employee.join_date, 'MM')=to_char(sysdate,'MM') order by employee.emp_seq desc
 	</select>
 	<update id="addMem" parameterType="map">
 		update employee

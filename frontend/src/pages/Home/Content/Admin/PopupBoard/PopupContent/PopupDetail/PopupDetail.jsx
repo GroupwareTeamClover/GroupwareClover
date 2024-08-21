@@ -36,14 +36,15 @@ export const PopupDetail = () => {
         setBoardActive(e.target.value);
     }
 
-    // 컴포넌트가 언마운트될 때 인스턴스 해제
-    useEffect(() => {
-        return () => {
-            if (editorRef.current) {
-                editorRef.current.getInstance().destroy();  // 인스턴스 해제
-            }
-        };
-    }, []);
+    // // 컴포넌트가 언마운트될 때 인스턴스 해제
+    // useEffect(() => {
+    //     return () => {
+    //         if (editorRef.current) {
+    //             editorRef.current.getInstance().destroy();  // 인스턴스 해제
+    //         }
+    //     };
+    // }, []);
+
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminpopup/postInfo/${popSeq}`).then(resp => {
             const data = resp.data;
@@ -77,6 +78,16 @@ export const PopupDetail = () => {
         });
     }, [popSeq]);
 
+    const handleDelete=()=>{
+        const confirm = window.confirm("글 삭제를 하시겠습니까?");
+        if(confirm){  axios.delete(`${BaseUrl()}/adminpopup/deletepop/${popSeq}`).then(resp => {
+            console.log(resp.data);
+            navi('/popup', {state:{type: '팝업공지글 목록'}});
+        }) }
+        else{return false}
+        
+    }
+
     const handleTitleChange = (e) => setTitle(e.target.value);
 
     const handleContentChange = () => setContent(editorRef.current.getInstance().getHTML());
@@ -105,9 +116,10 @@ export const PopupDetail = () => {
         setAddFileUrls(prev => prev.filter(url => url !== file.url)); // remove URL from addFileUrls
     };
     const handleCancel = () => {
-        if (window.confirm("글 수정을 취소하시겠습니까?")) {
-            navi(-1);
-        }
+        const confirm = window.confirm("글 작성을 취소하시겠습니까?");
+        if(confirm){  navi('/popup', {state:{type: '팝업공지글 목록'}}); }
+        else{return false}
+       
     };
 
     const handleSubmit = () => {
@@ -221,6 +233,7 @@ export const PopupDetail = () => {
 
     return (
         <div className={styles.container}>
+            <div className={styles.deletebox}><button className={styles.deleteBtn} onClick={handleDelete}>삭제</button></div>
             <div className={styles.headbox}>
                 <h3>{post.empName} 관리자님의 팝업공지글</h3>
                 <div className={styles.popWriteDate}>

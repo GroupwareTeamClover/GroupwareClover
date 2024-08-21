@@ -129,8 +129,8 @@
     padding-left: 10px;
 }
 
-.funcBtn select{
-    height: 35px;
+.theadtd select{
+    height: 30px;
     width: 200px;
     margin-left: 20px;
     
@@ -182,8 +182,11 @@
     width:50%;
     padding:5px 0px;
 }
+.table tbody td{
+    height:35px;
+}
 .table thead td:nth-child(1){
-    width:100px;    /* 이름 너비 */
+    width:70px;    /* 이름 너비 */
 }
 .table thead td:nth-child(2) {
     width: 60px; /* 부서 열의 너비 */
