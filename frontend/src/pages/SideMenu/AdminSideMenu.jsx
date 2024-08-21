@@ -16,7 +16,7 @@ export const AdminSideMenu = () => {
     { 
       name: "조직관리", link: "/member", type: "통합사원목록", icon: FaUserTie, 
       submenus: [
-        { name: "조직도", link: "/deptmap", type: "조직도" },
+        { name: "조직도", link: "/member/deptmap", type: "조직도" },
         { name: "통합 사원 목록", link: "/member", type: "통합 사원 목록" },
         { name: "가입 승인 목록", link: "/member/addmem", type: "가입 승인 목록" },
         { name: "통합 근태 목록", link: "/member/attend", type: "통합 근태 목록" },

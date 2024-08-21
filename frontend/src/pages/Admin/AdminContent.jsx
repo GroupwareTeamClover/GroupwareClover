@@ -26,7 +26,7 @@ export const AdminContent = () => {
           <Route path="/member/*" element={<Member/>}/>
           <Route path="/popup/*" element={<Popup/>}/>
           <Route path="/log/*" element={<Log/>}/>
-          <Route path="/deptmap/*" element={<Deptmap/>}/>
+          <Route path="/member/deptmap/*" element={<Deptmap/>}/>
         </Routes>
     </div>
   );

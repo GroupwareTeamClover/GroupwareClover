@@ -19,7 +19,7 @@ export const Deptmap=()=>{
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedChild, setSelectedChild] = useState(null);
  // Pagingation
- const PER_PAGE = 10; // 한 페이지에 보여줄 목록 수 
+ const PER_PAGE = 8; // 한 페이지에 보여줄 목록 수 
 //  const pageCount = Math.ceil(selectedFolder.children.length / PER_PAGE); // (총 갯수 / PER_PAGE) = 페이지 몇 개 나올지 계산  
  const [currentPage, setCurrentPage] = useState(0);
  const handlePageChange = ({selected}) => {
@@ -35,8 +35,6 @@ export const Deptmap=()=>{
     // 상태에 따라 header 내용 설정
     const headerText = state?.type || '조직도';
   
-  
-
     useEffect(() => {
         setIsLoading(true);
         axios.get(`${BaseUrl()}/chat/organization`).then((resp) => {
@@ -159,9 +157,9 @@ export const Deptmap=()=>{
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>아바타</th>
+                                        <th></th>
                                         <th>이름</th>
-                                        <th>역할</th>
+                                        <th>직위</th>
                                     </tr>
                                 </thead>
                                 <tbody>
