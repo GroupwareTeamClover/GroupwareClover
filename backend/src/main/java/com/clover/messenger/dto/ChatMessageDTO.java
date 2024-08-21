@@ -9,6 +9,8 @@ public class ChatMessageDTO {
     private Timestamp sendTime;
     private int roomSeq;
     private int senderSeq;
+    private String senderName;
+    private String senderAvatar;
     private String roomType;  
     private int receiverSeq;  
 
@@ -69,6 +71,22 @@ public class ChatMessageDTO {
         this.roomType = roomType;
     }
 
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public String getSenderAvatar() {
+        return senderAvatar;
+    }
+
+    public void setSenderAvatar(String senderAvatar) {
+        this.senderAvatar = senderAvatar;
+    }
+
     public int getReceiverSeq() {
         return receiverSeq;
     }
@@ -80,13 +98,15 @@ public class ChatMessageDTO {
 
     public ChatMessageDTO() {}
 
-    public ChatMessageDTO(int messageSeq, String messageContent, String messageType, Timestamp sendTime, int roomSeq, int senderSeq, String roomType, int receiverSeq) {
+    public ChatMessageDTO(int messageSeq, String messageContent, String messageType, Timestamp sendTime, int roomSeq, int senderSeq, String senderName, String senderAvatar, String roomType, int receiverSeq) {
         this.messageSeq = messageSeq;
         this.messageContent = messageContent;
         this.messageType = messageType != null ? messageType : "CHAT"; // 기본 값 설정
         this.sendTime = sendTime;
         this.roomSeq = roomSeq;
         this.senderSeq = senderSeq;
+        this.senderName = senderName;
+        this.senderAvatar = senderAvatar;
         this.roomType = roomType;
         this.receiverSeq = receiverSeq;
     }
