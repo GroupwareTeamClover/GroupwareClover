@@ -26,6 +26,7 @@ export const FindId = () => {
     // exists 계정 정보 확인 후 있다면 다음 로직 진행
     axios.get(`${BaseUrl()}/employee/exists`, {params}).then(res => {
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
+      console.log("인증코드 ==== ", ranNumber);
       if(res.data.empSeq > 0) {
         // 계정 조회 성공
         const data = {

@@ -45,11 +45,14 @@ public class ChatMessageWebSocketController {
         // 읽지 않은 메시지 수 업데이트
         updateUnreadMessageCount(chatMessage.getRoomSeq(), senderSeq);
         
-        // 채팅방 목록 업데이트
-        sendChatRoomsUpdate(senderSeq);
-
         // 채팅방의 모든 사용자에게 메시지 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + chatMessage.getRoomSeq(), savedMessage);
+
+        // 채팅방의 모든 참여자에게 채팅방 목록 업데이트 전송
+        List<Integer> roomMembers = chatRoomService.getRoomMembers(chatMessage.getRoomSeq());
+        for (Integer memberSeq : roomMembers) {
+            sendChatRoomsUpdate(memberSeq);
+        }
     }
 
     /**

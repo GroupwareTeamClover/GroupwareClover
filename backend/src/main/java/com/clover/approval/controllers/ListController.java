@@ -103,6 +103,16 @@ public class ListController {
     	System.out.println("현재페이지" + cpage);
     	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
     	System.out.println("네비 범위" + naviCountPerPage);
+    	System.out.println("임시 저장의 타입" + searchType);
+    	System.out.println("임시 저장의 키워드" + keyword);
+    	if(keyword==null) {
+    		System.out.println("null 확인");
+    	}
+    	
+    	if(keyword=="") {
+    		System.out.println("빈문자열 확인");
+    	}
+    	
     	
     	type="임시문서함";
         // 전체게시글 수
@@ -134,6 +144,7 @@ public class ListController {
     	System.out.println("현재페이지" + cpage);
     	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
     	System.out.println("네비 범위" + naviCountPerPage);
+
     	
     	type="결재문서함";
         // 전체게시글 수

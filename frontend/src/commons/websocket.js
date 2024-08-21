@@ -162,6 +162,8 @@ export const subscribeToRoom = (roomSeq, onMessageReceived) => {
           senderAvatar: message.senderAvatar,
           senderName: message.senderName
         });
+
+        
       });
   
       // 구독한 채팅방 목록 업데이트

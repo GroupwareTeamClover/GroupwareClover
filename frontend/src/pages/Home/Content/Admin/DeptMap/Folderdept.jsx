@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
 import styles from '../../../../../components/Folder/Folder.module.css'
-import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder  } from "react-icons/fa";
+import { FaRegPlusSquare, FaRegMinusSquare, FaRegFolder, FaUser, FaBuilding, FaRegBuilding  } from "react-icons/fa";
 import { CiFileOn } from "react-icons/ci";
 
 
 
 
-export const Folderdept = ({ folder, level = 0, onItemClick, selectedItem, setSelectedItem, onFolderClick }) => {
+export const Folderdept = ({ folder, level = 0, onItemClick, selectedItem, setSelectedItem, onFolderClick, isFiltered}) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     useEffect(() => {
+        if (isFiltered) {
+            setIsExpanded(true);
+        } else {
         const isItemSelected = folder.children && folder.children.some(child => child.seq === selectedItem?.seq);
         if (isItemSelected) {
             setIsExpanded(true);
         }
-    }, [selectedItem]);
+        else {
+            setIsExpanded(false);
+        }
+    }
+    }, []);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
@@ -26,17 +33,17 @@ export const Folderdept = ({ folder, level = 0, onItemClick, selectedItem, setSe
                 {folder.children && folder.children.length > 0 && (
                     isExpanded ? <FaRegMinusSquare /> : <FaRegPlusSquare />
                 )}
-                <span><FaRegFolder /></span><span className={styles.headerText}>{folder.name}</span>
+                <span><FaRegBuilding /></span><span className={styles.headerText}>{folder.name}</span>
             </div>
             {isExpanded && folder.children && folder.children.length > 0 && (
                 <div className={styles.folderContent}>
                     {folder.children.map((child, index) => (
                         <div key={index} className={styles.fileItem}>
-                            <span><CiFileOn /></span> 
+                            <span><FaUser size={15} color="rgba(139, 139, 196, 0.726)"/></span> 
                             <span 
                                 onClick={() => onItemClick(child)} 
                                 className={`${styles.contentText} ${selectedItem?.seq === child.seq ? styles.selected : ''}`}>
-                                {child.name}
+                                {child.name} {child.role}
                             </span>
                         </div>
                     ))}
