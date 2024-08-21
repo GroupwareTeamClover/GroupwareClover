@@ -57,12 +57,12 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
       console.log("인증코드 ==== ", ranNumber);
       // 계정 조회 성공
-      // const data = {
-      //   to_name: exists.empName,
-      //   to_email: exists.empEmail,
-      //   message: ranNumber
-      // }
-      // sendEmail(data);
+      const data = {
+        to_name: exists.empName,
+        to_email: exists.empEmail,
+        message: ranNumber
+      }
+      sendEmail(data);
       setAccessNum(prev => ({ ...prev, code: ranNumber }));
       setEmailCheck(true);
     } else {
