@@ -2,7 +2,7 @@ import styles from './SelectSchedule.module.css'
 import {dateSetting} from "../../../../../commons/common";
 import React from "react";
 
-export const SelectSchedule = ({ closeModal, setDataChange, eventData }) => {
+export const SelectSchedule = ({ eventData }) => {
   return (
     <div className={styles.detail}>
       <p>일정 상세 정보</p>

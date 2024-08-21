@@ -172,6 +172,33 @@ create table attachment (
 
 create sequence attachment_sequence start with 1 increment by 1 nomaxvalue nocache;
 
+-- 게시판 외래키
+--1.[화이트리스트]
+ALTER TABLE board_whitelist 
+ADD CONSTRAINTS board_whitelist_boardFK foreign KEY (boardlist_seq) 
+REFERENCES boardlist(boardlist_seq) on delete cascade;
+
+ALTER TABLE board_whitelist 
+ADD CONSTRAINTS board_whitelist_empFK foreign KEY (emp_seq) 
+REFERENCES employee(emp_seq) on delete cascade;
+--2.[중요글]
+ALTER TABLE board_important 
+ADD CONSTRAINTS board_important_empFK foreign KEY (emp_seq) 
+REFERENCES employee(emp_seq) on delete cascade;
+
+ALTER TABLE board_important 
+ADD CONSTRAINTS board_important_boardFK foreign KEY (board_seq) 
+REFERENCES board(board_seq) on delete cascade;
+--3.[게시판]
+ALTER TABLE board 
+ADD CONSTRAINTS board_boardlistFK foreign KEY (boardlist_seq) 
+REFERENCES boardlist(boardlist_seq) on delete cascade;
+--4.[댓글]
+ALTER TABLE board_comment 
+ADD CONSTRAINTS board_comment_boardFK foreign KEY (board_seq) 
+REFERENCES board(board_seq) on delete cascade;
+
+
 --조진혁
 -- room_seq, emp_seq, message_seq 모두 외래키, emp_seq, room_seq는 기본키
 CREATE TABLE LastReadMessage (

@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,7 +33,7 @@ public class S3Service {
 	// s3 임시폴더 파일 업로드 함수 (임시폴더 업로드 후 파일 저장 경로 URL을 반환)
 	public String uploadFile(MultipartFile file, String folderPath) {
 		File fileObj = convertMultiPartFileToFile(file);
-		String filePath = folderPath + "/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+		String filePath = folderPath + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
 		s3Client.putObject(new PutObjectRequest(bucketName, filePath, fileObj));
 		fileObj.delete();
 		return s3Client.getUrl(bucketName, filePath).toString();

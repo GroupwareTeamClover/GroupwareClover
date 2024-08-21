@@ -2,7 +2,7 @@ import styles from './FindId.module.css'
 import {useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../commons/config";
-import {sendEmail} from "../../../commons/common";
+import {failAlert, sendEmail, successAlert} from "../../../commons/common";
 
 export const FindId = () => {
 
@@ -19,7 +19,7 @@ export const FindId = () => {
 
   const handleEmailCheck = () => {
     if(exists.empName === "" || exists.empEmail === ""){
-      alert("입력하지 않은 값이 있습니다.");
+      failAlert("","입력 값을 확인해주세요.");
       return false;
     }
     const params = { ...exists }
@@ -38,7 +38,8 @@ export const FindId = () => {
         setExists(prev => ({ ...prev, empId: res.data.empId }));
         setEmailCheck(true);
       }
-      else alert("조건에 맞는 회원 없음");
+
+      else failAlert("","해당 직원이 존재하지 않습니다.");
     });
   }
 
@@ -46,9 +47,9 @@ export const FindId = () => {
     if(parseInt(accessNum.code) === parseInt(accessNum.input)) {
       // 이메일 인증 후 인증 번호가 맞다면 아이디 요청하여 아이디 바인딩
       setInvalidate(true);
-      alert("인증 완료");
+      successAlert("", "인증이 완료되었습니다.");
     }
-    else alert("인증번호 틀림");
+    else failAlert("","인증번호를 확인해주세요.");
   }
 
   return (

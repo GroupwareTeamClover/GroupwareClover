@@ -47,4 +47,7 @@ public class AttachmentDAO {
 		mybatis.delete("Attachment.deleteAllFile", data);
 	}
 	
+	public void deleteFilesByBoardlistSeq(int seq) {
+		mybatis.delete("Attachment.deleteFilesByBoardlistSeq", seq);
+	}
 }

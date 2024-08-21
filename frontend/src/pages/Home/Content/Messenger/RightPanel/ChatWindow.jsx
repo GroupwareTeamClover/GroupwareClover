@@ -45,6 +45,7 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
   const handleReceivedMessage = useCallback((message) => {
     switch (message.messageType) {
       case 'CHAT':
+        console.log('메시지 수신:', message);
         addMessage(chat.roomSeq, message);
         scrollToBottom();
         break;

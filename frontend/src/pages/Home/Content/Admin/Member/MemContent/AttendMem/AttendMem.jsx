@@ -1,14 +1,21 @@
 import styles from './AttendMem.module.css'
-import {FaSearch} from "react-icons/fa";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../../../../commons/config";
 import {Pagination} from "../../../../../../../components/Pagination/Pagination";
+import {Modal} from "../../../../../../../components/Modal/Modal";
+import {dateYMD, workTime} from "../../../../../../../commons/common";
 
 export const AttendMem = () =>{
   let today = new Date();
   let year = today.getFullYear();
   let month = ('0' + (today.getMonth() + 1)).slice(-2);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const [date, setDate] = useState({ year, month});
 
   /** 부서 선택 **/
   const [select, setSelect] = useState(0);
@@ -30,11 +37,11 @@ export const AttendMem = () =>{
   /** 선택된 부서 한달 근태 현황 **/
   const [employees, setEmployees] = useState([]);
   useEffect(() => {
-    axios.get(`${BaseUrl()}/attendance/members/${select}/${year}-${month}`).then(res => {
+    axios.get(`${BaseUrl()}/attendance/members/${select}/${date.year}-${date.month}`).then(res => {
       setEmployees(res.data);
       setFiltered(res.data);
     });
-  }, [select]);
+  }, [select, date]);
 
   /** 페이지네이션 설정 **/
   const [currentPage, setCurrentPage] = useState(0);
@@ -46,12 +53,53 @@ export const AttendMem = () =>{
     window.scrollTo(0,320); // 페이지 변경 시 스크롤 맨 위로 이동
   };
 
+  /** 날짜 변환 **/
+  const handleDateChange = (e) => {
+    const target = e.target.name;
+    if (target === "prev") {
+      setDate(prev => {
+        const currentMonth = parseInt(prev.month, 10); // 숫자로 변환
+        const newMonth = currentMonth === 1 ? 12 : currentMonth - 1;
+        const newYear = currentMonth === 1 ? prev.year - 1 : prev.year;
+        return {
+          ...prev,
+          year: newYear,
+          month: String(newMonth).padStart(2, '0') // 다시 문자열로 변환
+        };
+      });
+    } else if (target === "next") {
+      if (date.year === year && date.month === month) return false;
+      setDate(prev => {
+        const currentMonth = parseInt(prev.month, 10); // 숫자로 변환
+        const newMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+        const newYear = currentMonth === 12 ? prev.year + 1 : prev.year;
+        return {
+          ...prev,
+          year: newYear,
+          month: String(newMonth).padStart(2, '0') // 다시 문자열로 변환
+        };
+      });
+    }
+  }
+
+  const [attendanceList, setAttendanecList] = useState([
+    {attSeq: 0, empSeq: 0, attArrive: "", attLeave: "", attTotal: 0, attSuccess: "", attDate: ""}
+  ]);
+  const handleAttDetail = (empSeq) => {
+    axios.get(`${BaseUrl()}/attendance/${empSeq}/${date.year}-${date.month}`).then(res => {
+      if (res.data !== "" && res.data !== null && res.data !== undefined) {
+        setAttendanecList(res.data.list);
+      }
+    });
+    openModal();
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.date}>
-        <button> 〈</button>
-        <p>2024-08 근태 현황</p>
-        <button> 〉</button>
+        <button name="prev" onClick={handleDateChange}> 〈</button>
+        <p>{date.year}-{date.month} 근태 현황</p>
+        <button name="next" onClick={handleDateChange}> 〉</button>
       </div>
       <div className={styles.funcBtn}>
         <div className={styles.col_button}>
@@ -67,7 +115,6 @@ export const AttendMem = () =>{
             <option value="99">미정</option>
           </select>
           <input type="text" id="keyword" name="keyword" onChange={searchData} placeholder="이름을 입력하세요"></input>
-          {/*<button onClick={handleSearch}><FaSearch className={styles.searchLogo} /></button>*/}
         </div>
 
       </div>
@@ -78,7 +125,7 @@ export const AttendMem = () =>{
             <thead className={styles.thead}>
             <tr>
               <td className={styles.theadtd}>No.</td>
-              <td className={styles.theadtd}>부서 / 이름 / 직급</td>
+              <td className={styles.theadtd}>이름 / 직급 / 부서</td>
               <td className={styles.theadtd}>출근일수</td>
               <td className={styles.theadtd}>지각</td>
               <td className={styles.theadtd}>결석</td>
@@ -93,8 +140,8 @@ export const AttendMem = () =>{
                     <td className={styles.theadtd}>
                       {item.empSeq}
                     </td>
-                    <td className={styles.theadtd}>
-                      {item.deptName} / {item.empName} / {item.roleName}
+                    <td className={styles.theadtd} onClick={() => handleAttDetail(item.empSeq)}>
+                      {item.empName} / {item.roleName} /  {item.deptName}
                     </td>
                     {
                       item.attCount.work_day === 0 ?
@@ -147,6 +194,26 @@ export const AttendMem = () =>{
           />
         )}
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div className={styles.outsideWork}>
+          {attendanceList.length !== 0 ?
+            attendanceList.map(item => {
+              return (
+                <div className={styles.outsideContent}>
+                  <p>{dateYMD(item.attDate)}</p>
+                  <p>{item.attArrive} ~ {item.attLeave}</p>
+                  <p> ({workTime(item.attTotal)}) </p>
+                </div>
+              );
+            })
+            :
+            <div className={styles.noWork}>
+              근무 내용 없음
+            </div>
+          }
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -1,5 +1,8 @@
 package com.clover.messenger.websocket;
 
+import java.util.Map;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -10,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import com.clover.messenger.dto.ChatMessageDTO;
 import com.clover.messenger.dto.ChatRoomDTO;
 import com.clover.messenger.services.ChatRoomService;
-
-import java.util.Map;
 
 @Controller
 public class ChatRoomWebSocketController {
@@ -70,5 +71,14 @@ public class ChatRoomWebSocketController {
         // 대화 내용 삭제 알림을 브로드캐스트
         messagingTemplate.convertAndSend("/topic/room/" + message.getRoomSeq(), 
             new ChatMessageDTO(message.getRoomSeq(), "대화 내용이 삭제되었습니다.", "CLEAR"));
+    }
+
+    private void sendChatRoomsUpdate(int empSeq) {
+        List<ChatRoomDTO> updatedRooms = chatRoomService.getChatRoomsWithDetails(empSeq);
+        messagingTemplate.convertAndSendToUser(
+            String.valueOf(empSeq),
+            "/queue/chatRoomsUpdate",
+            updatedRooms
+        );
     }
 }

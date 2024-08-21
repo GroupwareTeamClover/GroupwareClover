@@ -1,4 +1,6 @@
+// ChildChatModal.jsx
 import React, { useState } from 'react';
+import DragModal from '../../../../../components/Modal/DragModal';
 import styles from './ChildChatModal.module.css';
 import ChatList from '../LeftPanel/ChatList';
 import RightPanel from '../RightPanel/RightPanel';
@@ -6,7 +8,7 @@ import { useChatStore } from '../../../../../store/messengerStore';
 
 const ChildChatModal = ({ isOpen, onClose }) => {
   const [openChatModals, setOpenChatModals] = useState([]);
-  const { chatRooms, setSelectedChat: setStoreSelectedChat } = useChatStore();
+  const { chatRooms, setSelectedChat: setStoreSelectedChat, updateChatRoom } = useChatStore();
 
   const handleChatSelect = (chat) => {
     setStoreSelectedChat(chat);
@@ -23,27 +25,14 @@ const ChildChatModal = ({ isOpen, onClose }) => {
 
   return (
     <>
-      <div className={styles.modalOverlay}>
-        <div className={styles.modalContent}>
-          <button className={styles.closeButton} onClick={onClose}>
-            &times;
-          </button>
-          <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} />
-        </div>
-      </div>
+      <DragModal isOpen={isOpen} onClose={onClose}>
+        <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
+      </DragModal>
 
       {openChatModals.map((chat) => (
-        <div key={chat.roomSeq} className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button
-              className={styles.closeButton}
-              onClick={() => handleCloseChatModal(chat.roomSeq)}
-            >
-              &times;
-            </button>
-            <RightPanel selectedChat={chat} />
-          </div>
-        </div>
+        <DragModal key={chat.roomSeq} isOpen={true} onClose={() => handleCloseChatModal(chat.roomSeq)}>
+          <RightPanel selectedChat={chat} />
+        </DragModal>
       ))}
     </>
   );
