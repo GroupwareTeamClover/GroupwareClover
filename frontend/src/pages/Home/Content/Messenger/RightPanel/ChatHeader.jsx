@@ -6,7 +6,7 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
   const [showMenu, setShowMenu] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true); // 알림 상태 추가
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -15,12 +15,16 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
     }
   }, [isSearching]);
 
+  useEffect(() => {
+    console.log('ChatHeader - chat 객체:', chat);
+  }, [chat]);
+
   const handleSearchClick = () => {
     setIsSearching(!isSearching);
     if (!isSearching) {
       setSearchTerm('');
     } else {
-      onSearch(''); 
+      onSearch('');
     }
   };
 
@@ -38,7 +42,15 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
   return (
     <div className={styles.chatHeader}>
       <div className={styles.chatInfo}>
-        <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
+        {chat.roomType === 'group' ? (
+          <div className={styles.groupAvatar}>
+            {chat.roomAvatar.split(',').slice(0, 4).map((avatar, index) => (
+              <img key={index} src={avatar.trim()} alt={`Member ${index + 1}`} />
+            ))}
+          </div>
+        ) : (
+          <img className={styles.avatar} src={chat.customRoomAvatar || chat.roomAvatar} alt="Avatar" />
+        )}
         <div className={styles.roomNameContainer}>
           <h2 className={styles.roomName}>{chat.customRoomName || chat.roomName}</h2>
           <span className={chat.isOnline ? styles.onlineStatus : styles.offlineStatus}>

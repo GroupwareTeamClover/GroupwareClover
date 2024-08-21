@@ -1,10 +1,10 @@
-// ChildChatModal.jsx
 import React, { useState } from 'react';
 import DragModal from '../../../../../components/Modal/DragModal';
 import styles from './ChildChatModal.module.css';
 import ChatList from '../LeftPanel/ChatList';
 import RightPanel from '../RightPanel/RightPanel';
 import { useChatStore } from '../../../../../store/messengerStore';
+import MessengerSideMenu from '../MessengerSideMenu/MessengerSideMenu';
 
 const ChildChatModal = ({ isOpen, onClose }) => {
   const [openChatModals, setOpenChatModals] = useState([]);
@@ -26,7 +26,14 @@ const ChildChatModal = ({ isOpen, onClose }) => {
   return (
     <>
       <DragModal isOpen={isOpen} onClose={onClose}>
-        <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
+        <div className={styles.modalBody}>
+          <div className={styles.sideMenu}>
+            <MessengerSideMenu />
+          </div>
+          <div className={styles.chatList}>
+            <ChatList chatRooms={chatRooms} onChatSelect={handleChatSelect} updateChatRoom={updateChatRoom} />
+          </div>
+        </div>
       </DragModal>
 
       {openChatModals.map((chat) => (
