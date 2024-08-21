@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useMemberStore } from '../../../../../../../store/store';
 import WebEditor from '../../../../../../../components/WebEditor/WebEditor';
+import { smallAlert, smallConfirmAlert } from '../../../../../../../commons/common';
 
 export const PopupWrite = () => {
 
@@ -75,7 +76,7 @@ export const PopupWrite = () => {
 
     const handleSubmit = () => {
         if (title.trim() === "") {
-            alert("제목을 입력해주세요!");
+            smallConfirmAlert("제목을 입력해주세요!");
             return;
         } 
         if (uploadError) {
