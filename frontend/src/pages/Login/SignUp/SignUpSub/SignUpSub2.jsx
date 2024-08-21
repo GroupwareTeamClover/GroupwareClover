@@ -54,12 +54,13 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
   /** 이메일로 인증번호 발송 **/
   const handleEmailCheck = () => {
     if(checkData.empEmail){
+      successAlert("","인증번호를 발송하였습니다.");
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
       console.log("인증코드 ==== ", ranNumber);
       // 계정 조회 성공
       // const data = {
-      //   to_name: exists.empName,
-      //   to_email: exists.empEmail,
+      //   to_name: sendData.empName,
+      //   to_email: sendData.empEmail,
       //   message: ranNumber
       // }
       // sendEmail(data);

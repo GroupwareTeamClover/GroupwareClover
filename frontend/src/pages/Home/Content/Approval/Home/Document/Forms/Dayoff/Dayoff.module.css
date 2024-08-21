@@ -1,4 +1,34 @@
+/* div{
+    border: 1px solid black;
+} */
+
 .container{
     width: 100%;
     height: 100%;
+
 }
+
+.table{
+    border-spacing:0;
+    border: 1px solid #7c7c7c;
+   
+}
+
+.th, .td{
+    padding: 10px;
+    border: 1px solid #7c7c7c;
+    border-radius: 0%;
+    margin: 0px;
+}
+
+.td{
+    text-align: left;
+}
+
+.finaltd{
+    text-align: left;
+    border: 1px solid #7c7c7c;
+    padding: 10px;
+    height: 300px;
+}
+

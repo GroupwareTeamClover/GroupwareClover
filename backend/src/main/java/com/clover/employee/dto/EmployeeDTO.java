@@ -9,7 +9,7 @@ public class EmployeeDTO {
     private String empPw;
     private String empName;
     private String empEmail;
-    private int empBirth;
+    private String empBirth;
     private String empGender;
     private String empTel;
     private String empAddress;
@@ -69,11 +69,11 @@ public class EmployeeDTO {
         this.empEmail = empEmail;
     }
 
-    public int getEmpBirth() {
+    public String getEmpBirth() {
         return empBirth;
     }
 
-    public void setEmpBirth(int empBirth) {
+    public void setEmpBirth(String empBirth) {
         this.empBirth = empBirth;
     }
 
@@ -163,7 +163,7 @@ public class EmployeeDTO {
         this.empPw = empPw;
     }
 
-    public EmployeeDTO(int empSeq, int empStateCode, String empId, String empPw, String empName, String empEmail, int empBirth, String empGender, String empTel, String empAddress, String empAvatar, int roleCode, int deptCode, Timestamp joinDate, Timestamp leaveDate, int annualLeaveDay, int workerStateCode) {
+    public EmployeeDTO(int empSeq, int empStateCode, String empId, String empPw, String empName, String empEmail, String empBirth, String empGender, String empTel, String empAddress, String empAvatar, int roleCode, int deptCode, Timestamp joinDate, Timestamp leaveDate, int annualLeaveDay, int workerStateCode) {
         this.empSeq = empSeq;
         this.empStateCode = empStateCode;
         this.empId = empId;

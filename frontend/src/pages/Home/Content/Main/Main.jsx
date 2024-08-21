@@ -10,6 +10,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import {roleName, deptName, dateYMD, dateSettingOrigin} from "../../../../commons/common";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
+import {useNavigate} from "react-router-dom";
 
 export const Main = () => {
     const [ modalState, setModalState ] = useState("");
@@ -19,6 +20,8 @@ export const Main = () => {
         setIsModalOpen(false);
         setModalState("");
     }
+
+    const navi = useNavigate();
 
     const {sessionData} = useMemberStore();
 
@@ -93,6 +96,7 @@ export const Main = () => {
                               {" "+sessionData.empName}{ roleName(sessionData.empRoleCode) === "미정" ? "" : " " + roleName(sessionData.empRoleCode)}</p>
                           <div className={styles.InfoBox}>
                               <button onClick={handleMyPageModal}>내 정보</button>
+                              <button onClick={() => navi("/approval")}>내 결재</button>
                           </div>
                       </div>
                   </div>

@@ -35,6 +35,7 @@ export const FindPw = ({closeModal}) => {
     axios.get(`${BaseUrl()}/employee/exists`, {params}).then(res => {
       // 이메일 인증 후 인증 번호가 맞다면 아이디 요청
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
+      console.log("인증코드 ==== ", ranNumber);
       if(res.data.empSeq > 0) {
         // 계정 조회 성공
         const data = {
