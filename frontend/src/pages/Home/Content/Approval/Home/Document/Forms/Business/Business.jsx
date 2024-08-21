@@ -18,7 +18,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     isTempInsert, setIsTempInsert,
     isTempEmergency, setIsTempEmergency,
     isTempTemp, setIsTempTemp,
-    isTempCancle, setIsTempCancle, files
+    isTempCancle, setIsTempCancle, files, setFiles, handleFileChange
 })=>{  
     const navi = useNavigate();
     const [isContentLoaded, setIsContentLoaded] = useState(false);
@@ -84,8 +84,6 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     useEffect(() => {
         // 의존성 배열에 필요한 상태만 포함
         setBusiness((prevBusiness) => {
-           
-
             if (
                 prevBusiness.document !== documentDTO ||
                 prevBusiness.docData !== docData ||
@@ -141,7 +139,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         }
     }, [isInsert, business]);
 
-    //임시저장 insert할 때 사용
+    //임시저장 insert할 때 사용/ setDocumentDTO가 DetailDocument에 없음
     useEffect(() => {
         if (isTemp && !id) {  // id가 없는 경우에만 실행
             console.log('setDocumentDTO있는 영역');
@@ -325,7 +323,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 <div className={styles.title}>
                     <div className={styles.name}>제목</div>
                         <div className={styles.value}>
-                            <input type='text' className={styles.inputtitle} placeholder='제목은 필수 값입니다.' onChange={handleTitleChange} value={title} disabled={isReadOnly}></input>
+                            <input type='text' className={styles.inputtitle} placeholder='제목은 필수로 입력해주세요(최대 20자)' onChange={handleTitleChange} value={title} disabled={isReadOnly} maxLength="20"></input>
                         </div>
                     </div>
                 </div>

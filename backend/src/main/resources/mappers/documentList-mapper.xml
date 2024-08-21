@@ -110,16 +110,19 @@
 	        WHERE (doc.doc_state_code = 2)
 	        AND doc.drafter_seq = #{empSeq}
 	    )  sub where 1=1
-			    <if test="searchType != null and keyword != null">
-			    	  <choose>
-			            <when test="searchType == 'title'">
-			                AND sub.title LIKE '%' || #{keyword} || '%' OR sub.title IS NULL
-			            </when>
-			            <when test="searchType == 'drafter_name'">
-			                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
-			            </when>
-			        </choose>
-	         	</if>
+			        <if test="searchType != null and keyword != null">
+					        <choose>
+					            <when test="searchType == 'title'">
+					                AND sub.title LIKE '%' || #{keyword} || '%'
+					            </when>
+					            <when test="searchType == 'drafter_name'">
+					                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
+					            </when>
+					        </choose>
+					    </if>
+					     <if test="keyword==''">
+					        OR sub.title IS NULL
+					    </if>
 	) final_subquery
     </select>
     
@@ -150,16 +153,19 @@
 				        WHERE (doc.doc_state_code = 2)
 				        AND doc.drafter_seq = #{empSeq}
 				    ) sub where 1=1
-				    <if test="searchType != null and keyword != null">
-				    	  <choose>
-				            <when test="searchType == 'title'">
-				                AND sub.title LIKE '%' || #{keyword} || '%' OR sub.title IS NULL
-				            </when>
-				            <when test="searchType == 'drafter_name'">
-				                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
-				            </when>
-				        </choose>
-		          	</if>
+				        <if test="searchType != null and keyword != null">
+					        <choose>
+					            <when test="searchType == 'title'">
+					                AND sub.title LIKE '%' || #{keyword} || '%'
+					            </when>
+					            <when test="searchType == 'drafter_name'">
+					                AND sub.drafter_name LIKE '%' || #{keyword} || '%'
+					            </when>
+					        </choose>
+					    </if>
+					    <if test="keyword==''">
+					        OR sub.title IS NULL
+					    </if>
 			) final_subquery
 		WHERE final_subquery.rn BETWEEN #{start} AND #{end}
     </select>

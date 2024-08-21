@@ -30,7 +30,7 @@ export const Document = ({type}) => {
     /*********************writer******************** */
 
     //모달정보
-    const {cloneDocCode, cloneEmpInfo} =useApprovalStore();
+    const {cloneDocCode, cloneEmpInfo, isModalComplete, setIsModalComplete} =useApprovalStore();
     //세션정보
     const {sessionData} = useMemberStore();
 
@@ -128,6 +128,14 @@ export const Document = ({type}) => {
      };
      const path = encodeURIComponent("temp");
 
+     // 모달이 완료된 후 파일 리스트 초기화
+    useEffect(() => {
+        if (isModalComplete) {
+            handleFileChange([]); // 파일 리스트 초기화
+        }
+    }, [isModalComplete]);
+
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -176,7 +184,8 @@ export const Document = ({type}) => {
                                                 documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
                                                 apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
                                                 participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}
-                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files}
+                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files} setFiles={setFiles} handleFileChange={handleFileChange}
+                                                
                                             /> 
                                         </div>
                                     </div> 
@@ -184,7 +193,7 @@ export const Document = ({type}) => {
                         </div>
                         <div className={styles.fileBox}>
                             <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
-                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files}>
+                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} defaultFileList={files}>
                                 <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
                             </Uploader>
                         </div> 
