@@ -76,7 +76,7 @@
     flex-direction: column;
     border: 5px solid #ddd;
     flex-grow: 1; /* 부모 요소의 남은 공간을 차지하도록 */
-    overflow-y: auto; /* 내부에서만 스크롤 가능하도록 */
+    /* overflow-y: auto; 내부에서만 스크롤 가능하도록 */
     max-height: 100%; /* 부모 요소의 높이를 넘어가지 않도록 제한 */
 }
 

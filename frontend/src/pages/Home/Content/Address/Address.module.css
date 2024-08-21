@@ -129,12 +129,7 @@
     padding-left: 10px;
 }
 
-.theadtd select{
-    height: 30px;
-    width: 200px;
-    margin-left: 20px;
-    
-}
+
 .funcBtn button{
     /* flex:0.1; */
     width: 100px;
@@ -162,7 +157,7 @@
     /* border: 1px solid black; */
     /* height: 75%; */
     flex:6;
-    padding: 0 25px;
+    /* padding: 0 25px; */
 }
 .tableWrapper{
     flex:8.5;
@@ -178,12 +173,24 @@
     height: 100%;
     table-layout: fixed; /* 테이블의 열 너비를 고정 */
 }
-.table select{
-    width:50%;
-    padding:5px 0px;
+.theadtd select{
+    height: 30px;
+    width: 100%;
+    background-color: #ffffff00;
+    border:none;
+    font-weight: bold;
+    padding-left: 20px;
+    /* margin-left: 20px; */
 }
+    
+    
+
 .table tbody td{
     height:35px;
+}
+.table thead td{
+    background-color: #f1f1f1;
+    font-weight: bold;
 }
 .table thead td:nth-child(1){
     width:70px;    /* 이름 너비 */

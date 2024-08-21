@@ -26,6 +26,11 @@ export const Address = () => {
     const [roleCode, setRoleCode] = useState("100");
     const [workerStateCode, setWorkerStateCode] = useState("100");
     const [empStateCode, setEmpStateCode] = useState("100");
+    //
+    const [deptName, setDeptName] = useState([]);
+    const [roleName, setRoleName] = useState([]);
+    const [workName, setWorkName] = useState([]);
+    const [empState, setEmpState] = useState([]);
 
  
     // 사원 수 출력 함수
@@ -62,6 +67,36 @@ export const Address = () => {
             console.log(resp.data)
         });
     },[storemembers]);
+     // 서버에서 부서코드-이름 데이터를 가져옴
+     useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
+            setDeptName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
+            setRoleName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
+            setWorkName(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+    useEffect(()=>{
+        axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
+            setEmpState(resp.data);
+            setIsLoading(false);
+            console.log(resp.data)
+        });
+    },[]);
+
 
     // 서버에서 사원 수 데이터를 가져옴
     useEffect(()=>{
@@ -135,7 +170,7 @@ const handleNameSearch =() =>{
         empNameRef.current.value = '';
     } else {
         // 검색어가 있는 경우 필터링
-        let result = members.filter((data) => data.empName.includes(keyword));
+        let result = members.filter((data) => data.EMP_NAME.includes(keyword));
         setFiltered(result);
         setDeptCode("100");
         setRoleCode("100");
@@ -177,20 +212,20 @@ const handleInputChange = (e) => {
 // 셀렉트 선택
 const applyFilters = () => {
     // let result = members;
-    let result = members.filter((data) => data.empName.includes(keyword));;
+    let result = members.filter((data) => data.EMP_NAME.includes(keyword));;
 
     // 필터 조건에 따라 데이터 필터링
     if (deptCode !== "100") {
-        result = result.filter(data => data.deptCode === parseInt(deptCode));
+        result = result.filter(data => data.DEPT_CODE === parseInt(deptCode));
     }
     if (roleCode !== "100") {
-        result = result.filter(data => data.roleCode === parseInt(roleCode));
+        result = result.filter(data => data.ROLE_CODE === parseInt(roleCode));
     }
     if (workerStateCode !== "100") {
-        result = result.filter(data => data.workerStateCode === parseInt(workerStateCode));
+        result = result.filter(data => data.WORKER_STATE_CODE === parseInt(workerStateCode));
     }
     if (empStateCode !== "100") {
-        result = result.filter(data => data.empStateCode === parseInt(empStateCode));
+        result = result.filter(data => data.EMP_STATE_CODE === parseInt(empStateCode));
     }
     
     setFiltered(result);
@@ -260,27 +295,21 @@ useEffect(() => {
                                         <td className={styles.theadtd}>
                                             <select name='deptCode' value={deptCode} onChange={handleInputChange}>
                                                 <option value='100'>부서</option>
-                                                <option value='1'>총무</option> 
-                                                <option value='2'>인사</option> 
-                                                <option value='3'>사무</option> 
-                                                <option value='4'>유통</option> 
-                                                <option value='5'>경영</option> 
-                                                <option value='99'>미정</option> 
+                                                {deptName.map(dept =>(
+                                                    <option key={dept.DEPT_CODE} value={dept.DEPT_CODE}>
+                                                        {dept.DEPT_NAME}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </td>
                                         <td className={styles.theadtd}>
                                             <select name='roleCode' value={roleCode} onChange={handleInputChange}>
                                                 <option value='100'>직위</option>
-                                                <option value='1'>사장</option> 
-                                                <option value='2'>부사장</option> 
-                                                <option value='3'>이사</option> 
-                                                <option value='4'>부장</option> 
-                                                <option value='5'>차장</option> 
-                                                <option value='6'>과장</option> 
-                                                <option value='7'>대리</option> 
-                                                <option value='8'>사원</option> 
-                                                <option value='9'>인턴</option> 
-                                                <option value='99'>미정</option> 
+                                                {roleName.map(role =>(
+                                                    <option key={role.ROLE_CODE} value={role.ROLE_CODE}>
+                                                        {role.ROLE_NAME}
+                                                    </option>
+                                                ))}
                                             </select>   
                                         </td>
                                     
@@ -302,37 +331,19 @@ useEffect(() => {
                                         filtered.slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE).map((mem, i) => (
                                             <tr key={i}>
                                             <td className={styles.theadtd}>
-                                                {mem.empName}
+                                                {mem.EMP_NAME}
                                             </td>
                                             <td className={styles.theadtd}>
-                                            {
-                                                        mem.deptCode === 1 ? '총무' : 
-                                                        mem.deptCode === 2 ? '인사' : 
-                                                        mem.deptCode === 3 ? '사무' : 
-                                                        mem.deptCode === 4 ? '유통' : 
-                                                        mem.deptCode === 5 ? '경영' : '미정'
-                                                    } 
+                                                {mem.DEPT_NAME} 
                                             </td>
                                             <td className={styles.theadtd}>
-                                            {
-                                                        mem.roleCode === 1 ? '사장' :
-                                                        mem.roleCode === 2 ? '부사장' :
-                                                        mem.roleCode === 3 ? '이사' :
-                                                        mem.roleCode === 4 ? '부장' :
-                                                        mem.roleCode === 5 ? '차장' :
-                                                        mem.roleCode === 6 ? '과장' :
-                                                        mem.roleCode === 7 ? '대리' :
-                                                        mem.roleCode === 8 ? '사원' :
-                                                        mem.roleCode === 9 ? '인턴' : '미정'
-                                                    } 
+                                                { mem.ROLE_NAME} 
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {mem.empEmail}
+                                                {mem.EMP_EMAIL}
                                             </td>
                                             <td className={styles.theadtd}>
-                                                {
-                                                mem.empTel                                        
-                                                }
+                                                { mem.EMP_TEL }
                                             </td>
                                         </tr>
                                         ))

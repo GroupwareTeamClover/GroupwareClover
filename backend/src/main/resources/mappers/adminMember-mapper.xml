@@ -5,7 +5,7 @@
   
 <mapper namespace="AdminMember">
 	<select id="getAllData" resultType="java.util.HashMap">
-select employee.emp_seq,employee.emp_state_code,employee.dept_code,employee.role_code,employee.worker_state_code, employee.emp_state_code, employee.emp_name, employee.emp_email, role.role_name, department.dept_name, worker_state.worker_state_name, employee_state.emp_state_name 
+select employee.emp_seq,employee.emp_tel,employee.emp_state_code,employee.dept_code,employee.role_code,employee.worker_state_code, employee.emp_state_code, employee.emp_name, employee.emp_email, role.role_name, department.dept_name, worker_state.worker_state_name, employee_state.emp_state_name 
 		from employee
         join department on employee.dept_code = department.dept_code
         join role on employee.role_code = role.role_code
