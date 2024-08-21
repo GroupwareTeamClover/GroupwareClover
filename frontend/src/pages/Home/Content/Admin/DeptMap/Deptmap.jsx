@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styles from './Deptmap.module.css'
 import { BaseUrl } from "../../../../../commons/config";
-import { FaSearch } from "react-icons/fa";
+import { FaRegPlusSquare, FaSearch } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { Folderdept } from "./Folderdept";
 import { Pagination } from "../../../../../components/Pagination/Pagination";
@@ -121,12 +121,15 @@ export const Deptmap=()=>{
             <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
             <div className={styles.content}>
                 <div className={styles.searchBox}>
+                    <div className={styles.addDept}>
+                        {/* <FaRegPlusSquare /> 부서추가 */}
+                    </div>
                     <div className={styles.searchLine}>
                         <div className={styles.inputBox}>
                             <input
                                 type='text'
                                 className={styles.input}
-                                placeholder='이름 또는 역할 검색'
+                                placeholder='이름 또는 직위 검색'
                                 onChange={handleSearchData}
                                 value={searchInput}
                             />
@@ -141,8 +144,10 @@ export const Deptmap=()=>{
                                 <Folderdept
                                     key={index}
                                     folder={adjustFolderProps(folder)}
-                                   onItemClick={handleItemClick}
+                                    onItemClick={handleItemClick}
                                     onFolderClick={handleFolderClick}
+                                    selectedItem={selectedFolder}
+                                    isFiltered={!!searchInput}
                                 />
                             ))
                         ) : (
@@ -153,7 +158,7 @@ export const Deptmap=()=>{
                 <div className={styles.deptlist}>
                     {selectedFolder && (
                         <div className={styles.tableBox}>
-                            <h4>{selectedFolder.name}</h4>
+                            <h4>{selectedFolder.name} 팀</h4>
                             <table>
                                 <thead>
                                     <tr>
