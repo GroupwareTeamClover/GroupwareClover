@@ -10,6 +10,7 @@ import {Pagination} from '../../../../../../../components/Pagination/Pagination'
 import {format} from 'date-fns';
 import { FaSearch } from "react-icons/fa";
 import { Loader } from "rsuite";
+import { smallAlert } from "../../../../../../../commons/common";
 export const AddMember = ()=>{
     const navi = useNavigate();
     const {storemembers, setstoremembers} = useMemStore();
@@ -131,7 +132,7 @@ export const AddMember = ()=>{
             setModalMems(checkedMems);  // 선택된 사원들을 모달에 전달할 리스트에 저장
             openModal();  // 모달 열기
         } else {
-            alert("변경할 사원을 선택해주세요.");
+            smallAlert("변경할 사원을 선택해주세요.");
         }
     };
     // 대기중 버튼 클릭했을때 (사원 하나만 변경)

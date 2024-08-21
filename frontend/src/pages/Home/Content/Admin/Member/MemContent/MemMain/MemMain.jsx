@@ -9,6 +9,7 @@ import { useMemStore } from '../../../../../../../store/store';
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import { FaSearch } from 'react-icons/fa';
 import { Loader } from 'rsuite';
+import { smallAlert } from '../../../../../../../commons/common';
 
 export const MemMain = () => {
     // 8/8(목)
@@ -198,9 +199,9 @@ export const MemMain = () => {
         if (modalName !== '' && checkedMems.length !== 0) {
             openModal();
         } else if(modalName !=='' && checkedMems.length === 0){
-            alert("변경할 사원을 선택해주세요.");
+            smallAlert("변경할 사원을 선택해주세요.");
         } else if(modalName ==='' && checkedMems.length !== 0){
-            alert("상태변경을 선택해주세요.");
+            smallAlert("상태변경을 선택해주세요.");
         }
     };
 

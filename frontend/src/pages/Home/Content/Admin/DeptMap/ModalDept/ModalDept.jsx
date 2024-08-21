@@ -3,6 +3,7 @@ import styles from './ModalDept.module.css'
 import { BiHelpCircle } from 'react-icons/bi';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
+import { smallAlert } from '../../../../../../commons/common';
 
 export const ModalDept =({setIsModalOpen})=>{
 
@@ -17,19 +18,19 @@ export const ModalDept =({setIsModalOpen})=>{
         console.log(deptCode);
         
         if(!deptName){
-            alert("부서명을 입력하세요.");
+            smallAlert("부서명을 입력하세요.");
             return;
         }
         // 이미존재하는 부서이름
         let existingDeptName = existingDeptCodes.filter(name => name.DEPT_NAME === deptName);
         if(existingDeptName){
-            alert("이미 존재 부서명. 다른 부서명 입력바람");
+            smallAlert("이미 존재 부서명. 다른 부서명 입력바람");
             return;
         }
         // 이미존재하는 부서코드
         let existingDeptCode = existingDeptCodes.filter(code => code.DEPT_CODE === deptCode);
         if(deptCode && existingDeptCode){
-            alert("이미 존재 부서코드. 다른 부서코드 입력 또는 자동생성"); 
+            smallAlert("이미 존재 부서코드. 다른 부서코드 입력 또는 자동생성"); 
             return;
         } else if(!deptCode){
             let minDeptCode = 1;

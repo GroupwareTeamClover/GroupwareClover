@@ -3,6 +3,7 @@ import { useMemStore } from '../../../../../../../../store/store';
 import styles from './ModalAdd.module.css';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../../../commons/config';
+import { smallAlert } from '../../../../../../../../commons/common';
 
 export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
     const [deptName, setDeptName] = useState([]);
@@ -72,12 +73,12 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
         };
 
         if (!dept || !role || !worker_state) {
-            alert("선택하세요");
+            smallAlert("선택하세요");
         } else {
             axios.put(`${BaseUrl()}/adminaddmem`, requestData)
             .then((resp)=>{
                 console.log("수정 결과: "+resp.data)
-                alert("승인되었습니다. ");
+                smallAlert("승인되었습니다. ");
                 resetCheckboxes();
                 setstoremembers(true);
                 closeModal();
@@ -85,7 +86,7 @@ export const ModalAdd = ({setIsModalOpen, checkedMems, resetCheckboxes})=>{
             )
             .catch((error) => {
                 console.error("수정 중 오류 발생:", error);
-                alert("승인 처리 중 오류가 발생했습니다.");
+                smallAlert("승인 처리 중 오류가 발생했습니다.");
             });
         }
         
