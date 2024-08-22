@@ -111,7 +111,7 @@ export const DetailDocument = ({type}) => {
             axios.get(`${BaseUrl()}/attachment/${'approval'}/${id}`).then(resp => {
                 setFiles(resp.data);
             });
-            axios.get(`${BaseUrl()}/approval/document/${id}`, document).then((resp)=>{
+            axios.get(`${BaseUrl()}/api/approval/document/${id}`, document).then((resp)=>{
                 // console.log(`detail접근확인`);
                 console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
 
@@ -229,7 +229,7 @@ export const DetailDocument = ({type}) => {
         if(isCancle){
             smallConfirmAlert("상신취소하시겠습니까? 모든 내용은 사라집니다.").then((result)=>{
                 if(result.isConfirmed){
-                    axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
                     .then(()=>{
                         setIsCancle(false);
                         navi(`/approval/list?type=기안진행&cpage=1`); // 절대 경로 사용
@@ -253,7 +253,7 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${apvLineSeq}`)
             console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/approval`, {
+            axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/${id}/approval`, {
                 cleanApvLineSeq:cleanApvLineSeq,
                 id: id
             }).then(()=>{
@@ -302,7 +302,7 @@ export const DetailDocument = ({type}) => {
                 const apvLineSeq=getApvLineSeq();
                 const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
                 //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-                axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/reject`, {
+                axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/${id}/reject`, {
                     cleanApvLineSeq:cleanApvLineSeq,
                     id: id,
                     reasonForRejection: reasonForRejection
@@ -337,7 +337,7 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${apvLineSeq}`)
             console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/holdoff`, {
+            axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/holdoff`, {
                 cleanApvLineSeq:cleanApvLineSeq,
             }).then(()=>{
                 setIsHoldoff(false);
@@ -355,7 +355,7 @@ export const DetailDocument = ({type}) => {
         if(isTempCancle && id){
             smallConfirmAlert("삭제하시겠습니까?").then((result)=>{
                 if(result.isConfirmed){
-                    axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
                     .then(()=>{
                         setIsTempCancle(false);
                         smallAlert("삭제 성공");
@@ -378,7 +378,7 @@ export const DetailDocument = ({type}) => {
     useEffect(()=>{
         if(isTempEmergency && id){
             console.log(isTempEmergency)
-            axios.put(`${BaseUrl()}/approval/document/temp/emergency/${id}`,  { isTempEmergency: isTempEmergency } ).then((resp)=>{
+            axios.put(`${BaseUrl()}/api/approval/document/temp/emergency/${id}`,  { isTempEmergency: isTempEmergency } ).then((resp)=>{
             })
         }
     },[isTempEmergency, id])
@@ -393,7 +393,7 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${partLineSeq}`)
             console.log(`클린결재번호 ${cleanPartLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanPartLineSeq}/${id}/part`, {
+            axios.put(`${BaseUrl()}/api/approval/line/${cleanPartLineSeq}/${id}/part`, {
                 cleanPartLineSeq:cleanPartLineSeq,
                 id: id
             }).then(()=>{
