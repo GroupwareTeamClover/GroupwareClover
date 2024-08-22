@@ -54,7 +54,7 @@ public class SignController {
             session.setAttribute("cloverAvatar", empInfo.getEmpAvatar());
             session.setAttribute("cloverDeptCode", empInfo.getDeptCode());
             session.setAttribute("cloverDeptName", empInfo.getDeptName());
-            session.setAttribute("cloverRoleName", empInfo.getRoleName());
+            session.setAttribute("cloverRoleCode", empInfo.getRoleCode());
             if(empInfo.getEmpStateCode() == 0) session.setAttribute("cloverAdmin", empInfo.getEmpStateCode());
             
             // 조진혁 웹소켓 로그인
