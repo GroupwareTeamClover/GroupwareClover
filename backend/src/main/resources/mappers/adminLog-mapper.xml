@@ -30,7 +30,7 @@
 </select>
 
 <select id="getSearchLog" parameterType="com.clover.admin.dto.AdminLogSearchDTO" resultType="com.clover.admin.dto.AdminLogDTO">
-     SELECT log.*, department.dept_name FROM log join department on log.dept_code = department.dept_code
+     SELECT log.*, department.dept_name FROM log left join department on log.dept_code = department.dept_code
         <where>
             <if test="empName != null and empName != ''">
                 AND log.emp_name like '%' || #{empName} || '%'
