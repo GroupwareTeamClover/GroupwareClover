@@ -27,14 +27,16 @@ public class EmployeeController {
     private HttpSession session;
 
 
-    @GetMapping("/{empSeq}")
-    public ResponseEntity<Map<String, Object>> getMyInfo(@PathVariable int empSeq) {
+    @GetMapping
+    public ResponseEntity<Map<String, Object>> getMyInfo() {
+        int empSeq = (int) session.getAttribute("cloverSeq");
         Map<String, Object> map = employeeService.getMyInfo(empSeq);
         return ResponseEntity.ok(map);
     }
 
     @PostMapping
     public ResponseEntity<String> signUpEmployee(@RequestBody EmployeeDTO dto) {
+        System.out.println("birth ===== " + dto.getEmpBirth());
         String result = employeeService.signUpEmployee(dto);
         return ResponseEntity.ok(result);
     }
@@ -48,7 +50,6 @@ public class EmployeeController {
 
     @PutMapping("/{empSeq}")
     public ResponseEntity<String> updatePwEmployee(@PathVariable int empSeq, @RequestBody EmployeeDTO dto) {
-        dto.setEmpSeq((int)session.getAttribute("cloverSeq"));
         String result = employeeService.updatePwEmployee(dto);
         return ResponseEntity.ok(result);
     }

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../../commons/config';
 import { useMemberStore } from '../../../../../../../store/store';
+import { smallAlert } from '../../../../../../../commons/common';
 
 export const PopupWindow = ({ setShowPopup }) => {
     const { sessionData } = useMemberStore();
@@ -78,7 +79,7 @@ export const PopupWindow = ({ setShowPopup }) => {
                         const popup = window.open('', popupId, `width=600,height=600,left=${leftPosition},top=${downPosition},scrollbars=yes,resizable=no`);
 
                         if (!popup) {
-                            alert('팝업 창을 열 수 없습니다. 팝업 차단을 확인하세요.');
+                            smallAlert('팝업 창을 열 수 없습니다. 팝업 차단을 확인하세요.');
                             continue;
                         }
 

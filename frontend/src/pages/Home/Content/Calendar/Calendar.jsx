@@ -7,7 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
-import {dateSettingOrigin, scheduleType} from "../../../../commons/common";
+import {dateSettingOrigin, failAlert, scheduleType} from "../../../../commons/common";
 import {BaseUrl} from "../../../../commons/config";
 import {useMemberStore} from "../../../../store/store";
 import {AddSchedule} from "./AddSchedule/AddSchedule";
@@ -45,8 +45,8 @@ export const Calendar = () => {
     axios.get(`${BaseUrl()}/schedule`).then(res => {
       // 체크된 그룹에 대하여 색상 설정 추가
       setScheduleList(itemAttribute(res.data));
-      setCheckSchedule(itemAttribute(res.data));
-    });
+      selectSchedule();
+    }).catch(() => failAlert("", "스케줄 조회에 실패하였습니다"));
   }
 
   /** 캘린더에 표시될 아이템들의 속성 셋팅 **/
@@ -75,23 +75,29 @@ export const Calendar = () => {
 
   /** 서브사이드바에서 체크된 목록만 캘린더에 표시 **/
   const [checkSchedule, setCheckSchedule] = useState([]);
-  useEffect(() => {
-    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
-    setCheckSchedule([]);
+  const selectSchedule = () => {
+    let filteredSchedules = [];
+
+    // 모든 체크박스 상태에 따라 필터링
     checkBoxKey.forEach(key => {
-      if(select[key] && key === "all") {
-        setCheckSchedule(scheduleList);
-      }
-      if(select[key]){
-        scheduleList.filter(item => {
-          if(item.type === key) {
-            setCheckSchedule(prev => ([ ...prev, item]));
-            return item;
-          }
-        });
+      if (select[key]) {
+        if (key === "all") {
+          filteredSchedules = [...scheduleList];
+        } else {
+          const filteredItems = scheduleList.filter(item => item.type === key);
+          filteredSchedules = [...filteredSchedules, ...filteredItems];
+        }
       }
     });
-  }, [select]);
+
+    // 필터링된 결과로 상태 업데이트
+    setCheckSchedule(filteredSchedules);
+  }
+
+  useEffect(() => {
+    // 체크된 목록 바뀌면 필터 사용해서 캘린더 재 렌더링
+    selectSchedule();
+  }, [select, scheduleList]);
 
   /** 이벤트 클릭 **/
   const [eventData, setEventData] = useState({start: "", end: "", title: ""});
@@ -113,18 +119,28 @@ export const Calendar = () => {
 
   /** 선택된 날짜를 형식에 맞게 셋팅 **/
   const selectDayList = (dateStr) => {
-      let selectList = checkSchedule.filter(item => {
-        if (item.date) return item.date === dateStr;
-        else if (item.start && item.end) {
-          const startDate = new Date(item.start);
-          const endDate = new Date(item.end);
-          const selectedDate = new Date(dateStr);
-          return selectedDate >= startDate && selectedDate <= endDate;
-        }
-        return false;
-      });
-    setScheduleSelectList(selectList);
+    // 선택된 날짜를 UTC 기준으로 변환하여 비교 준비
+    const selectedDate = new Date(dateStr);
+    const selectedDateStartOfDay = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate(), 0, 0, 0));
+    const selectedDateEndOfDay = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth(), selectedDate.getUTCDate(), 23, 59, 59, 999));
 
+    let selectList = checkSchedule.filter(item => {
+      if (item.date) {
+        const itemDate = new Date(item.date);
+        const itemDateStartOfDay = new Date(Date.UTC(itemDate.getUTCFullYear(), itemDate.getUTCMonth(), itemDate.getUTCDate(), 0, 0, 0));
+        const itemDateEndOfDay = new Date(Date.UTC(itemDate.getUTCFullYear(), itemDate.getUTCMonth(), itemDate.getUTCDate(), 23, 59, 59, 999));
+        return itemDateEndOfDay >= selectedDateStartOfDay && itemDateStartOfDay <= selectedDateEndOfDay;
+      }
+      else if (item.start && item.end) {
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        return endDate >= selectedDateStartOfDay && startDate <= selectedDateEndOfDay;
+      }
+
+      return false;
+    });
+
+    setScheduleSelectList(selectList);
   }
 
   /** 모달 화면 스테이트 **/

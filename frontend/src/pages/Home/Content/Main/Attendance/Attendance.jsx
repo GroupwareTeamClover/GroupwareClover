@@ -6,6 +6,7 @@ import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {dateYMD, failAlert, successAlert, timeAlert, workTime} from "../../../../../commons/common";
 import {useMemberStore} from "../../../../../store/store";
+import {Loading} from "../../../../../components/Loading/Loading";
 
 export const Attendance = () => {
   let today = new Date();
@@ -22,6 +23,8 @@ export const Attendance = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const [loading, setLoading] = useState(false);
 
   const defaultData = {attSeq: "", empSeq: "", attArrive: "", attLeave: "", attTotal: "", attSuccess: "", attDate: ""};
   const [arrive, setArrive] = useState(defaultData);
@@ -82,13 +85,17 @@ export const Attendance = () => {
 
   /** 금일 근태 정보 **/
   const todayAtt = () => {
+    setLoading(true);
     axios.get(`${BaseUrl()}/attendance/today/${dateData}`).then(res => {
       if (res.data !== "" && res.data !== null && res.data !== undefined) setArrive(res.data);
-    });
+    }).catch(() => failAlert("","정보 조회에 실패하였습니다"));
+
+    setLoading(false);
   }
 
   /** 한달 근태 정보 **/
   const monthAtt = () => {
+    setLoading(true);
     axios.get(`${BaseUrl()}/attendance/${sessionData.empSeq}/${date.year}-${date.month}`).then(res => {
       if (res.data !== "" && res.data !== null && res.data !== undefined) {
           const hour = Math.floor(res.data.count.work_total_time / 60);
@@ -104,7 +111,9 @@ export const Attendance = () => {
         setMyAttendance(data);
         setAttendanecList(res.data.list);
       }
-    });
+    }).catch(() => failAlert("","정보 조회에 실패하였습니다"));
+
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -147,6 +156,7 @@ export const Attendance = () => {
 
   return (
     <div className={styles.attendance}>
+      { loading && <Loading />}
       <div className={styles.attTitle}>
         <h2>내 근태 현황</h2>
         <HiMenuAlt3 size={30} className={styles.icons} onClick={handleAttDetail}/>
@@ -203,7 +213,7 @@ export const Attendance = () => {
               </div>
               <div>
                 <p>연차</p>
-                <span>{myAttendance.work_day != 0 ? myAttendance.work_day - myAttendance.work_success : "-"}</span>
+                <span>{myAttendance.work_day != 0 ? "-" : "-"}</span>
               </div>
             </div>
             <div className={styles.totalWorkTime}>
@@ -218,9 +228,9 @@ export const Attendance = () => {
           </div>
           <div className={styles.outsideWork}>
                   {attendanceList.length !== 0 ?
-                    attendanceList.map(item => {
+                    attendanceList.map((item, i) => {
                         return (
-                          <div className={styles.outsideContent}>
+                          <div className={styles.outsideContent} key={i}>
                               <p>{dateYMD(item.attDate)}</p>
                               <p>{item.attArrive} ~ {item.attLeave}</p>
                               <p> ({workTime(item.attTotal)}) </p>

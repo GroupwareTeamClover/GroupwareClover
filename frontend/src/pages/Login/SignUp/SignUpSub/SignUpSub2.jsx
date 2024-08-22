@@ -3,15 +3,18 @@ import {failAlert, sendEmail, successAlert, timeAlert, validateEmail, validatePh
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
+import {Loading} from "../../../../components/Loading/Loading";
 
 export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, setSignUpState }) => {
 
   const keys = ["empId", "empPw", "empName", "empEmail", "empBirth", "empGender", "empTel"];
 
+  /** 로딩 상태 **/
+  const [loading, setLoading] = useState(false);
+
   /** 입력 데이터 체크 **/
   const handleDataCheck = (e) => {
     let { name, value } = e.target;
-
     if (name === "empTel") {
       setSendData(prev => {
         const data = {...prev, [name]: value};
@@ -56,7 +59,6 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
     if(checkData.empEmail){
       successAlert("","인증번호를 발송하였습니다.");
       const ranNumber =  Math.floor(100000 + Math.random() * 900000);
-      console.log("인증코드 ==== ", ranNumber);
       // 계정 조회 성공
       const data = {
         to_name: sendData.empName,
@@ -82,15 +84,21 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
       let data = sendData;
       data.empGender = data.empGender%2 === 1 ? "M" : "F";
       delete data.pwCheck;
+
+      setLoading(true);
+
       const res = await axios.post(`${BaseUrl()}/employee`, data);
       if(res.data === "ok"){
         timeAlert("회원가입 완료");
+        // setLoading(false);
         setSignUpState(false);
       }
     } else {
       //  checkData가 fales 인 부분으로 포커스 이동하는 로직 필요
       failAlert("", "회원가입 입력창을 확인해주세요");
     }
+
+    setLoading(false);
   }
 
   const [successBtn, setSuccessBtn] = useState(false);
@@ -105,6 +113,9 @@ export const SignUpSub2 = ({ sendData, checkData,  setSendData, setCheckData, se
 
   return (
     <div className={styles.container}>
+
+      { loading && <Loading /> }
+
       <div className={styles.title}>
         <h1>Join Employee!</h1>
       </div>

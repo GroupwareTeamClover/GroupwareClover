@@ -7,7 +7,7 @@ export const useScheduleStore = create(set => ({
 
   // 선택된 스케줄 리스트
   scheduleSelectList: [],
-  setScheduleSelectList: params => set({ scheduleSelectList : params }),
+  setScheduleSelectList: param => set({ scheduleSelectList : param }),
 
   // 선택된 스케줄
   scheduleDetail: {},
@@ -15,5 +15,5 @@ export const useScheduleStore = create(set => ({
 
   // 선택된 날짜
   scheduleDay: "",
-  setScheduleDay: params => set({ scheduleDay: params })
+  setScheduleDay: param => set({ scheduleDay: param }),
 }));
