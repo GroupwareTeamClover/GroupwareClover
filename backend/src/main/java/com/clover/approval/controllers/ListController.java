@@ -21,7 +21,7 @@ import com.clover.approval.services.ListService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/approval/list")
+@RequestMapping("/api/approval/list")
 public class ListController {
 	@Autowired
 	public DocumentService documentService;
@@ -37,7 +37,7 @@ public class ListController {
 	
 	private String type;
 	
-	//사이드바 리스트
+	//기안진행, 결재대기, 결재예정, 참조/열람대기리스트
 	@GetMapping
 	public ResponseEntity<ListMappingDTO> getListInfo(){
 		int empSeq = (int) session.getAttribute("cloverSeq");
