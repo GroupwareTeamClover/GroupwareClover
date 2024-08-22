@@ -1,6 +1,7 @@
 package com.clover.employee.dao;
 
 import com.clover.employee.dto.EmployeeDTO;
+import com.clover.employee.dto.SignDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,7 +16,7 @@ public class EmployeeDAO {
     private SqlSession mybatis;
 
     /** 로그인 **/
-    public EmployeeDTO signIn(EmployeeDTO dto) {
+    public SignDTO signIn(SignDTO dto) {
         return mybatis.selectOne("Employee.signIn", dto);
     }
 

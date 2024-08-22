@@ -3,6 +3,7 @@ package com.clover.employee.services;
 import com.clover.commons.Sha512;
 import com.clover.employee.dao.EmployeeDAO;
 import com.clover.employee.dto.EmployeeDTO;
+import com.clover.employee.dto.SignDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class EmployeeService {
     private Sha512 sha512;
 
     /** 로그인 **/
-    public EmployeeDTO signIn(EmployeeDTO dto) {
+    public SignDTO signIn(SignDTO dto) {
         dto.setEmpPw(sha512.getSHA512(dto.getEmpPw()));
         return employeeDAO.signIn(dto);
     }

@@ -176,7 +176,7 @@ export const workTime = (time) => {
 }
 
 // =============================== [ 부서, 직급 코드 이름으로 변환 ] ===============================
-export const deptName = (code) => {
+export const deptName = async (code) => {
 
   // axios.get(`${BaseUrl()}/`).then(res => {
   //   for(let item of res.data) {
