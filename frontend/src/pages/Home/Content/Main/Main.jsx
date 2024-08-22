@@ -7,7 +7,7 @@ import {Mypage} from "./Mypage/Mypage";
 import {Attendance} from "./Attendance/Attendance";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import {roleName, deptName, dateYMD, dateSettingOrigin} from "../../../../commons/common";
+import {dateYMD, dateSettingOrigin} from "../../../../commons/common";
 import axios from "axios";
 import {BaseUrl} from "../../../../commons/config";
 import {useNavigate} from "react-router-dom";
