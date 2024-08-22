@@ -78,7 +78,7 @@ public class SignController {
         // 정하윤 : 로그인 실패한 로그 기록 테이블에 insert. 
         AdminLogDTO adminlogdto = new AdminLogDTO(0, 0, "", dto.getEmpId(), 0, clientIp, localLogTime, "로그인 실패","");
         adminlogService.insertLog(adminlogdto);
-
+        System.out.println("로그인 실패: "+ dto.getEmpId());
         return null;
 //        return ResponseEntity.badRequest().body("로그인 실패");
     }
