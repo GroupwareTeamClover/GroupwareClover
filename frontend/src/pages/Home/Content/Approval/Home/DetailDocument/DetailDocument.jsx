@@ -43,6 +43,8 @@ export const DetailDocument = ({type}) => {
     };
     const FormComponent = formConfig[type] || formConfig.invalid;
 
+    console.log(`상신테이블 이름 확인 :  ${formConfig[type].name.toLowerCase()}`);
+
     //DraferMenu에서 상신취소 클릭시-메뉴컴포넌트에 전달
     const [isCancle, setIsCancle] = useState(false);
 
@@ -207,7 +209,7 @@ export const DetailDocument = ({type}) => {
 
     }      
              
- 
+
 
   
     /*********************메뉴 클릭에 따른 update******************** */
