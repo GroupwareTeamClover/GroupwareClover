@@ -15,7 +15,7 @@ public class EmployeeDAO {
     private SqlSession mybatis;
 
     /** 로그인 **/
-    public EmployeeDTO SignIn(EmployeeDTO dto) {
+    public EmployeeDTO signIn(EmployeeDTO dto) {
         return mybatis.selectOne("Employee.signIn", dto);
     }
 

@@ -40,7 +40,7 @@ public class SignController {
 
     @PostMapping
     public ResponseEntity<?> signIn(@RequestBody EmployeeDTO dto, HttpServletRequest request) {
-        EmployeeDTO empInfo = employeeService.SignIn(dto);
+        EmployeeDTO empInfo = employeeService.signIn(dto);
         
         // 정하윤 로그아이피
         String clientIp = getClientIp(request);	// ip주소 가져오기 
