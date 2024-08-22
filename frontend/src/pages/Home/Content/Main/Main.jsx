@@ -93,10 +93,10 @@ export const Main = () => {
 
                   <div className={styles.myInfo}>
                       <div className={styles.avatar}>
-                          { myInfo.EMP_AVATAR === null ?
+                          { sessionData.empAvatar === null ?
                             <img src={default_image} alt="기본이미지"/>
                             :
-                            <img src={myInfo.EMP_AVATAR} alt="기본이미지"/>
+                            <img src={sessionData.empAvatar} alt="기본이미지"/>
                           }
                       </div>
                       <div className={styles.empInfo}>
