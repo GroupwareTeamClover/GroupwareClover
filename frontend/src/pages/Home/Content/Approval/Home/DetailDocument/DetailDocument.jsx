@@ -463,6 +463,9 @@ export const DetailDocument = ({type}) => {
         }
     }
 
+
+    //임시저장에서 첨부파일 처리하기
+
  
   
    
@@ -549,8 +552,7 @@ export const DetailDocument = ({type}) => {
                                     <p className={styles.eachFile} key={i} onClick={() => { handleDownload(file.attachmentSysname, file.attachmentOriname) }}>{i + 1}. {file.attachmentOriname}</p>
                                 </>
                             );
-                        })
-                        }
+                        })}
                     </div>
                 </div>
                 {/* 오른쪽 */}
