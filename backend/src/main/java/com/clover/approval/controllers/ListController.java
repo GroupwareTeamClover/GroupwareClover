@@ -40,9 +40,10 @@ public class ListController {
 	//사이드바 리스트
 	@GetMapping
 	public ResponseEntity<ListMappingDTO> getListInfo(){
-		List<DocumentDTO> documentDTO = documentService.getAllDoc();
-		List<ApvLineDTO> apvlist=lineService.getAllApv();	
-		List<ParticipantsLineDTO> plist=lineService.getAllPart();
+		int empSeq = (int) session.getAttribute("cloverSeq");
+		List<DocumentDTO> documentDTO = documentService.getAllDoc(empSeq);
+		List<ApvLineDTO> apvlist=lineService.getAllApv(empSeq);	
+		List<ParticipantsLineDTO> plist=lineService.getAllPart(empSeq);
 		ListMappingDTO listInfo=new ListMappingDTO(documentDTO, apvlist, plist);
 		return ResponseEntity.ok(listInfo);
 	}

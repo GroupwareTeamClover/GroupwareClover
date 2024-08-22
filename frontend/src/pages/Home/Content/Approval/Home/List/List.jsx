@@ -7,11 +7,12 @@ import { format } from 'date-fns';
 import { useNavigate, useLocation   } from 'react-router-dom';
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
+import {Loading} from "../../../../../../components/Loading/Loading"
 
 
 
 export const List = ({ type }) => {
-
+    
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const cpage = parseInt(queryParams.get('cpage')) || 1; // cpage를 URL에서 가져오고 기본값을 1로 설정
@@ -55,7 +56,7 @@ export const List = ({ type }) => {
     };
 
     /************전체데이터준비**************/
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const navi = useNavigate();
     const { sessionData } = useMemberStore();
 
@@ -389,7 +390,7 @@ export const List = ({ type }) => {
             <div className={styles.content}>
                 <div className={styles.contentbox}>
                     {loading ? (
-                        <p>로딩 중...</p>
+                        <Loading />
                     ) : (
                         <>
                             <table>

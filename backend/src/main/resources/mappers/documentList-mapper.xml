@@ -306,7 +306,7 @@
     </select>
     
     <select id="countPartDocuments" resultType="int">
-    	  SELECT count(*) FROM (
+    	SELECT count(*) FROM (
         SELECT sub.*, 
                ROW_NUMBER() OVER (ORDER BY sub.write_date DESC) AS rn
         FROM (

@@ -69,8 +69,8 @@ public class DocumentService {
 	}
 	
 	//리스트에서 전체 문서 출력하기
-	public List<DocumentDTO> getAllDoc(){
-		return documentDAO.selectAllDoc();
+	public List<DocumentDTO> getAllDoc(int empSeq){
+		return documentDAO.selectAllDoc(empSeq);
 	}
 	
 	

@@ -7,7 +7,7 @@ import { BaseUrl } from '../../../../../../commons/config'
 import { format } from 'date-fns';
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos  } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-
+import { Loading } from '../../../../../../components/Loading/Loading'
 
 export const Main=()=>{
     
@@ -66,6 +66,7 @@ export const Main=()=>{
 
     //전체 정보 한번만 가져오기
     useEffect(()=>{
+
         //카드 정보
         axios.get(`${BaseUrl()}/approval/list/main/card`).then((resp)=>{
             console.log(resp.data)

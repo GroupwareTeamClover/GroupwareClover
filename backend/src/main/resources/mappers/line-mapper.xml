@@ -43,11 +43,11 @@
 	</select>
 	
 	<select id="selectAllApv" resultType="com.clover.approval.dto.ApvLineDTO">
-		select * from apv_line
+		select * from apv_line where apver_id = #{empSeq}
 	</select>
 	
 	<select id="selectAllPart" resultType="com.clover.approval.dto.ParticipantsLineDTO">
-		select * from participants_line
+		select * from participants_line  where emp_seq = #{empSeq}
 	</select>
 	
 	<update id="updateWaitToApproval">
