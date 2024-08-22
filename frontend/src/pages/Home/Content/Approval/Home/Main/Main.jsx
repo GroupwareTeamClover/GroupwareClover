@@ -68,13 +68,13 @@ export const Main=()=>{
     useEffect(()=>{
 
         //카드 정보
-        axios.get(`${BaseUrl()}/approval/list/main/card`).then((resp)=>{
+        axios.get(`${BaseUrl()}/api/approval/list/main/card`).then((resp)=>{
             console.log(resp.data)
             setCardDocumentDTOs(resp.data)
         })
 
         //리스트 정보
-         axios.get(`${BaseUrl()}/approval/list/main/list`).then((resp)=>{
+         axios.get(`${BaseUrl()}/api/approval/list/main/list`).then((resp)=>{
             console.log(resp.data)
             setListDocumentDTOs(resp.data)
         })

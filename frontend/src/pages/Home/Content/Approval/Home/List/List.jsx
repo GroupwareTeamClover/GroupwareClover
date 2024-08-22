@@ -80,7 +80,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '기안진행' || type === '결재대기' || type === '결재예정' || type === '참조/열람대기') {
             setLoading(true); // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list`, list)
+            axios.get(`${BaseUrl()}/api/approval/list`, list)
                 .then((resp) => {
                     setDocumentDTOs(resp.data.document);
                     setApvLineDTOs(resp.data.apvline);
@@ -176,7 +176,7 @@ export const List = ({ type }) => {
         if (type === '기안문서함') {
             console.log(searchType, keyword);
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/finish`, {
+            axios.get(`${BaseUrl()}/api/approval/list/finish`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -207,7 +207,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '임시문서함') {
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/temp`, {
+            axios.get(`${BaseUrl()}/api/approval/list/temp`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -237,7 +237,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '결재문서함') {
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/approval`, {
+            axios.get(`${BaseUrl()}/api/approval/list/approval`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -267,7 +267,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '참조/열람문서함') {
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/part`, {
+            axios.get(`${BaseUrl()}/api/approval/list/part`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
