@@ -45,10 +45,15 @@ export const Deptmap=()=>{
                 if (!acc[DEPT_NAME]) {
                     acc[DEPT_NAME] = { name: DEPT_NAME, children: [] };
                 }
-                acc[DEPT_NAME].children.push({ name: EMP_NAME, role: ROLE_NAME, seq: EMP_SEQ, avatar: EMP_AVATAR });
-                return acc;
+                if(EMP_NAME === null){
+                    acc[DEPT_NAME]={name: DEPT_NAME, children:[]}
+                }else{
+                    acc[DEPT_NAME].children.push({ name: EMP_NAME, role: ROLE_NAME, seq: EMP_SEQ, avatar: EMP_AVATAR });
+                    return acc;
+                }
             }, {});
 
+            
             const newFolderData = Object.values(departmentMap);
             setFolderData(newFolderData);
             setFilteredData(newFolderData);
@@ -57,6 +62,7 @@ export const Deptmap=()=>{
         
     }, []);
     
+    console.log(folderData)
     useEffect(() => {
         if (selectedFolder) {
             setCurrentPage(0); 
@@ -197,15 +203,23 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {selectedFolder.children
+                                    {
+                                    selectedFolder.children
                                     .slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
                                     .map(child => (
+                                        child.name !== undefined ?
                                         <tr key={child.seq}>
+                                            
                                             <td><img src={child.avatar} alt={child.name} width="50" /></td>
                                             <td>{child.name}</td>
                                             <td>{child.role}</td>
-                                        </tr>
-                                    ))}
+                                            
+                                            </tr>
+                                            :( <tr><td colSpan={3}>'현재 부서원이 존재하지 않습니다'</td></tr>)
+                                    )
+                                )
+                                }
+                               
                                 </tbody>
                             </table>
                         </div>
