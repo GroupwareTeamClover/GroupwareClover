@@ -1,6 +1,7 @@
 import styles from './Approval.module.css'
 import {Side} from './Side/Side';
 import {Home} from './Home/Home';
+import { Routes, Route, useLocation  } from "react-router-dom";
 
 //현재 url approval/*
 
@@ -11,7 +12,9 @@ export const Approval = () =>{
                 <Side/>
               </div>
             <div className={styles.home}>
-                <Home/>
+                <Routes>
+                    <Route path="/*" element={<Home/>}/>
+                </Routes>
             </div>
         </div>
     );
