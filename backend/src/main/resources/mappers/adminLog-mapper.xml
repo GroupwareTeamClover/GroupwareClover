@@ -42,10 +42,10 @@
                 AND log.log_status = #{logStatus}
             </if>
             <if test="specificStartDate != null and specificStartDate != ''">
-                AND log.local_logtime <![CDATA[ >= ]]>#{specificStartDate} || ' 00:00:00'
+                AND log.local_logtime <![CDATA[ >= ]]>  TO_DATE(#{specificStartDate} || ' 00:00:00', 'YYYY-MM-DD HH24:MI:SS')
             </if>
             <if test="specificEndDate != null and specificEndDate != ''">
-                AND log.local_logtime <![CDATA[ <= ]]> #{specificEndDate} || ' 23:59:59'
+                AND log.local_logtime <![CDATA[ <= ]]> TO_DATE(#{specificEndDate} || ' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
             </if>
         </where>
         order by log.log_seq desc
