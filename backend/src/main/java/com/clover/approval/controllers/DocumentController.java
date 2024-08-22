@@ -37,7 +37,7 @@ import com.clover.employee.services.EmployeeService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/approval/document")
+@RequestMapping("/api/approval/document")
 public class DocumentController {
 	
 	@Autowired

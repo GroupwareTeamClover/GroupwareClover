@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.clover.approval.services.DocumentService;
 
 @RestController
-@RequestMapping("/docCode")
+@RequestMapping("/api/docCode")
 public class DocCodeController {
 	
 	@Autowired
