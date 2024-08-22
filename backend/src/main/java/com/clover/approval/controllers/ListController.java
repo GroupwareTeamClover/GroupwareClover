@@ -47,11 +47,19 @@ public class ListController {
 		return ResponseEntity.ok(listInfo);
 	}
 	
-	//메인리스트
-	@GetMapping("/main")
+	//메인리스트-카드
+	@GetMapping("/main/card")
+	public ResponseEntity<List<DocumentDTO>> getMainCardInfo(){
+		 int empSeq = (int) session.getAttribute("cloverSeq");
+		List<DocumentDTO> documentDTO = listService.getMainCard(empSeq);	
+		return ResponseEntity.ok(documentDTO);
+	}
+	
+	//메인리스트-리스트
+	@GetMapping("/main/list")
 	public ResponseEntity<List<DocumentDTO>> getMainListInfo(){
 		 int empSeq = (int) session.getAttribute("cloverSeq");
-		List<DocumentDTO> documentDTO = documentService.getMainDoc(empSeq);	
+		List<DocumentDTO> documentDTO = listService.getMainList(empSeq);	
 		return ResponseEntity.ok(documentDTO);
 	}
 	

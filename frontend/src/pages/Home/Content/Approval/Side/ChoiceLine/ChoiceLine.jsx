@@ -10,6 +10,7 @@ import { DragFolder } from './DragFolder/DragFolder';
 //아이콘
 import { CiTrash } from "react-icons/ci";
 import { FaSearch} from "react-icons/fa";
+import { smallAlert} from "../../../../../../commons/common"
 
 
 
@@ -100,6 +101,7 @@ export const ChoiceLine= () =>{
 
         // 중복 확인 로직 추가
         setSelectedEmpInfo(prev => {
+            console.log(prev)
             const existingItems = prev[type] || [];
             const isDuplicate = existingItems.some(existingItem => existingItem.seq === item.seq);
 
@@ -108,18 +110,21 @@ export const ChoiceLine= () =>{
             || (type !== 'refchoice' && prev.refchoice && prev.refchoice.some(existingItem => existingItem.seq === item.seq))  
             || (type !== 'viechoice' && prev.viechoice && prev.viechoice.some(existingItem => existingItem.seq === item.seq))  
             ) {
-                alert("이미 다른 결재라인에 포함되어 있는 직웝입니다.");
+                smallAlert("이미 다른 결재라인에 포함되어 있는 직웝입니다.");
                 return prev;
             }
 
             //같은 결재라인에 포함되어 있는 직원일 때 넣을 수 없다.
             if (isDuplicate) {
-                alert("이미 포함된 직원입니다.");
+                smallAlert("이미 포함된 직원입니다.");
                 return prev;
             }
 
             //인원수 제한하기
-            // if()
+            if(selectedEmpInfo[type].length>=3){
+                smallAlert("최대 3명까지 설정가능합니다.");
+                return prev;
+            }
 
             // 중복되지 않은 경우에만 추가
             return {

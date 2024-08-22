@@ -9,6 +9,7 @@ import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md"
 import { FaSearch } from "react-icons/fa";
 
 
+
 export const List = ({ type }) => {
 
     const location = useLocation();
