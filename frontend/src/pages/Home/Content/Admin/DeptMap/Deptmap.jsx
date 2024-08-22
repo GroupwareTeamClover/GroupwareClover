@@ -95,16 +95,10 @@ export const Deptmap=()=>{
                     const filteredChildren = folder.children.filter(child => {
                         const childName = child.name || '';
                         const childRole = child.role || '';
-                        return childName.toLowerCase().includes(query.toLowerCase()) ||
-                            childRole.toLowerCase().includes(query.toLowerCase());
-                    });
-                    // const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
-                    // const filteredChildren = folder.children.filter(child =>
-                    //     child.name.toLowerCase().includes(query.toLowerCase()) 
-                    //     // ||
-                    //     // child.role.toLowerCase().includes(query.toLowerCase())
-                    // );
-                    
+                        return childName.toLowerCase().includes(query.toLowerCase()) 
+                        // ||
+                        //     childRole.toLowerCase().includes(query.toLowerCase());
+                    });                 
                     
                     if (folderMatches || filteredChildren.length) {
                         return { ...folder, children: filteredChildren.length ? filteredChildren : folder.children, isOpen: true };
@@ -164,7 +158,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
                             <input
                                 type='text'
                                 className={styles.input}
-                                placeholder='이름 또는 직위 검색'
+                                placeholder='이름 검색'
                                 onChange={handleSearchData}
                                 value={searchInput}
                             />
@@ -182,7 +176,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
                                     onItemClick={handleItemClick}
                                     onFolderClick={handleFolderClick}
                                     selectedItem={selectedFolder}
-                                    isFiltered={!!searchInput}
+                                    isFiltered={searchInput}
                                 />
                             ))
                         ) : (

@@ -79,6 +79,8 @@ export const ModalDept =({setIsModalOpen, onDeptAdded })=>{
                 </div>
                 <div className={styles.statusSelect}>
                     <input type='text' name='deptcode' value={deptCode ||''} 
+                    placeholder='부서코드는 자동 생성됩니다.'
+                    disabled
                     onChange={(e) =>{
                         const value = e.target.value;
                         if (/^\d*$/.test(value)) {
@@ -105,7 +107,7 @@ export const ModalDept =({setIsModalOpen, onDeptAdded })=>{
             </div>  
             <div className={styles.changeStatus}>
                 <div className={styles.statusHelp}>
-                   (입력하지 않을 시, 부서코드가 자동 생성됩니다.)
+                   {/* (입력하지 않을 시, 부서코드가 자동 생성됩니다.) */}
                 </div>
             </div>            
             <div className={styles.btnstyle}>

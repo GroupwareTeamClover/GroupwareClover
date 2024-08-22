@@ -27,13 +27,12 @@ export const Folderdept = ({ folder, level = 0, onItemClick, selectedItem, setSe
         setIsExpanded(!isExpanded);
     };
 
+    console.log(folder.children)
     return (
         <div className={styles.folderContainer} style={{ marginLeft: `${level * 20}px` }}>
             <div className={styles.folderHeader} onClick={() => { handleToggle(); onFolderClick(folder); }}>
-            {folder.children && folder.children.length > 0 ? (
+                {folder.children && folder.children.length > 0 && (
                     isExpanded ? <FaRegMinusSquare /> : <FaRegPlusSquare />
-                ) : (
-                    <FaRegPlusSquare /> // 자식이 없는 경우에도 플러스 아이콘 유지
                 )}
                 <span><FaRegBuilding /></span><span className={styles.headerText}>{folder.name}</span>
             </div>
@@ -51,6 +50,7 @@ export const Folderdept = ({ folder, level = 0, onItemClick, selectedItem, setSe
                     ))}
                 </div>
             )}
+            
         </div>
     );
 };
