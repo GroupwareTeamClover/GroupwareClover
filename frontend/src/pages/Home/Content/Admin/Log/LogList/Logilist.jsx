@@ -3,7 +3,7 @@ import styles from './Loglist.module.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../commons/config';
-import { deptName } from '../../../../../../commons/common';
+import { deptName, smallAlert } from '../../../../../../commons/common';
 import { Pagination } from '../../../../../../components/Pagination/Pagination';
 import { format, startOfDay, subDays, subMonths, parseISO, isBefore, isAfter } from 'date-fns';
 
@@ -104,17 +104,17 @@ export const Loglist = () => {
         }
 
         if (isAfter(newDate, today)) {
-            alert("날짜는 오늘 이후로 설정할 수 없습니다.");
+            smallAlert("날짜는 오늘 이후로 설정할 수 없습니다.");
             return;
         }
 
         if (isStartDate && isAfter(newDate, parseISO(specificEndDate))) {
-            alert("시작일은 종료일보다 이후일 수 없습니다.");
+            smallAlert("시작일은 종료일보다 이후일 수 없습니다.");
             return;
         }
 
         if (!isStartDate && isBefore(newDate, parseISO(specificStartDate))) {
-            alert("종료일은 시작일보다 이전일 수 없습니다.");
+            smallAlert("종료일은 시작일보다 이전일 수 없습니다.");
             return;
         }
 
@@ -125,23 +125,23 @@ export const Loglist = () => {
         const today = format(startOfDay(new Date()), 'yyyy-MM-dd');
 
         if ((specificStartDate === '' || specificEndDate === '') && (searchType === '' && selectStatus === '')) {
-            alert("적어도 하나의 검색 조건을 설정하세요!");
+            smallAlert("적어도 하나의 검색 조건을 설정하세요!");
             return;
         }
         if (searchType !== '' && keyword === '' && selectStatus === '' && specificStartDate === '' && specificEndDate === '') {
-            alert("검색어를 입력하세요");
+            smallAlert("검색어를 입력하세요");
             return;
         }
         if ((specificStartDate !== '' && specificEndDate === '') || (specificStartDate === '' && specificEndDate !== '')) {
-            alert("검색기간을 확인하세요.");
+            smallAlert("검색기간을 확인하세요.");
             return;
         }
         if (specificEndDate > today) {
-            alert("종료일은 오늘 날짜를 초과할 수 없습니다.");
+            smallAlert("종료일은 오늘 날짜를 초과할 수 없습니다.");
             return;
         }
         if (specificStartDate > specificEndDate) {
-            alert("시작일은 종료일보다 이후일 수 없습니다.");
+            smallAlert("시작일은 종료일보다 이후일 수 없습니다.");
             return;
         }
 
