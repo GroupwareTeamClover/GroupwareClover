@@ -49,6 +49,10 @@ const DetilBoard = () => {
     }, [scrollMove])
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
+    useEffect(() => {
         axios.get(`${BaseUrl()}/boardlist/boardInfo`, { params: { boardlistSeq: boardlistSeq } }).then(resp => {
             (resp.data.boardlistName !== undefined) ? setBoardlistName(resp.data.boardlistName) : setBoardlistName("중요 게시물");
         });

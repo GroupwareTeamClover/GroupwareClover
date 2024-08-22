@@ -135,6 +135,20 @@
     margin-bottom: 1.1vh;
 }
 
+.viewCont table {
+    border: 1px solid black;
+}
+
+.viewCont th {
+    border: 1px solid black;
+    background-color: gray;
+    color: white;
+}
+
+.viewCont td {
+    border: 1px solid black;
+}
+
 .content .viewCont::-webkit-scrollbar {
     width: 0.52vw;
 }
