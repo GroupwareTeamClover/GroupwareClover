@@ -5,11 +5,13 @@ import axios from "axios";
 import {BaseUrl} from "../../../../../commons/config";
 import {useScheduleStore} from "../../../../../store/scheduleStore";
 import {useMemberStore} from "../../../../../store/store";
+import {Loading} from "../../../../../components/Loading/Loading";
 
 export const DetailSchedule = ({setDataChange}) => {
 
   const { sessionData } = useMemberStore();
   const { scheduleSelectList, setScheduleSelectList, scheduleDetail, setScheduleDetail, scheduleDay } = useScheduleStore();
+  const [loading, setLoading] = useState(false);
 
   const [minDateTime, setMinDateTime] = useState('');
   useEffect(() => {
@@ -35,6 +37,7 @@ export const DetailSchedule = ({setDataChange}) => {
   const handleScheduleDelete = (seq) => {
     confirmAlert("일정을 삭제 하시겠습니까?").then(res => {
       if (res.isConfirmed) {
+        setLoading(true);
         axios.delete(`${BaseUrl()}/schedule/${seq}`).then(res => {
           if (res.data === "ok") {
             setScheduleDetail({});
@@ -43,8 +46,9 @@ export const DetailSchedule = ({setDataChange}) => {
             setDataChange(prev => !prev);
             timeAlert("일정 삭제 완료!");
           }
-        });
+        }).catch(() => failAlert("","일정 삭제에 실패하였습니다"));
       }
+      setLoading(false);
     });
   }
 
@@ -84,6 +88,7 @@ export const DetailSchedule = ({setDataChange}) => {
       endDate: updateData.end
     }
 
+    setLoading(true);
     axios.put(`${BaseUrl()}/schedule`, data).then(res => {
       if(res.data === "ok"){
         const listData = scheduleSelectList.map(item => item.scheduleSeq === updateData.scheduleSeq ? updateData : item);
@@ -98,13 +103,16 @@ export const DetailSchedule = ({setDataChange}) => {
 
         timeAlert("일정 수정 완료!");
       }
-    });
+    }).catch(() => failAlert("","일정 수정에 실패하였습니다"));
+
+    setLoading(false);
   }
 
 
 
   return (
       <div className={styles.modalForm}>
+        { loading && <Loading />}
         <div className={styles.list}>
           <p>일정 목록 ( {scheduleDay} )</p>
           <ul>
