@@ -22,7 +22,6 @@ public class AdminLogDAO {
 	public List<AdminLogDTO> getAllLog(){
 		return mybatis.selectList("AdminLog.getAllLog");
 	}
-//	public void getSearchLog(AdminLogSearchDTO logsearchdto){
 	public List<AdminLogDTO> getSearchLog(AdminLogSearchDTO logsearchdto){
 		return mybatis.selectList("AdminLog.getSearchLog", logsearchdto);
 	}

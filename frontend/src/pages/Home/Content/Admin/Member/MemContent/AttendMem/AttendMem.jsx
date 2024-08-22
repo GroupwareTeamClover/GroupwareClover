@@ -5,12 +5,14 @@ import {BaseUrl} from "../../../../../../../commons/config";
 import {Pagination} from "../../../../../../../components/Pagination/Pagination";
 import {Modal} from "../../../../../../../components/Modal/Modal";
 import {dateYMD, workTime} from "../../../../../../../commons/common";
+import { useMemberStore } from '../../../../../../../store/store';
 
 export const AttendMem = () =>{
   let today = new Date();
   let year = today.getFullYear();
   let month = ('0' + (today.getMonth() + 1)).slice(-2);
 
+  const {admin, setAdmin} = useMemberStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -94,7 +96,7 @@ export const AttendMem = () =>{
     openModal();
   }
 
-  return (
+  return ( !admin ? <div>관리자 전용임</div> :
     <div className={styles.container}>
       <div className={styles.date}>
         <button name="prev" onClick={handleDateChange}> 〈</button>

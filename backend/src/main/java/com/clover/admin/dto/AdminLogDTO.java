@@ -11,11 +11,14 @@ public class AdminLogDTO {
 	private String clientIp;
 	private LocalDateTime localLogTime;
 	private String logStatus;
+	private String deptName;
 	
 	public AdminLogDTO() {}
 
-	public AdminLogDTO(int logSeq, int empSeq, String empName, String empId,int deptCode, String clientIp,
-			LocalDateTime localLogTime, String logStatus) {
+	
+
+	public AdminLogDTO(int logSeq, int empSeq, String empName, String empId, int deptCode, String clientIp,
+			LocalDateTime localLogTime, String logStatus, String deptName) {
 		super();
 		this.logSeq = logSeq;
 		this.empSeq = empSeq;
@@ -25,7 +28,22 @@ public class AdminLogDTO {
 		this.clientIp = clientIp;
 		this.localLogTime = localLogTime;
 		this.logStatus = logStatus;
+		this.deptName = deptName;
 	}
+
+
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+
 
 	public int getLogSeq() {
 		return logSeq;

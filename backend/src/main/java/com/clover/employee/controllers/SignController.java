@@ -55,8 +55,10 @@ public class SignController {
             session.setAttribute("cloverDeptCode", empInfo.getDeptCode());
             session.setAttribute("cloverDeptName", empInfo.getDeptName());
             session.setAttribute("cloverRoleCode", empInfo.getRoleCode());
-            if(empInfo.getEmpStateCode() == 0) session.setAttribute("cloverAdmin", empInfo.getEmpStateCode());
+            if(empInfo.getWorkerStateCode() == 0) session.setAttribute("cloverAdmin", empInfo.getWorkerStateCode());
             
+            Integer adminState = (Integer)session.getAttribute("cloverAdmin");
+            System.out.println("세션관리자 " + adminState );
             // 조진혁 웹소켓 로그인
             // WebSocket 연결을 위한 고유 식별자 생성
             String wsToken = UUID.randomUUID().toString();
@@ -68,13 +70,13 @@ public class SignController {
 
             // 정하윤 로그 아이피 AdminLogService로 보내기 : 로그 기록 테이블에 insert하게. 
             AdminLogDTO adminlogdto = new AdminLogDTO(0, empInfo.getEmpSeq(), empInfo.getEmpName(), dto.getEmpId(),
-            		empInfo.getDeptCode(), clientIp, localLogTime, "로그인 성공");
+            		empInfo.getDeptCode(), clientIp, localLogTime, "로그인 성공","");
             adminlogService.insertLog(adminlogdto);
 
             return ResponseEntity.ok(response);
         }
         // 정하윤 : 로그인 실패한 로그 기록 테이블에 insert. 
-        AdminLogDTO adminlogdto = new AdminLogDTO(0, 0, "", dto.getEmpId(), 0, clientIp, localLogTime, "로그인 실패");
+        AdminLogDTO adminlogdto = new AdminLogDTO(0, 0, "", dto.getEmpId(), 0, clientIp, localLogTime, "로그인 실패","");
         adminlogService.insertLog(adminlogdto);
 
         return null;

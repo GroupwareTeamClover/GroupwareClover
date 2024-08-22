@@ -21,7 +21,8 @@ import rejectImage from './../../../../../../images/reject.PNG';
 import { format } from 'date-fns';
 import { Modal } from "../../../../../../components/Modal/Modal";
 import { useNavigate } from 'react-router-dom';
-import { smallAlert, smallConfirmAlert} from "../../../../../../commons/common"
+import { smallAlert, smallConfirmAlert} from "../../../../../../commons/common";
+import { Uploader } from "rsuite"; 
 
 
 
@@ -104,6 +105,8 @@ export const DetailDocument = ({type}) => {
         handleGetAll();
     },[])
 
+    let docDetailCode;
+
 
     //DB에서 정보 가져오는함수
     const handleGetAll=()=>{
@@ -146,6 +149,8 @@ export const DetailDocument = ({type}) => {
                 resp.data.pline.map((line, index)=>{
                     if(line.empSeq===sessionData.empSeq && line.readYN === 'n') setIsPartMenu(true)
                 })
+                
+                docDetailCode=resp.data.document.docDetailCode;
 
                 const documentData = resp.data.document ? [{
                     type: 'document',
@@ -229,8 +234,9 @@ export const DetailDocument = ({type}) => {
         if(isCancle){
             smallConfirmAlert("상신취소하시겠습니까? 모든 내용은 사라집니다.").then((result)=>{
                 if(result.isConfirmed){
-                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-                    .then(()=>{
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}`, {params: {
+                        table:   formConfig[type].name.toLowerCase(),
+                    }}).then(()=>{
                         setIsCancle(false);
                         navi(`/approval/list?type=기안진행&cpage=1`); // 절대 경로 사용
                     }).catch(()=>{
@@ -429,7 +435,7 @@ export const DetailDocument = ({type}) => {
         console.log(totalLineInfo)
     },[totalLineInfo])
 
-    //detail 첨부파일    
+    //detail 첨부파일  detail
     const [files, setFiles] = useState([]);
 
      //첨부파일 조회 및 다운로드
@@ -552,9 +558,9 @@ export const DetailDocument = ({type}) => {
                     </div> 
                     </div>
                     </div>
-                    { !isTempMenu && 
+                    { (isPartMenu || isApprovalMenu || isDrafterMenu) &&
                         (<>
-                            {files.length > 0 &&
+                        {files.length > 0 &&
                             ((isFileBoxOpen) ? <div className={styles.fileHeader}>
                                 <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▲</div>
                             </div> : <div className={styles.fileHeader}>

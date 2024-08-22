@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Modal } from "../../../../../../../components/Modal/Modal";
 import { ModalAdd } from "./ModalAdd/ModalAdd";
 import { BaseUrl } from "../../../../../../../commons/config";
-import { useMemStore } from "../../../../../../../store/store";
+import { useMemberStore, useMemStore } from "../../../../../../../store/store";
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import {format} from 'date-fns';
 import { FaSearch } from "react-icons/fa";
@@ -14,6 +14,7 @@ import { Loading } from "../../../../../../../components/Loading/Loading";
 export const AddMember = ()=>{
     const navi = useNavigate();
     const {storemembers, setstoremembers} = useMemStore();
+    const {admin, setAdmin} = useMemberStore();
     const [waitingNum, setWaitingNum] = useState();
     const [finishNum, setFinishNum] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
@@ -161,7 +162,7 @@ export const AddMember = ()=>{
         
     };
     
-    return(
+    return( !admin ? <div>관리자 전용임</div>: 
         <div className={styles.container}>
             {isLoading && <Loading content="글 목록을 불러오는 중입니다.."/>}
             <div className={styles.member_info}>

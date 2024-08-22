@@ -15,6 +15,7 @@ export const PopupWrite = () => {
     const navi = useNavigate();
 
     const { sessionData } = useMemberStore();
+    const {admin} = useMemberStore();
     const [uploadError, setUploadError] = useState(false);
 
 
@@ -230,7 +231,7 @@ export const PopupWrite = () => {
         setUploadError(hasError);
     };
 
-    return (
+    return ( !admin ? <div>관리자 전용임</div> :
         <div className={styles.container}>
             <h3>{sessionData.empName} 관리자님의 팝업공지글</h3>
             <div className={styles.title}>
