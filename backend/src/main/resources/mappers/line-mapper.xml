@@ -47,7 +47,7 @@
 	</select>
 	
 	<select id="selectAllPart" resultType="com.clover.approval.dto.ParticipantsLineDTO">
-		select * from participants_line  where emp_seq = #{empSeq}
+		select * from participants_line  where emp_seq = #{empSeq} and read_yn='n'
 	</select>
 	
 	<update id="updateWaitToApproval">
