@@ -6,8 +6,10 @@ import { BaseUrl } from '../../../../../../commons/config';
 import { deptName, smallAlert } from '../../../../../../commons/common';
 import { Pagination } from '../../../../../../components/Pagination/Pagination';
 import { format, startOfDay, subDays, subMonths, parseISO, isBefore, isAfter } from 'date-fns';
+import { useMemberStore } from '../../../../../../store/store';
 
 export const Loglist = () => {
+    const {admin, setAdmin} = useMemberStore();
     const [loglist, setLoglist] = useState([]);
     const [filtered, setFiltered] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -41,6 +43,7 @@ export const Loglist = () => {
                 setFiltered(resp.data.list);
                 setTotalPages(resp.data.pages);
                 setIsLoading(false);
+                console.log(resp.data.list)
             })
             .catch((error) => {
                 console.error('데이터 가져오기 오류:', error);
@@ -58,6 +61,7 @@ export const Loglist = () => {
             params.logStatus = selectStatus;
         }
         if (specificStartDate && specificEndDate) {
+            console.log(specificStartDate)
             params.specificStartDate = specificStartDate;
             params.specificEndDate = specificEndDate;
         }
@@ -161,7 +165,7 @@ export const Loglist = () => {
         fetchLogs(0); // 검색 조건 초기화 시 전체 목록으로 돌아감
     };
 
-    return (
+    return ( !admin ? <div>관리자 전용임</div> :
         <div className={styles.container}>
             <div className={styles.member_info}>
                 <div className={styles.coltitle}>
@@ -273,7 +277,8 @@ export const Loglist = () => {
                                         </td>
                                         <td className={styles.theadtd}>{log.empId || "알 수 없음"}</td>
                                         <td className={styles.theadtd}>
-                                            {log.empName || "알 수 없음"} ({deptName(log.deptCode) || "알 수 없음"})
+                                            {/* {log.empName || "알 수 없음"} ({deptName(log.deptCode) || "알 수 없음"}) */}
+                                            {log.empName || "알 수 없음"} ({log.deptName || "알 수 없음"})
                                         </td>
                                         <td className={styles.theadtd} style={{ color: log.logStatus === "로그인 성공" ? 'green' : 'red' }}>
                                             {log.logStatus}

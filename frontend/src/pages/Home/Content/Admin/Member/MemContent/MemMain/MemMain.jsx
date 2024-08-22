@@ -5,7 +5,7 @@ import { Modal } from '../../../../../../../components/Modal/Modal';
 import { ModalPosition } from './ModalPosition/ModalPosition';
 import {BaseUrl} from '../../../../../../../commons/config';
 import { ModalDelete } from './ModalDelete/ModalDelete';
-import { useMemStore } from '../../../../../../../store/store';
+import { useMemberStore, useMemStore } from '../../../../../../../store/store';
 import {Pagination} from '../../../../../../../components/Pagination/Pagination';
 import { FaSearch } from 'react-icons/fa';
 import { smallAlert } from '../../../../../../../commons/common';
@@ -15,7 +15,7 @@ export const MemMain = () => {
     // 8/8(목)
 
     const {storemembers, setstoremembers} = useMemStore();
-
+    const {admin, setAdmin} = useMemberStore();
     const [status, setStatus] = useState({status:''});
     const [members, setMembers] = useState([]);
     const [filtered, setFiltered] = useState(members);
@@ -315,7 +315,7 @@ export const MemMain = () => {
     
     
 
-    return (
+    return ( !admin ? <div>관리자 전용임</div> :
       <div className={styles.container}>
         {isLoading && <Loading content="글 목록을 불러오는 중입니다.."/>}
         <div className={styles.member_info}>

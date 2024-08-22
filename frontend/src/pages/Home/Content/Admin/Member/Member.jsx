@@ -6,6 +6,7 @@ import {Route, Routes} from "react-router-dom";
 import { AddMember } from './MemContent/AddMem/AddMember';
 import { Address } from '../../Address/Address';
 import {AttendMem} from '../Member/MemContent/AttendMem/AttendMem';
+import { useMemberStore } from '../../../../../store/store';
 
 
 export const Member = () => {
@@ -13,6 +14,7 @@ export const Member = () => {
   const location = useLocation();
   const state = location.state;
   console.log("headerTxt"+ state?.type)
+  const {admin} = useMemberStore();
 
   // 상태에 따라 header 내용 설정
   const headerText = state?.type || '통합사원목록';
@@ -23,6 +25,7 @@ export const Member = () => {
     return (
       <div className={styles.container}>
         <div className={styles.header}><h3 className={styles.headerText}>{headerText}</h3></div>
+        {!admin ? <div>관리자 전용임</div> :
         <div className={styles.detail}>
           <Routes>
             <Route path="/*" element={ <MemMain /> } />
@@ -31,6 +34,7 @@ export const Member = () => {
 
           </Routes>
         </div>
+        }
       </div>
     );
   }

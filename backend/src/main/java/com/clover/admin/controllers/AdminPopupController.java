@@ -104,8 +104,7 @@ public class AdminPopupController {
 	@GetMapping("/postInfo/{popSeq}")
 	public ResponseEntity<AdminPopupDTO> getPostInfo(@PathVariable int popSeq){
 		return ResponseEntity.ok(adminpopupService.getPostInfo(popSeq));
-		
-		// ++ DB 첨부파일 정보(FileController) , 댓글 목록 (CommentController)
+		// ++ DB 첨부파일 정보(FileController)
 	}
 	@DeleteMapping("/deletepop/{popSeq}")
 	public ResponseEntity<Void> deletepop(@PathVariable int popSeq){
