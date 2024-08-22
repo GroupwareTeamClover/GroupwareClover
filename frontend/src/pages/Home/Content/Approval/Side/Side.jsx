@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import {useEffect, useState} from "react";
 import { BigModal } from './BigModal/BigModal'
 import { useApprovalStore } from '../../../../../store/approvalStore';
+import {smallAlert, smallConfirmAlert} from '../../../../../commons/common'
 
 //현재 url approval/*
 export const Side = () => {
@@ -56,7 +57,7 @@ export const Side = () => {
             handlePageChange(event);
           
         }else{
-            alert("결재 양식을 선택하세요.");
+            smallAlert("결재 양식을 선택하세요.");
         }
     }
 
@@ -65,7 +66,7 @@ export const Side = () => {
         //모달창닫기
         //이거 안하면 writepage넘어가서 새결재하기 눌렀을 때 작동안함
         if(selectedEmpInfo.apvchoice==''){
-            alert("결재자는 필수입니다.");
+            smallAlert("결재자는 필수입니다.");
         }else{
             setIsModalComplete(true); 
         }

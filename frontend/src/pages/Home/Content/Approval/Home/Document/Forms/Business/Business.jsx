@@ -9,6 +9,7 @@ import { useMemberStore } from '../../../../../../../../store/store';
 import  WebEditor  from '../../../../../../../../components/WebEditor/WebEditor';
 
 import { BsChevronDoubleLeft } from 'react-icons/bs';
+import {smallAlert} from '../../../../../../../../commons/common';
 
 export const Business =({type, isInsert, setIsInsert, isEmergency, 
     documentDTO, setDocumentDTO, 
@@ -52,7 +53,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     // 유효성 검사 함수
     const validateForm = () => {
         if (!title) {
-            alert("제목은 필수 값입니다.");
+            smallAlert("제목은 필수 값입니다.");
             return true;
         }
         return false;
@@ -128,11 +129,11 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             }else{
                 console.log('전송할 데이터:', business); // 전송 전에 데이터를 로그로 확인
                 axios.post(`${BaseUrl()}/approval/document`, business).then((resp) => {
-                    alert("문서 생성 성공");
+                    smallAlert("문서 생성 성공");
                     navi(`/approval/document/${resp.data}?type=${type}`);
                     setIsInsert(false);
                 }).catch((error) => {
-                    alert('문서 생성 실패');
+                    smallAlert('문서 생성 실패');
                     setIsInsert(false);
                 });
             }
@@ -157,12 +158,12 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             console.log(business);
             axios.post(`${BaseUrl()}/approval/document`, business)
                 .then((resp) => {
-                    alert("임시 저장 성공");
+                    smallAlert("임시 저장 성공");
                     navi(`/approval/document/${resp.data}?type=${type}`);
                     setIsTemp(false);
                 })
                 .catch((error) => {
-                    alert('임시 저장 실패');
+                    smallAlert('임시 저장 실패');
                     setIsTemp(false);
                 });
         }
@@ -233,11 +234,11 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             }else{
                 // console.log(business.docData);
                 axios.put(`${BaseUrl()}/approval/document/temp/${id}/${type}?table=business`, business).then((resp) => {
-                    alert("문서 생성 성공");
+                    smallAlert("문서 생성 성공");
                     navi(`/approval/list?type=기안진행`);
                     setIsTempInsert(false);
                 }).catch((error) => {
-                    alert('문서 생성 실패');
+                    smallAlert('문서 생성 실패');
                     setIsTempInsert(false);
                 });
             }
@@ -250,11 +251,11 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         if(isTempTemp && id){
             axios.put(`${BaseUrl()}/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
                 setIsTempTemp(false);
-                alert("저장 완료");
+                smallAlert("저장 완료");
                 navi(`/approval/document/${resp.data.id}?type=${resp.data.type}`);
             }).catch((error) => {
                 setIsTempTemp(false);
-                alert("저장 실패");
+                smallAlert("저장 실패");
             });
         }
     },[isTempTemp])

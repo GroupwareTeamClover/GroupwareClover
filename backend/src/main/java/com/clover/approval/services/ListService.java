@@ -13,6 +13,15 @@ public class ListService {
 		@Autowired
 		public ListDAO listDAO;
 		
+		//메인카드
+		public List<DocumentDTO> getMainCard(int empSeq){
+			return listDAO.getMainCard(empSeq);
+		}
+		
+		//메인리스트
+		public List<DocumentDTO> getMainList(int empSeq){
+			return listDAO.getMainList(empSeq);
+		}
 	
 		//총레코드 수
 		public int getRecordTotalCount(String type, int empSeq, String searchType, String keyword) {

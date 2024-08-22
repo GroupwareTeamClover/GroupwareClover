@@ -21,6 +21,8 @@ import rejectImage from './../../../../../../images/reject.PNG';
 import { format } from 'date-fns';
 import { Modal } from "../../../../../../components/Modal/Modal";
 import { useNavigate } from 'react-router-dom';
+import { smallAlert, smallConfirmAlert} from "../../../../../../commons/common"
+
 
 
 export const DetailDocument = ({type}) => {
@@ -40,6 +42,8 @@ export const DetailDocument = ({type}) => {
         invalid: () => <div>유효하지 않은 양식입니다.</div>,
     };
     const FormComponent = formConfig[type] || formConfig.invalid;
+
+    console.log(`상신테이블 이름 확인 :  ${formConfig[type].name.toLowerCase()}`);
 
     //DraferMenu에서 상신취소 클릭시-메뉴컴포넌트에 전달
     const [isCancle, setIsCancle] = useState(false);
@@ -205,7 +209,7 @@ export const DetailDocument = ({type}) => {
 
     }      
              
- 
+
 
   
     /*********************메뉴 클릭에 따른 update******************** */
@@ -223,19 +227,20 @@ export const DetailDocument = ({type}) => {
     //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
     useEffect(()=>{
         if(isCancle){
-            if(window.confirm("상신취소하시겠습니까? 모든 내용은 사라집니다.")){
-                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-                .then(()=>{
+            smallConfirmAlert("상신취소하시겠습니까? 모든 내용은 사라집니다.").then((result)=>{
+                if(result.isConfirmed){
+                    axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                    .then(()=>{
+                        setIsCancle(false);
+                        navi(`/approval/list?type=기안진행&cpage=1`); // 절대 경로 사용
+                    }).catch(()=>{
+                        setIsCancle(false);
+                        smallAlert("취소 실패");
+                    })
+                }else{
                     setIsCancle(false);
-                    navi(`/approval`); // 절대 경로 사용
-                }).catch(()=>{
-                    setIsCancle(false);
-                    alert("취소 실패");
-                })
-            }else{
-                setIsCancle(false);
-            }
-     
+                }
+            })
         }
     },[isCancle])
 
@@ -254,12 +259,12 @@ export const DetailDocument = ({type}) => {
             }).then(()=>{
                 setIsApproval(false);
                 setIsApprovalMenu(false);
-                alert("결재 완료");
+                smallAlert("결재 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsApproval(false);
                 setIsApprovalMenu(false);
-                alert("결재 실패");
+                smallAlert("결재 실패");
             })
 
             //내가 이 문서의 마지막 결재자이고 결재하기로 한다면 문서 상태를 승인으로 업데이트
@@ -305,7 +310,7 @@ export const DetailDocument = ({type}) => {
                     setIsRejectModalComplete(false); //모달창 반려버튼
                     setIsReject(false); //반려버튼
                     setIsApprovalMenu(false);
-                    alert("반려 완료");
+                    smallAlert("반려 완료");
                     handleGetAll();
                     closeModal();
                     
@@ -313,7 +318,7 @@ export const DetailDocument = ({type}) => {
                     setIsRejectModalComplete(false);
                     setIsReject(false);
                     setIsApprovalMenu(false);
-                    alert("반려 실패");
+                    smallAlert("반려 실패");
                     closeModal();
                 })
             }
@@ -336,11 +341,11 @@ export const DetailDocument = ({type}) => {
                 cleanApvLineSeq:cleanApvLineSeq,
             }).then(()=>{
                 setIsHoldoff(false);
-                alert("보류 완료");
+                smallAlert("보류 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsHoldoff(false);
-                alert("보류 실패");
+                smallAlert("보류 실패");
             })
         }
     },[isHoldoff, totalLineInfo])
@@ -348,19 +353,22 @@ export const DetailDocument = ({type}) => {
      //임시저장에서 취소 시 DB삭제
      useEffect(()=>{
         if(isTempCancle && id){
-            if(window.confirm("삭제하시겠습니까?")){
-                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-                .then(()=>{
+            smallConfirmAlert("삭제하시겠습니까?").then((result)=>{
+                if(result.isConfirmed){
+                    axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                    .then(()=>{
+                        setIsTempCancle(false);
+                        smallAlert("삭제 성공");
+                        navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
+                    }).catch(()=>{
+                        setIsTempCancle(false);
+                        smallAlert("삭제 실패");
+                    })
+                }else{
                     setIsTempCancle(false);
-                    alert("삭제 성공");
-                    navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
-                }).catch(()=>{
-                    setIsTempCancle(false);
-                    alert("삭제 실패");
-                })
-            }else{
-                setIsTempCancle(false);
-            }
+                }
+            })
+       
         }
     },[isTempCancle, id])
 
@@ -391,12 +399,12 @@ export const DetailDocument = ({type}) => {
             }).then(()=>{
                 setIsPartCheck(false);
                 setIsPartMenu(false);
-                alert("읽음 처리 완료");
+                smallAlert("읽음 처리 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsPartCheck(false);
                 setIsPartMenu(false);
-                alert("읽음 처리 실패");
+                smallAlert("읽음 처리 실패");
             })
 
         }
@@ -653,8 +661,8 @@ export const DetailDocument = ({type}) => {
                                                 <input type="text" placeholder="반려 사유를 입력해주세요 최대(30자)" className={styles.inputcss} onChange={handleModalInput} maxLength="30"></input>
                                             </div>
                                             <div className={styles.modalbtnBox}>
-                                                <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
                                                 <button name="next" onClick={handleRejectCancle} className={styles.btn} > 취소</button>
+                                                <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
                                             </div>
                                         </>
                                     )}

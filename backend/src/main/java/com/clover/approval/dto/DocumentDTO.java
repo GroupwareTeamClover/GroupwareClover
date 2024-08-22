@@ -96,6 +96,8 @@ public class DocumentDTO {
 		this.pcpDivision=pcpDivision;
 		this.apvState=apvState;
   	 }
+  	 
+
   	
 
     // Getters and Setters
