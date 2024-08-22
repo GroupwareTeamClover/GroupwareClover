@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../../../../../../../../commons/config';
 import { useMemStore } from '../../../../../../../../store/store';
+import { smallAlert } from '../../../../../../../../commons/common';
 
 
 export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheckboxes, setCurrentPage, currentPage })=>{
@@ -79,7 +80,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
                 resetCheckboxes();
                 setCurrentPage(currentPage);
         })
-        }else{ alert("수정사항을 선택해주세요.")}
+        }else{ smallAlert("수정사항을 선택해주세요.")}
     };
         
    

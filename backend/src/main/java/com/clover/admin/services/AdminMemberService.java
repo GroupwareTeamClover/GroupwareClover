@@ -70,4 +70,12 @@ public class AdminMemberService {
 		adminmemberDAO.addMem(adddto);
 	}
 	
+	public void addDepartment(String deptName, String deptCode) {
+		adminmemberDAO.addDepartment(deptName, deptCode);
+	}
+	
+	public List<HashMap<String, Object>> getOrganization() {
+        return adminmemberDAO.getOrganization();
+    }
+	
 }

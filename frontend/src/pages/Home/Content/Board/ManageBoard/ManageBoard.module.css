@@ -1,6 +1,6 @@
 .container {
     flex: 7;
-    height : 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     background-color: white;
@@ -24,13 +24,13 @@
     height: 72vh;
     background-color: white;
     overflow-y: auto;
-    border : 1px solid black;
+    border: 1px solid black;
 }
 
 .content .listHeaderBox {
     height: 7%;
     display: flex;
-    border : 1px solid black;
+    border: 1px solid black;
     background-color: lightgray;
 }
 
@@ -87,20 +87,22 @@
     height: 60%;
 }
 
-.eachButtonBox button:hover{
+.eachButtonBox button:hover {
     cursor: pointer;
 }
 
 .eachButtonBox .eachDeleteButton {
     background-color: lightcoral;
-    border-color: red;
+    border: 0;
+    border-radius: 5px;
     font-weight: bold;
     margin-right: 1.04vw;
 }
 
 .eachButtonBox .eachModifyButton {
     background-color: lightskyblue;
-    border-color: rgb(152, 152, 244);
+    border: 0;
+    border-radius: 5px;
     font-weight: bold;
     margin-left: 1.04vw;
 }

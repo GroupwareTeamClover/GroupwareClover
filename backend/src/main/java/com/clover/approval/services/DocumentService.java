@@ -69,15 +69,11 @@ public class DocumentService {
 	}
 	
 	//리스트에서 전체 문서 출력하기
-	public List<DocumentDTO> getAllDoc(){
-		return documentDAO.selectAllDoc();
+	public List<DocumentDTO> getAllDoc(int empSeq){
+		return documentDAO.selectAllDoc(empSeq);
 	}
 	
 	
-	//홈에서 출력할 문서
-	public List<DocumentDTO> getMainDoc(int empSeq){
-		return documentDAO.selectMainDoc(empSeq);
-	}
 	
 	//상신취소
 	@Transactional
