@@ -20,7 +20,7 @@ export const ChoiceForm= () =>{
 
 
     useEffect(() => {
-        axios.get(`${BaseUrl()}/docCode`).then((resp) => {
+        axios.get(`${BaseUrl()}/api/docCode`).then((resp) => {
             const data = resp.data;
             // console.log(data)
             // 부서별로 데이터를 그룹화

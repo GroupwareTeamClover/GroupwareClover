@@ -64,6 +64,7 @@ export const Login = ({ setSign, setAdmin }) => {
         empName: employeeInfo.empName,
         empAvatar: employeeInfo.empAvatar,
         empDeptCode: employeeInfo.deptCode,
+        empDeptName: employeeInfo.deptName,
         empRoleCode: employeeInfo.roleCode,
         wsToken: wsToken                   // WebSocket 연결을 위한 토큰
       }

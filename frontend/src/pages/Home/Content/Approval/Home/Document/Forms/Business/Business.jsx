@@ -128,7 +128,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 setIsInsert(false);
             }else{
                 console.log('전송할 데이터:', business); // 전송 전에 데이터를 로그로 확인
-                axios.post(`${BaseUrl()}/approval/document`, business).then((resp) => {
+                axios.post(`${BaseUrl()}/api/approval/document`, business).then((resp) => {
                     smallAlert("문서 생성 성공");
                     navi(`/approval/document/${resp.data}?type=${type}`);
                     setIsInsert(false);
@@ -156,7 +156,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     useEffect(() => {
         if (isTemp && !id) {
             console.log(business);
-            axios.post(`${BaseUrl()}/approval/document`, business)
+            axios.post(`${BaseUrl()}/api/approval/document`, business)
                 .then((resp) => {
                     smallAlert("임시 저장 성공");
                     navi(`/approval/document/${resp.data}?type=${type}`);
@@ -175,7 +175,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const contentRef = useRef(null);
 
     const getData=()=>{
-        axios.get(`${BaseUrl()}/approval/document/${id}/${type}?table=business`, business).then((resp) => {
+        axios.get(`${BaseUrl()}/api/approval/document/${id}/${type}?table=business`, business).then((resp) => {
             console.log(resp.data);
             let writeDate = null;
             if (resp.data.BS_WRITE_DATE) {
@@ -233,7 +233,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 setIsTempInsert(false);
             }else{
                 // console.log(business.docData);
-                axios.put(`${BaseUrl()}/approval/document/temp/${id}/${type}?table=business`, business).then((resp) => {
+                axios.put(`${BaseUrl()}/api/approval/document/temp/${id}/${type}?table=business`, business).then((resp) => {
                     smallAlert("문서 생성 성공");
                     navi(`/approval/list?type=기안진행`);
                     setIsTempInsert(false);
@@ -249,7 +249,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     useEffect(()=>{
         
         if(isTempTemp && id){
-            axios.put(`${BaseUrl()}/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
+            axios.put(`${BaseUrl()}/api/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
                 setIsTempTemp(false);
                 smallAlert("저장 완료");
                 navi(`/approval/document/${resp.data.id}?type=${resp.data.type}`);

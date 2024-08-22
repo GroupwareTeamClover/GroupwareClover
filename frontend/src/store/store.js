@@ -9,6 +9,7 @@ export const useMemberStore = create(set => ({
     empName: "",
     empAvatar: "",
     empDeptCode: "",
+    empDeptName: "",
     empRoleCode: ""
   },
   setSessionData: param => set({ sessionData : param}),
