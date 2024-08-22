@@ -21,6 +21,9 @@ import rejectImage from './../../../../../../images/reject.PNG';
 import { format } from 'date-fns';
 import { Modal } from "../../../../../../components/Modal/Modal";
 import { useNavigate } from 'react-router-dom';
+import { smallAlert, smallConfirmAlert} from "../../../../../../commons/common";
+import { Uploader } from "rsuite"; 
+
 
 
 export const DetailDocument = ({type}) => {
@@ -40,6 +43,8 @@ export const DetailDocument = ({type}) => {
         invalid: () => <div>유효하지 않은 양식입니다.</div>,
     };
     const FormComponent = formConfig[type] || formConfig.invalid;
+
+    console.log(`상신테이블 이름 확인 :  ${formConfig[type].name.toLowerCase()}`);
 
     //DraferMenu에서 상신취소 클릭시-메뉴컴포넌트에 전달
     const [isCancle, setIsCancle] = useState(false);
@@ -100,6 +105,8 @@ export const DetailDocument = ({type}) => {
         handleGetAll();
     },[])
 
+    let docDetailCode;
+
 
     //DB에서 정보 가져오는함수
     const handleGetAll=()=>{
@@ -107,7 +114,7 @@ export const DetailDocument = ({type}) => {
             axios.get(`${BaseUrl()}/attachment/${'approval'}/${id}`).then(resp => {
                 setFiles(resp.data);
             });
-            axios.get(`${BaseUrl()}/approval/document/${id}`, document).then((resp)=>{
+            axios.get(`${BaseUrl()}/api/approval/document/${id}`, document).then((resp)=>{
                 // console.log(`detail접근확인`);
                 console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
 
@@ -142,6 +149,8 @@ export const DetailDocument = ({type}) => {
                 resp.data.pline.map((line, index)=>{
                     if(line.empSeq===sessionData.empSeq && line.readYN === 'n') setIsPartMenu(true)
                 })
+                
+                docDetailCode=resp.data.document.docDetailCode;
 
                 const documentData = resp.data.document ? [{
                     type: 'document',
@@ -205,7 +214,7 @@ export const DetailDocument = ({type}) => {
 
     }      
              
- 
+
 
   
     /*********************메뉴 클릭에 따른 update******************** */
@@ -223,19 +232,21 @@ export const DetailDocument = ({type}) => {
     //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
     useEffect(()=>{
         if(isCancle){
-            if(window.confirm("상신취소하시겠습니까? 모든 내용은 사라집니다.")){
-                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-                .then(()=>{
+            smallConfirmAlert("상신취소하시겠습니까? 모든 내용은 사라집니다.").then((result)=>{
+                if(result.isConfirmed){
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}`, {params: {
+                        table:   formConfig[type].name.toLowerCase(),
+                    }}).then(()=>{
+                        setIsCancle(false);
+                        navi(`/approval/list?type=기안진행&cpage=1`); // 절대 경로 사용
+                    }).catch(()=>{
+                        setIsCancle(false);
+                        smallAlert("취소 실패");
+                    })
+                }else{
                     setIsCancle(false);
-                    navi(`/approval`); // 절대 경로 사용
-                }).catch(()=>{
-                    setIsCancle(false);
-                    alert("취소 실패");
-                })
-            }else{
-                setIsCancle(false);
-            }
-     
+                }
+            })
         }
     },[isCancle])
 
@@ -248,18 +259,18 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${apvLineSeq}`)
             console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/approval`, {
+            axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/${id}/approval`, {
                 cleanApvLineSeq:cleanApvLineSeq,
                 id: id
             }).then(()=>{
                 setIsApproval(false);
                 setIsApprovalMenu(false);
-                alert("결재 완료");
+                smallAlert("결재 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsApproval(false);
                 setIsApprovalMenu(false);
-                alert("결재 실패");
+                smallAlert("결재 실패");
             })
 
             //내가 이 문서의 마지막 결재자이고 결재하기로 한다면 문서 상태를 승인으로 업데이트
@@ -297,7 +308,7 @@ export const DetailDocument = ({type}) => {
                 const apvLineSeq=getApvLineSeq();
                 const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
                 //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-                axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/${id}/reject`, {
+                axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/${id}/reject`, {
                     cleanApvLineSeq:cleanApvLineSeq,
                     id: id,
                     reasonForRejection: reasonForRejection
@@ -305,7 +316,7 @@ export const DetailDocument = ({type}) => {
                     setIsRejectModalComplete(false); //모달창 반려버튼
                     setIsReject(false); //반려버튼
                     setIsApprovalMenu(false);
-                    alert("반려 완료");
+                    smallAlert("반려 완료");
                     handleGetAll();
                     closeModal();
                     
@@ -313,7 +324,7 @@ export const DetailDocument = ({type}) => {
                     setIsRejectModalComplete(false);
                     setIsReject(false);
                     setIsApprovalMenu(false);
-                    alert("반려 실패");
+                    smallAlert("반려 실패");
                     closeModal();
                 })
             }
@@ -332,15 +343,15 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${apvLineSeq}`)
             console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanApvLineSeq}/holdoff`, {
+            axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/holdoff`, {
                 cleanApvLineSeq:cleanApvLineSeq,
             }).then(()=>{
                 setIsHoldoff(false);
-                alert("보류 완료");
+                smallAlert("보류 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsHoldoff(false);
-                alert("보류 실패");
+                smallAlert("보류 실패");
             })
         }
     },[isHoldoff, totalLineInfo])
@@ -348,19 +359,22 @@ export const DetailDocument = ({type}) => {
      //임시저장에서 취소 시 DB삭제
      useEffect(()=>{
         if(isTempCancle && id){
-            if(window.confirm("삭제하시겠습니까?")){
-                axios.delete(`${BaseUrl()}/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
-                .then(()=>{
+            smallConfirmAlert("삭제하시겠습니까?").then((result)=>{
+                if(result.isConfirmed){
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                    .then(()=>{
+                        setIsTempCancle(false);
+                        smallAlert("삭제 성공");
+                        navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
+                    }).catch(()=>{
+                        setIsTempCancle(false);
+                        smallAlert("삭제 실패");
+                    })
+                }else{
                     setIsTempCancle(false);
-                    alert("삭제 성공");
-                    navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
-                }).catch(()=>{
-                    setIsTempCancle(false);
-                    alert("삭제 실패");
-                })
-            }else{
-                setIsTempCancle(false);
-            }
+                }
+            })
+       
         }
     },[isTempCancle, id])
 
@@ -370,7 +384,7 @@ export const DetailDocument = ({type}) => {
     useEffect(()=>{
         if(isTempEmergency && id){
             console.log(isTempEmergency)
-            axios.put(`${BaseUrl()}/approval/document/temp/emergency/${id}`,  { isTempEmergency: isTempEmergency } ).then((resp)=>{
+            axios.put(`${BaseUrl()}/api/approval/document/temp/emergency/${id}`,  { isTempEmergency: isTempEmergency } ).then((resp)=>{
             })
         }
     },[isTempEmergency, id])
@@ -385,18 +399,18 @@ export const DetailDocument = ({type}) => {
             console.log(`결재번호 ${partLineSeq}`)
             console.log(`클린결재번호 ${cleanPartLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
-            axios.put(`${BaseUrl()}/approval/line/${cleanPartLineSeq}/${id}/part`, {
+            axios.put(`${BaseUrl()}/api/approval/line/${cleanPartLineSeq}/${id}/part`, {
                 cleanPartLineSeq:cleanPartLineSeq,
                 id: id
             }).then(()=>{
                 setIsPartCheck(false);
                 setIsPartMenu(false);
-                alert("읽음 처리 완료");
+                smallAlert("읽음 처리 완료");
                 handleGetAll();
             }).catch(()=>{
                 setIsPartCheck(false);
                 setIsPartMenu(false);
-                alert("읽음 처리 실패");
+                smallAlert("읽음 처리 실패");
             })
 
         }
@@ -421,7 +435,7 @@ export const DetailDocument = ({type}) => {
         console.log(totalLineInfo)
     },[totalLineInfo])
 
-    //첨부파일    
+    //detail 첨부파일  detail
     const [files, setFiles] = useState([]);
 
      //첨부파일 조회 및 다운로드
@@ -454,6 +468,23 @@ export const DetailDocument = ({type}) => {
             console.error('다운로드 중 에러 발생.');
         }
     }
+
+
+    //임시저장에서 첨부파일 처리하기 write
+    // const [files, setFiles] = useState([]);
+    // const handleFileChange = (fileList) => {
+    //     setFiles(fileList);
+    // };
+    // const handleUploadSuccess = (response, file) => {
+    //     const fileUrl = response;
+    //     // 파일 리스트에 업로드된 파일 추가
+    //     setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
+    // };
+    // const handleRemove = (file) => {
+    //     // 파일 리스트에서 해당 파일 제거
+    //     setFiles((prev) => prev.filter((f) => f.name !== file.name));
+    // };
+    // const path = encodeURIComponent("temp");
 
  
   
@@ -527,23 +558,37 @@ export const DetailDocument = ({type}) => {
                     </div> 
                     </div>
                     </div>
+                    { (isPartMenu || isApprovalMenu || isDrafterMenu) &&
+                        (<>
                         {files.length > 0 &&
-                        ((isFileBoxOpen) ? <div className={styles.fileHeader}>
-                            <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▲</div>
-                        </div> : <div className={styles.fileHeader}>
-                            <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▼</div>
-                        </div>)
-                    }
-                    <div className={styles.fileBox}>
-                        {isFileBoxOpen && files.map((file, i) => {
-                            return (
-                                <>
-                                    <p className={styles.eachFile} key={i} onClick={() => { handleDownload(file.attachmentSysname, file.attachmentOriname) }}>{i + 1}. {file.attachmentOriname}</p>
-                                </>
-                            );
-                        })
+                            ((isFileBoxOpen) ? <div className={styles.fileHeader}>
+                                <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▲</div>
+                            </div> : <div className={styles.fileHeader}>
+                                <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▼</div>
+                            </div>)
                         }
-                    </div>
+                        <div className={styles.fileBox}>
+                            {isFileBoxOpen && files.map((file, i) => {
+                                return (
+                                    <>
+                                        <p className={styles.eachFile} key={i} onClick={() => { handleDownload(file.attachmentSysname, file.attachmentOriname) }}>{i + 1}. {file.attachmentOriname}</p>
+                                    </>
+                                );
+                            })}
+                        </div>
+                        </>)
+                    }
+
+                    {/* {  isTempMenu && 
+                        (<>
+                        <div className={styles.fileBox}>
+                            <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
+                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} defaultFileList={files}>
+                                <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
+                            </Uploader>
+                        </div> 
+                        </>)
+                    } */}
                 </div>
                 {/* 오른쪽 */}
                 <div className={styles.side}>
@@ -653,8 +698,8 @@ export const DetailDocument = ({type}) => {
                                                 <input type="text" placeholder="반려 사유를 입력해주세요 최대(30자)" className={styles.inputcss} onChange={handleModalInput} maxLength="30"></input>
                                             </div>
                                             <div className={styles.modalbtnBox}>
-                                                <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
                                                 <button name="next" onClick={handleRejectCancle} className={styles.btn} > 취소</button>
+                                                <button name="prev" onClick={handleRejectComplete} className={styles.btn}> 반려</button>
                                             </div>
                                         </>
                                     )}

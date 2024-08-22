@@ -10,6 +10,8 @@ import { useApprovalStore } from '../../../../../../store/approvalStore';
 //아이콘
 import { FaSearch} from "react-icons/fa";
 
+import { smallAlert} from "../../../../../../commons/common"
+
 
 export const ChoiceForm= () =>{
     const {selectedDocCode, setSelectedDocCode, setCopySelectedDocCode}=useApprovalStore();
@@ -18,7 +20,7 @@ export const ChoiceForm= () =>{
 
 
     useEffect(() => {
-        axios.get(`${BaseUrl()}/docCode`).then((resp) => {
+        axios.get(`${BaseUrl()}/api/docCode`).then((resp) => {
             const data = resp.data;
             // console.log(data)
             // 부서별로 데이터를 그룹화
@@ -81,9 +83,6 @@ export const ChoiceForm= () =>{
         }
     };
 
-    
-
-
     //다음모달창
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -105,7 +104,7 @@ export const ChoiceForm= () =>{
         if (selectedDocCode) {
             setIsModalOpen(true);
         } else {
-            alert("항목을 선택하세요.");
+            smallAlert("항목을 선택하세요.");
         }
     };
 

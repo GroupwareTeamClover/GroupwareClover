@@ -21,7 +21,7 @@ import com.clover.approval.services.ListService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/approval/list")
+@RequestMapping("/api/approval/list")
 public class ListController {
 	@Autowired
 	public DocumentService documentService;
@@ -37,21 +37,30 @@ public class ListController {
 	
 	private String type;
 	
-	//사이드바 리스트
+	//기안진행, 결재대기, 결재예정, 참조/열람대기리스트
 	@GetMapping
 	public ResponseEntity<ListMappingDTO> getListInfo(){
-		List<DocumentDTO> documentDTO = documentService.getAllDoc();
-		List<ApvLineDTO> apvlist=lineService.getAllApv();	
-		List<ParticipantsLineDTO> plist=lineService.getAllPart();
+		int empSeq = (int) session.getAttribute("cloverSeq");
+		List<DocumentDTO> documentDTO = documentService.getAllDoc(empSeq);
+		List<ApvLineDTO> apvlist=lineService.getAllApv(empSeq);	
+		List<ParticipantsLineDTO> plist=lineService.getAllPart(empSeq);
 		ListMappingDTO listInfo=new ListMappingDTO(documentDTO, apvlist, plist);
 		return ResponseEntity.ok(listInfo);
 	}
 	
-	//메인리스트
-	@GetMapping("/main")
+	//메인리스트-카드
+	@GetMapping("/main/card")
+	public ResponseEntity<List<DocumentDTO>> getMainCardInfo(){
+		 int empSeq = (int) session.getAttribute("cloverSeq");
+		List<DocumentDTO> documentDTO = listService.getMainCard(empSeq);	
+		return ResponseEntity.ok(documentDTO);
+	}
+	
+	//메인리스트-리스트
+	@GetMapping("/main/list")
 	public ResponseEntity<List<DocumentDTO>> getMainListInfo(){
 		 int empSeq = (int) session.getAttribute("cloverSeq");
-		List<DocumentDTO> documentDTO = documentService.getMainDoc(empSeq);	
+		List<DocumentDTO> documentDTO = listService.getMainList(empSeq);	
 		return ResponseEntity.ok(documentDTO);
 	}
 	

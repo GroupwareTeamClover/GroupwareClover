@@ -14,7 +14,6 @@ import { BaseUrl } from "../../../../../../commons/config";
 import { DragFolder } from "../../Side/ChoiceLine/DragFolder/DragFolder";
 import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./Menus/DrafterMenu/DrafterMenu";
-import {deptName} from "./../../../../../../commons/common"
 import 'rsuite/Uploader/styles/index.css';
 import { Uploader } from 'rsuite';
 
@@ -90,11 +89,10 @@ export const Document = ({type}) => {
             )
         }, []);
 
-
         //왼쪽 기안자 정보
         const [drafterData, setDrafterData]=useState([ 
             { label: '기안자', value: sessionData.empName },
-            { label: '소속', value: deptName(sessionData.empDeptCode) },
+            { label: '소속', value: sessionData.empDeptName },
             { label: '기안일', value: currentDate },
             { label: '문서번호', value: '' }
         ]); 

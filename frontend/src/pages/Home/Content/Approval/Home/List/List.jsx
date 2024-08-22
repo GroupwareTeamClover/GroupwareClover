@@ -7,10 +7,12 @@ import { format } from 'date-fns';
 import { useNavigate, useLocation   } from 'react-router-dom';
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
+import {Loading} from "../../../../../../components/Loading/Loading"
+
 
 
 export const List = ({ type }) => {
-
+    
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const cpage = parseInt(queryParams.get('cpage')) || 1; // cpage를 URL에서 가져오고 기본값을 1로 설정
@@ -54,7 +56,7 @@ export const List = ({ type }) => {
     };
 
     /************전체데이터준비**************/
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const navi = useNavigate();
     const { sessionData } = useMemberStore();
 
@@ -78,7 +80,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '기안진행' || type === '결재대기' || type === '결재예정' || type === '참조/열람대기') {
             setLoading(true); // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list`, list)
+            axios.get(`${BaseUrl()}/api/approval/list`, list)
                 .then((resp) => {
                     setDocumentDTOs(resp.data.document);
                     setApvLineDTOs(resp.data.apvline);
@@ -174,7 +176,7 @@ export const List = ({ type }) => {
         if (type === '기안문서함') {
             console.log(searchType, keyword);
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/finish`, {
+            axios.get(`${BaseUrl()}/api/approval/list/finish`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -205,7 +207,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '임시문서함') {
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/temp`, {
+            axios.get(`${BaseUrl()}/api/approval/list/temp`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -235,7 +237,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '결재문서함') {
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/approval`, {
+            axios.get(`${BaseUrl()}/api/approval/list/approval`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -265,7 +267,7 @@ export const List = ({ type }) => {
     useEffect(() => {
         if (type === '참조/열람문서함') {
             setLoading(true);  // 로딩 상태 설정
-            axios.get(`${BaseUrl()}/approval/list/part`, {
+            axios.get(`${BaseUrl()}/api/approval/list/part`, {
                 params: {
                     cpage: cpage,  // 페이지 번호 전달
                     recordCountPerPage: recordCountPerPage,  // 고정값: 한 페이지에 몇 개의 글 보여줄 건지 
@@ -388,7 +390,7 @@ export const List = ({ type }) => {
             <div className={styles.content}>
                 <div className={styles.contentbox}>
                     {loading ? (
-                        <p>로딩 중...</p>
+                        <Loading />
                     ) : (
                         <>
                             <table>

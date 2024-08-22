@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.clover.employee.dto.SignDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServerHttpRequest;
@@ -39,8 +40,8 @@ public class SignController {
     private HttpSession session;
 
     @PostMapping
-    public ResponseEntity<?> signIn(@RequestBody EmployeeDTO dto, HttpServletRequest request) {
-        EmployeeDTO empInfo = employeeService.SignIn(dto);
+    public ResponseEntity<?> signIn(@RequestBody SignDTO dto, HttpServletRequest request) {
+        SignDTO empInfo = employeeService.signIn(dto);
         
         // 정하윤 로그아이피
         String clientIp = getClientIp(request);	// ip주소 가져오기 
@@ -52,6 +53,7 @@ public class SignController {
             session.setAttribute("cloverName", empInfo.getEmpName());
             session.setAttribute("cloverAvatar", empInfo.getEmpAvatar());
             session.setAttribute("cloverDeptCode", empInfo.getDeptCode());
+            session.setAttribute("cloverDeptName", empInfo.getDeptName());
             session.setAttribute("cloverRoleCode", empInfo.getRoleCode());
             if(empInfo.getWorkerStateCode() == 0) session.setAttribute("cloverAdmin", empInfo.getWorkerStateCode());
             
@@ -66,15 +68,11 @@ public class SignController {
             response.put("employeeInfo", empInfo);
             response.put("wsToken", wsToken);
 
-            
-
             // 정하윤 로그 아이피 AdminLogService로 보내기 : 로그 기록 테이블에 insert하게. 
-   
             AdminLogDTO adminlogdto = new AdminLogDTO(0, empInfo.getEmpSeq(), empInfo.getEmpName(), dto.getEmpId(),
             		empInfo.getDeptCode(), clientIp, localLogTime, "로그인 성공","");
             adminlogService.insertLog(adminlogdto);
-           
-            
+
             return ResponseEntity.ok(response);
         }
         // 정하윤 : 로그인 실패한 로그 기록 테이블에 insert. 
@@ -104,7 +102,6 @@ public class SignController {
    
     // 정하윤 - ip주소 가져오는 메서드
     // 네트워크 환경과 설정에 따라 ip주소 헤더가 달라질 수 있기때문에 분리. 보통 x-forwarded-for가 붙어있음. 
-    
     private String getClientIp(HttpServletRequest request) {
         String clientIp = request.getHeader("X-Forwarded-For");
         if (clientIp != null && !clientIp.isEmpty() && !"unknown".equalsIgnoreCase(clientIp)) {

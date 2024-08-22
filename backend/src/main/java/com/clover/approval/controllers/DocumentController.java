@@ -37,7 +37,7 @@ import com.clover.employee.services.EmployeeService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/approval/document")
+@RequestMapping("/api/approval/document")
 public class DocumentController {
 	
 	@Autowired
@@ -171,6 +171,11 @@ public class DocumentController {
 	public ResponseEntity<Void> delete(@PathVariable int id, @RequestParam String table){
 		System.out.println(table);
 		documentService.deleteBySeq(id, table);
+		
+		//파일삭제
+		attServ.deleteFiles(id, "approval");
+		s3Serv.deleteFiles("posts/" + id + "/");
+		s3Serv.deleteFiles("images/posts/"  + id + "/");
 		return ResponseEntity.ok().build();
 	}
 	

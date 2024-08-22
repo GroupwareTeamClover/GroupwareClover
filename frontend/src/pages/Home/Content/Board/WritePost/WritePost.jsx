@@ -183,7 +183,7 @@ const WritePost = () => {
             <div className={styles.fileBox}>
                 <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} onClick={alertMax}
                     onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} disabled={files.length >= maxFiles}>
-                    <div style={{ lineHeight: '50px', textAlign: 'center', backgroundColor: 'whitesmoke', border: '2px dotted lightgray', borderRadius: '5px' }}>클릭하여 파일을 추가하세요 (최대 5개 파일 업로드 가능)</div>
+                    <div style={{ lineHeight: '50px', textAlign: 'center', backgroundColor: 'whitesmoke', border: '2px dotted lightgray', borderRadius: '5px' }}>클릭하여 파일을 추가하세요 ( 각 파일은 10MB까지 최대 5개 파일 업로드 가능합니다 )</div>
                 </Uploader>
             </div>
             <div className={styles.editorBox}>

@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/approval/line")
+@RequestMapping("/api/approval/line")
 public class LineController {
 	 @Autowired
 	private LineService lineService;

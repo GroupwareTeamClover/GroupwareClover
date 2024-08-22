@@ -4,6 +4,7 @@ import { MdEmergency } from "react-icons/md";
 import { BsPencilSquare, BsDownload } from "react-icons/bs";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {smallConfirmAlert} from '../../../../../../../../commons/common'
 
 export const WriterMenu=({setIsInsert, setIsEmergency, setIsTemp})=>{
 
@@ -31,7 +32,7 @@ export const WriterMenu=({setIsInsert, setIsEmergency, setIsTemp})=>{
 
     //취소
     const handleInsertCancle=()=>{
-        if (window.confirm("작성중이던 내용은 모두 사라집니다. 취소하시겠습니까?")) {
+        if (smallConfirmAlert("작성중이던 내용은 모두 사라집니다. 취소하시겠습니까?")) {
             navi('/approval');
         } 
     }
