@@ -16,6 +16,17 @@ public class ListDAO {
 	@Autowired
 	private SqlSession mybatis;
 	
+	//메인카드
+	public List<DocumentDTO> getMainCard(int empSeq){
+		return mybatis.selectList("DocumentList.selectMainCard", empSeq);
+	}
+			
+	//메인리스트
+	public List<DocumentDTO> getMainList(int empSeq){
+		return mybatis.selectList("DocumentList.selectMainList", empSeq);
+	}
+	
+	
 	//반복되는 코드 공통 메소드
 	private int getRecordTotalCount(int empSeq, String searchType, String keyword, String countQueryId) {
 		Map<String, Object> map = new HashMap<>();

@@ -7,7 +7,7 @@ import { BaseUrl } from '../../../../../../commons/config'
 import { format } from 'date-fns';
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos  } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-
+import { Loading } from '../../../../../../components/Loading/Loading'
 
 export const Main=()=>{
     
@@ -23,8 +23,27 @@ export const Main=()=>{
     };
     
 
-     // DocumentDTO 구성
-    const [documentDTOs, setDocumentDTOs] = useState([{
+    // DocumentDTO 구성
+    const [listDocumentDTOs, setListDocumentDTOs]=useState([{
+        docSeq: 0,
+        docDetailCode: 0, // 예시 값
+        docStateCode: 0, // 진행중의미
+        drafterSeq: 0, // 기안자seq
+        egcYn: 'n', //긴급여부
+        writeDate: null,
+        finishDate: null,
+        currentApverSeq: 0, // 현재결재자
+        finalApverSeq: 0, // 최종결재자
+        docComSeq: null,
+        title: '',
+        drafterName:'',
+        currentApverName:'',
+        finalApverName:'',
+        detailName:'',
+        stateName:'',
+        apvState:''
+    }]);
+    const [cardDocumentDTOs, setCardDocumentDTOs] = useState([{
         docSeq: 0,
         docDetailCode: 0, // 예시 값
         docStateCode: 0, // 진행중의미
@@ -44,69 +63,45 @@ export const Main=()=>{
         apvState:''
     }]);
 
-    //랩
-    const [list, setList]=useState({});
 
     //전체 정보 한번만 가져오기
     useEffect(()=>{
-        axios.get(`${BaseUrl()}/approval/list/main`, list).then((resp)=>{
+
+        //카드 정보
+        axios.get(`${BaseUrl()}/api/approval/list/main/card`).then((resp)=>{
             console.log(resp.data)
-            setDocumentDTOs(resp.data)
+            setCardDocumentDTOs(resp.data)
+        })
+
+        //리스트 정보
+         axios.get(`${BaseUrl()}/api/approval/list/main/list`).then((resp)=>{
+            console.log(resp.data)
+            setListDocumentDTOs(resp.data)
         })
     },[])
 
-    useEffect(()=>{
-        setList({
-            "document": documentDTOs
-        })
-        // console.log(documentDTOs)
-        // console.log(apvLineDTOs)
-        // console.log(participantsLineDTOs)
-        // console.log(list);
-    },[documentDTOs])
-
-    // 필터링된 리스트 상태
-    const [filteredMainCard, setFilteredMainCard] = useState([]);
-    const [filteredMainList, setFilteredMainList] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    useEffect(()=>{
-        if (!Array.isArray(list.document)) return; // 리스트가 배열이 아닐 때는 아무것도 하지 않음
-        //변해야 하는 값
-        let filteredMainCard = [];
-        let filteredMainList = [];
 
-        //카드 == 현재결재자가 나인 문서들 넘겨야 할 정보들 (문서상태, 제목, 기안자, 기안일)
-        filteredMainCard=list.document.filter(line=>
-            line.currentApverSeq ===sessionData.empSeq && line.stateName === '진행중' && (line.apvState === '대기' || line.apvState==="보류")
-        )
 
-        //리스트 == 내가 기안자이고 문서상태가 진행중인 문서들
-        filteredMainList=list.document.filter(line=>
-            line.drafterSeq ===sessionData.empSeq && line.stateName === '진행중'
-        ).slice(0,5);//상위5개항목추출
-
-        setFilteredMainCard(filteredMainCard)
-        setFilteredMainList(filteredMainList)
-    },[list])
-
-      // 페이지 전환 핸들러
-      const handlePrevPage = () => {
+    // 페이지 전환 핸들러
+    const handlePrevPage = () => {
         setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
     };
 
     const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(filteredMainCard.length / 5) - 1));
+        setCurrentPage((prevPage) => Math.min(prevPage + 1, Math.ceil(cardDocumentDTOs.length / 5) - 1));
     };
 
      // 현재 페이지에 해당하는 카드들
-     const displayedCards = filteredMainCard.slice(currentPage * 5, (currentPage * 5) + 5);
+     const displayedCards = cardDocumentDTOs.length> 0? cardDocumentDTOs.slice(currentPage * 5, (currentPage * 5) + 5):[];
 
 
-        // 상태가 업데이트된 후 값을 확인하기 위한 useEffect 추가
-        useEffect(() => {
-            console.log("Filtered Main Card:", filteredMainCard);
-            console.log("Filtered Main List:", filteredMainList);
-        }, [filteredMainCard, filteredMainList]);
+    // 상태가 업데이트된 후 값을 확인하기 위한 useEffect 추가
+    useEffect(() => {
+        console.log("Filtered Main Card:", cardDocumentDTOs);
+        console.log("Filtered Main List:", listDocumentDTOs);
+        console.log("Filtered Main displayedCards:", displayedCards);
+    }, [cardDocumentDTOs, listDocumentDTOs, displayedCards]);
 
     
     const handleDetail=(seq, type)=>{
@@ -139,7 +134,7 @@ export const Main=()=>{
                         <span 
                             className={styles.paginationSpan}
                             onClick={handleNextPage} 
-                            disabled={currentPage === Math.ceil(filteredMainCard.length / 5) - 1}
+                            disabled={currentPage === Math.ceil(cardDocumentDTOs.length / 5) - 1}
                         >
                             <MdOutlineArrowForwardIos size={20}/>
                         </span>
@@ -159,8 +154,8 @@ export const Main=()=>{
                             </tr>
                         </thead>
                         <tbody className={styles.tbody}>
-                        {filteredMainList.length > 0 ? (
-                                filteredMainList.map((line, index) => (
+                        {listDocumentDTOs.length > 0 ? (
+                                listDocumentDTOs.map((line, index) => (
                                     <tr key={index} className={styles.tbodytr}>
                                         <td className={`${styles.td1} ${styles.tablerow}`}>{formatDate(line.writeDate)}</td>
                                         <td className={`${styles.td2} ${styles.tablerow}`}>{line.detailName}</td>

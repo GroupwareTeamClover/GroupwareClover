@@ -100,6 +100,18 @@ public class AdminMemberDAO {
 	        }
 	}
 	
+	public void addDepartment(String deptName, String deptCode) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("deptName", deptName);
+		params.put("deptCode", deptCode);
+		
+		mybatis.insert("AdminMember.addDepartment", params);
+	}
+	
+	
+	public List<HashMap<String, Object>> getOrganization(){
+		return mybatis.selectList("AdminMember.getOrganization");
+	}    
 	
 	
 	

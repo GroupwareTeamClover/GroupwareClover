@@ -36,13 +36,13 @@ public class LineService {
 	}
 	
 	//리스트페이지에 결재라인 전체 정보출력하기
-	public List<ApvLineDTO> getAllApv(){
-		return lineDAO.selectAllApv();
+	public List<ApvLineDTO> getAllApv(int empSeq){
+		return lineDAO.selectAllApv(empSeq);
 	}
 	
 	//리스트페이지에 참조,열람라인 전체 정보 출력하기
-	public List<ParticipantsLineDTO> getAllPart(){
-		return lineDAO.selectAllPart();
+	public List<ParticipantsLineDTO> getAllPart(int empSeq){
+		return lineDAO.selectAllPart(empSeq);
 	}
 	
 	//결재상태업데이트 함수들

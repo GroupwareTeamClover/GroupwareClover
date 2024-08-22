@@ -48,8 +48,8 @@ public class DocumentDAO {
 	}
 	
 	//전체 정보 출력
-	public List<DocumentDTO> selectAllDoc(){
-		return mybatis.selectList("Document.selectAllDoc");
+	public List<DocumentDTO> selectAllDoc(int empSeq){
+		return mybatis.selectList("Document.selectAllDoc",empSeq);
 	}
 	
 	//메인에서 출력할 정보

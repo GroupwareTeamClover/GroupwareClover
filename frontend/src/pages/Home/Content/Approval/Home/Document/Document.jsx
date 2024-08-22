@@ -90,7 +90,6 @@ export const Document = ({type}) => {
             )
         }, []);
 
-
         //왼쪽 기안자 정보
         const [drafterData, setDrafterData]=useState([ 
             { label: '기안자', value: sessionData.empName },

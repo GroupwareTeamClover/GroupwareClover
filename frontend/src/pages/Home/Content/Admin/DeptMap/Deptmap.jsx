@@ -38,17 +38,22 @@ export const Deptmap=()=>{
   
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`${BaseUrl()}/chat/organization`).then((resp) => {
+        axios.get(`${BaseUrl()}/adminmember/organization`).then((resp) => {
             const data = resp.data;
             const departmentMap = data.reduce((acc, current) => {
                 const { DEPT_NAME, EMP_NAME, ROLE_NAME, EMP_SEQ, EMP_AVATAR } = current;
                 if (!acc[DEPT_NAME]) {
                     acc[DEPT_NAME] = { name: DEPT_NAME, children: [] };
                 }
-                acc[DEPT_NAME].children.push({ name: EMP_NAME, role: ROLE_NAME, seq: EMP_SEQ, avatar: EMP_AVATAR });
-                return acc;
+                if(EMP_NAME === null){
+                    acc[DEPT_NAME]={name: DEPT_NAME, children:[]}
+                }else{
+                    acc[DEPT_NAME].children.push({ name: EMP_NAME, role: ROLE_NAME, seq: EMP_SEQ, avatar: EMP_AVATAR });
+                    return acc;
+                }
             }, {});
 
+            
             const newFolderData = Object.values(departmentMap);
             setFolderData(newFolderData);
             setFilteredData(newFolderData);
@@ -57,6 +62,7 @@ export const Deptmap=()=>{
         
     }, []);
     
+    console.log(folderData)
     useEffect(() => {
         if (selectedFolder) {
             setCurrentPage(0); 
@@ -87,11 +93,18 @@ export const Deptmap=()=>{
             if (!query) return data;
             return data
                 .map(folder => {
-                    const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
-                    const filteredChildren = folder.children.filter(child =>
-                        child.name.toLowerCase().includes(query.toLowerCase()) ||
-                        child.role.toLowerCase().includes(query.toLowerCase())
-                    );
+                    // 폴더 이름이 undefined일 수 있는 경우를 대비하여 기본값을 설정
+                    const folderName = folder.name || '';
+                    const folderMatches = folderName.toLowerCase().includes(query.toLowerCase());
+
+                    // 자식 항목의 필터링
+                    const filteredChildren = folder.children.filter(child => {
+                        const childName = child.name || '';
+                        const childRole = child.role || '';
+                        return childName.toLowerCase().includes(query.toLowerCase()) 
+                        // ||
+                        //     childRole.toLowerCase().includes(query.toLowerCase());
+                    });                 
                     
                     if (folderMatches || filteredChildren.length) {
                         return { ...folder, children: filteredChildren.length ? filteredChildren : folder.children, isOpen: true };
@@ -115,6 +128,16 @@ export const Deptmap=()=>{
         };
     };
 
+    const handleDeptAdded = (newDept) => {
+        // 새로운 부서가 추가되면 기존 부서 목록에 새 부서를 추가합니다.
+        setFolderData(prevData => {
+            // 새로운 부서를 기존 부서 데이터에 추가
+            const updatedData = [...prevData, newDept];
+            setFilteredData(updatedData); // 필터링된 데이터도 업데이트
+            return updatedData;
+        });
+    };
+
 // 페이지네이션을 위해 selectedFolder가 null이 아닐 때만 계산
 const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PER_PAGE) : 0;
 
@@ -126,18 +149,6 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
     const handleAddDept =()=>{
         openModal(); 
     }
-    // const handleAddDept = () => {
-    //     if (!deptCode) {
-    //         // Find the minimum available deptCode
-    //         let minDeptCode = 1;
-    //         while (existingDeptCodes.includes(minDeptCode)) {
-    //             minDeptCode++;
-    //         }
-    //         setDeptCode(minDeptCode);
-    //     }
-    //     openModal();
-    // };
-    
   
 
     return (
@@ -153,7 +164,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
                             <input
                                 type='text'
                                 className={styles.input}
-                                placeholder='이름 또는 직위 검색'
+                                placeholder='이름 검색'
                                 onChange={handleSearchData}
                                 value={searchInput}
                             />
@@ -171,7 +182,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
                                     onItemClick={handleItemClick}
                                     onFolderClick={handleFolderClick}
                                     selectedItem={selectedFolder}
-                                    isFiltered={!!searchInput}
+                                    isFiltered={searchInput}
                                 />
                             ))
                         ) : (
@@ -192,15 +203,23 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {selectedFolder.children
+                                    {
+                                    selectedFolder.children
                                     .slice(currentPage * PER_PAGE, (currentPage +1) * PER_PAGE)
                                     .map(child => (
+                                        child.name !== undefined ?
                                         <tr key={child.seq}>
+                                            
                                             <td><img src={child.avatar} alt={child.name} width="50" /></td>
                                             <td>{child.name}</td>
                                             <td>{child.role}</td>
-                                        </tr>
-                                    ))}
+                                            
+                                            </tr>
+                                            :( <tr><td colSpan={3}>'현재 부서원이 존재하지 않습니다'</td></tr>)
+                                    )
+                                )
+                                }
+                               
                                 </tbody>
                             </table>
                         </div>
@@ -220,7 +239,7 @@ const pageCount = selectedFolder ? Math.ceil(selectedFolder.children.length / PE
             </div>
             <Modal isOpen={isModalOpen} onClose={closeModal}>
                 <div className={styles.modalForm}>
-                   <ModalDept setIsModalOpen={setIsModalOpen}/>
+                   <ModalDept setIsModalOpen={setIsModalOpen} onDeptAdded={handleDeptAdded}/>
                 </div>
             </Modal>
         </div>

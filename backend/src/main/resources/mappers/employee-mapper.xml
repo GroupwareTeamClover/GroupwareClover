@@ -4,11 +4,14 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="Employee">
 
-    <select id="signIn" resultType="com.clover.employee.dto.EmployeeDTO">
+    <select id="signIn" resultType="com.clover.employee.dto.SignDTO">
         SELECT
-            *
+            e.*,
+            d.dept_name
         FROM
-            employee
+            employee e
+            JOIN
+                department d ON e.dept_code = d.dept_code
         WHERE
             emp_id = #{empId}
         AND

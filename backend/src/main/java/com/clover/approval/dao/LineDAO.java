@@ -45,14 +45,14 @@ public class LineDAO {
 	}
 	
 	//전체 출력
-	public List<ApvLineDTO> selectAllApv(){
-		return mybatis.selectList("Line.selectAllApv");
+	public List<ApvLineDTO> selectAllApv(int empSeq){
+		return mybatis.selectList("Line.selectAllApv", empSeq);
 	}
 	
 	
 	//참조자, 열람자 select
-	public List<ParticipantsLineDTO> selectAllPart(){
-		return mybatis.selectList("Line.selectAllPart");
+	public List<ParticipantsLineDTO> selectAllPart(int empSeq){
+		return mybatis.selectList("Line.selectAllPart", empSeq);
 	}
 	
 	//결재상태업데이트 함수들
