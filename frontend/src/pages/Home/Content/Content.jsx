@@ -10,6 +10,7 @@ import {Member} from './Admin/Member/Member';
 import { Popup } from './Admin/PopupBoard/Popup';
 import { Log } from './Admin/Log/Log';
 import { Dashboard } from './Admin/Dashboard/Dashboard';
+import MessengerRoutes from './Messenger/MessengerRoutes';
 
 export const Content = () => {
 
@@ -20,7 +21,7 @@ export const Content = () => {
           <Route path="/calendar/*" element={ <Calendar /> } />
           <Route path="/address/*" element={ <Address /> } />
           <Route path="/community/*" element={<Board/> }></Route>
-          <Route path="/chat/*" element={ <ChatMain /> } />
+          <Route path="/chat/*" element={ <MessengerRoutes /> } />
           <Route path="/approval/*" element={<Approval/>}/>
           <Route path="/member/*" element={<Member/>}/>
           <Route path="/popup/*" element={<Popup/>}/>
