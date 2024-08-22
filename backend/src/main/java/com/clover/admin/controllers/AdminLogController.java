@@ -47,7 +47,8 @@ public class AdminLogController {
         System.out.println("empId 는 ? " + empId);
         System.out.println("empName 는 ? " + empName);
         System.out.println("logStatus 는 ? " + logStatus);
-
+        System.out.println("specificStartDate는?"+specificStartDate);
+        System.out.println("specificEndDate?"+specificEndDate);
         return ResponseEntity.ok(adminlogService.getSearchLog(logsearchdto, page, size));
     }
 	
