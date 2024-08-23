@@ -27,6 +27,7 @@ import { Uploader } from "rsuite";
 
 
 export const DetailDocument = ({type}) => {
+    //type==Business
     const navi = useNavigate();
 
     //세션정보
@@ -35,16 +36,20 @@ export const DetailDocument = ({type}) => {
     //메인화면의 결재하기 상태변수
     const { id } = useParams();
 
+       // 받아온 type에 해당하는 컴포넌트를 동적으로 가져옴
+    //    const FormComponent = Forms[type] || (() => <div>유효하지 않은 양식입니다.</div>);
+
+
     // console.log(id);
     //맵핑해서 양식별 메뉴와 폼 컴포넌트 결정
-    const formConfig = {
-        업무기안: Business,
-        휴가신청서: Dayoff,
-        invalid: () => <div>유효하지 않은 양식입니다.</div>,
-    };
-    const FormComponent = formConfig[type] || formConfig.invalid;
+    // const formConfig = {
+    //     업무기안: Business,
+    //     휴가신청서: Dayoff,
+    //     invalid: () => <div>유효하지 않은 양식입니다.</div>,
+    // };
+    // const FormComponent = formConfig[type] || formConfig.invalid;
 
-    console.log(`상신테이블 이름 확인 :  ${formConfig[type].name.toLowerCase()}`);
+    // console.log(`상신테이블 이름 확인 :  ${formConfig[type].name.toLowerCase()}`);
 
     //DraferMenu에서 상신취소 클릭시-메뉴컴포넌트에 전달
     const [isCancle, setIsCancle] = useState(false);
@@ -235,7 +240,7 @@ export const DetailDocument = ({type}) => {
             smallConfirmAlert("상신취소하시겠습니까? 모든 내용은 사라집니다.").then((result)=>{
                 if(result.isConfirmed){
                     axios.delete(`${BaseUrl()}/api/approval/document/${id}`, {params: {
-                        table:   formConfig[type].name.toLowerCase(),
+                        table:   'business'
                     }}).then(()=>{
                         setIsCancle(false);
                         navi(`/approval/list?type=기안진행&cpage=1`); // 절대 경로 사용
@@ -361,7 +366,7 @@ export const DetailDocument = ({type}) => {
         if(isTempCancle && id){
             smallConfirmAlert("삭제하시겠습니까?").then((result)=>{
                 if(result.isConfirmed){
-                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${formConfig[type].name.toLowerCase()}`, id)
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${type.toLowerCase()}`, id)
                     .then(()=>{
                         setIsTempCancle(false);
                         smallAlert("삭제 성공");
@@ -549,7 +554,7 @@ export const DetailDocument = ({type}) => {
                                     ) }
                         </div>
                         <div className={styles.form}>
-                            <FormComponent type={type} id={id} isTempMenu={isTempMenu} 
+                            <Business type={type} id={id} isTempMenu={isTempMenu} 
                             isTempInsert={isTempInsert} setIsTempInsert={setIsTempInsert} 
                             isTempEmergency={isTempEmergency} setIsTempEmergency={setIsTempEmergency}
                             isTempTemp={isTempTemp} setIsTempTemp={setIsTempTemp}
