@@ -62,20 +62,6 @@ CREATE TABLE worker_state (
 
 CREATE SEQUENCE worker_state_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
 
-CREATE TABLE outside_work (
-    outside_seq NUMBER PRIMARY KEY,
-    outside_state_code varchar2(30) NOT NULL,
-    start_date varchar2(30) NOT NULL,
-    end_date varchar2(30) NOT NULL,
-    outside_date timestamp DEFAULT sysdate NOT NULL
-);
-
-CREATE SEQUENCE outside_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
-
-CREATE TABLE outside_state (
-    outside_state_code NUMBER PRIMARY KEY,
-    outside_state_name varchar2(20) NOT NULL
-);
 
 CREATE TABLE dayoff_state (
     dayoff_code NUMBER PRIMARY KEY,
