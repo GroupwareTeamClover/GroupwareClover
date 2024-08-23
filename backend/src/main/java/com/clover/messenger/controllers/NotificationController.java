@@ -19,7 +19,7 @@ import com.clover.messenger.services.ChatRoomService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/chat/notifications")
+@RequestMapping("/api/chat/notifications")
 public class NotificationController {
     
     @Autowired
