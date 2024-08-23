@@ -189,6 +189,17 @@ public class DocumentController {
 		Map<String, Object> map=new HashMap<>();
 		map.put("id", id);
 		map.put("type",type);
+		// 변환 작업
+	    if (map.get("BS_WRITE_DATE") instanceof oracle.sql.TIMESTAMP) {
+	        try {
+	            oracle.sql.TIMESTAMP oracleTimestamp = (oracle.sql.TIMESTAMP) map.get("BS_WRITE_DATE");
+	            java.sql.Timestamp timestamp = oracleTimestamp.timestampValue();
+	            map.put("BS_WRITE_DATE", timestamp);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            // 에러 처리 (필요한 경우)
+	        }
+	    }
 		return ResponseEntity.ok(map);
 	}
 	
@@ -200,6 +211,17 @@ public class DocumentController {
 		Map<String, Object> map=new HashMap<>();
 		map.put("id", id);
 		map.put("type",type);
+		// 변환 작업
+	    if (map.get("BS_WRITE_DATE") instanceof oracle.sql.TIMESTAMP) {
+	        try {
+	            oracle.sql.TIMESTAMP oracleTimestamp = (oracle.sql.TIMESTAMP) map.get("BS_WRITE_DATE");
+	            java.sql.Timestamp timestamp = oracleTimestamp.timestampValue();
+	            map.put("BS_WRITE_DATE", timestamp);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            // 에러 처리 (필요한 경우)
+	        }
+	    }
 		return ResponseEntity.ok(map);
 	}
 	
