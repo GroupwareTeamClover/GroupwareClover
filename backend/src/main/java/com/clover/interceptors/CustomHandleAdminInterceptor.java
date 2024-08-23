@@ -17,10 +17,11 @@ public class CustomHandleAdminInterceptor implements HandlerInterceptor{
 	
 	@Autowired
     private UserSessionService userSessionService;
-
+	@Autowired
+	private AdminMemberService adminMemService;
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+		  
         HttpSession session = request.getSession(false); // false를 사용하여 세션이 없으면 새로 생성하지 않음
 
         if (session == null || session.getAttribute("cloverSeq") == null) {
@@ -28,36 +29,30 @@ public class CustomHandleAdminInterceptor implements HandlerInterceptor{
             return false; // 로그인되지 않은 경우 연결 거부
         }
 
-
-        else if (session.getAttribute("cloverAdmin") == null) {
-            System.out.println("관리자가 아님.");
-            return false; // 관리자가 아니면 연결 거부
-        }
         else {
-
-        System.out.println("사용자임");
-       return true;
+        	int empSeq = (Integer) session.getAttribute("cloverSeq");
+        	EmployeeDTO empInfo = adminMemService.getWorkerStateCode(empSeq);
+        	
+        	int workerCode = empInfo.getWorkerStateCode();
+        	
+        	if(workerCode != 0) {
+        		System.out.println("!!!관리자 아님!!!");
+        		return false;
+        	}
+        	System.out.println("****관리자임******");
+        	return true;
         }
+//        if (session.getAttribute("cloverAdmin") == null) {
+//            System.out.println("관리자가 아님.");
+//            return false; // 관리자가 아니면 연결 거부
+//        }
+//                
+//        System.out.println("사용자임");
+//       return true;
+        
+        
+        
 	}
-
-
+	
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -111,7 +111,7 @@ public class AdminMemberDAO {
 	}    
 	
 	public EmployeeDTO getWorkerStateCode(int empSeq) {
-		return mybatis.selectOne("AdminMember.getWorkerStateCode");
+		return mybatis.selectOne("AdminMember.getWorkerStateCode", empSeq);
 	}
 	
 	
