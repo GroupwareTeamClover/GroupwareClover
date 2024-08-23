@@ -16,6 +16,7 @@ import { ProgressBar } from "react-bootstrap";
 import { DraferMenu } from "./Menus/DrafterMenu/DrafterMenu";
 import 'rsuite/Uploader/styles/index.css';
 import { Uploader } from 'rsuite';
+import { smallAlert } from "../../../../../../commons/common";
 
 export const Document = ({type}) => {
     //type==Business
@@ -116,11 +117,56 @@ export const Document = ({type}) => {
      const handleFileChange = (fileList) => {
          setFiles(fileList);
      };
-     const handleUploadSuccess = (response, file) => {
-         const fileUrl = response;
+     //누적
+    let fileCount=0;  
+    const duplicateFiles = []; // 중복된 파일들을 저장할 리스트   
+    const handleUploadSuccess = (response, file) => {
+        fileCount++;
+
+        //한꺼번에 5개 초과 넣을 때 막기 
+        if(fileCount>5){
+            smallAlert("파일은 최대 5개까지만 업로드 가능합니다.")
+            setFiles([]);
+            return;
+        }
+
+        // 하나씩 들어올 때 막기
+        if (files.length >= 5) {
+            smallAlert("파일은 최대 5개까지만 업로드 가능합니다.");
+            // handleRemove(file) 대신 아래 코드를 사용하여 신규 파일만 제거
+            setFiles((prevFiles) => prevFiles.filter(f => f.name !== file.name || f.url !== response));
+            return;
+        }
+
+        
          // 파일 리스트에 업로드된 파일 추가
-         setFiles((prev) => [...prev, { name: file.name, url: fileUrl }]);
-     };
+         setFiles((prevFiles) => {
+            // 새로운 파일을 추가한 리스트 생성
+            let newFiles = [...prevFiles, { name: file.name, url: response }];
+
+            
+            // 중복된 파일을 확인하고 제거
+            const uniqueFiles = newFiles.filter((file, index, self) =>
+                index === self.findIndex(f => f.name === file.name)
+            );
+
+            // 중복 파일이 제거되었는지 확인하고 알림 표시
+            if (newFiles.length !== uniqueFiles.length) {
+                smallAlert("중복된 파일이 제거되었습니다.");
+            }
+
+            newFiles = uniqueFiles; // 중복 파일이 제거된 리스트로 업데이트
+
+            // 부분적으로 막는 방법: 누적된 파일 리스트의 길이로 개수를 판단
+            if (newFiles.length > 5) {
+                smallAlert("파일은 최대 5개까지만 업로드 가능합니다.");
+                return prevFiles; // 누적하지 않음
+            }
+
+            return newFiles; // 새로운 파일 리스트를 업데이트
+
+         })
+    };
      const handleRemove = (file) => {
          // 파일 리스트에서 해당 파일 제거
          setFiles((prev) => prev.filter((f) => f.name !== file.name));
@@ -135,10 +181,16 @@ export const Document = ({type}) => {
     }, [isModalComplete]);
 
 
+
+
+
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h3 className={styles.headerText}>{type}</h3>
+                <h3 className={styles.headerText}>
+                     {/* 원래 type===업무기안이었음 */}
+                    업무기안</h3>
             </div>
             <div className={styles.menu}>
                 <WriterMenu setIsInsert={setIsInsert} setIsEmergency={setIsEmergency} setIsTemp={setIsTemp}/>
@@ -151,7 +203,8 @@ export const Document = ({type}) => {
                         <div className={styles.test}>
                             <div className={styles.leftcontainer}>
                                     <div className={styles.insideheader}>
-                                        <span><h2>{type}</h2></span>
+                                         {/* 원래 type===업무기안이었음 */}
+                                        <span><h2>업무기안</h2></span>
                                     </div>
                                     <div className={styles.bigcontent}>
                                         <div className={styles.info}> 
@@ -183,7 +236,7 @@ export const Document = ({type}) => {
                                                 documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
                                                 apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
                                                 participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}
-                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files} setFiles={setFiles} handleFileChange={handleFileChange}
+                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files} setFiles={setFiles}
                                                 
                                             /> 
                                         </div>
@@ -192,7 +245,8 @@ export const Document = ({type}) => {
                         </div>
                         <div className={styles.fileBox}>
                             <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
-                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} defaultFileList={files}>
+                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} defaultFileList={files}  
+                                handleFileChange={handleFileChange} >
                                 <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
                             </Uploader>
                         </div> 

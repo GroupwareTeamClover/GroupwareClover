@@ -237,7 +237,7 @@ export const DetailDocument = ({type}) => {
     //상신취소는 결재처리를 아무도 하지 않았을 때 기안자만 할 수 있다.
     useEffect(()=>{
         if(isCancle){
-            smallConfirmAlert("상신취소하시겠습니까? 모든 내용은 사라집니다.").then((result)=>{
+            smallConfirmAlert("정말 삭제하시겠습니까?").then((result)=>{
                 if(result.isConfirmed){
                     axios.delete(`${BaseUrl()}/api/approval/document/${id}`, {params: {
                         table:   'business'
@@ -361,15 +361,17 @@ export const DetailDocument = ({type}) => {
         }
     },[isHoldoff, totalLineInfo])
 
+
+
      //임시저장에서 취소 시 DB삭제
      useEffect(()=>{
         if(isTempCancle && id){
-            smallConfirmAlert("삭제하시겠습니까?").then((result)=>{
+            smallConfirmAlert("정말 삭제하시겠습니까?").then((result)=>{
                 if(result.isConfirmed){
-                    axios.delete(`${BaseUrl()}/api/approval/document/${id}?table=${type.toLowerCase()}`, id)
-                    .then(()=>{
+                    axios.delete(`${BaseUrl()}/api/approval/document/${id}`, {params: {
+                        table:   'business'
+                    }}).then(()=>{
                         setIsTempCancle(false);
-                        smallAlert("삭제 성공");
                         navi(`/approval/list?type=임시문서함`); //임시문서함으로 이동되게 하기
                     }).catch(()=>{
                         setIsTempCancle(false);
@@ -497,7 +499,9 @@ export const DetailDocument = ({type}) => {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h3 className={styles.headerText}>{type} 
+                <h3 className={styles.headerText}>
+                    {/* 원래 type===업무기안이었음 */}
+                    업무기안
                 {totalLineInfo.some(item => item.type === 'document' && item.egcYn === 'y') && (
                          <span className={styles.egcstate}>긴급</span>
                     )}
@@ -518,7 +522,8 @@ export const DetailDocument = ({type}) => {
                     <div className={styles.test}>
                     <div className={styles.leftcontainer}>
                     <div className={styles.insideheader}>
-                        <span><h2>{type}</h2></span>
+                        {/* 원래 type===업무기안이었음 */}
+                        <span><h2>업무기안</h2></span>
                     </div>
                     <div className={styles.bigcontent}>
                         <div className={styles.info}> 
@@ -563,8 +568,6 @@ export const DetailDocument = ({type}) => {
                     </div> 
                     </div>
                     </div>
-                    { (isPartMenu || isApprovalMenu || isDrafterMenu) &&
-                        (<>
                         {files.length > 0 &&
                             ((isFileBoxOpen) ? <div className={styles.fileHeader}>
                                 <div className={styles.fileLetter} onClick={handleFileBox}>첨부파일 ({files.length}) ▲</div>
@@ -581,9 +584,6 @@ export const DetailDocument = ({type}) => {
                                 );
                             })}
                         </div>
-                        </>)
-                    }
-
                     {/* {  isTempMenu && 
                         (<>
                         <div className={styles.fileBox}>

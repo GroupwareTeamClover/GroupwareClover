@@ -9,7 +9,7 @@ import { useMemberStore } from '../../../../../../../../store/store';
 import  WebEditor  from '../../../../../../../../components/WebEditor/WebEditor';
 
 import { BsChevronDoubleLeft } from 'react-icons/bs';
-import {smallAlert} from '../../../../../../../../commons/common';
+import {smallAlert, smallConfirmAlert} from '../../../../../../../../commons/common';
 
 export const Business =({type, isInsert, setIsInsert, isEmergency, 
     documentDTO, setDocumentDTO, 
@@ -19,7 +19,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     isTempInsert, setIsTempInsert,
     isTempEmergency, setIsTempEmergency,
     isTempTemp, setIsTempTemp,
-    isTempCancle, setIsTempCancle, files, setFiles, handleFileChange
+    isTempCancle, setIsTempCancle, files, setFiles
 })=>{  
     const navi = useNavigate();
     const [isContentLoaded, setIsContentLoaded] = useState(false);
@@ -53,7 +53,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     // 유효성 검사 함수
     const validateForm = () => {
         if (!title) {
-            smallAlert("제목은 필수 값입니다.");
+            smallAlert("제목을 입력해주세요.");
             return true;
         }
         return false;
@@ -156,16 +156,23 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     useEffect(() => {
         if (isTemp && !id) {
             console.log(business);
-            axios.post(`${BaseUrl()}/api/approval/document`, business)
-                .then((resp) => {
-                    smallAlert("임시 저장 성공");
-                    navi(`/approval/document/${resp.data}?type=${type}`);
+            smallConfirmAlert(`임시저장에서 첨부파일은 변경할 수 없습니다. 이대로 임시저장하시겠습니까?`).then((result)=>{
+                if(result.isConfirmed){
+                    axios.post(`${BaseUrl()}/api/approval/document`, business)
+                    .then((resp) => {
+                        smallAlert("임시 저장 성공");
+                        navi(`/approval/document/${resp.data}?type=${type}`);
+                        setIsTemp(false);
+                    })
+                    .catch((error) => {
+                        smallAlert('임시 저장 실패');
+                        setIsTemp(false);
+                    });
+                    
+                }else{
                     setIsTemp(false);
-                })
-                .catch((error) => {
-                    smallAlert('임시 저장 실패');
-                    setIsTemp(false);
-                });
+                }
+            })
         }
     }, [business]);
 
