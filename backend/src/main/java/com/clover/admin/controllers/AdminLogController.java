@@ -22,9 +22,7 @@ public class AdminLogController {
 	@GetMapping
 	public ResponseEntity<PageInfo<AdminLogDTO>> getAllLog(@RequestParam(defaultValue = "1") int page,
              @RequestParam(defaultValue = "10") int size) {
-		System.out.println("log page = "+page);
-		System.out.println("log size = " + size);
-	return ResponseEntity.ok(adminlogService.getAllLog(page, size));
+		return ResponseEntity.ok(adminlogService.getAllLog(page, size));
 	}
 	
 	@GetMapping("/search")
@@ -42,33 +40,9 @@ public class AdminLogController {
         logsearchdto.setSpecificStartDate(specificStartDate);
         logsearchdto.setSpecificEndDate(specificEndDate);
         
-        System.out.println("empId 는 ? " + empId);
-        System.out.println("empName 는 ? " + empName);
-        System.out.println("logStatus 는 ? " + logStatus);
-        System.out.println("specificStartDate는?"+specificStartDate);
-        System.out.println("specificEndDate?"+specificEndDate);
+      
         return ResponseEntity.ok(adminlogService.getSearchLog(logsearchdto, page, size));
     }
-	
-//	@GetMapping
-//	public ResponseEntity<List<AdminLogDTO>> getAllLog(){
-//		return ResponseEntity.ok(adminlogService.getAllLog());
-//	}
-	
-//	@GetMapping("/search")
-//		public ResponseEntity<List<AdminLogDTO>> getSearchLog(String empName, String empId, String logStatus, 
-//				String specificStartDate, String specificEndDate){
-//		 AdminLogSearchDTO logsearchdto = new AdminLogSearchDTO();
-//			 logsearchdto.setEmpName(empName);
-//			 logsearchdto.setEmpId(empId);
-//			 logsearchdto.setLogStatus(logStatus);
-//	        logsearchdto.setSpecificStartDate(specificStartDate);
-//	        logsearchdto.setSpecificEndDate(specificEndDate);
-//	        
-//	        System.out.println(logsearchdto.getEmpId() + logsearchdto.getLogStatus());
-//
-//		return ResponseEntity.ok(adminlogService.getSearchLog(logsearchdto));  // 돌려보낼거(list) 있음.
-//	}
 	
 	
 	

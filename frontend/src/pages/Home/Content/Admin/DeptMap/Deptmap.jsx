@@ -31,7 +31,6 @@ export const Deptmap=()=>{
 
     const location = useLocation();
     const state = location.state;
-    console.log("headerTxt"+ state?.type)
   
     // 상태에 따라 header 내용 설정
     const headerText = state?.type || '조직도';
@@ -62,7 +61,6 @@ export const Deptmap=()=>{
         
     }, []);
     
-    console.log(folderData)
     useEffect(() => {
         if (selectedFolder) {
             setCurrentPage(0); 

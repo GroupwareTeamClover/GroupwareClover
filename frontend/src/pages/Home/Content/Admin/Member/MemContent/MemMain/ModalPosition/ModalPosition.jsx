@@ -32,25 +32,21 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
      useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
             setDeptName(resp.data);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
             setRoleName(resp.data);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
             setWorkName(resp.data);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
             setEmpState(resp.data);
-            console.log(resp.data)
         });
     },[]);
 
@@ -58,7 +54,6 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
     const handleChangeStatus =(e)=>{
         const { value } = e.target;
         setNewValue(value);         // select에서 선택한 옵션명
-        console.log(checkedMems)
     }
     
     const handleSave = () => {
@@ -70,9 +65,7 @@ export const ModalPosition = ({modalState, setIsModalOpen,checkedMems,resetCheck
             empSeqList:members            
         };      
         
-        console.log(newValue);
         if(newValue !==''){
-            console.log("update axios param: " +param.updateMems.stateCode +"dd "+ param.empSeqList) // 선택한 상태 변경할 목록(예. 직위), 변경할 항목(예. 대리), 변경할 사원번호(예. 32)
             axios.put(`${BaseUrl()}/adminmember`, param)    //수정하기
             .then(()=>{
                 setstoremembers(true);

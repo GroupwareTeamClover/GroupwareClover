@@ -24,15 +24,11 @@ public class AdminPopupDAO {
 	
 	public void createPopup(AdminPopupDTO popupdto) {
 		
-		System.out.println(popupdto.getSpecificStartDate());
-
 	    mybatis.insert("AdminPopup.insertPop", popupdto);
 	    
-	    System.out.println("Generated popSeq: " + popupdto.getPopSeq());
 	    Integer popSeq = popupdto.getPopSeq();
 	    if(popSeq != 0) {
 	        popupdto.setPopSeq(popSeq); 
-	        System.out.println(popupdto.getPopSeq());
 	        mybatis.insert("AdminPopup.insertPopPeriod", popupdto);
 	    }
 	}
