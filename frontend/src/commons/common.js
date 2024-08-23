@@ -174,38 +174,3 @@ export const workTime = (time) => {
   const minute = time%60;
   return `${hour}시간 ${minute}분`
 }
-
-// =============================== [ 부서, 직급 코드 이름으로 변환 ] ===============================
-export const deptName = async (code) => {
-
-  // axios.get(`${BaseUrl()}/`).then(res => {
-  //   for(let item of res.data) {
-  //     if(item.deptCode === code) return item.deptName;
-  //   }
-  // }).catch(() => failAlert("부서이름 가져오는 중 오류 발생"));
-
-  let name = "";
-  switch (parseInt(code)) {
-    case 1:
-      name = "총무";
-      break;
-    case 2:
-      name = "인사";
-      break;
-    case 3:
-      name = "사무";
-      break;
-    case 4:
-      name = "유통";
-      break;
-    case 5:
-      name = "경영";
-      break;
-    case 99:
-      name = "미정";
-      break;
-    default :
-      name = "미정";
-  }
-  return name;
-}
