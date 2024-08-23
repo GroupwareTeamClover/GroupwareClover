@@ -163,11 +163,7 @@ export const DetailSchedule = ({setDataChange}) => {
                       {!updateForm ?
                           <div className={styles.btnBox}>
                             <button onClick={() => handleScheduleDelete(scheduleDetail.scheduleSeq)}>일정 삭제</button>
-                            <button onClick={() => {
-                              setUpdateForm(true)
-                              console.log("updateData === ", updateData);
-                            }
-                            }>일정 수정</button>
+                            <button onClick={() => setUpdateForm(true)}>일정 수정</button>
                           </div>
                           :
                           <div className={styles.btnBox}>

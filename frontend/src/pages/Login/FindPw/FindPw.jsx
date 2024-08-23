@@ -72,7 +72,6 @@ export const FindPw = ({closeModal}) => {
       delete changePw.check;
       setLoading(true);
       axios.put(`${BaseUrl()}/employee/${changePw.empSeq}`, changePw).then(res => {
-        console.log(res.data);
         if(res.data === "ok") {
           successAlert("", "비밀번호 변경이 완료되었습니다.");
           closeModal();
