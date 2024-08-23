@@ -110,7 +110,7 @@ export const ChoiceLine= () =>{
             || (type !== 'refchoice' && prev.refchoice && prev.refchoice.some(existingItem => existingItem.seq === item.seq))  
             || (type !== 'viechoice' && prev.viechoice && prev.viechoice.some(existingItem => existingItem.seq === item.seq))  
             ) {
-                smallAlert("이미 다른 결재라인에 포함되어 있는 직웝입니다.");
+                smallAlert("이미 다른 결재라인에 포함되어 있는 직원입니다.");
                 return prev;
             }
 

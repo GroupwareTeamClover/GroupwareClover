@@ -9,7 +9,7 @@
 		from employee e
 		left outer join department d on e.dept_code=d.dept_code
 		left outer join role r on e.role_code=r.role_code
-		where e.emp_seq!=#{seq}
+		where e.emp_seq!=#{seq} and d.dept_name!='미정'
 	</select>
 
 	<insert id="insertApvLine">

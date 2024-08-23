@@ -14,7 +14,8 @@ CREATE TABLE employee(
     dept_code NUMBER NOT NULL,
     join_date TIMESTAMP NULL,
     leave_date TIMESTAMP NULL,
-    annual_leave_day NUMBER DEFAULT 0 NOT NULL
+    annual_leave_day NUMBER DEFAULT 0 NOT NULL,
+    worker_state_code NUMBER DEFAULT 99 NOT NULL
 );
 
 CREATE SEQUENCE employee_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
@@ -62,20 +63,6 @@ CREATE TABLE worker_state (
 
 CREATE SEQUENCE worker_state_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
 
-CREATE TABLE outside_work (
-    outside_seq NUMBER PRIMARY KEY,
-    outside_state_code varchar2(30) NOT NULL,
-    start_date varchar2(30) NOT NULL,
-    end_date varchar2(30) NOT NULL,
-    outside_date timestamp DEFAULT sysdate NOT NULL
-);
-
-CREATE SEQUENCE outside_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
-
-CREATE TABLE outside_state (
-    outside_state_code NUMBER PRIMARY KEY,
-    outside_state_name varchar2(20) NOT NULL
-);
 
 CREATE TABLE dayoff_state (
     dayoff_code NUMBER PRIMARY KEY,
@@ -110,12 +97,12 @@ CREATE SEQUENCE POPUP_PERIOD_SEQUENCE START WITH 1 INCREMENT BY 1 NOMAXVALUE NOC
 
 create table log (
     log_seq number PRIMARY KEY,
-    emp_seq number NULL, 
+    emp_seq number NULL,
     emp_name varchar2(50) NULL,
     emp_id varchar2(20) NULL,
     dept_code number NULL,
     client_ip varchar2(20) NOT NULL,
-    local_logtime timestamp NOT NULL, 
+    local_logtime timestamp NOT NULL,
     log_status varchar2(100) NOT NULL
 );
 create sequence log_sequence start with 1 increment by 1 nomaxvalue nocache;
@@ -174,28 +161,28 @@ create sequence attachment_sequence start with 1 increment by 1 nomaxvalue nocac
 
 -- 게시판 외래키
 --1.[화이트리스트]
-ALTER TABLE board_whitelist 
-ADD CONSTRAINTS board_whitelist_boardFK foreign KEY (boardlist_seq) 
+ALTER TABLE board_whitelist
+ADD CONSTRAINTS board_whitelist_boardFK foreign KEY (boardlist_seq)
 REFERENCES boardlist(boardlist_seq) on delete cascade;
 
-ALTER TABLE board_whitelist 
-ADD CONSTRAINTS board_whitelist_empFK foreign KEY (emp_seq) 
+ALTER TABLE board_whitelist
+ADD CONSTRAINTS board_whitelist_empFK foreign KEY (emp_seq)
 REFERENCES employee(emp_seq) on delete cascade;
 --2.[중요글]
-ALTER TABLE board_important 
-ADD CONSTRAINTS board_important_empFK foreign KEY (emp_seq) 
+ALTER TABLE board_important
+ADD CONSTRAINTS board_important_empFK foreign KEY (emp_seq)
 REFERENCES employee(emp_seq) on delete cascade;
 
-ALTER TABLE board_important 
-ADD CONSTRAINTS board_important_boardFK foreign KEY (board_seq) 
+ALTER TABLE board_important
+ADD CONSTRAINTS board_important_boardFK foreign KEY (board_seq)
 REFERENCES board(board_seq) on delete cascade;
 --3.[게시판]
-ALTER TABLE board 
-ADD CONSTRAINTS board_boardlistFK foreign KEY (boardlist_seq) 
+ALTER TABLE board
+ADD CONSTRAINTS board_boardlistFK foreign KEY (boardlist_seq)
 REFERENCES boardlist(boardlist_seq) on delete cascade;
 --4.[댓글]
-ALTER TABLE board_comment 
-ADD CONSTRAINTS board_comment_boardFK foreign KEY (board_seq) 
+ALTER TABLE board_comment
+ADD CONSTRAINTS board_comment_boardFK foreign KEY (board_seq)
 REFERENCES board(board_seq) on delete cascade;
 
 
@@ -297,6 +284,10 @@ CREATE TABLE schedule (
 
 CREATE SEQUENCE schedule_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
+ALTER TABLE schedule
+    ADD CONSTRAINTS schedule_empFK foreign KEY (emp_seq)
+REFERENCES employee(emp_seq) on delete cascade;
+
 
 --**************insert 데이트 문***************
 --박새미
@@ -347,12 +338,7 @@ INSERT INTO dayoff_state VALUES(5, '공가');
 INSERT INTO dayoff_state VALUES(6, '질병휴가');
 
 -- Employee dummy data test90 (admin) / password → test
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test90', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester0', 'test0@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 0 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test91', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester1', 'test1@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test92', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester2', 'test2@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test93', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester3', 'test3@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test94', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester4', 'test4@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-
+INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test90', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', '김철수', 'test0@gmail.com', '790123', 'M', '01012345678', 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/man.png', 99, 99, NULL,NULL, 0, 99 );
 --**************트리거 or 함수***************
 
 

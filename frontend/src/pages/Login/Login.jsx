@@ -57,7 +57,6 @@ export const Login = ({ setSign, setAdmin }) => {
       // 응답 데이터에서 employeeInfo와 wsToken을 구조 분해 할당으로 추출
       const {employeeInfo, wsToken} = res.data;
 
-      console.log(employeeInfo.deptName);
       // 세션 데이터 제이슨 형식으로 저장
       const sessionData = {
         empSeq: employeeInfo.empSeq,
