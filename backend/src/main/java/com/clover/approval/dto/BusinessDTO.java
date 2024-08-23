@@ -2,32 +2,33 @@
 package com.clover.approval.dto;
 
 import java.sql.Timestamp;
-import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class BusinessDTO extends DocumentDTO {
     private int bsSeq;
     private String bsTitle;
     private String bsContent;
-    private Date bsWriteDate;
+    private Timestamp bsWriteDate;
     private int parentSeq;
 	public BusinessDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	public BusinessDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
-			Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq,
+			Timestamp writeTimestamp, Timestamp finishTimestamp, int currentApverSeq, int finalApverSeq, String docComSeq,
 			String empName, String deptName, String roleName) {
-		super(docSeq, docDetailCode, docStateCode, drafterSeq, egcYn, writeDate, finishDate, currentApverSeq, finalApverSeq,
+		super(docSeq, docDetailCode, docStateCode, drafterSeq, egcYn, writeTimestamp, finishTimestamp, currentApverSeq, finalApverSeq,
 				docComSeq, empName, deptName, roleName);
 		// TODO Auto-generated constructor stub
 	}
 	public BusinessDTO(int docSeq, int docDetailCode, int docStateCode, int drafterSeq, String egcYn,
-			Timestamp writeDate, Timestamp finishDate, int currentApverSeq, int finalApverSeq, String docComSeq) {
-		super(docSeq, docDetailCode, docStateCode, drafterSeq, egcYn, writeDate, finishDate, currentApverSeq, finalApverSeq,
+			Timestamp writeTimestamp, Timestamp finishTimestamp, int currentApverSeq, int finalApverSeq, String docComSeq) {
+		super(docSeq, docDetailCode, docStateCode, drafterSeq, egcYn, writeTimestamp, finishTimestamp, currentApverSeq, finalApverSeq,
 				docComSeq);
 		// TODO Auto-generated constructor stub
 	}
-	public BusinessDTO(int bsSeq, String bsTitle, String bsContent, Date bsWriteDate, int parentSeq) {
+	public BusinessDTO(int bsSeq, String bsTitle, String bsContent, Timestamp bsWriteDate, int parentSeq) {
 		super();
 		this.bsSeq = bsSeq;
 		this.bsTitle = bsTitle;
@@ -53,10 +54,10 @@ public class BusinessDTO extends DocumentDTO {
 	public void setBsContent(String bsContent) {
 		this.bsContent = bsContent;
 	}
-	public Date getBsWriteDate() {
+	public Timestamp getBsWriteDate() {
 		return bsWriteDate;
 	}
-	public void setBsWriteDate(Date bsWriteDate) {
+	public void setBsWriteDate(Timestamp bsWriteDate) {
 		this.bsWriteDate = bsWriteDate;
 	}
 	public int getParentSeq() {

@@ -73,6 +73,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     useEffect(() => {
         // DTO 상태 업데이트
+        // console.log(`post전 date확인 ${date}`)
         setDocData((prev) => ({
             ...prev,
             bsTitle: title,
@@ -235,7 +236,6 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장에서 결재요청 시 documnet정보 진행중으로 변경
     useEffect(() => {
         if (isTempInsert && id) {  
-           
             if (validateForm()) {
                 setIsTempInsert(false);
             }else{

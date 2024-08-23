@@ -113,4 +113,9 @@ select employee.emp_seq,employee.emp_tel,employee.emp_state_code,employee.dept_c
         LEFT JOIN  employee ON department.dept_code = employee.dept_code
         LEFT JOIN  role ON employee.role_code = role.role_code
     </select>
+    
+    
+    <select id="getWorkerStateCode" resultType="com.clover.employee.dto.EmployeeDTO">
+    	select * from employee where emp_seq = #{empSeq}
+    </select>
 </mapper>

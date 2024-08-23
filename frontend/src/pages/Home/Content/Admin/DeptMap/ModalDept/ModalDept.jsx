@@ -16,7 +16,6 @@ export const ModalDept =({setIsModalOpen, onDeptAdded })=>{
     useEffect(()=>{
         // 테이블에 존재하는 부서코드, 부서이름 가져오기. (같은 코드, 이름 있으면 막기 위해서)
         axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp) => {
-            console.log(resp.data)
             setExistingDeptCodes(resp.data.map(code => ({DEPT_CODE:code.DEPT_CODE, DEPT_NAME:code.DEPT_NAME}))); 
         });
     },[])
@@ -45,7 +44,6 @@ export const ModalDept =({setIsModalOpen, onDeptAdded })=>{
             // handleAxios(deptName, minDeptCode);
             
             axios.post(`${BaseUrl()}/adminmember/addDept`, {deptName, minDeptCode}).then((resp)=>{
-                console.log("됨?"+deptName)
                 const newDept = { name: deptName, children: [] };
                 onDeptAdded(newDept);
                 closeModal();
