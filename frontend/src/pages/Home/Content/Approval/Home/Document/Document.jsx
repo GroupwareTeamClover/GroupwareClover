@@ -18,13 +18,14 @@ import 'rsuite/Uploader/styles/index.css';
 import { Uploader } from 'rsuite';
 
 export const Document = ({type}) => {
+    //type==Business
     //맵핑해서 양식별 메뉴와 폼 컴포넌트 결정
-    const formConfig = {
-        업무기안: Business,
-        휴가신청서: Dayoff,
-        invalid: () => <div>유효하지 않은 양식입니다.</div>,
-    };
-    const FormComponent = formConfig[type] || formConfig.invalid;
+    // const formConfig = {
+    //     업무기안: Business,
+    //     휴가신청서: Dayoff,
+    //     invalid: () => <div>유효하지 않은 양식입니다.</div>,
+    // };
+    // const FormComponent = formConfig[type] || formConfig.invalid;
 
     /*********************writer******************** */
 
@@ -178,7 +179,7 @@ export const Document = ({type}) => {
                                                     )}
                                         </div>
                                         <div className={styles.form}>
-                                            <FormComponent type={type} isInsert={isInsert} setIsInsert={setIsInsert} isEmergency={isEmergency}
+                                            <Business type={type} isInsert={isInsert} setIsInsert={setIsInsert} isEmergency={isEmergency}
                                                 documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
                                                 apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
                                                 participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}

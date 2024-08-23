@@ -82,7 +82,8 @@ export const Side = () => {
             setCloneDocCode(structuredClone(selectedDocCode));
             setCloneEmpInfo(structuredClone(selectedEmpInfo));
             closeModal();
-            navi(`/approval/document/new?type=${selectedDocCode.children.name}`); // 페이지 다시 로드
+            
+            navi(`/approval/document/new?type=Business`); // 페이지 다시 로드
         }
     }, [isModalComplete]);
 
