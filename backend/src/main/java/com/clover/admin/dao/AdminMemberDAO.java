@@ -110,6 +110,9 @@ public class AdminMemberDAO {
 		return mybatis.selectList("AdminMember.getOrganization");
 	}    
 	
+	public EmployeeDTO getWorkerStateCode(int empSeq) {
+		return mybatis.selectOne("AdminMember.getWorkerStateCode");
+	}
 	
 	
 }
