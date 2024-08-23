@@ -97,12 +97,12 @@ CREATE SEQUENCE POPUP_PERIOD_SEQUENCE START WITH 1 INCREMENT BY 1 NOMAXVALUE NOC
 
 create table log (
     log_seq number PRIMARY KEY,
-    emp_seq number NULL, 
+    emp_seq number NULL,
     emp_name varchar2(50) NULL,
     emp_id varchar2(20) NULL,
     dept_code number NULL,
     client_ip varchar2(20) NOT NULL,
-    local_logtime timestamp NOT NULL, 
+    local_logtime timestamp NOT NULL,
     log_status varchar2(100) NOT NULL
 );
 create sequence log_sequence start with 1 increment by 1 nomaxvalue nocache;
@@ -161,28 +161,28 @@ create sequence attachment_sequence start with 1 increment by 1 nomaxvalue nocac
 
 -- 게시판 외래키
 --1.[화이트리스트]
-ALTER TABLE board_whitelist 
-ADD CONSTRAINTS board_whitelist_boardFK foreign KEY (boardlist_seq) 
+ALTER TABLE board_whitelist
+ADD CONSTRAINTS board_whitelist_boardFK foreign KEY (boardlist_seq)
 REFERENCES boardlist(boardlist_seq) on delete cascade;
 
-ALTER TABLE board_whitelist 
-ADD CONSTRAINTS board_whitelist_empFK foreign KEY (emp_seq) 
+ALTER TABLE board_whitelist
+ADD CONSTRAINTS board_whitelist_empFK foreign KEY (emp_seq)
 REFERENCES employee(emp_seq) on delete cascade;
 --2.[중요글]
-ALTER TABLE board_important 
-ADD CONSTRAINTS board_important_empFK foreign KEY (emp_seq) 
+ALTER TABLE board_important
+ADD CONSTRAINTS board_important_empFK foreign KEY (emp_seq)
 REFERENCES employee(emp_seq) on delete cascade;
 
-ALTER TABLE board_important 
-ADD CONSTRAINTS board_important_boardFK foreign KEY (board_seq) 
+ALTER TABLE board_important
+ADD CONSTRAINTS board_important_boardFK foreign KEY (board_seq)
 REFERENCES board(board_seq) on delete cascade;
 --3.[게시판]
-ALTER TABLE board 
-ADD CONSTRAINTS board_boardlistFK foreign KEY (boardlist_seq) 
+ALTER TABLE board
+ADD CONSTRAINTS board_boardlistFK foreign KEY (boardlist_seq)
 REFERENCES boardlist(boardlist_seq) on delete cascade;
 --4.[댓글]
-ALTER TABLE board_comment 
-ADD CONSTRAINTS board_comment_boardFK foreign KEY (board_seq) 
+ALTER TABLE board_comment
+ADD CONSTRAINTS board_comment_boardFK foreign KEY (board_seq)
 REFERENCES board(board_seq) on delete cascade;
 
 
@@ -203,7 +203,7 @@ Create table Notifications (
     is_read char(1) default 'F' not null,
     create_date timestamp default sysdate not null,
     message_seq number not null,
-    emp_seq number not null    
+    emp_seq number not null
 );
 
 Create sequence notification_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
@@ -213,7 +213,7 @@ Create table chatRoomLog (
     room_time_seq number primary key,
     emp_seq number not null,
     room_seq number not null,
-    join_time timestamp, 
+    join_time timestamp,
     left_time timestamp
 );
 
@@ -251,9 +251,9 @@ Create sequence room_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 Create table chatMembers (
     emp_seq number primary key,
     room_seq number not null,
-    member_role VARCHAR2(20) DEFAULT 'MEMBER' 
+    member_role VARCHAR2(20) DEFAULT 'MEMBER'
         CHECK (member_role IN ('MEMBER', 'ADMIN', 'MODERATOR', 'OWNER', 'GUEST', 'BANNED')),
-    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL    
+    join_time TIMESTAMP DEFAULT SYSDATE NOT NULL
 );
 
 
@@ -355,6 +355,10 @@ CREATE TABLE schedule (
 );
 
 CREATE SEQUENCE schedule_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+
+ALTER TABLE schedule
+    ADD CONSTRAINTS schedule_empFK foreign KEY (emp_seq)
+REFERENCES employee(emp_seq) on delete cascade;
 
 
 --**************insert 데이트 문***************

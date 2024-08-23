@@ -25,7 +25,7 @@
             null,
         </if>
         <if test="bsWriteDate != null">
-            #{bsWriteDate},
+            TO_DATE(#{bsWriteDate}|| ' 23:59:59', 'YYYY-MM-DD'),
         </if>
         #{parentSeq})
 </insert>
