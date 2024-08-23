@@ -32,9 +32,11 @@ export const WriterMenu=({setIsInsert, setIsEmergency, setIsTemp})=>{
 
     //취소
     const handleInsertCancle=()=>{
-        if (smallConfirmAlert("작성중이던 내용은 모두 사라집니다. 취소하시겠습니까?")) {
-            navi('/approval');
-        } 
+        smallConfirmAlert("작성중이던 내용은 모두 사라집니다. 취소하시겠습니까?").then((result)=>{
+            if(result.isConfirmed){
+                navi('/approval');
+            }
+        })
     }
 
     return(
