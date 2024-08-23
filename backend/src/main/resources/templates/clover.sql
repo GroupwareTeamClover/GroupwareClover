@@ -14,7 +14,8 @@ CREATE TABLE employee(
     dept_code NUMBER NOT NULL,
     join_date TIMESTAMP NULL,
     leave_date TIMESTAMP NULL,
-    annual_leave_day NUMBER DEFAULT 0 NOT NULL
+    annual_leave_day NUMBER DEFAULT 0 NOT NULL,
+    worker_state_code NUMBER DEFAULT 99 NOT NULL
 );
 
 CREATE SEQUENCE employee_sequence START WITH 1 INCREMENT BY 1 nocache nomaxvalue;
@@ -405,12 +406,7 @@ INSERT INTO dayoff_state VALUES(5, '공가');
 INSERT INTO dayoff_state VALUES(6, '질병휴가');
 
 -- Employee dummy data test90 (admin) / password → test
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test90', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester0', 'test0@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 0 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test91', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester1', 'test1@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test92', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester2', 'test2@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test93', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester3', 'test3@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test94', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', 'tester4', 'test4@gmail.com', 991111, 'M', '01012345678', '서울 동대문구 난계로 230 5층', NULL, 99, 99, sysdate, NULL, 0, 99 );
-
+INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test90', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', '김철수', 'test0@gmail.com', '790123', 'M', '01012345678', 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/man.png', 99, 99, NULL,NULL, 0, 99 );
 --**************트리거 or 함수***************
 
 
