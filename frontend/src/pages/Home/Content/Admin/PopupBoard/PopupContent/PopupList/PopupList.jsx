@@ -19,6 +19,8 @@ export const PopupList=()=>{
 
     const [isLoading, setIsLoading] = useState(true);
 
+    const [announcements, setAnnouncements] = useState([]);
+
     // 페이지네이션 설정
     const PER_PAGE = 10;
     const pageCount = Math.ceil(filtered.length / PER_PAGE);
@@ -37,9 +39,12 @@ export const PopupList=()=>{
             setFiltered(resp.data);
             setstoremembers(false);
             setIsLoading(false);
-            console.log(resp.data)
         });
 
+        axios.get(`${BaseUrl()}/adminpopup/today`).then((resp)=>{
+            setAnnouncements(resp.data);
+            console.log(resp.data)
+        })
         
     },[storemembers]);
 
@@ -66,9 +71,9 @@ export const PopupList=()=>{
             smallAlert("검색 유형을 선택하세요!");
         } else {
             if (searchType === 'title') {
-                setFiltered(poplist.filter(post => (post.popTitle == keyword || post.popTitle.includes(keyword))));
+                setFiltered(poplist.filter(post => (post.popTitle === keyword || post.popTitle.includes(keyword))));
             } else {
-                setFiltered(poplist.filter(post => (post.empName == keyword || post.empName.includes(keyword))));
+                setFiltered(poplist.filter(post => (post.empName === keyword || post.empName.includes(keyword))));
             }
             // 검색 후 첫 페이지로 이동
             setCurrentPage(0);
@@ -79,7 +84,22 @@ export const PopupList=()=>{
     return(
 
         <div className={styles.container}>
-           
+            <div className={styles.member_info}>
+                <div className={styles.member_total}>
+                    <div className={styles.member_box}>
+                        오늘 팝업 공지  :  <span style={{color:'orange'}}> {announcements.length} 개</span>
+                    </div>
+                </div>
+                <div className={styles.pop_list}>
+                    <div className={styles.member_box}>
+                    {announcements.map((pop, i) => (
+                        <div key={i}>
+                            {i+1}. <a href={`/popup/detail/${pop.popSeq}`}>{pop.popTitle}</a>
+                        </div>
+                    ))}
+                    </div>
+                </div>
+            </div>
             <div className={styles.funcBtn}>
                 <div className={styles.col_button}>
                 </div>         

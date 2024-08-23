@@ -40,7 +40,6 @@ export const Dashboard = () => {
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/worker`)
             .then((resp) => {
-                console.log(resp.data)
                 const regularCount = resp.data.find(item => item.WORKER_STATE_CODE === 1)?.COUNT || 0;
                 const irregularCount = resp.data.find(item => item.WORKER_STATE_CODE === 2)?.COUNT || 0;
                 const contractCount = resp.data.find(item => item.WORKER_STATE_CODE === 3)?.COUNT || 0;
@@ -52,20 +51,16 @@ export const Dashboard = () => {
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/countmem`)
             .then((resp) => {
-                console.log(resp.data)
                 const newMemCount = resp.data.find(item => item.EMP_STATE_CODE === 0)?.COUNT || 0;
                 const ingMemCount = resp.data.find(item => item.EMP_STATE_CODE === 1)?.COUNT || 0;
                 const outMemCount = resp.data.find(item => item.EMP_STATE_CODE === 2)?.COUNT || 0;
-                console.log("newMem "+ newMemCount)
                 setEmpData({ newMem: newMemCount, ingMem: ingMemCount , outMem: outMemCount});
             })
             .catch(error => console.error('Error fetching data:', error));        
         
         axios.get(`${BaseUrl()}/adminmember/countNewMonth`)
             .then((resp) => {
-                console.log(resp.data)
                 const newMemMonthCount = resp.data[0]?.COUNT || 0;
-                console.log("newMemMonth"+ newMemMonthCount)
                 setNewMonth(newMemMonthCount);
             })
             .catch(error => console.error('Error fetching data:', error));      
@@ -73,7 +68,6 @@ export const Dashboard = () => {
     useEffect(() => {
         axios.get(`${BaseUrl()}/adminmember/deptCount`)
         .then((resp) => {
-            console.log(resp.data)
             const a = resp.data.find(item => item.DEPT_CODE === 1)?.COUNT  || 0;
             const b = resp.data.find(item => item.DEPT_CODE === 2)?.COUNT  || 0;
             const c = resp.data.find(item => item.DEPT_CODE === 3)?.COUNT  || 0;

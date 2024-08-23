@@ -8,7 +8,7 @@ import WebEditor from '../../../../../../../components/WebEditor/WebEditor';
 import { Uploader } from 'rsuite';
 import { useParams } from 'react-router-dom';
 import {format} from 'date-fns';
-import { confirmAlert, smallConfirmAlert } from '../../../../../../../commons/common';
+import { confirmAlert, smallAlert, smallConfirmAlert } from '../../../../../../../commons/common';
 
 
 export const PopupDetail = () => {
@@ -82,17 +82,10 @@ export const PopupDetail = () => {
         smallConfirmAlert("글 삭제를 하시겠습니까?").then((result)=>{
             if(result.isConfirmed){
                 axios.delete(`${BaseUrl()}/adminpopup/deletepop/${popSeq}`).then(resp => {
-                        console.log(resp.data);
                         navi('/popup', {state:{type: '팝업공지글 목록'}});
                 })}
             else{return false}
         })
-        // const confirm = window.confirm("글 삭제를 하시겠습니까?");
-        // if(confirm){  axios.delete(`${BaseUrl()}/adminpopup/deletepop/${popSeq}`).then(resp => {
-        //     console.log(resp.data);
-        //     navi('/popup', {state:{type: '팝업공지글 목록'}});
-        // }) }
-        // else{return false}
         
     }
 
@@ -101,21 +94,47 @@ export const PopupDetail = () => {
     const handleContentChange = () => setContent(editorRef.current.getInstance().getHTML());
 
 
+    // 파일 첨부
+    let fileCount = 0;
+
     const handleUploadSuccess = (response, file) => {
         const fileUrl = response;
         const newFile = { name: file.name, url: fileUrl };
-        // 중복 파일 제거
-        setFiles(prev => prev.filter(f => f.name !== file.name));
-        
-        // 파일 추가
-        setFiles(prev => [...prev, newFile]);
-        setAddFileUrls(prev => [...prev, fileUrl]); // addFileUrls 상태 업데이트
+
+          // 파일 리스트에 업로드된 파일 추가
+          setFiles((prevFiles) => {
+            // 새로운 파일을 추가한 리스트 생성
+            let newFiles = [...prevFiles, { name: file.name, url: response }];
+
+            
+            // 중복된 파일을 확인하고 제거
+            const uniqueFiles = newFiles.filter((file, index, self) =>
+                index === self.findIndex(f => f.name === file.name)
+            );
+
+            // 중복 파일이 제거되었는지 확인하고 알림 표시
+            if (newFiles.length !== uniqueFiles.length) {
+                smallAlert("중복된 파일이 제거되었습니다.");
+            }
+
+            newFiles = uniqueFiles; // 중복 파일이 제거된 리스트로 업데이트
+
+            // 부분적으로 막는 방법: 누적된 파일 리스트의 길이로 개수를 판단
+            if (newFiles.length > 5) {
+                smallAlert("파일은 최대 5개까지만 업로드 가능합니다.");
+                return prevFiles; // 누적하지 않음
+            }
+
+            return newFiles; // 새로운 파일 리스트를 업데이트
+    
+        })
+        setAddFileUrls(prev => [...prev, fileUrl]);
+    
     };
+
     const handleUploadError = (error, file) => {
         console.error('File upload error:', error);
-        alert(file.name+'파일 용량이 큽니다. 파일 크기를 확인해주세요.');
-        // setUploadError(true); // 에러 상태 설정
-        // 실패한 파일을 리스트에서 제거
+        smallAlert(file.name + ' 파일 용량이 큽니다. 파일 크기를 확인해주세요.');
         handleRemove(file);
     };
 
@@ -123,6 +142,44 @@ export const PopupDetail = () => {
         setFiles(prev => prev.filter(f => f.name !== file.name));
         setAddFileUrls(prev => prev.filter(url => url !== file.url)); // remove URL from addFileUrls
     };
+
+    
+    // // 파일 첨부
+    // let fileCount=0;
+    // const uplicateFiles =[]; // 중복 파일 저장할 리스트
+
+    // const handleUploadSuccess = (response, file) => {
+    //     fileCount++; 
+
+    //     const fileUrl = response;
+    //     const newFile = { name: file.name, url: fileUrl };
+    //     // 중복 파일 제거
+    //     setFiles(prev => prev.filter(f => f.name !== file.name));
+        
+    //     // 파일 추가
+    //     setFiles(prev => [...prev, newFile]);
+    //     setAddFileUrls(prev => [...prev, fileUrl]); // addFileUrls 상태 업데이트
+
+
+
+
+    // };
+
+
+
+
+    // const handleUploadError = (error, file) => {
+    //     console.error('File upload error:', error);
+    //     alert(file.name+'파일 용량이 큽니다. 파일 크기를 확인해주세요.');
+    //     // setUploadError(true); // 에러 상태 설정
+    //     // 실패한 파일을 리스트에서 제거
+    //     handleRemove(file);
+    // };
+
+    // const handleRemove = (file) => {
+    //     setFiles(prev => prev.filter(f => f.name !== file.name));
+    //     setAddFileUrls(prev => prev.filter(url => url !== file.url)); // remove URL from addFileUrls
+    // };
     const handleCancel = () => {
         smallConfirmAlert("글 작성을 취소하시겠습니까?").then((result)=>{
             if(result.isConfirmed){
@@ -188,16 +245,13 @@ export const PopupDetail = () => {
         // const deleteImageUrls = originImageUrls?.filter(imageUrl =>  newImageUrls && !newImageUrls.includes(imageUrl));
         // const addImageUrls = newImageUrls?.filter(imageUrl => !originImageUrls.includes(imageUrl));
 
-        console.log("originImageUrls:", originImageUrls);
-        console.log("newImageUrls:", newImageUrls);
+        
 
         const deleteImageUrls = originImageUrls?.filter(imageUrl => {
-            console.log("Checking imageUrl in originImageUrls:", imageUrl);
             return newImageUrls && !newImageUrls.includes(imageUrl);
         }) || [];
 
         const addImageUrls = newImageUrls.filter(imageUrl => {
-            console.log("Checking imageUrl in newImageUrls:", imageUrl);
             return !originImageUrls?.includes(imageUrl);
         }) || [];
 
@@ -233,7 +287,6 @@ export const PopupDetail = () => {
                 }
             })
             .catch(error => {
-                console.log("서버오류: ", error.response);
                 if (error.response) {
                     console.log("응답 상태 코드: ", error.response.status);
                     console.log("응답 데이터: ", error.response.data);
