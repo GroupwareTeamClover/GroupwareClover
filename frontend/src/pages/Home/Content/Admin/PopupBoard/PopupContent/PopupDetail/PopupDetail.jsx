@@ -194,7 +194,7 @@ export const PopupDetail = () => {
 
     const handleSubmit = () => {
         if (title.trim() === "") {
-            alert("제목을 입력해주세요!");
+            smallAlert("제목을 입력해주세요!");
             return;
         }
 
@@ -205,32 +205,32 @@ export const PopupDetail = () => {
         const strippedContent = textContent.trim();
 
         if (!hasImage && strippedContent === "") {
-            alert("내용을 입력해주세요!");
+            smallAlert("내용을 입력해주세요!");
             return;
         }
 
         if (!periodType) {
-            alert("공지기간을 선택해주세요!");
+            smallAlert("공지기간을 선택해주세요!");
             return;
         }
 
         if (periodType === 'specific' && (!specificStartDate || !specificEndDate)) {
-            alert("특정 기간의 시작일과 종료일을 모두 선택해주세요!");
+            smallAlert("특정 기간의 시작일과 종료일을 모두 선택해주세요!");
             return;
         }
 
         if (periodType === 'monthly' && !monthlyDay) {
-            alert("매월 반복의 날짜를 선택해주세요!");
+            smallAlert("매월 반복의 날짜를 선택해주세요!");
             return;
         }
 
         if (periodType === 'weekly' && !weeklyDay) {
-            alert("매주 반복의 요일을 선택해주세요!");
+            smallAlert("매주 반복의 요일을 선택해주세요!");
             return;
         }
 
         if (!boardActive) {
-            alert("활성화 여부를 선택해주세요!");
+            smallAlert("활성화 여부를 선택해주세요!");
             return;
         }
 
@@ -280,10 +280,10 @@ export const PopupDetail = () => {
         axios.put(`${BaseUrl()}/adminpopup/${popSeq}`, payload)
             .then(resp => {
                 if (resp.status === 200) {
-                    alert("공지팝업이 수정되었습니다.");
+                    smallAlert("공지팝업이 수정되었습니다.");
                     navi('/popup', { state: { type: '팝업공지글 목록' } });
                 } else {
-                    alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+                    smallAlert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
                 }
             })
             .catch(error => {
@@ -291,7 +291,7 @@ export const PopupDetail = () => {
                     console.log("응답 상태 코드: ", error.response.status);
                     console.log("응답 데이터: ", error.response.data);
                 }
-                alert("서버에 문제 발생.");
+                smallAlert("서버에 문제 발생.");
             });
     };
 
