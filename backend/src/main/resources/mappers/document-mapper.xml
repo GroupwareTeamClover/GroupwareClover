@@ -25,7 +25,7 @@
             null,
         </if>
         <if test="bsWriteDate != null">
-            TO_DATE(#{bsWriteDate}|| ' 23:59:59', 'YYYY-MM-DD'),
+        	 #{bsWriteDate},
         </if>
         #{parentSeq})
 </insert>
@@ -135,21 +135,21 @@
 		update document set doc_state_code = 1, write_date = sysdate where doc_seq=#{seq}
 	</update>
 	
-	<update id="updateDocTypeData">
-	    update ${table}
-	    <set>
-	        <if test="bsTitle != null">
-	            bs_title = #{bsTitle},
-	        </if>
-	        <if test="bsContent != null">
-	            bs_content = #{bsContent},
-	        </if>
-	        <if test="bsWriteDate != null">
-	            bs_write_date = #{bsWriteDate},
-	        </if>
-	    </set>
-	    where bs_seq = #{bsSeq}
-	</update>
+<update id="updateDocTypeData">
+    update ${table}
+    <set>
+        <if test="docData.bsTitle != null">
+            bs_title = #{docData.bsTitle},
+        </if>
+        <if test="docData.bsContent != null">
+            bs_content = #{docData.bsContent},
+        </if>
+        <if test="docData.bsWriteDate != null">
+            bs_write_date = #{docData.bsWriteDate},
+        </if>
+    </set>
+    where bs_seq = #{docData.bsSeq}
+</update>
 	
 	<update id="updateTempDocEmergency">
 		update document

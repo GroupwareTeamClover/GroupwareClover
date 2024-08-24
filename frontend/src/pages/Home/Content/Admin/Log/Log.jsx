@@ -9,7 +9,6 @@ export const Log = () => {
 
     const location = useLocation();
     const state = location.state;
-    console.log("headerTxt"+ state?.type)
     const {admin} = useMemberStore();
     // 상태에 따라 header 내용 설정
     const headerText = state?.type || '접속 로그 관리';

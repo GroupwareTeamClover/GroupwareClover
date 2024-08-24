@@ -12,7 +12,6 @@ import com.clover.approval.dao.LineDAO;
 import com.clover.approval.dto.ApvLineDTO;
 import com.clover.approval.dto.BusinessDTO;
 import com.clover.approval.dto.DocumentDTO;
-import com.clover.approval.dto.InsertMappingDTO;
 import com.clover.approval.dto.ParticipantsLineDTO;
 
 @Service
@@ -54,8 +53,12 @@ public class DocumentService {
 		//업무양식
 		if(typeDocDTO instanceof BusinessDTO) {
 			((BusinessDTO) typeDocDTO).setParentSeq(docDTO.getDocSeq());
+			System.out.println("날짜 확인하기"+ ((BusinessDTO) typeDocDTO).getBsWriteDate());
+			
 			documentDAO.insertBusiness((BusinessDTO)typeDocDTO);
 		}
+		
+		
 	}
 	
 	
@@ -87,13 +90,13 @@ public class DocumentService {
 	
 	//임시저장에서 결재요청시 문서상태 업데이트
 	@Transactional
-	public void updateDocState(int seq, String table, Map<String,Object> docData) {
+	public void updateDocState(int seq, String table, DocumentDTO docData) {
 		documentDAO.updateDocState(seq);
 		documentDAO.updateDocTypeData(table, docData);
 	}
 	
 	//임시저장에서 임시저장시
-	public void updateTemptoTemp(String table, Map<String,Object> docData) {
+	public void updateTemptoTemp(String table, DocumentDTO docData) {
 		documentDAO.updateDocTypeData(table, docData);
 	}
 	

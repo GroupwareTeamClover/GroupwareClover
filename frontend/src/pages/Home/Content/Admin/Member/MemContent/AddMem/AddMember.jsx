@@ -26,7 +26,6 @@ export const AddMember = ()=>{
     // axios로 출력받기 emp table - joindate가 이번달인 사람들....  
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminaddmem/newname`).then((resp)=>{
-            console.log(resp.data)
             setNewMem(resp.data);
             setFiltered(resp.data);
             setstoremembers(false);
@@ -35,7 +34,6 @@ export const AddMember = ()=>{
 
             // empStateCode가 1인 갯수(승인완료)
             const countState1 = resp.data.filter(mem => mem.EMP_STATE_CODE !== 0).length;
-            console.log("승인완료된거 : "+countState1)
             setFinishNum(countState1);
             // empStateCode가 0인 갯수(승인대기)
             const countState0 = resp.data.filter(mem => mem.EMP_STATE_CODE === 0).length;

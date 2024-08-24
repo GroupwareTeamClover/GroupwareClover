@@ -179,35 +179,75 @@ export const PopupWrite = () => {
         // else{return false}
     }
 
-     //첨부파일
-    const [files, setFiles] = useState([]);
-    const handleFileChange = (fileList) => {
-        // setFiles(fileList.map(file => ({ name: file.name, url: file.blobUrl })));
-        const newFiles = fileList.map(file => ({ name: file.name, url: file.blobUrl }));
-        setFiles(prevFiles => {
-            // 기존 파일 리스트에서 중복 제거 후 추가
-            const existingFileNames = new Set(prevFiles.map(file => file.name));
-            const filteredFiles = newFiles.filter(file => !existingFileNames.has(file.name));
-            return [...prevFiles, ...filteredFiles];
-        });
-    };
-    
-    const handleUploadSuccess = (response, file) => {
-        const fileUrl = response; // 서버에서 받은 파일 URL
-        setFiles(prevFiles => {
-            const newFile = { name: file.name, url: fileUrl };
-            const existingFileNames = new Set(prevFiles.map(file => file.name));
-            // 중복된 파일이 없을 때만 추가
-            if (!existingFileNames.has(file.name)) {
-                return [...prevFiles, newFile];
+      //첨부파일
+      const [files, setFiles] = useState([]);
+      const handleFileChange = (fileList) => {
+          // setFiles(fileList.map(file => ({ name: file.name, url: file.blobUrl })));
+          const newFiles = fileList.map(file => ({ name: file.name, url: file.blobUrl }));
+          setFiles(prevFiles => {
+              // 기존 파일 리스트에서 중복 제거 후 추가
+              const existingFileNames = new Set(prevFiles.map(file => file.name));
+              const filteredFiles = newFiles.filter(file => !existingFileNames.has(file.name));
+              return [...prevFiles, ...filteredFiles];
+          });
+      };
+      
+
+      ////// 파일 갯수 제한하기 /////////
+      let fileCount =0;
+      const duplicateFiles = [] // 중복 파일 저장할 리스트 
+
+      const handleUploadSuccess = (response, file) => {        
+        fileCount++;
+
+        //한꺼번에 5개 초과 넣을 때 막기 
+        if(fileCount>5){
+            smallAlert("파일은 최대 5개까지만 업로드 가능합니다.")
+            setFiles([]);
+            return;
+        }
+
+        // 하나씩 들어올 때 막기
+        if (files.length >= 5) {
+            smallAlert("파일은 최대 5개까지만 업로드 가능합니다.");
+            // handleRemove(file) 대신 아래 코드를 사용하여 신규 파일만 제거
+            setFiles((prevFiles) => prevFiles.filter(f => f.name !== file.name || f.url !== response));
+            return;
+        }
+
+         // 파일 리스트에 업로드된 파일 추가
+         setFiles((prevFiles) => {
+            // 새로운 파일을 추가한 리스트 생성
+            let newFiles = [...prevFiles, { name: file.name, url: response }];
+
+            
+            // 중복된 파일을 확인하고 제거
+            const uniqueFiles = newFiles.filter((file, index, self) =>
+                index === self.findIndex(f => f.name === file.name)
+            );
+
+            // 중복 파일이 제거되었는지 확인하고 알림 표시
+            if (newFiles.length !== uniqueFiles.length) {
+                smallAlert("중복된 파일이 제거되었습니다.");
             }
-            return prevFiles;
-        });
-        // setUploadError(false);
-         // 파일 업로드 성공 시, 업로드 오류 상태를 체크
-         checkForUploadErrors();
-     };
-    const handleUploadError = (error, file) => {
+
+            newFiles = uniqueFiles; // 중복 파일이 제거된 리스트로 업데이트
+
+            // 부분적으로 막는 방법: 누적된 파일 리스트의 길이로 개수를 판단
+            if (newFiles.length > 5) {
+                smallAlert("파일은 최대 5개까지만 업로드 가능합니다.");
+                return prevFiles; // 누적하지 않음
+            }
+
+            return newFiles; // 새로운 파일 리스트를 업데이트
+
+         })
+
+
+       };
+
+     
+       const handleUploadError = (error, file) => {
         console.error('File upload error:', error);
         smallAlert( file.name +'파일 용량이 큽니다. ');
         setUploadError(true); // 에러 상태 설정
@@ -223,7 +263,6 @@ export const PopupWrite = () => {
             return updatedFiles;
         });
     };
-
     // 업로드 오류 상태를 체크하는 함수
     const checkForUploadErrors = (updatedFiles = files) => {
         // 업로드 오류가 있는지 확인

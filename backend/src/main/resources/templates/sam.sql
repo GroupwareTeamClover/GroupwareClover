@@ -1,5 +1,4 @@
 --박새미
---박새미
 CREATE TABLE document (
 	doc_seq	number		 primary key,
 	doc_detail_code	number		NOT NULL,
@@ -28,7 +27,7 @@ CREATE TABLE apv_line (
 
 CREATE sequence apv_line_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
-CREATE TABLE dayoff (
+/*CREATE TABLE dayoff (
 	dayoff_seq	number		 primary key,
 	dayoff_code	number		NOT NULL,
 	start_date	timestamp		NOT NULL,
@@ -36,15 +35,16 @@ CREATE TABLE dayoff (
 	dayoff_half	char(1)		NULL,
 	half_type	char(1)		NULL,
 	doc_seq	number		NOT NULL
-);
+);*/
 
-CREATE sequence dayoff_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+/*CREATE sequence dayoff_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
+*/
 
 CREATE TABLE business (
 	bs_seq	number		 primary key,
-	bs_title	varchar(300)		NOT NULL,
+	bs_title	varchar(300)	NULL,
 	bs_content	clob		NULL,
-	bs_write_date	timestamp		NOT NULL,
+	bs_write_date	timestamp	NULL,
 	doc_seq	number		NOT NULL
 );
 
@@ -89,10 +89,8 @@ CREATE TABLE doc_code (
 --**************insert 데이트 문***************
 --박새미
 insert into doc_code values(1,'일반');
-insert into doc_code values(2, '근태');
 
 insert into doc_detail_code values(1, '업무기안' ,5, 1);
-insert into doc_detail_code values(2, '휴가신청서',5, 2);
 
 insert into doc_state_code values(1, '대기');
 insert into doc_state_code values(2, '임시저장');
@@ -105,6 +103,5 @@ insert into apv_state_code values(1, '대기');
 insert into apv_state_code values(2, '예정');
 insert into apv_state_code values(3, '승인');
 insert into apv_state_code values(4, '반려');
-insert into apv_state_code values(5, '전결');
-insert into apv_state_code values(6, '후결');
+insert into apv_state_code values(8, '보류');
 insert into apv_state_code values(9, '중지');

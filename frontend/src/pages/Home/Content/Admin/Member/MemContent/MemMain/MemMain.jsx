@@ -69,7 +69,6 @@ export const MemMain = () => {
             setFiltered(resp.data);
             setstoremembers(false);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[storemembers]);
 
@@ -78,28 +77,24 @@ export const MemMain = () => {
         axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
             setDeptName(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
             setRoleName(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
             setWorkName(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
             setEmpState(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
 
@@ -109,7 +104,6 @@ export const MemMain = () => {
             const processedData = processCountData(resp.data);
             setCountMem(processedData);
             setstoremembers(false);
-            console.log(resp.data);
         });
     },[storemembers]);
 
