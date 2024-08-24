@@ -144,6 +144,9 @@
         <if test="docData.bsContent != null">
             bs_content = #{docData.bsContent},
         </if>
+        <if test="docData.bsWriteDate == null">
+            bs_write_date = null,
+        </if>
         <if test="docData.bsWriteDate != null">
             bs_write_date = #{docData.bsWriteDate},
         </if>

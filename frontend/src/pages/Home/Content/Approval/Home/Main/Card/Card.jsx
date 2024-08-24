@@ -20,13 +20,13 @@ export const Card= ({apvState, title, drafterName, writeDate, egcYn, seq, detail
         <div className={styles.container}>
              <div className={styles.card}> 
                     <div className={styles.stateBox}>
+                        {egcYn==='y' && <span className={styles.egcstate}>긴급</span>}
                         {apvState==='대기' && <span className={styles.waitstate}>진행중</span>}
                         {apvState==='보류' && <span className={styles.holdstate}>보류</span>}
                     </div>
 
                     <div className={styles.titleBox}>
                         <span className={styles.title}>{title}</span>
-                        {egcYn==='y' && <span className={styles.egcstate}>긴급</span>}
                     </div>
 
                     <div className={styles.drafterBox}>
