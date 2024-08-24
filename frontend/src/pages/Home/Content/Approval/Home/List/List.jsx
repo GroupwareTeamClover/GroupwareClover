@@ -122,7 +122,7 @@ export const List = ({ type }) => {
                         filteredDocument = resp.data.document.filter(doc =>
                             filteredPartLine.some(part =>
                                 part.docSeq === doc.docSeq && (
-                                    (part.pcpDivision === 'r' && (doc.stateName !== '임시저장')) ||
+                                    (part.pcpDivision === 'r' && doc.stateName !== '임시저장') ||
                                     (part.pcpDivision === 'v' && (doc.stateName === '완료' || doc.stateName === '반려'))
                                 )
                             )
