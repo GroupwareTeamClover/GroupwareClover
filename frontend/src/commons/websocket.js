@@ -33,6 +33,12 @@ stompClient.connect(headers, () => {
       onMessageReceived(message);
     });
 
+    // 공지톡 메시지 구독 추가
+    stompClient.subscribe('/topic/notice', (payload) => {
+      const noticeMessage = JSON.parse(payload.body);
+      onMessageReceived({ type: 'NOTICE', message: noticeMessage });
+    });    
+
     // 새 채팅방 생성 알림 구독
     stompClient.subscribe('/topic/newChatRoom', (payload) => {
       console.log('새 채팅방 생성완료');
@@ -196,4 +202,12 @@ export const clearChatHistory = (roomSeq) => {
 
 export const toggleNotifications = (roomSeq, enabled) => {
   sendMessage("/app/chat.toggleNotifications", { roomSeq, enabled });
+};
+
+export const sendNotice = (noticeMessage) => {
+  if (stompClient && stompClient.connected) {
+    stompClient.send("/app/chat.sendNotice", {}, JSON.stringify(noticeMessage));
+  } else {
+    console.error('WebSocket이 연결되어 있지 않습니다.');
+  }
 };

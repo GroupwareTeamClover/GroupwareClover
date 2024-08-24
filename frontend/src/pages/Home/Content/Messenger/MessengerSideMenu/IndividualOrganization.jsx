@@ -17,7 +17,7 @@ const IndividualOrganization = ({ onClose }) => {
 
     useEffect(() => {
         setIsLoading(true);
-        axios.get(`${BaseUrl()}/chat/organization`).then((resp) => {
+        axios.get(`${BaseUrl()}/api/chat/organization`).then((resp) => {
             const data = resp.data;
             const departmentMap = data.reduce((acc, current) => {
                 const { DEPT_NAME, EMP_NAME, ROLE_NAME, EMP_SEQ, EMP_AVATAR } = current;

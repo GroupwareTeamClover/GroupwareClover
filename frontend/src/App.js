@@ -10,6 +10,7 @@ import { Admin } from './pages/Admin/Admin';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { Loading } from "./components/Loading/Loading";
 import { useChatStore } from './store/messengerStore';
 import { connectWebSocket, subscribeToRoom, disconnectWebSocket } from './commons/websocket';
@@ -18,7 +19,10 @@ function App() {
   const userData = sessionStorage.getItem("sessionUser");
   const adminCheck = sessionStorage.getItem("sessionAdmin");
   const { sign, setSign, setSessionData, admin, setAdmin } = useMemberStore();
-  const { chatRooms, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, setChatRooms, updateUnreadCount } = useChatStore();
+  const { 
+    chatRooms, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, 
+    setChatRooms, updateUnreadCount, handleNoticeMessage 
+  } = useChatStore();
 
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -62,6 +66,9 @@ function App() {
           case 'CREATE_GROUP_CHAT':
             addChatRoom(message.room);
             break;
+          case 'NOTICE':
+            handleNoticeMessage(message.message);
+            break;            
           default:
             console.log('알 수 없는 메시지 타입:', message.type);
         }
@@ -76,7 +83,7 @@ function App() {
       // 로그인되지 않은 상태에서는 로딩만 종료하고 로그인 페이지를 표시
       setLoading(false);
     }
-  }, [sign, adminCheck, setSessionData, setSign, setAdmin, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, setChatRooms, updateUnreadCount]);
+  }, [sign, adminCheck, setSessionData, setSign, setAdmin, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, setChatRooms, updateUnreadCount, handleNoticeMessage]);
 
   if (loading) {
     return <Loading />;
@@ -105,6 +112,7 @@ function App() {
           </>
         }
       </Router>
+      
       <ToastContainer />
     </div>
   );

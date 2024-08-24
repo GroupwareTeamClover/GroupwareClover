@@ -256,6 +256,7 @@ Create table chatMembers (
     join_time TIMESTAMP DEFAULT SYSDATE NOT NULL
 );
 
+
 --박새미
 CREATE TABLE document (
 	doc_seq	number		 primary key,

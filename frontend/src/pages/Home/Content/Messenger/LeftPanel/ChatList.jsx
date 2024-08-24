@@ -18,7 +18,7 @@ const ChatList = ({ chatRooms, onChatSelect, updateChatRoom }) => {
     });
     // 읽음 처리
     try {
-      await axios.post(`${BaseUrl()}/chat/messages/read/${chat.roomSeq}`);
+      await axios.post(`${BaseUrl()}/api/chat/messages/read/${chat.roomSeq}`);
       updateChatRoom(chat.roomSeq, { unreadCount: 0 });
     } catch (error) {
       console.error('메시지 읽음 처리 오류:', error);
