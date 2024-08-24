@@ -13,7 +13,7 @@ const ProfilePanel = ({ selectedProfile, onChatStart }) => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                let url = `${BaseUrl()}/chat/profile`;
+                let url = `${BaseUrl()}/api/chat/profile`;
                 if (selectedProfile) {
                     url += `?empSeq=${selectedProfile.EMP_SEQ}`;
                 }
@@ -29,7 +29,7 @@ const ProfilePanel = ({ selectedProfile, onChatStart }) => {
 
     const handleStartChat = async () => {
       try {
-          const response = await axios.post(`${BaseUrl()}/chat/rooms`,
+          const response = await axios.post(`${BaseUrl()}/api/chat/rooms`,
               { targetEmpSeq: profile.EMP_SEQ },
               {
                   headers: {

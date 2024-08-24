@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.clover.messenger.dto.ChatMessageDTO;
+import com.clover.messenger.dto.NoticeMessageDTO;
 
 @Controller
 public class NotificationWebSocketController {
@@ -22,5 +23,11 @@ public class NotificationWebSocketController {
         // 알림 설정 변경을 해당 사용자에게만 전송
         messagingTemplate.convertAndSendToUser(String.valueOf(message.getSenderSeq()), 
             "/queue/notifications", message);
+    }
+
+    @MessageMapping("/chat.sendNotice")
+    public void sendNotice(NoticeMessageDTO noticeMessage) {
+        // 공지톡 메시지를 모든 연결된 클라이언트에게 브로드캐스트
+        messagingTemplate.convertAndSend("/topic/notice", noticeMessage);
     }
 }

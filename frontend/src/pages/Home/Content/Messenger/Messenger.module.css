@@ -517,3 +517,41 @@
   font-size: 16px;
   font-weight: bold;
 }
+
+.noticeModal {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.noticeModal h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.noticeModal textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  resize: none;
+}
+
+.noticeModal button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.noticeModal button:hover {
+  background-color: #388E3C;
+}

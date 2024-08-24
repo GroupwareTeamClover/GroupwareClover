@@ -14,7 +14,7 @@ import com.clover.messenger.services.ChatRoomService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/chat/messages")
+@RequestMapping("/api/chat/messages")
 public class ChatMessageController {
     @Autowired
     private ChatMessageService chatMessageService;

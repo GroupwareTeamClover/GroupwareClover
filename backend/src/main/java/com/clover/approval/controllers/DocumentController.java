@@ -58,11 +58,11 @@ public class DocumentController {
 	@Autowired
 	private AttachmentService attServ;
 	
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	
 	//insert-문서,결재자,참조/열람자,양식정보까지 && 임시저장
 	@PostMapping
 	public ResponseEntity<Integer> insertData(@RequestBody InsertMappingDTO insertMappingDTO) {
-	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 	    // DTO 처리
 	    // 팩토리 패턴을 사용하여 적절한 DocumentDTO 생성
 	    DocumentDTO document = insertMappingDTO.getDocument();
@@ -185,21 +185,38 @@ public class DocumentController {
 	//임시저장에서 결재요청, 문서상태 임시저장->진행중으로 변경
 	@PutMapping("/temp/{id}/{type}")
 	public ResponseEntity<Map<String,Object>> updateDocState(@PathVariable int id,@PathVariable String type, @RequestParam String table, @RequestBody InsertMappingDTO insertMappingDTO){
-		documentService.updateDocState(id, table, insertMappingDTO.getDocData());
+	    System.out.println("임시저장에서 결재요청 테이블 확인"+table);
+		DocumentDTO typeDocument = DocumentFactory.createDocument(table);
+	    
+	    if (typeDocument instanceof BusinessDTO) {
+	        BusinessDTO TypeDocDTO = (BusinessDTO) typeDocument;
+	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
+	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
+	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
+	        System.out.println("임시저장에서 결재요청 컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
+	        
+	        // 날짜 처리
+	        Object bsWriteDateObj = insertMappingDTO.getDocData().get("bsWriteDate");
+	        System.out.println(" 임시저장에서 결재요청 변환 전: "+bsWriteDateObj);
+	        if (bsWriteDateObj instanceof String) {
+	            try {
+	                // Convert the String to Timestamp
+	            	java.util.Date pased=dateFormat.parse((String)bsWriteDateObj);
+	            	Timestamp ts=new Timestamp(pased.getTime());
+	            	System.out.println(" 임시저장에서 결재요청 변환 후: "+ts);
+	                TypeDocDTO.setBsWriteDate(ts);
+	            } catch (Exception e) {
+	                // Handle the case where the String cannot be converted to Timestamp
+	                e.printStackTrace();
+	            } 
+	        }
+			documentService.updateDocState(id, table, TypeDocDTO);
+	    }
+		
+
 		Map<String, Object> map=new HashMap<>();
 		map.put("id", id);
 		map.put("type",type);
-		// 변환 작업
-	    if (map.get("BS_WRITE_DATE") instanceof oracle.sql.TIMESTAMP) {
-	        try {
-	            oracle.sql.TIMESTAMP oracleTimestamp = (oracle.sql.TIMESTAMP) map.get("BS_WRITE_DATE");
-	            java.sql.Timestamp timestamp = oracleTimestamp.timestampValue();
-	            map.put("BS_WRITE_DATE", timestamp);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            // 에러 처리 (필요한 경우)
-	        }
-	    }
 		return ResponseEntity.ok(map);
 	}
 	
@@ -207,21 +224,36 @@ public class DocumentController {
 	@PutMapping("/temp/temp/{id}/{type}")
 	public ResponseEntity<Map<String,Object>> updateTemptoTemp(@PathVariable int id, @PathVariable String type, @RequestParam String table, @RequestBody InsertMappingDTO insertMappingDTO){
 		System.out.println(insertMappingDTO.getDocData());
-		documentService.updateTemptoTemp(table, insertMappingDTO.getDocData());
+		DocumentDTO typeDocument = DocumentFactory.createDocument(table);
+		
+	    if (typeDocument instanceof BusinessDTO) {
+	        BusinessDTO TypeDocDTO = (BusinessDTO) typeDocument;
+	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
+	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
+	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
+	        System.out.println("임시저장에서 결재요청 컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
+	        
+	        // 날짜 처리
+	        Object bsWriteDateObj = insertMappingDTO.getDocData().get("bsWriteDate");
+	        System.out.println(" 임시저장에서 결재요청 변환 전: "+bsWriteDateObj);
+	        if (bsWriteDateObj instanceof String) {
+	            try {
+	                // Convert the String to Timestamp
+	            	java.util.Date pased=dateFormat.parse((String)bsWriteDateObj);
+	            	Timestamp ts=new Timestamp(pased.getTime());
+	            	System.out.println(" 임시저장에서 결재요청 변환 후: "+ts);
+	                TypeDocDTO.setBsWriteDate(ts);
+	            } catch (Exception e) {
+	                // Handle the case where the String cannot be converted to Timestamp
+	                e.printStackTrace();
+	            } 
+	        }
+			documentService.updateTemptoTemp(table, TypeDocDTO);
+	    }
+
 		Map<String, Object> map=new HashMap<>();
 		map.put("id", id);
 		map.put("type",type);
-		// 변환 작업
-	    if (map.get("BS_WRITE_DATE") instanceof oracle.sql.TIMESTAMP) {
-	        try {
-	            oracle.sql.TIMESTAMP oracleTimestamp = (oracle.sql.TIMESTAMP) map.get("BS_WRITE_DATE");
-	            java.sql.Timestamp timestamp = oracleTimestamp.timestampValue();
-	            map.put("BS_WRITE_DATE", timestamp);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	            // 에러 처리 (필요한 경우)
-	        }
-	    }
 		return ResponseEntity.ok(map);
 	}
 	
