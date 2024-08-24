@@ -117,12 +117,12 @@ export const List = ({ type }) => {
                         );
                     } else if (type === '참조/열람대기') {
                         filteredPartLine = resp.data.pline.filter(line =>
-                            line.empSeq === sessionData.empSeq && line.readYN === "n"
+                            line.empSeq === sessionData.empSeq && line.readYN === "n" 
                         );
                         filteredDocument = resp.data.document.filter(doc =>
                             filteredPartLine.some(part =>
                                 part.docSeq === doc.docSeq && (
-                                    (part.pcpDivision === 'r') ||
+                                    (part.pcpDivision === 'r' && (doc.stateName !== '임시저장')) ||
                                     (part.pcpDivision === 'v' && (doc.stateName === '완료' || doc.stateName === '반려'))
                                 )
                             )
