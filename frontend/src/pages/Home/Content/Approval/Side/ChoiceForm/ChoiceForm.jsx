@@ -128,7 +128,9 @@ export const ChoiceForm = () => {
                         </div>
                         <div className={styles.searchContent}>
                             {isLoading ? (
-                                <Loading /> // 데이터 로딩 중일 때만 로딩 컴포넌트 표시
+                                 <>
+                                    로딩중...
+                                 </>
                             ) : (
                                 filteredData.map((folder, index) => (
                                     <Folder key={index} folder={folder} onItemClick={handleItemClick} selectedItem={selectedDocCode} setSelectedItem={setSelectedDocCode} />

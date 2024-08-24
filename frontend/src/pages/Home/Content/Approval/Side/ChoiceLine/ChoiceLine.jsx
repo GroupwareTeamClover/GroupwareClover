@@ -157,7 +157,9 @@ export const ChoiceLine = () => {
                         </div>
                         <div className={styles.searchContent}>
                             {isLoading ? (
-                                <Loading /> // 데이터 로딩 중일 때만 로딩 컴포넌트 표시
+                                <>
+                                로딩중...
+                                </>
                             ) : (
                                 filteredData.map((folder, index) => (
                                     <DragFolder key={index} folder={folder} onItemClick={handleItemClick} selectedItem={selectedEmpInfo} setSelectedItem={setSelectedEmpInfo}
