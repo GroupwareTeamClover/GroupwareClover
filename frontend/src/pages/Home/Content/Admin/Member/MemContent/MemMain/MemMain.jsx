@@ -140,15 +140,17 @@ export const MemMain = () => {
     
         checkboxRef.current.forEach((checkbox, i) => {
             const mem = filtered[i + currentPage * PER_PAGE];
-            if (checkbox && mem.empStateCode !== 0) {
+            // 가입대기(0번)인 사원은 checked표시하기 <== 가입대기 사원은 목록에서 제거하기로 수정함. 그래서 필요없어진 코드임. 
+            // if (checkbox && mem.empStateCode !== 0) {
                 checkbox.checked = checked;
-            }
+            // }
         });
     
-        setCheckedMems(checked ? enabledValues.filter((EMP_SEQ, i) => {
-            const mem = filtered[i + currentPage * PER_PAGE];
-            return mem.empStateCode !== 0;
-        }) : []);
+        // setCheckedMems(checked ? enabledValues.filter((EMP_SEQ, i) => {
+        //     const mem = filtered[i + currentPage * PER_PAGE];
+        //     return mem.empStateCode !== 0;
+        // }) : []);  // 가입대기를 애초에 제거했으므로 필요없는 filter로직임!!! 그래서 아래 setCheckedMems로 코드 변경
+        setCheckedMems(checked ? enabledValues : []);
     };
 
     // 개별 체크박스 클릭 처리

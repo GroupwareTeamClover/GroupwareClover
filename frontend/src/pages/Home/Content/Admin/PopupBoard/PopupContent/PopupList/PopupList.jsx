@@ -86,18 +86,14 @@ export const PopupList=()=>{
         <div className={styles.container}>
             <div className={styles.member_info}>
                 <div className={styles.member_total}>
-                    <div className={styles.member_box}>
-                        오늘 팝업 공지  :  <span style={{color:'orange'}}> {announcements.length} 개</span>
-                    </div>
+                    <span className={styles.sparkle}>오늘의 팝업 : <span style={{color:'orange'}}> {announcements.length} 개</span> </span>
                 </div>
                 <div className={styles.pop_list}>
-                    <div className={styles.member_box}>
-                    {announcements.map((pop, i) => (
+                    {/* {announcements.map((pop, i) => (
                         <div key={i}>
                             {i+1}. <a href={`/popup/detail/${pop.popSeq}`}>{pop.popTitle}</a>
                         </div>
-                    ))}
-                    </div>
+                    ))} */}
                 </div>
             </div>
             <div className={styles.funcBtn}>
