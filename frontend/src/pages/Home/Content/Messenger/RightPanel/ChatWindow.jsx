@@ -102,12 +102,11 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
 
   return (
     <div className={styles.chatWindow}>
-      <ChatHeader
+      <ChatHeader 
         chat={chat}
-        onSearch={handleSearch}
-        onLeaveChat={handleLeaveChat}
-        onClearChat={handleClearChat}
-        onToggleNotifications={handleToggleNotifications}
+        onLeaveChat={() => onLeaveChat(chat.roomSeq)}
+        onClearChat={() => onClearChat(chat.roomSeq)}
+        onToggleNotifications={(enabled) => onToggleNotifications(chat.roomSeq, enabled)}
       />
       <div className={styles.messageListContainer} ref={messagesContainerRef}>
         <MessageList

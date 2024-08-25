@@ -65,7 +65,13 @@ stompClient.connect(headers, () => {
      stompClient.subscribe(`/topic/room/+/unreadCountUpdate`, (payload) => {
       const message = JSON.parse(payload.body);
       onMessageReceived({ type: 'UNREAD_COUNT_UPDATE', ...message });
-    });     
+    });
+    
+      // 메시지의 읽지 않은 사용자 수 업데이트를 위한 구독 추가
+      stompClient.subscribe(`/topic/room/${sessionUser.empSeq}/messageUpdate`, (payload) => {
+        const { messageSeq, unreadCount } = JSON.parse(payload.body);
+        onMessageReceived({ type: 'MESSAGE_UPDATE', messageSeq, unreadCount });
+      });    
 
       // 개인 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newChatRoom`, (payload) => {

@@ -39,11 +39,12 @@
     </update>
 
     <select id="getOnlineUsersByDeptCode" resultType="java.util.HashMap">
-        SELECT us.emp_seq, us.emp_name, us.emp_avatar
+        SELECT e.emp_seq, e.emp_name, e.emp_avatar
         FROM userSession us
-        WHERE us.dept_code = #{deptCode}
+        JOIN employee e ON us.emp_seq = e.emp_seq
+        WHERE e.dept_code = #{deptCode}
         AND us.last_activity_time <![CDATA[>]]> sysdate - INTERVAL '30' MINUTE
-    </select>    
+    </select>
  	
  	
 </mapper>

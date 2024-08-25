@@ -1,12 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './ChatWindow.module.css';
-import { FaSearch, FaEllipsisV, FaTimes, FaBell, FaBellSlash } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaBell, FaBellSlash, FaSignOutAlt } from 'react-icons/fa';
 
-const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifications }) => {
-  const [showMenu, setShowMenu] = useState(false);
+const ChatHeader = ({ chat, onSearch, onLeaveChat, onToggleNotifications }) => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(chat.notificationsEnabled);
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -17,6 +16,7 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
 
   useEffect(() => {
     console.log('ChatHeader - chat 객체:', chat);
+    setNotificationsEnabled(chat.notificationsEnabled);
   }, [chat]);
 
   const handleSearchClick = () => {
@@ -36,7 +36,13 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
   const handleToggleNotifications = () => {
     const newState = !notificationsEnabled;
     setNotificationsEnabled(newState);
-    onToggleNotifications(newState);
+    onToggleNotifications(chat.roomSeq, newState);
+  };
+
+  const handleLeaveChat = () => {
+
+      onLeaveChat(chat.roomSeq);
+  
   };
 
   return (
@@ -54,7 +60,7 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
         <div className={styles.roomNameContainer}>
           <h2 className={styles.roomName}>{chat.customRoomName || chat.roomName}</h2>
           <span className={chat.isOnline ? styles.onlineStatus : styles.offlineStatus}>
-            {chat.isOnline ? '온라인' : '오프라인'}
+            {chat.isOnline ? '오프라인' : '온라인'}
           </span>
         </div>
       </div>
@@ -75,19 +81,11 @@ const ChatHeader = ({ chat, onSearch, onLeaveChat, onClearChat, onToggleNotifica
           {isSearching ? <FaTimes /> : <FaSearch />}
         </button>
         <button onClick={handleToggleNotifications} className={styles.iconButton}>
-          {notificationsEnabled ? <FaBell /> : <FaBellSlash />}
+          {notificationsEnabled ? <FaBellSlash /> : <FaBell />}
         </button>
-        <div className={styles.menuContainer}>
-          <button onClick={() => setShowMenu(!showMenu)} className={styles.iconButton}>
-            <FaEllipsisV />
-          </button>
-          {showMenu && (
-            <div className={styles.dropdownMenu}>
-              <button onClick={onLeaveChat}>채팅방 나가기</button>
-              <button onClick={onClearChat}>대화내용 삭제</button>
-            </div>
-          )}
-        </div>
+        <button onClick={handleLeaveChat} className={styles.iconButton} title="채팅방 나가기">
+          <FaSignOutAlt />
+        </button>
       </div>
     </div>
   );

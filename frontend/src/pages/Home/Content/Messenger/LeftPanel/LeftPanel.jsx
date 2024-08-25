@@ -9,7 +9,6 @@ const LeftPanel = ({ onChatSelect }) => {
   return (
     <div className={styles.leftPanel}>
 
-      <SearchBar />
       <OnlineUsers />
       <ChatList onChatSelect={onChatSelect} />
       <AddChat/>  

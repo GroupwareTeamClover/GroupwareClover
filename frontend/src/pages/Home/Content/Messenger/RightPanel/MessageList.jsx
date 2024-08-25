@@ -6,7 +6,7 @@ import { useChatStore } from '../../../../../store/messengerStore';
 import { sendMessage } from '../../../../../commons/websocket';
 
 const MessageList = ({ messages, chat, currentUserSeq, searchTerm }) => {
-  const { markMessageAsRead } = useChatStore();
+  const { markMessageAsRead, updateMessageUnreadCount } = useChatStore();
   const lastMessageSeqRef = useRef(null);
 
   useEffect(() => {
@@ -36,11 +36,6 @@ const MessageList = ({ messages, chat, currentUserSeq, searchTerm }) => {
   const renderMessage = (message, index) => {
     const isCurrentUser = message.senderSeq === currentUserSeq;
     const unreadCount = message.unreadCount || 0; // 서버에서 받아온 읽지 않은 사용자 수
-
-    // unreadCount와 관련된 데이터를 확인하기 위한 콘솔 로그 추가
-    console.log('Message Seq:', message.messageSeq);
-    console.log('Sender Seq:', message.senderSeq);
-    console.log('Unread Count:', unreadCount);
 
     return (
       <div

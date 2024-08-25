@@ -78,7 +78,7 @@ export const ChatMain = () => {
   const handleLeaveChat = async (roomSeq) => {
     if (window.confirm("정말로 채팅방을 나가시겠습니까?")) {
       try {
-        await axios.post(`${BaseUrl()}/chat/rooms/leave/${roomSeq}`);
+        await axios.post(`${BaseUrl()}/api/chat/rooms/leave/${roomSeq}`);
         leaveRoom(roomSeq);
         setSelectedChat(null);
         await fetchChatRooms();
@@ -117,7 +117,6 @@ export const ChatMain = () => {
         <MessengerSideMenu />
       </div>
       <div className={styles.leftPanel}>
-        <SearchBar />
         <OnlineUsers 
           onlineUsers={onlineUsers} 
           onProfileSelect={handleProfileSelect}

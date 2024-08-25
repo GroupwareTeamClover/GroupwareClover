@@ -103,3 +103,47 @@
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
+.employeeList {
+    margin-top: 20px;
+}
+
+.department {
+    margin-bottom: 20px;
+}
+
+.departmentName {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.employeeItem {
+    margin-bottom: 10px;
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.employeeName {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.employeeRole {
+    color: #666;
+}

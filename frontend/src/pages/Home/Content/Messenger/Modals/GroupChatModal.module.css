@@ -12,62 +12,84 @@
 
 .modalContent {
     background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    width: 300px;
+    padding: 30px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-.selectedEmployees {
-    margin-top: 10px;
-    max-height: 100px;
-    overflow-y: auto;
-}
-
-.employeeTag {
-    display: inline-block;
-    background-color: #e0e0e0;
-    padding: 5px;
-    margin: 2px;
-    border-radius: 3px;
-    font-size: 12px;
-}
-
-.buttonGroup {
-    margin-top: 15px;
+.modalHeader {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-.buttonGroup button {
-    padding: 5px 10px;
+.closeButton {
+    background: none;
     border: none;
-    border-radius: 3px;
+    font-size: 20px;
     cursor: pointer;
 }
 
-.buttonGroup button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
+.input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
-.buttonGroup button[type="button"] {
+.selectedEmployees {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.employeeTag {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 5px 10px;
+    margin: 2px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.employeeAvatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.createButton, .cancelButton {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.createButton {
+    background-color: #4CAF50;
+    color: white;
+    margin-right: 10px;
+}
+
+.cancelButton {
     background-color: #f44336;
     color: white;
 }
 
-.employeeTag {
-    display: flex;
-    align-items: center;
-    background-color: #e0e0e0;
-    padding: 5px;
-    margin: 2px;
-    border-radius: 20px;
-}
-
-.employeeAvatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 5px;
+.createButton:hover, .cancelButton:hover {
+    opacity: 0.8;
 }

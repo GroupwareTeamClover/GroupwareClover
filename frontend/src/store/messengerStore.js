@@ -99,6 +99,22 @@ export const useChatStore = create((set, get) => ({
     )
   })),
 
+  updateMessageUnreadCount: (roomSeq, messageSeq, unreadCount) => set(state => {
+    const roomMessages = state.messages[roomSeq];
+    if (!roomMessages) return state; // 메시지가 없으면 상태를 변경하지 않음
+
+    const updatedMessages = roomMessages.map(message =>
+      message.messageSeq === messageSeq ? { ...message, unreadCount } : message
+    );
+
+    return {
+      messages: {
+        ...state.messages,
+        [roomSeq]: updatedMessages
+      }
+    };
+  }),
+
   //메시지를 읽음 처리하는 함수
   markMessageAsRead: (roomSeq, lastReadMessageSeq) => set((state) => {
     const roomMessages = state.messages[roomSeq];

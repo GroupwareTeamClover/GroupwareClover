@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.clover.employee.dto.EmployeeDTO;
 import com.clover.messenger.dao.ChatMessageDAO;
 import com.clover.messenger.dto.ChatMessageDTO;
+import com.clover.messenger.dto.ChatRoomDTO;
 
 @Service
 public class ChatMessageService {
@@ -91,20 +92,42 @@ public class ChatMessageService {
         chatMessageDAO.updateLastReadMessage(empSeq, roomSeq, messageSeq);
     }
 
+    // @Transactional
+    // public void markMessagesAsRead(int roomSeq, int empSeq) {
+    //     int lastMessageSeq = chatMessageDAO.getLastMessageSeq(roomSeq);
+    //     chatMessageDAO.updateLastReadMessage(empSeq, roomSeq, lastMessageSeq);
+    //     updateUnreadMessageCount(roomSeq, empSeq);
+    
+    //     // 모든 사용자에게 읽지 않은 메시지 수 업데이트 전송
+    //     List<Integer> roomMembers = chatRoomService.getRoomMembers(roomSeq);
+    //     for (Integer memberSeq : roomMembers) {
+    //         if (!memberSeq.equals(empSeq)) {
+    //             int unreadCount = getUnreadMessageCount(roomSeq, memberSeq);
+    //             messagingTemplate.convertAndSend("/topic/room/" + roomSeq + "/unreadCountUpdate",
+    //                     Map.of("roomSeq", roomSeq, "unreadCount", unreadCount));
+    //         }
+    //     }
+    // }
     @Transactional
     public void markMessagesAsRead(int roomSeq, int empSeq) {
+        ChatRoomDTO room = chatRoomService.getRoomInfoForUser(roomSeq, empSeq);
         int lastMessageSeq = chatMessageDAO.getLastMessageSeq(roomSeq);
         chatMessageDAO.updateLastReadMessage(empSeq, roomSeq, lastMessageSeq);
+
+        if ("group".equals(room.getRoomType())) {
+            updateGroupMessageReadStatus(roomSeq, empSeq, lastMessageSeq);
+        }
+
         updateUnreadMessageCount(roomSeq, empSeq);
-    
-        // 모든 사용자에게 읽지 않은 메시지 수 업데이트 전송
-        List<Integer> roomMembers = chatRoomService.getRoomMembers(roomSeq);
-        for (Integer memberSeq : roomMembers) {
-            if (!memberSeq.equals(empSeq)) {
-                int unreadCount = getUnreadMessageCount(roomSeq, memberSeq);
-                messagingTemplate.convertAndSend("/topic/room/" + roomSeq + "/unreadCountUpdate",
-                        Map.of("roomSeq", roomSeq, "unreadCount", unreadCount));
-            }
+    }
+
+    private void updateGroupMessageReadStatus(int roomSeq, int empSeq, int lastMessageSeq) {
+        List<ChatMessageDTO> unreadMessages = chatMessageDAO.getUnreadMessages(roomSeq, empSeq, lastMessageSeq);
+        for (ChatMessageDTO message : unreadMessages) {
+            chatMessageDAO.markMessageAsReadByUser(message.getMessageSeq(), empSeq);
+            int unreadCount = chatRoomService.getRoomMembers(roomSeq).size() - chatMessageDAO.getReadUserCount(message.getMessageSeq());
+            messagingTemplate.convertAndSend("/topic/room/" + roomSeq + "/messageUpdate",
+                    Map.of("messageSeq", message.getMessageSeq(), "unreadCount", unreadCount));
         }
     }
 }
