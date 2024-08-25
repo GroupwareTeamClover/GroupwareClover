@@ -84,9 +84,11 @@ public class DocumentDAO {
 		mybatis.update("Document.updateDocState", seq);
 	}
 	
-	public void updateDocTypeData(String table, Map<String,Object> docData) {
-		docData.put("table", table);
-		mybatis.update("Document.updateDocTypeData", docData);
+	public void updateDocTypeData(String table, DocumentDTO docData) {
+		Map<String, Object> map=new HashMap<>();
+		map.put("table", table);
+		map.put("docData", (BusinessDTO)docData);
+		mybatis.update("Document.updateDocTypeData", map);
 	}
 	
 	//임시저장에서 긴급여부 처리

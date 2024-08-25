@@ -25,6 +25,7 @@ CREATE INDEX IDX_LastReadMessage_ROOM_SEQ ON LastReadMessage(ROOM_SEQ);
 
 
 -- 알림정보
+-- messeage_seq랑 emp_seq는 외래키
 Create table Notifications (
     notification_seq number primary key,
     notification_type varchar2(20) not null,
@@ -37,6 +38,8 @@ Create table Notifications (
 Create sequence notification_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 -- 채팅방 입장 로그
+-- 입장 시간, 나간 시간 기록?
+-- 채팅방 입장 로그 계속 쓸까?
 Create table chatRoomLog (
     room_time_seq number primary key,
     emp_seq number not null,

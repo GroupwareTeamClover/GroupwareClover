@@ -30,7 +30,7 @@ export const ChatMain = () => {
   useEffect(() => {
     const fetchInitialOnlineUsers = async () => {
       try {
-        const response = await axios.get(`${BaseUrl()}/chat/online-users`);
+        const response = await axios.get(`${BaseUrl()}/api/chat/online-users`);
         setOnlineUsers(response.data);
       } catch (error) {
         console.error('온라인 사용자 목록 조회 오류:', error);
@@ -42,9 +42,9 @@ export const ChatMain = () => {
 
   const fetchChatRooms = useCallback(async () => {
     try {
-      const response = await axios.get(`${BaseUrl()}/chat/rooms`);
+      const response = await axios.get(`${BaseUrl()}/api/chat/rooms`);
       const roomsWithUnreadCounts = await Promise.all(response.data.map(async (room) => {
-        const unreadCountResponse = await axios.get(`${BaseUrl()}/chat/messages/unread/${room.roomSeq}`);
+        const unreadCountResponse = await axios.get(`${BaseUrl()}/api/chat/messages/unread/${room.roomSeq}`);
         return { ...room, unreadCount: unreadCountResponse.data };
       }));
       setChatRooms(roomsWithUnreadCounts);
@@ -91,8 +91,8 @@ export const ChatMain = () => {
   const handleClearChat = async (roomSeq) => {
     if (window.confirm("대화 내용을 삭제하시겠습니까? (서버에서도 삭제됩니다)")) {
       try {
-        await axios.delete(`${BaseUrl()}/chat/messages/clear/${roomSeq}`);
-        const response = await axios.get(`${BaseUrl()}/chat/rooms/${roomSeq}/messages`);
+        await axios.delete(`${BaseUrl()}/api/chat/messages/clear/${roomSeq}`);
+        const response = await axios.get(`${BaseUrl()}/api/chat/rooms/${roomSeq}/messages`);
         setMessages(roomSeq, response.data);
         await fetchChatRooms();
       } catch (error) {
@@ -103,7 +103,7 @@ export const ChatMain = () => {
 
   const handleToggleNotifications = async (roomSeq, enabled) => {
     try {
-      await axios.post(`${BaseUrl()}/chat/notifications/${roomSeq}`, { enabled });
+      await axios.post(`${BaseUrl()}/api/chat/notifications/${roomSeq}`, { enabled });
       toggleNotifications(roomSeq, enabled);
       console.log(`알림 ${enabled ? '켜기' : '끄기'}`);
     } catch (error) {

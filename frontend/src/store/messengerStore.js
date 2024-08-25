@@ -132,5 +132,24 @@ export const useChatStore = create((set, get) => ({
     // 온라인 사용자 목록을 설정하는 함수
     setOnlineUsers: (users) => set({ onlineUsers: users }),
 
+      // 새 공지사항 여부
+  hasNewNotice: false,
+
+  // 새 공지사항 상태 설정 함수
+  setHasNewNotice: (value) => set({ hasNewNotice: value }),
+
+  // 공지사항 메시지 처리 함수
+  handleNoticeMessage: (message) => {
+    set({ hasNewNotice: true });
+    toast.info(`공지사항: ${message.content}`, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  },
+
 
 }));

@@ -16,7 +16,7 @@ import com.clover.messenger.services.ChatRoomService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/chat/rooms")
+@RequestMapping("/api/chat/rooms")
 public class ChatRoomController {
     @Autowired
     private ChatRoomService chatRoomService;

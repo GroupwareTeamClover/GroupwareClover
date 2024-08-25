@@ -34,7 +34,6 @@ public class DocumentService {
 	public void insertDoc(DocumentDTO docDTO, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist, DocumentDTO typeDocDTO) {
 		documentDAO.insertDoc(docDTO);
 		System.out.println(docDTO.getDocSeq());
-		System.out.println("생으로 출력: "+((BusinessDTO) typeDocDTO).getBsWriteDate());
 		
 		if(apvlist.size()>0) {
 			for(ApvLineDTO dto:apvlist) {
@@ -91,13 +90,13 @@ public class DocumentService {
 	
 	//임시저장에서 결재요청시 문서상태 업데이트
 	@Transactional
-	public void updateDocState(int seq, String table, Map<String,Object> docData) {
+	public void updateDocState(int seq, String table, DocumentDTO docData) {
 		documentDAO.updateDocState(seq);
 		documentDAO.updateDocTypeData(table, docData);
 	}
 	
 	//임시저장에서 임시저장시
-	public void updateTemptoTemp(String table, Map<String,Object> docData) {
+	public void updateTemptoTemp(String table, DocumentDTO docData) {
 		documentDAO.updateDocTypeData(table, docData);
 	}
 	

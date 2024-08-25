@@ -8,7 +8,7 @@ import { BaseUrl } from "../../../commons/config";
 import { useNavigate } from "react-router-dom";
 import { ImExit } from "react-icons/im";
 import { confirmAlert, failAlert, timeAlert } from "../../../commons/common";
-import { FaEnvelope } from 'react-icons/fa';
+import { FaEnvelope, FaBell } from 'react-icons/fa';
 import { useChatStore } from "../../../store/messengerStore";
 import ChildChatModal from '../Content/Messenger/Modals/ChildChatModal';
 
@@ -17,12 +17,12 @@ export const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { sessionData, setSign, setAdmin } = useMemberStore();
-  const { chatRooms, setChatRooms, updateChatRoom} = useChatStore();
+  const { chatRooms, setChatRooms, updateChatRoom, hasNewNotice, setHasNewNotice} = useChatStore();
 
   useEffect(() => {
     const fetchChatRooms = async () => {
       try {
-        const response = await axios.get(`${BaseUrl()}/chat/rooms`);
+        const response = await axios.get(`${BaseUrl()}/api/chat/rooms`);
         setChatRooms(response.data);
       } catch (error) {
         console.error('채팅방 목록 조회 오류:', error);
@@ -73,6 +73,10 @@ export const Header = () => {
               <span className={styles.unreadBadge}>{totalUnreadCount}</span>
             )}
           </div>
+          <div className={styles.noticeIcon} onClick={() => setHasNewNotice(false)}>
+            <FaBell size={24} />
+            {hasNewNotice && <span className={styles.unreadBadge}></span>}
+          </div>      
           <div className={styles.userAvatar}>
             {sessionData.empAvatar === null ?
               <img src={defaultImage} alt="기본 이미지"/>
