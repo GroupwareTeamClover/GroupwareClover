@@ -51,6 +51,7 @@ export const Login = ({ setSign, setAdmin }) => {
       // 가입 대기 상태 로그인 차단
       if(res.data.employeeInfo.workerStateCode === 99) {
         failAlert("", "가입 대기중입니다. 잠시만 기다려주세요.");
+        setLoading(false);
         return false;
       }
 
