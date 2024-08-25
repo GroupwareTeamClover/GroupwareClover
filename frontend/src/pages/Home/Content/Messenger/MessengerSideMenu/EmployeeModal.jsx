@@ -9,7 +9,7 @@ const EmployeeModal = ({ employee, onClose }) => {
 
     const handleStartChat = async () => {
         try {
-            const response = await axios.post(`${BaseUrl()}/chat/rooms`, 
+            const response = await axios.post(`${BaseUrl()}/api/chat/rooms`, 
                 { targetEmpSeq: employee.seq },  // 객체로 감싸서 전송
                 {
                     headers: {

@@ -76,7 +76,6 @@ public class AdminMemberController {
 	
 	@PutMapping
 	public ResponseEntity<Void> updateMultiMemState(@RequestBody AdminUpdateMemDTO updto){
-		System.out.println(updto.getEmpSeqList());
 		adminmemberService.updateMemState(updto);
 		return ResponseEntity.ok().build();
 	}
@@ -86,7 +85,6 @@ public class AdminMemberController {
         try {
         	String deptName = deptData.get("deptName");
         	String deptCode = deptData.get("minDeptCode");
-        	System.out.println(deptName + deptCode);
             adminmemberService.addDepartment(deptName, deptCode);
             return ResponseEntity.ok().build();
         } catch (Exception e) {

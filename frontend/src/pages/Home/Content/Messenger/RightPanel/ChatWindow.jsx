@@ -27,7 +27,7 @@ const ChatWindow = ({ chat, onLeaveChat, onClearChat, onToggleNotifications }) =
 
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await axios.get(`${BaseUrl()}/chat/messages/${chat.roomSeq}`);
+      const response = await axios.get(`${BaseUrl()}/api/chat/messages/${chat.roomSeq}`);
       setMessages(chat.roomSeq, response.data);
       setTimeout(scrollToBottom, 0);
     } catch (error) {

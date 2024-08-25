@@ -78,4 +78,10 @@ public class AdminMemberService {
         return adminmemberDAO.getOrganization();
     }
 	
+	
+//	workerStateCode 0인지 아닌지 가져오기
+	public EmployeeDTO getWorkerStateCode(int empSeq) {
+		return adminmemberDAO.getWorkerStateCode(empSeq);
+	}
+	
 }

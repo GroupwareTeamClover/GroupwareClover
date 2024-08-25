@@ -184,7 +184,6 @@ export const Document = ({type}) => {
 
 
 
-
     return (
         <div className={styles.container}>
             <div className={styles.header}>
@@ -236,7 +235,7 @@ export const Document = ({type}) => {
                                                 documentDTO={documentDTO} setDocumentDTO={setDocumentDTO}
                                                 apvLineDTOs={apvLineDTOs} setApvLineDTOs={setApvLineDTOs}
                                                 participantsLineDTOs={participantsLineDTOs} setParticipantsLineDTOs={setParticipantsLineDTOs}
-                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files} setFiles={setFiles}
+                                                isTemp={isTemp} setIsTemp={setIsTemp} files={files} setFiles={setFiles} 
                                                 
                                             /> 
                                         </div>
@@ -245,8 +244,8 @@ export const Document = ({type}) => {
                         </div>
                         <div className={styles.fileBox}>
                             <Uploader autoUpload={true} action={`${BaseUrl()}/attachment/upload/${path}`} multiple draggable
-                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} defaultFileList={files}  
-                                handleFileChange={handleFileChange} >
+                                onSuccess={handleUploadSuccess} onRemove={handleRemove} fileList={files} defaultFileList={files} handleFileChange={handleFileChange} 
+                                >
                                 <div style={{ lineHeight: '100px', textAlign: 'center' }}>클릭하거나 드래그하여 파일을 추가하세요</div>
                             </Uploader>
                         </div> 

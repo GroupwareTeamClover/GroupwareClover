@@ -7,7 +7,7 @@ import { BaseUrl } from '../../../../../commons/config';
 export const createOneOnOneChat = async (targetEmpSeq) => {
   try {
     // 서버에 HTTP 요청을 보내 채팅방 생성
-    const response = await axios.post(`${BaseUrl()}/chat/rooms`,
+    const response = await axios.post(`${BaseUrl()}/api/chat/rooms`,
       { targetEmpSeq: targetEmpSeq },
       {
         headers: {
@@ -40,7 +40,7 @@ export const createGroupChat = async (roomName, participants) => {
     // 서버에 HTTP 요청을 보내 그룹 채팅방 생성
     console.log('그룹 채팅 생성 시도:', { roomName, participants });
     console.log('참가자 seq 목록:', participants.map(p => p.seq));
-    const response = await axios.post(`${BaseUrl()}/chat/rooms/group`,
+    const response = await axios.post(`${BaseUrl()}/api/chat/rooms/group`,
       { 
         roomName: roomName,
         participants: participants.map(p => ({

@@ -65,7 +65,6 @@ export const Address = () => {
             setFiltered(resp.data);
             setstoremembers(false);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[storemembers]);
      // 서버에서 부서코드-이름 데이터를 가져옴
@@ -73,28 +72,24 @@ export const Address = () => {
         axios.get(`${BaseUrl()}/adminmember/deptName`).then((resp)=>{
             setDeptName(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/roleName`).then((resp)=>{
             setRoleName(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/workName`).then((resp)=>{
             setWorkName(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
     useEffect(()=>{
         axios.get(`${BaseUrl()}/adminmember/empState`).then((resp)=>{
             setEmpState(resp.data);
             setIsLoading(false);
-            console.log(resp.data)
         });
     },[]);
 
@@ -105,7 +100,6 @@ export const Address = () => {
             const processedData = processCountData(resp.data);
             setCountMem(processedData);
             setstoremembers(false);
-            console.log("카운트멤버"+resp.data)
         });
     },[storemembers]);
 
@@ -244,7 +238,6 @@ useEffect(() => {
     const location = useLocation();
     
     const state = location.state;
-    console.log("headerTxt"+ state?.type)
   
     // 상태에 따라 header 내용 설정
     const headerText = state?.type || '사원 주소록';

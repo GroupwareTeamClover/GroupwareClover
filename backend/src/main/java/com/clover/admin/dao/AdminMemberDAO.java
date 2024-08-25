@@ -66,10 +66,7 @@ public class AdminMemberDAO {
 			// newValue가 퇴사일 경우 true로 설정
 	        boolean isLeave = "퇴사".equals(updto.getNewValue());
 	        params.put("isLeave", isLeave);
-	        
-			System.out.println("확인용 :"+ params.get("tbObject"));
-			System.out.println("String: "+ params.get("newValue"));
-			System.out.println("empSeq"+empSeq);
+	        			
 			mybatis.update("AdminMember.updateMem", params);
 			
 			// '퇴사'일 때 추가적인 leave_date 업데이트해주기.
@@ -95,7 +92,7 @@ public class AdminMemberDAO {
 
 	        for (int empSeq : adddto.getEmpSeqList()) {
 	            params.put("empSeq", empSeq);
-	            System.out.println(params);
+	           
 	            mybatis.update("AdminMember.addMem", params);
 	        }
 	}
@@ -113,6 +110,9 @@ public class AdminMemberDAO {
 		return mybatis.selectList("AdminMember.getOrganization");
 	}    
 	
+	public EmployeeDTO getWorkerStateCode(int empSeq) {
+		return mybatis.selectOne("AdminMember.getWorkerStateCode", empSeq);
+	}
 	
 	
 }

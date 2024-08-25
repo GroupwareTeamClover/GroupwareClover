@@ -18,7 +18,7 @@ import com.clover.messenger.services.UserSessionService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/api/chat")
 public class ProfileController {
     @Autowired
     private ChatProfileService chatProfileService; 

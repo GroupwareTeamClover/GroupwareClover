@@ -15,7 +15,7 @@ const CreateChatModal = ({ onClose, onRoomCreated }) => {
   // 채팅방 생성 함수
   const handleCreateRoom = async () => {
     try {
-      const response = await axios.post(`${BaseUrl()}/chat/rooms`, {
+      const response = await axios.post(`${BaseUrl()}/api/chat/rooms`, {
         roomName,
         roomType,
         roomDescription: description,

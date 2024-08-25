@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.clover.admin.services.AdminMemberService;
+import com.clover.employee.dto.EmployeeDTO;
 import com.clover.messenger.services.UserSessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +17,8 @@ public class CustomHandleAdminInterceptor implements HandlerInterceptor{
 	
 	@Autowired
     private UserSessionService userSessionService;
-	
+	@Autowired
+	private AdminMemberService adminMemService;
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		  
@@ -26,34 +29,30 @@ public class CustomHandleAdminInterceptor implements HandlerInterceptor{
             return false; // 로그인되지 않은 경우 연결 거부
         }
 
-        
-        if (session.getAttribute("cloverAdmin") == null) {
-            System.out.println("관리자가 아님.");
-            return false; // 관리자가 아니면 연결 거부
+        else {
+        	int empSeq = (Integer) session.getAttribute("cloverSeq");
+        	EmployeeDTO empInfo = adminMemService.getWorkerStateCode(empSeq);
+        	
+        	int workerCode = empInfo.getWorkerStateCode();
+        	
+        	if(workerCode != 0) {
+        		System.out.println("!!!관리자 아님!!!");
+        		return false;
+        	}
+        	System.out.println("****관리자임******");
+        	return true;
         }
-                
-        System.out.println("사용자임");
-       return true;
+//        if (session.getAttribute("cloverAdmin") == null) {
+//            System.out.println("관리자가 아님.");
+//            return false; // 관리자가 아니면 연결 거부
+//        }
+//                
+//        System.out.println("사용자임");
+//       return true;
+        
+        
         
 	}
 	
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

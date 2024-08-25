@@ -13,7 +13,6 @@ export const Member = () => {
 
   const location = useLocation();
   const state = location.state;
-  console.log("headerTxt"+ state?.type)
   const {admin} = useMemberStore();
 
   // 상태에 따라 header 내용 설정

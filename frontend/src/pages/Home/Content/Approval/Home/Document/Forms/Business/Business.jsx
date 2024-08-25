@@ -24,6 +24,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     const navi = useNavigate();
     const [isContentLoaded, setIsContentLoaded] = useState(false);
     const [fileData, setFileData]=useState({});
+    
 
 
     //********************************write 시 코드******************************************/
@@ -73,6 +74,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     useEffect(() => {
         // DTO 상태 업데이트
+        // console.log(`post전 date확인 ${date}`)
         setDocData((prev) => ({
             ...prev,
             bsTitle: title,
@@ -89,7 +91,8 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 prevBusiness.document !== documentDTO ||
                 prevBusiness.docData !== docData ||
                 prevBusiness.apvline !== apvLineDTOs ||
-                prevBusiness.pline !== participantsLineDTOs
+                prevBusiness.pline !== participantsLineDTOs ||
+                prevBusiness.fileData !== fileData
             ) {
                 return {
                     "document": documentDTO,
@@ -100,8 +103,6 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                     "fileData": fileData
                 };
             }
-
-            console.log('업데이트된 business 객체:', prevBusiness);
             return prevBusiness;
         });
     }, [documentDTO, apvLineDTOs, participantsLineDTOs, docData, fileData]);
@@ -110,7 +111,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     // 초기화
     useEffect(() => {
         if (isModalComplete) {
-            setDate(null);
+            setDate('');
             setTitle('');
             setContent('');
             if (editorRef.current) {
@@ -235,7 +236,6 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장에서 결재요청 시 documnet정보 진행중으로 변경
     useEffect(() => {
         if (isTempInsert && id) {  
-           
             if (validateForm()) {
                 setIsTempInsert(false);
             }else{
@@ -252,10 +252,12 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
         }
     }, [isTempInsert]);
 
-    //임시저장에서 임시저장 시 정보 변경
+    //임시저장에서 임시저장 시 정보 변경, 변경저장
     useEffect(()=>{
         
         if(isTempTemp && id){
+            console.log("변경저장 전 business")
+            console.log(business)
             axios.put(`${BaseUrl()}/api/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
                 setIsTempTemp(false);
                 smallAlert("저장 완료");
@@ -288,17 +290,18 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             };
     }, []);
 
+
+
+
     
     useEffect(() => {
-
         const imageUrls = content.match(/<img[^>]+src="([^">]+)"/g)?.map(imgTag => {
             const match = imgTag.match(/src="([^">]+)"/);
             return match ? match[1] : null;
         });
         
         if ((files && files.length > 0) || imageUrls) { // files가 비어 있지 않을 때만 실행         
-            console.log(files);
-            console.log()
+            console.log(`변경전 파일 ${files}`);
             // 새로운 fileData를 생성
             const updatedFileData = {
                 fileNames: Array.isArray(files) ? files.map(file => file.name) : [], // files가 배열인지 확인하고 map을 사용
@@ -312,7 +315,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
                 ...updatedFileData, // 새로운 파일 데이터를 추가
             }));
         }   
-    }, [files, content]);
+    }, [files]);
 
 
 

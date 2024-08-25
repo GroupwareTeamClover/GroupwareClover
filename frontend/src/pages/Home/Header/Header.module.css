@@ -94,4 +94,28 @@
     position: relative; 
     display: flex;
     align-items: center;
+    margin-right: 15px;
+}
+
+.noticeIcon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.noticeBadge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 20px;
+    height: 20px;
 }

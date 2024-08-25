@@ -43,7 +43,6 @@ export const Loglist = () => {
                 setFiltered(resp.data.list);
                 setTotalPages(resp.data.pages);
                 setIsLoading(false);
-                console.log(resp.data.list)
             })
             .catch((error) => {
                 console.error('데이터 가져오기 오류:', error);
@@ -61,7 +60,6 @@ export const Loglist = () => {
             params.logStatus = selectStatus;
         }
         if (specificStartDate && specificEndDate) {
-            console.log(specificStartDate)
             params.specificStartDate = specificStartDate;
             params.specificEndDate = specificEndDate;
         }

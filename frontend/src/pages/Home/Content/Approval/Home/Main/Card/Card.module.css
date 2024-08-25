@@ -71,12 +71,12 @@
 }
 
 .egcstate{
-    margin-top: 3px;
-    background: none;
-    border: 1px solid #ff9f9d;
-    color: #fb4c49;
+    margin-left: 10px;
+    background-color: #fb4c49;
+    border: none;
+    color: white;
     font-size: 13px;
-    padding: 1px;
+    padding: 3.5px;
     border-radius: 3px;
     letter-spacing: -1px;
 }
