@@ -26,7 +26,6 @@ CREATE TABLE attendance (
     att_arrive varchar2(30) NOT NULL,
     att_leave varchar2(30) DEFAULT NULL,
     att_total NUMBER DEFAULT NULL,
-    work_state_seq NUMBER NOT NULL,
     att_success char(1) DEFAULT 'N',
     att_date timestamp DEFAULT sysdate NOT null
 );
