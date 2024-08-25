@@ -7,7 +7,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import React, {useEffect, useState} from "react";
 import {Modal} from "../../../../components/Modal/Modal";
 import axios from "axios";
-import {dateSettingOrigin, failAlert, scheduleType} from "../../../../commons/common";
+import {dateSettingOrigin, scheduleType} from "../../../../commons/common";
 import {BaseUrl} from "../../../../commons/config";
 import {useMemberStore} from "../../../../store/store";
 import {AddSchedule} from "./AddSchedule/AddSchedule";
@@ -46,7 +46,7 @@ export const Calendar = () => {
       // 체크된 그룹에 대하여 색상 설정 추가
       setScheduleList(itemAttribute(res.data));
       selectSchedule();
-    }).catch(() => failAlert("", "스케줄 조회에 실패하였습니다"));
+    }).catch();
   }
 
   /** 캘린더에 표시될 아이템들의 속성 셋팅 **/
