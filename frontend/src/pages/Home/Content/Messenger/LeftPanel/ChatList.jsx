@@ -1,12 +1,12 @@
-import React, { useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { BaseUrl } from '../../../../../commons/config';
+import React from 'react';
 import styles from '../Messenger.module.css';
 import { useChatStore } from '../../../../../store/messengerStore';
-import { sendMessage, connectWebSocket } from '../../../../../commons/websocket';
+import { sendMessage } from '../../../../../commons/websocket';
 import { format } from 'date-fns';
 
 const ChatList = ({ chatRooms, onChatSelect, updateChatRoom }) => {
+  const { markMessageAsRead } = useChatStore(); // 읽음 처리용 함수 가져오기
+
   const handleChatSelect = async (chat) => {
     onChatSelect(chat);
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
@@ -16,13 +16,11 @@ const ChatList = ({ chatRooms, onChatSelect, updateChatRoom }) => {
       senderSeq: sessionUser.empSeq,
       senderName: sessionUser.empName
     });
-    // 읽음 처리
-    try {
-      await axios.post(`${BaseUrl()}/api/chat/messages/read/${chat.roomSeq}`);
-      updateChatRoom(chat.roomSeq, { unreadCount: 0 });
-    } catch (error) {
-      console.error('메시지 읽음 처리 오류:', error);
-    }
+
+    // 선택한 채팅방에 대해 읽음 처리
+    markMessageAsRead(chat.roomSeq, sessionUser.empSeq);
+    
+    updateChatRoom(chat.roomSeq, { unreadCount: 0 });
   };
 
   const formatMessageTime = (time) => {

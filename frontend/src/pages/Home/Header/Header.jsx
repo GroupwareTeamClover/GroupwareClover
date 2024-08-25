@@ -75,7 +75,7 @@ export const Header = () => {
           </div>
           <div className={styles.noticeIcon} onClick={() => setHasNewNotice(false)}>
             <FaBell size={24} />
-            {hasNewNotice && <span className={styles.unreadBadge}></span>}
+            {hasNewNotice && <span className={styles.noticeBadge}></span>}
           </div>      
           <div className={styles.userAvatar}>
             {sessionData.empAvatar === null ?

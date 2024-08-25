@@ -65,16 +65,39 @@ public class ChatMessageWebSocketController {
         Integer empSeq = Integer.parseInt(headerAccessor.getUser().getName());
         chatMessageService.markMessagesAsRead(readMessageDTO.getRoomSeq(), empSeq);
 
-        // 읽음 처리 후 업데이트된 읽지 않은 메시지 수 계산
-        int unreadCount = chatMessageService.getUnreadMessageCount(readMessageDTO.getRoomSeq(), empSeq);
+        // // 읽음 처리 후 업데이트된 읽지 않은 메시지 수 계산
+        // int unreadCount = chatMessageService.getUnreadMessageCount(readMessageDTO.getRoomSeq(), empSeq);
         
-        // 업데이트된 읽지 않은 메시지 수를 사용자에게 전송
-        messagingTemplate.convertAndSendToUser(
-            String.valueOf(empSeq),
-            "/queue/unread",
-            Map.of("roomSeq", readMessageDTO.getRoomSeq(), "unreadCount", unreadCount)
-        );
+        // // 업데이트된 읽지 않은 메시지 수를 사용자에게 전송
+        // messagingTemplate.convertAndSendToUser(
+        //     String.valueOf(empSeq),
+        //     "/queue/unread",
+        //     Map.of("roomSeq", readMessageDTO.getRoomSeq(), "unreadCount", unreadCount)
+        // );
+        chatMessageService.updateUnreadMessageCount(readMessageDTO.getRoomSeq(), empSeq);
     }
+
+    /**
+     * 클라이언트에서 읽음 처리를 업데이트하는 메소드
+     * @param readMessageDTO 읽음 처리 정보를 포함한 DTO
+     */
+    @MessageMapping("/chat.updateUnreadCount")
+    public void updateUnreadCount(@Payload ReadMessageDTO readMessageDTO) {
+        // 메시지를 읽음 처리하고, 읽지 않은 메시지 수를 업데이트하여 모든 사용자에게 전송
+        chatMessageService.markMessagesAsRead(readMessageDTO.getRoomSeq(), readMessageDTO.getEmpSeq());
+
+        // 모든 사용자에게 읽지 않은 메시지 수 업데이트 전송
+        List<Integer> roomMembers = chatRoomService.getRoomMembers(readMessageDTO.getRoomSeq());
+        for (Integer memberSeq : roomMembers) {
+            if (!memberSeq.equals(readMessageDTO.getEmpSeq())) {
+                int unreadCount = chatMessageService.getUnreadMessageCount(readMessageDTO.getRoomSeq(), memberSeq);
+                messagingTemplate.convertAndSend("/topic/room/" + readMessageDTO.getRoomSeq() + "/unreadCountUpdate",
+                        Map.of("roomSeq", readMessageDTO.getRoomSeq(), "unreadCount", unreadCount));
+            }
+        }
+    }    
+
+    
 
     /**
      * 읽지 않은 메시지 수를 업데이트하고 해당 정보를 사용자에게 전송하는 메소드

@@ -24,12 +24,12 @@
 
     <delete id="deleteOldSessions">
         DELETE FROM userSession
-        WHERE login_time <![CDATA[<]]> sysdate - INTERVAL '#{hours}' HOUR
+        WHERE login_time <![CDATA[<]]> sysdate - INTERVAL '${hours}' HOUR
     </delete>
 
     <delete id="deleteInactiveSessions">
         DELETE FROM userSession
-        WHERE last_activity_time <![CDATA[<]]> sysdate - INTERVAL '#{hours}' HOUR
+        WHERE last_activity_time  <![CDATA[<]]> sysdate - INTERVAL '${hours}' HOUR
     </delete>
 
     <update id="updateLastActivityTime">

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { toast} from 'react-toastify'
+import { sendMessage } from '../commons/websocket';
 
 export const useChatStore = create((set, get) => ({
   // 모든 채팅방 목록
@@ -99,21 +100,34 @@ export const useChatStore = create((set, get) => ({
   })),
 
   //메시지를 읽음 처리하는 함수
-  markMessageAsRead: (roomSeq) => set((state) => {
-    const updateMessages = state.messages[roomSeq]?.map(message => ({
+  markMessageAsRead: (roomSeq, lastReadMessageSeq) => set((state) => {
+    const roomMessages = state.messages[roomSeq];
+    if (!roomMessages) return state; // 메시지가 없으면 상태를 변경하지 않음
+  
+    const hasUnreadMessages = roomMessages.some(msg => !msg.isRead && msg.messageSeq <= lastReadMessageSeq);
+    if (!hasUnreadMessages) return state; // 읽지 않은 메시지가 없으면 상태를 변경하지 않음
+  
+    // 서버에 읽음 처리 요청 보내기
+    sendMessage("/app/chat.readMessages", { roomSeq, lastReadMessageSeq });
+  
+    const updatedMessages = roomMessages.map(message => ({
       ...message,
-      isRead:true
-    })) || [];
-
+      isRead: message.isRead || message.messageSeq <= lastReadMessageSeq
+    }));
+  
+    // 메시지가 변경되었는지 확인
+    const messagesChanged = JSON.stringify(roomMessages) !== JSON.stringify(updatedMessages);
+  
+    if (!messagesChanged) return state; // 메시지가 변경되지 않았다면 상태를 변경하지 않음
+  
     return {
       messages: {
-       ...state.messages,
-        [roomSeq]: updateMessages
+        ...state.messages,
+        [roomSeq]: updatedMessages
       },
-      unreadCounts: {
-       ...state.unreadCounts,
-        [roomSeq]: 0
-      }
+      chatRooms: state.chatRooms.map(room => 
+        room.roomSeq === roomSeq ? { ...room, unreadCount: 0 } : room
+      )
     };
   }),
 

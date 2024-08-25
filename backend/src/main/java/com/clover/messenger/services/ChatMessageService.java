@@ -1,8 +1,10 @@
 package com.clover.messenger.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,13 @@ public class ChatMessageService {
 
     @Autowired
     private ChatProfileService chatProfileService;
+
+        @Autowired
+    private ChatRoomService chatRoomService;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
 
     /**
      * 특정 채팅방의 메시지 목록을 가져오는 메서드
@@ -44,7 +53,22 @@ public class ChatMessageService {
         message.setSenderAvatar(sender.getEmpAvatar());
 
         chatMessageDAO.saveMessage(message);
+        updateUnreadMessageCount(message.getRoomSeq(), message.getSenderSeq());
         return message;
+    }
+
+    public void updateUnreadMessageCount(int roomSeq, int senderSeq) {
+        List<Integer> roomMembers = chatRoomService.getRoomMembers(roomSeq);
+        for (Integer memberSeq : roomMembers) {
+            if (!memberSeq.equals(senderSeq)) {
+                int unreadCount = chatMessageDAO.getUnreadMessageCount(roomSeq, memberSeq);
+                messagingTemplate.convertAndSendToUser(
+                    String.valueOf(memberSeq),
+                    "/queue/unread",
+                    Map.of("roomSeq", roomSeq, "unreadCount", unreadCount)
+                );
+            }
+        }
     }
 
     /**
@@ -71,5 +95,16 @@ public class ChatMessageService {
     public void markMessagesAsRead(int roomSeq, int empSeq) {
         int lastMessageSeq = chatMessageDAO.getLastMessageSeq(roomSeq);
         chatMessageDAO.updateLastReadMessage(empSeq, roomSeq, lastMessageSeq);
+        updateUnreadMessageCount(roomSeq, empSeq);
+    
+        // 모든 사용자에게 읽지 않은 메시지 수 업데이트 전송
+        List<Integer> roomMembers = chatRoomService.getRoomMembers(roomSeq);
+        for (Integer memberSeq : roomMembers) {
+            if (!memberSeq.equals(empSeq)) {
+                int unreadCount = getUnreadMessageCount(roomSeq, memberSeq);
+                messagingTemplate.convertAndSend("/topic/room/" + roomSeq + "/unreadCountUpdate",
+                        Map.of("roomSeq", roomSeq, "unreadCount", unreadCount));
+            }
+        }
     }
 }

@@ -40,11 +40,11 @@ stompClient.connect(headers, () => {
     });    
 
     // 새 채팅방 생성 알림 구독
-    stompClient.subscribe('/topic/newChatRoom', (payload) => {
-      console.log('새 채팅방 생성완료');
-      const message = JSON.parse(payload.body);
-      onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
-    });
+    // stompClient.subscribe('/topic/newChatRoom', (payload) => {
+    //   console.log('새 채팅방 생성완료');
+    //   const message = JSON.parse(payload.body);
+    //   onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
+    // });
 
     // 세션 스토리지에서 사용자 정보를 가져옴
     const sessionUser = JSON.parse(sessionStorage.getItem('sessionUser'));
@@ -61,16 +61,15 @@ stompClient.connect(headers, () => {
         });
       });
 
+     // 읽지 않은 메시지 수 업데이트를 위한 새로운 구독 추가
+     stompClient.subscribe(`/topic/room/+/unreadCountUpdate`, (payload) => {
+      const message = JSON.parse(payload.body);
+      onMessageReceived({ type: 'UNREAD_COUNT_UPDATE', ...message });
+    });     
+
       // 개인 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newChatRoom`, (payload) => {
         console.log('1:1 개인 채팅방 생성');
-        const message = JSON.parse(payload.body);
-        onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
-      });
-
-      // 그룹 채팅방 생성 알림 구독
-      stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newGroupChatRoom`, (payload) => {
-        console.log('그룹 채팅방 생성');
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
@@ -80,7 +79,16 @@ stompClient.connect(headers, () => {
         console.log('타겟 1:1 개인 채팅방 생성');
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
+      });      
+
+      // 그룹 채팅방 생성 알림 구독
+      stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newGroupChatRoom`, (payload) => {
+        console.log('그룹 채팅방 생성');
+        const message = JSON.parse(payload.body);
+        onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
+
+
 
     // 온라인 사용자 상태 업데이트 구독 추가
     stompClient.subscribe('/topic/userStatus', (payload) => {
