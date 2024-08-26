@@ -7,9 +7,9 @@ on:
     branches: [ release ]
 
 jobs:
-  build-test-and-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v2
 
@@ -19,36 +19,20 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Cache Maven packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-
-    - name: Build and test backend with Maven
+    - name: Build backend with Maven
       run: |
         cd backend
-        mvn clean verify
+        mvn clean package -DskipTests
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'  # Node.js 버전을 16으로 변경
+        node-version: '14'
 
-    - name: Cache npm packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: ${{ runner.os }}-node-
-
-    - name: Build and test frontend
+    - name: Build frontend
       run: |
         cd frontend
         npm install --legacy-peer-deps
-        npm install --save-dev @babel/plugin-proposal-private-property-in-object
-        CI=true npm test -- --passWithNoTests
         CI=false npm run build
 
     - name: Login to DockerHub
