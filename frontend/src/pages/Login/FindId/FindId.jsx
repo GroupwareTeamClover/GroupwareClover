@@ -45,6 +45,7 @@ export const FindId = () => {
           setAccessNum(prev => ({ ...prev, code: ranNumber }));
           setExists(prev => ({ ...prev, empId: res.data.empId }));
           setEmailCheck(true);
+          successAlert("","인증번호가 발송되었습니다.");
         } else failAlert("","해당 직원이 존재하지 않습니다.");
       })
       .catch(() => failAlert("","해당 직원이 존재하지 않습니다."));

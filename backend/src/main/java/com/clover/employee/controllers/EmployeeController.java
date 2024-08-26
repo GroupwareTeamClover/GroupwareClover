@@ -49,7 +49,11 @@ public class EmployeeController {
 
     @PutMapping("/{empSeq}")
     public ResponseEntity<String> updatePwEmployee(@PathVariable int empSeq, @RequestBody EmployeeDTO dto) {
+        dto.setEmpSeq(empSeq);
+        System.out.println("seq ==== " +  dto.getEmpSeq());
+        System.out.println("pw ===== " +  dto.getEmpPw());
         String result = employeeService.updatePwEmployee(dto);
+        System.out.println("result ==== " + result);
         return ResponseEntity.ok(result);
     }
 
