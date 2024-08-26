@@ -7,9 +7,9 @@ on:
     branches: [ release ]
 
 jobs:
-  build-and-deploy:
+  build-test-and-deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
 
@@ -19,20 +19,35 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    - name: Build backend with Maven
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build and test backend with Maven
       run: |
         cd backend
-        mvn clean package -DskipTests
+        mvn clean verify
 
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
         node-version: '14'
 
-    - name: Build frontend
+    - name: Cache npm packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: ${{ runner.os }}-node-
+
+    - name: Build and test frontend
       run: |
         cd frontend
         npm install --legacy-peer-deps
+        npm test
         CI=false npm run build
 
     - name: Login to DockerHub
