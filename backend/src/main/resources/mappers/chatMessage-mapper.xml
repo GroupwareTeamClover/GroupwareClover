@@ -67,4 +67,22 @@
         DELETE FROM ChatMessage
         WHERE room_seq = #{roomSeq} AND sender_seq = #{empSeq}
     </delete>
+
+    <select id="getUnreadMessages" resultType="com.clover.messenger.dto.ChatMessageDTO">
+        SELECT * FROM ChatMessage 
+        WHERE room_seq = #{roomSeq} 
+        AND message_seq <![CDATA[ > ]]> (SELECT COALESCE(MAX(last_read_message_seq), 0) 
+                        FROM LastReadMessage 
+                        WHERE room_seq = #{roomSeq} AND emp_seq = #{empSeq})
+        AND message_seq <![CDATA[<=]]> #{lastMessageSeq}
+    </select>
+
+    <insert id="markMessageAsReadByUser">
+        INSERT INTO MessageReadStatus (message_seq, emp_seq, read_time)
+        VALUES (#{messageSeq}, #{empSeq}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <select id="getReadUserCount" resultType="int">
+        SELECT COUNT(*) FROM MessageReadStatus WHERE message_seq = #{messageSeq}
+    </select>
 </mapper>

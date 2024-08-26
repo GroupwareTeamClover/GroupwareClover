@@ -30,7 +30,6 @@ public class CustomHandlerInterceptor implements HandlerInterceptor {
             return false; // 로그인되지 않은 경우 연결 거부
         }
 
-        System.out.println("customHandlerInterceptor 경유 중. 오류시 확인 부탁드려요.");
         String sessionId = session.getId();
         int empSeq = (int) session.getAttribute("cloverSeq");
         String cloverName = (String) session.getAttribute("cloverName");
@@ -41,4 +40,8 @@ public class CustomHandlerInterceptor implements HandlerInterceptor {
 
         return true; 
     }
+
+    
 }
+
+
