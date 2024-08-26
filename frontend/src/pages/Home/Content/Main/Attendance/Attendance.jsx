@@ -88,7 +88,7 @@ export const Attendance = () => {
     setLoading(true);
     axios.get(`${BaseUrl()}/attendance/today/${dateData}`).then(res => {
       if (res.data !== "" && res.data !== null && res.data !== undefined) setArrive(res.data);
-    }).catch(() => failAlert("","정보 조회에 실패하였습니다"));
+    }).catch(() => failAlert("","금일 근태 조회에 실패하였습니다"));
 
     setLoading(false);
   }
@@ -111,7 +111,7 @@ export const Attendance = () => {
         setMyAttendance(data);
         setAttendanecList(res.data.list);
       }
-    }).catch(() => failAlert("","정보 조회에 실패하였습니다"));
+    }).catch(() => failAlert("","근태 정보 조회에 실패하였습니다"));
 
     setLoading(false);
   }

@@ -15,12 +15,6 @@ public class UserSessionService {
     private UserSessionDAO userSessionDAO;
 
     public void insertOrUpdateUserSession(String sessionId, int empSeq, String empName, String empAvatar, int deptCode) {
-        System.out.println("UserSessionService: insertOrUpdateUserSession 호출됨");
-        System.out.println("sessionId: " + sessionId);
-        System.out.println("empSeq: " + empSeq);
-        System.out.println("cloverName: " + empName);
-        System.out.println("cloverAvatar: " + empAvatar);
-        System.out.println("deptCode: " + deptCode);
         userSessionDAO.insertOrUpdateUserSession(sessionId, empSeq, empName, empAvatar, deptCode);
     }
 

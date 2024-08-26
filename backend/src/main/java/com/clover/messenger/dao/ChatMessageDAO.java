@@ -91,4 +91,23 @@ public class ChatMessageDAO {
         params.put("empSeq", empSeq);
         mybatis.delete("ChatMessageMapper.deleteChatHistory", params);
     }
+
+    public List<ChatMessageDTO> getUnreadMessages(int roomSeq, int empSeq, int lastMessageSeq) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("roomSeq", roomSeq);
+        params.put("empSeq", empSeq);
+        params.put("lastMessageSeq", lastMessageSeq);
+        return mybatis.selectList("ChatMessageMapper.getUnreadMessages", params);
+    }
+
+    public void markMessageAsReadByUser(int messageSeq, int empSeq) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("messageSeq", messageSeq);
+        params.put("empSeq", empSeq);
+        mybatis.insert("ChatMessageMapper.markMessageAsReadByUser", params);
+    }
+
+    public int getReadUserCount(int messageSeq) {
+        return mybatis.selectOne("ChatMessageMapper.getReadUserCount", messageSeq);
+    }
 }

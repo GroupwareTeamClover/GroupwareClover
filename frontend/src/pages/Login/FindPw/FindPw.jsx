@@ -51,6 +51,7 @@ export const FindPw = ({closeModal}) => {
         setAccessNum(prev => ({ ...prev, code: ranNumber }));
         setChangePw(prev => ({ ...prev, empSeq: res.data.empSeq }));
         setInvalidate(true);
+        successAlert("", "인증코드가 발송되었습니다.");
       }
       else failAlert("","해당 직원이 존재하지 않습니다.");
     }).catch(() => failAlert("","해당 직원이 존재하지 않습니다."));

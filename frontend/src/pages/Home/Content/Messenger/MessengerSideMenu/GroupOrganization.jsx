@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Organization.module.css';
-import { Folder } from '../../../../../components/Folder/Folder';
 import { BaseUrl } from '../../../../../commons/config';
 import axios from 'axios';
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaCheck } from "react-icons/fa";
 import GroupChatModal from '../Modals/GroupChatModal';
 import { createGroupChat } from '../utils/chat-utils';
 
@@ -11,7 +10,6 @@ const GroupOrganization = ({ onClose }) => {
     const [folderData, setFolderData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [selectedItem, setSelectedItem] = useState({ children: {} });
     const [searchInput, setSearchInput] = useState('');
     const [selectedEmployees, setSelectedEmployees] = useState([]);
     const [isGroupChatModalOpen, setIsGroupChatModalOpen] = useState(false);
@@ -23,9 +21,9 @@ const GroupOrganization = ({ onClose }) => {
             const departmentMap = data.reduce((acc, current) => {
                 const { DEPT_NAME, EMP_NAME, ROLE_NAME, EMP_SEQ, EMP_AVATAR } = current;
                 if (!acc[DEPT_NAME]) {
-                    acc[DEPT_NAME] = { name: DEPT_NAME, children: [] };
+                    acc[DEPT_NAME] = { name: DEPT_NAME, employees: [] };
                 }
-                acc[DEPT_NAME].children.push({ name: EMP_NAME, role: ROLE_NAME, seq: EMP_SEQ, avatar: EMP_AVATAR });
+                acc[DEPT_NAME].employees.push({ name: EMP_NAME, role: ROLE_NAME, seq: EMP_SEQ, avatar: EMP_AVATAR });
                 return acc;
             }, {});
 
@@ -40,13 +38,15 @@ const GroupOrganization = ({ onClose }) => {
         setSearchInput(e.target.value);
     }
 
-    const handleItemClick = (item) => {
-        const isSelected = selectedEmployees.some(emp => emp.seq === item.seq);
-        if (isSelected) {
-            setSelectedEmployees(selectedEmployees.filter(emp => emp.seq !== item.seq));
-        } else {
-            setSelectedEmployees([...selectedEmployees, item]);
-        }
+    const handleEmployeeSelect = (employee) => {
+        setSelectedEmployees(prev => {
+            const isSelected = prev.some(emp => emp.seq === employee.seq);
+            if (isSelected) {
+                return prev.filter(emp => emp.seq !== employee.seq);
+            } else {
+                return [...prev, employee];
+            }
+        });
     };
 
     useEffect(() => {
@@ -54,14 +54,13 @@ const GroupOrganization = ({ onClose }) => {
             if (!query) return data;
             return data
                 .map(folder => {
-                    const folderMatches = folder.name.toLowerCase().includes(query.toLowerCase());
-                    const filteredChildren = folder.children.filter(child =>
-                        child.name.toLowerCase().includes(query.toLowerCase()) ||
-                        child.role.toLowerCase().includes(query.toLowerCase())
+                    const filteredEmployees = folder.employees.filter(emp =>
+                        emp.name.toLowerCase().includes(query.toLowerCase()) ||
+                        emp.role.toLowerCase().includes(query.toLowerCase())
                     );
                     
-                    if (folderMatches || filteredChildren.length) {
-                        return { ...folder, children: filteredChildren.length ? filteredChildren : folder.children, isOpen: true };
+                    if (filteredEmployees.length) {
+                        return { ...folder, employees: filteredEmployees };
                     }
                     return null;
                 })
@@ -70,17 +69,6 @@ const GroupOrganization = ({ onClose }) => {
 
         setFilteredData(filterFolders(folderData, searchInput));
     }, [searchInput, folderData]);
-
-    const adjustFolderProps = (folder) => {
-        return {
-            ...folder,
-            children: folder.children.map(child => ({
-                ...child,
-                name: child.name,
-                children: []
-            }))
-        };
-    };
 
     const handleCreateGroupChat = async (roomName) => {
         if (selectedEmployees.length < 2) {
@@ -116,23 +104,34 @@ const GroupOrganization = ({ onClose }) => {
                         </div>
                         <div className={styles.iconBox}><FaSearch /></div>
                     </div>
-                    <div className={styles.searchContent}>
-                        {isLoading ? (
-                            <p>로딩 중...</p>
-                        ) : filteredData.length > 0 ? (
-                            filteredData.map((folder, index) => (
-                                <Folder
-                                    key={index}
-                                    folder={adjustFolderProps(folder)}
-                                    onItemClick={handleItemClick}
-                                    selectedItem={selectedItem}
-                                    setSelectedItem={setSelectedItem}
-                                />
-                            ))
-                        ) : (
-                            <p>데이터가 없습니다.</p>
-                        )}
-                    </div>
+                </div>
+                <div className={styles.employeeList}>
+                    {isLoading ? (
+                        <p>로딩 중...</p>
+                    ) : filteredData.length > 0 ? (
+                        filteredData.map((department, index) => (
+                            <div key={index} className={styles.department}>
+                                <h5 className={styles.departmentName}>{department.name}</h5>
+                                {department.employees.map((employee) => (
+                                    <div key={employee.seq} className={styles.employeeItem}>
+                                        <label className={styles.checkboxLabel}>
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedEmployees.some(emp => emp.seq === employee.seq)}
+                                                onChange={() => handleEmployeeSelect(employee)}
+                                                className={styles.checkbox}
+                                            />
+                                            <img src={employee.avatar || '/default-avatar.png'} alt={employee.name} className={styles.avatar} />
+                                            <span className={styles.employeeName}>{employee.name}</span>
+                                            <span className={styles.employeeRole}>{employee.role}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                            </div>
+                        ))
+                    ) : (
+                        <p>데이터가 없습니다.</p>
+                    )}
                 </div>
             </div>
             <div className={styles.footer}>
@@ -154,4 +153,5 @@ const GroupOrganization = ({ onClose }) => {
         </div>
     );
 }
+
 export default GroupOrganization;

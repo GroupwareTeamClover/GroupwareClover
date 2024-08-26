@@ -26,7 +26,6 @@ CREATE TABLE attendance (
     att_arrive varchar2(30) NOT NULL,
     att_leave varchar2(30) DEFAULT NULL,
     att_total NUMBER DEFAULT NULL,
-    work_state_seq NUMBER NOT NULL,
     att_success char(1) DEFAULT 'N',
     att_date timestamp DEFAULT sysdate NOT null
 );
@@ -69,8 +68,16 @@ CREATE TABLE dayoff_state (
     dayoff_name varchar2(30) NOT NULL
 );
 
+CREATE TABLE schedule (
+                          schedule_seq NUMBER PRIMARY KEY,
+                          schedule_content VARCHAR2(300) NOT NULL,
+                          emp_seq NUMBER NOT NULL,
+                          dept_code NUMBER NOT NULL,
+                          start_date TIMESTAMP NOT NULL,
+                          end_date TIMESTAMP NOT NULL
+);
 
-
+CREATE SEQUENCE schedule_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 
 --정하윤
 create table popup_board (
@@ -345,21 +352,9 @@ CREATE TABLE doc_code (
 /*CREATE sequence dayoff_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
 */
 
-
-/*CREATE TABLE schedule (
-    schedule_seq NUMBER PRIMARY KEY,
-    schedule_content VARCHAR2(300) NOT NULL,
-    emp_seq NUMBER NOT NULL,
-    dept_code NUMBER NOT NULL,
-    start_date TIMESTAMP NOT NULL,
-    end_date TIMESTAMP NOT NULL
-);
-
-CREATE SEQUENCE schedule_sequence start with 1 INCREMENT by 1 nocache nomaxvalue;
-
 ALTER TABLE schedule
     ADD CONSTRAINTS schedule_empFK foreign KEY (emp_seq)
-REFERENCES employee(emp_seq) on delete cascade;*/
+REFERENCES employee(emp_seq) on delete cascade;
 
 
 --**************insert 데이트 문***************
@@ -423,7 +418,7 @@ INSERT INTO dayoff_state VALUES(5, '공가');
 INSERT INTO dayoff_state VALUES(6, '질병휴가');
 
 -- Employee dummy data test90 (admin) / password → test
-INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test90', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', '김철수', 'test0@gmail.com', '790123', 'M', '01012345678', 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/man.png', 99, 99, NULL,NULL, 0, 99 );
+INSERT INTO employee VALUES ( employee_sequence.nextval, 0, 'test90', 'ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff', '김철수', 'test0@gmail.com', '790123', 'M', '01012345678', 'https://groupwareteamclover.s3.ap-northeast-2.amazonaws.com/profile/man.png', 99, 99, NULL,NULL, 0, 0 );
 --**************트리거 or 함수***************
 
 
