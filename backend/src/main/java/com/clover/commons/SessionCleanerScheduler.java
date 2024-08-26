@@ -12,9 +12,11 @@ public class SessionCleanerScheduler {
     @Autowired
     private UserSessionService userSessionService;
 
-    @Scheduled(fixedRate = 36) // 1시간마다 실행
+    @Scheduled(fixedRate = 3600000) // 1시간마다 실행
     public void cleanSessions() {
         System.out.println("세션 클리어 중 ");
         userSessionService.cleanSessions();
     }
 }
+
+

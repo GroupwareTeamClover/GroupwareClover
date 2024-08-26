@@ -336,3 +336,21 @@
   z-index: 1000;
 }
 
+.iconButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 10px;
+  transition: color 0.3s ease;
+}
+
+.iconButton:hover {
+  color: #007bff;
+}
+
+.iconButton[title="채팅방 나가기"]:hover {
+  color: #dc3545;
+}

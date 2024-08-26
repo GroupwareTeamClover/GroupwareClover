@@ -21,7 +21,7 @@ function App() {
   const { sign, setSign, setSessionData, admin, setAdmin } = useMemberStore();
   const { 
     chatRooms, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, 
-    setChatRooms, updateUnreadCount, handleNoticeMessage 
+    setChatRooms, updateUnreadCount, handleNoticeMessage, updateMessageUnreadCount 
   } = useChatStore();
 
   const [open, setOpen] = useState(true);
@@ -58,6 +58,9 @@ function App() {
           case 'UNREAD_COUNT_UPDATE':
             updateUnreadCount(message.roomSeq, message.unreadCount);
             break;
+            case 'MESSAGE_UPDATE':
+              updateMessageUnreadCount(message.roomSeq, message.messageSeq, message.unreadCount);
+              break;            
           case 'CHAT_ROOMS_UPDATE':
             setChatRooms(message.rooms);
             break;
@@ -83,7 +86,7 @@ function App() {
       // 로그인되지 않은 상태에서는 로딩만 종료하고 로그인 페이지를 표시
       setLoading(false);
     }
-  }, [sign, adminCheck, setSessionData, setSign, setAdmin, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, setChatRooms, updateUnreadCount, handleNoticeMessage]);
+  }, [sign, adminCheck, setSessionData, setSign, setAdmin, addMessage, setOnlineUsers, addChatRoom, updateChatRoom, setChatRooms, updateUnreadCount, handleNoticeMessage, updateMessageUnreadCount]);
 
   if (loading) {
     return <Loading />;
