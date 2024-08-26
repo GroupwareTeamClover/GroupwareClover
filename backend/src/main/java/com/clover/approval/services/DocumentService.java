@@ -33,7 +33,7 @@ public class DocumentService {
 	@Transactional
 	public void insertDoc(DocumentDTO docDTO, List<ApvLineDTO> apvlist, List<ParticipantsLineDTO> plist, DocumentDTO typeDocDTO) {
 		documentDAO.insertDoc(docDTO);
-		System.out.println(docDTO.getDocSeq());
+//		System.out.println(docDTO.getDocSeq());
 		
 		if(apvlist.size()>0) {
 			for(ApvLineDTO dto:apvlist) {
@@ -53,7 +53,7 @@ public class DocumentService {
 		//업무양식
 		if(typeDocDTO instanceof BusinessDTO) {
 			((BusinessDTO) typeDocDTO).setParentSeq(docDTO.getDocSeq());
-			System.out.println("날짜 확인하기"+ ((BusinessDTO) typeDocDTO).getBsWriteDate());
+//			System.out.println("날짜 확인하기"+ ((BusinessDTO) typeDocDTO).getBsWriteDate());
 			
 			documentDAO.insertBusiness((BusinessDTO)typeDocDTO);
 		}

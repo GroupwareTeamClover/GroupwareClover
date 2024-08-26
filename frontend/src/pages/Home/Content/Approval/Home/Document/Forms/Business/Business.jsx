@@ -128,7 +128,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
             if (validateForm()) {
                 setIsInsert(false);
             }else{
-                console.log('전송할 데이터:', business); // 전송 전에 데이터를 로그로 확인
+                // console.log('전송할 데이터:', business); // 전송 전에 데이터를 로그로 확인
                 axios.post(`${BaseUrl()}/api/approval/document`, business).then((resp) => {
                     smallAlert("문서 생성 성공");
                     navi(`/approval/document/${resp.data}?type=${type}`);
@@ -144,8 +144,8 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     //임시저장 insert할 때 사용/ setDocumentDTO가 DetailDocument에 없음
     useEffect(() => {
         if (isTemp && !id) {  // id가 없는 경우에만 실행
-            console.log('setDocumentDTO있는 영역');
-            console.log(business);
+            // console.log('setDocumentDTO있는 영역');
+            // console.log(business);
             // 기존 값에 임시저장 상태로 업데이트
             setDocumentDTO((prev) => ({
                 ...prev, 
@@ -156,7 +156,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     useEffect(() => {
         if (isTemp && !id) {
-            console.log(business);
+            // console.log(business);
             smallConfirmAlert(`임시저장에서 첨부파일은 변경할 수 없습니다. 이대로 임시저장하시겠습니까?`).then((result)=>{
                 if(result.isConfirmed){
                     axios.post(`${BaseUrl()}/api/approval/document`, business)
@@ -184,7 +184,7 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
 
     const getData=()=>{
         axios.get(`${BaseUrl()}/api/approval/document/${id}/${type}?table=business`, business).then((resp) => {
-            console.log(resp.data);
+            // console.log(resp.data);
             let writeDate = null;
             if (resp.data.BS_WRITE_DATE) {
                 // '2024. 8. 14.' 형식으로 받은 날짜를 'YYYY-MM-DD' 형식으로 변환
@@ -256,8 +256,8 @@ export const Business =({type, isInsert, setIsInsert, isEmergency,
     useEffect(()=>{
         
         if(isTempTemp && id){
-            console.log("변경저장 전 business")
-            console.log(business)
+            // console.log("변경저장 전 business")
+            // console.log(business)
             axios.put(`${BaseUrl()}/api/approval/document/temp/temp/${id}/${type}?table=business`, business).then((resp) => {
                 setIsTempTemp(false);
                 smallAlert("저장 완료");

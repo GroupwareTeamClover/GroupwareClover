@@ -14,10 +14,6 @@ public class DocumentFactory {
                 return new BusinessDTO();
             case "dayoff":
                 return new DayoffDTO();
-            case "업무기안":
-            	return new BusinessDTO();
-            case "휴가신청서":
-            	 return new DayoffDTO();
             default:
                 throw new IllegalArgumentException("Unknown docType: " + docType);
         }

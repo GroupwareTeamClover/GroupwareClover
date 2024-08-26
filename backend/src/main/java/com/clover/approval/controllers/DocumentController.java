@@ -63,7 +63,6 @@ public class DocumentController {
 	//insert-문서,결재자,참조/열람자,양식정보까지 && 임시저장
 	@PostMapping
 	public ResponseEntity<Integer> insertData(@RequestBody InsertMappingDTO insertMappingDTO) {
-	    // DTO 처리
 	    // 팩토리 패턴을 사용하여 적절한 DocumentDTO 생성
 	    DocumentDTO document = insertMappingDTO.getDocument();
 	    DocumentDTO typeDocument = DocumentFactory.createDocument(insertMappingDTO.getDocType());
@@ -73,11 +72,11 @@ public class DocumentController {
 	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
 	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
 	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
-	        System.out.println("컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
+//	        System.out.println("컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
 	        
 	        // 날짜 처리
 	        Object bsWriteDateObj = insertMappingDTO.getDocData().get("bsWriteDate");
-	        System.out.println("변환 전: "+bsWriteDateObj);
+//	        System.out.println("변환 전: "+bsWriteDateObj);
 	        if (bsWriteDateObj instanceof String) {
 	            try {
 	                // Convert the String to Timestamp
@@ -99,10 +98,10 @@ public class DocumentController {
 		List<String> fileNames = (List<String>) insertMappingDTO.getFileData().getOrDefault("fileNames", new ArrayList<>());
 	    List<String> fileUrls = (List<String>) insertMappingDTO.getFileData().getOrDefault("fileUrls", new ArrayList<>());
 	    List<String> images = (List<String>) insertMappingDTO.getFileData().getOrDefault("images", new ArrayList<>());
-		System.out.println(insertMappingDTO.getFileData());
-	    System.out.println(fileNames);
-		System.out.println(fileUrls);
-		System.out.println(images);
+//		System.out.println(insertMappingDTO.getFileData());
+//	    System.out.println(fileNames);
+//		System.out.println(fileUrls);
+//		System.out.println(images);
 	    //첨부파일이 있을 경우
 	    if (fileNames.size() > 0) {
 			for (int i = 0; i < fileNames.size(); i ++) {
@@ -153,7 +152,7 @@ public class DocumentController {
 	@GetMapping("/{id}/{type}")
 	public ResponseEntity<Map<String,Object>> getDocTypeBySeq(@PathVariable int id, @PathVariable String type, @RequestParam String table){
 		Map<String, Object> map =documentService.getDocTypeBySeq(id, table);
-		System.out.println(map);
+//		System.out.println(map);
 	    // 변환 작업
 	    if (map.get("BS_WRITE_DATE") instanceof oracle.sql.TIMESTAMP) {
 	        try {
@@ -172,7 +171,7 @@ public class DocumentController {
 	//상신취소 & 임시저장에서 삭제
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable int id, @RequestParam String table){
-		System.out.println(table);
+//		System.out.println(table);
 		documentService.deleteBySeq(id, table);
 		
 		//파일삭제
@@ -185,7 +184,7 @@ public class DocumentController {
 	//임시저장에서 결재요청, 문서상태 임시저장->진행중으로 변경
 	@PutMapping("/temp/{id}/{type}")
 	public ResponseEntity<Map<String,Object>> updateDocState(@PathVariable int id,@PathVariable String type, @RequestParam String table, @RequestBody InsertMappingDTO insertMappingDTO){
-	    System.out.println("임시저장에서 결재요청 테이블 확인"+table);
+//	    System.out.println("임시저장에서 결재요청 테이블 확인"+table);
 		DocumentDTO typeDocument = DocumentFactory.createDocument(table);
 	    
 	    if (typeDocument instanceof BusinessDTO) {
@@ -193,17 +192,17 @@ public class DocumentController {
 	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
 	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
 	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
-	        System.out.println("임시저장에서 결재요청 컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
+//	        System.out.println("임시저장에서 결재요청 컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
 	        
 	        // 날짜 처리
 	        Object bsWriteDateObj = insertMappingDTO.getDocData().get("bsWriteDate");
-	        System.out.println(" 임시저장에서 결재요청 변환 전: "+bsWriteDateObj);
+//	        System.out.println(" 임시저장에서 결재요청 변환 전: "+bsWriteDateObj);
 	        if (bsWriteDateObj instanceof String) {
 	            try {
 	                // Convert the String to Timestamp
 	            	java.util.Date pased=dateFormat.parse((String)bsWriteDateObj);
 	            	Timestamp ts=new Timestamp(pased.getTime());
-	            	System.out.println(" 임시저장에서 결재요청 변환 후: "+ts);
+//	            	System.out.println(" 임시저장에서 결재요청 변환 후: "+ts);
 	                TypeDocDTO.setBsWriteDate(ts);
 	            } catch (Exception e) {
 	                // Handle the case where the String cannot be converted to Timestamp
@@ -223,7 +222,7 @@ public class DocumentController {
 	//임시저장에서 임시저장, 양식마다 정보 변경
 	@PutMapping("/temp/temp/{id}/{type}")
 	public ResponseEntity<Map<String,Object>> updateTemptoTemp(@PathVariable int id, @PathVariable String type, @RequestParam String table, @RequestBody InsertMappingDTO insertMappingDTO){
-		System.out.println(insertMappingDTO.getDocData());
+//		System.out.println(insertMappingDTO.getDocData());
 		DocumentDTO typeDocument = DocumentFactory.createDocument(table);
 		
 	    if (typeDocument instanceof BusinessDTO) {
@@ -231,17 +230,17 @@ public class DocumentController {
 	        TypeDocDTO.setBsSeq((int) insertMappingDTO.getDocData().get("bsSeq"));
 	        TypeDocDTO.setBsTitle((String) insertMappingDTO.getDocData().get("bsTitle"));
 	        TypeDocDTO.setBsContent((String) insertMappingDTO.getDocData().get("bsContent"));
-	        System.out.println("임시저장에서 결재요청 컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
+//	        System.out.println("임시저장에서 결재요청 컨트롤러에서 날짜확인"+insertMappingDTO.getDocData().get("bsWriteDate"));
 	        
 	        // 날짜 처리
 	        Object bsWriteDateObj = insertMappingDTO.getDocData().get("bsWriteDate");
-	        System.out.println(" 임시저장에서 결재요청 변환 전: "+bsWriteDateObj);
+//	        System.out.println(" 임시저장에서 결재요청 변환 전: "+bsWriteDateObj);
 	        if (bsWriteDateObj instanceof String) {
 	            try {
 	                // Convert the String to Timestamp
 	            	java.util.Date pased=dateFormat.parse((String)bsWriteDateObj);
 	            	Timestamp ts=new Timestamp(pased.getTime());
-	            	System.out.println(" 임시저장에서 결재요청 변환 후: "+ts);
+//	            	System.out.println(" 임시저장에서 결재요청 변환 후: "+ts);
 	                TypeDocDTO.setBsWriteDate(ts);
 	            } catch (Exception e) {
 	                // Handle the case where the String cannot be converted to Timestamp

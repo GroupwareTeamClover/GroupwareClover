@@ -121,19 +121,15 @@ export const DetailDocument = ({type}) => {
             });
             axios.get(`${BaseUrl()}/api/approval/document/${id}`, document).then((resp)=>{
                 // console.log(`detail접근확인`);
-                console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
+                // console.log(`detail정보확인 : ${JSON.stringify(resp.data, null, 2)}`);
 
-                //상신취소메뉴 on 대기또는 예정 누군가 승인또는반려를 한명이라도 시작되었다면 상신취소할 수 없음.
-                const allLinesMeetCondition = resp.data.apvline.every(line => 
-                    line.apvStatusCode === 1 || line.apvStatusCode === 2
-                );
-                
+                //상신취소메뉴 on 대기또는 예정 누군가 승인 또는 반려를 한명이라도 시작되었다면 상신취소할 수 없음.
+                const allLinesMeetCondition = resp.data.apvline.every(line => line.apvStatusCode === 1 || line.apvStatusCode === 2);
                 if (allLinesMeetCondition && resp.data.document.drafterSeq === sessionData.empSeq && resp.data.document.docStateCode===1) {
                     setIsDrafterMenu(true);
                 }
                 
-                //결정메뉴들 on(결재, 반려, 보류)
-                //대기와 보류일때 
+                //결정메뉴들 on(결재, 반려, 보류) 대기와 보류일때 
                 resp.data.apvline.map((line, index)=>{
                     if(line.apverId===sessionData.empSeq && (line.apvStatusCode===1 || line.apvStatusCode===8))  setIsApprovalMenu(true)
                     if(line.apvStatusCode===8) setIsHoldoffClicked(true)
@@ -144,10 +140,7 @@ export const DetailDocument = ({type}) => {
                 if(resp.data.document.drafterSeq === sessionData.empSeq && resp.data.document.docStateCode===2){
                     setIsTempMenu(true);
                     console.log(resp.data.document.egcYn);
-                    if(resp.data.document.egcYn==='y'){
-                        setIsTempEmergency('y');
-                    }
-                    
+                    if(resp.data.document.egcYn==='y'){setIsTempEmergency('y');}
                 }
 
                 //참조자/열람자 메뉴 on
@@ -261,8 +254,8 @@ export const DetailDocument = ({type}) => {
             //내 결재라인 구분 번호
             const apvLineSeq=getApvLineSeq();
             const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
-            console.log(`결재번호 ${apvLineSeq}`)
-            console.log(`클린결재번호 ${cleanApvLineSeq}`)
+            // console.log(`결재번호 ${apvLineSeq}`)
+            // console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
             axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/${id}/approval`, {
                 cleanApvLineSeq:cleanApvLineSeq,
@@ -309,7 +302,7 @@ export const DetailDocument = ({type}) => {
     }   
     useEffect(()=>{
             if(isRejectModalComplete){
-                console.log(reasonForRejection);
+                // console.log(reasonForRejection);
                 const apvLineSeq=getApvLineSeq();
                 const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
                 //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
@@ -345,8 +338,8 @@ export const DetailDocument = ({type}) => {
         if(isHoldoff){
             const apvLineSeq=getApvLineSeq();
             const cleanApvLineSeq=String(apvLineSeq).replace(/,/g,'');
-            console.log(`결재번호 ${apvLineSeq}`)
-            console.log(`클린결재번호 ${cleanApvLineSeq}`)
+            // console.log(`결재번호 ${apvLineSeq}`)
+            // console.log(`클린결재번호 ${cleanApvLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
             axios.put(`${BaseUrl()}/api/approval/line/${cleanApvLineSeq}/holdoff`, {
                 cleanApvLineSeq:cleanApvLineSeq,
@@ -390,7 +383,7 @@ export const DetailDocument = ({type}) => {
     //임시저장에서 긴급여부 선택시 문서 정보 변경
     useEffect(()=>{
         if(isTempEmergency && id){
-            console.log(isTempEmergency)
+            // console.log(isTempEmergency)
             axios.put(`${BaseUrl()}/api/approval/document/temp/emergency/${id}`,  { isTempEmergency: isTempEmergency } ).then((resp)=>{
             })
         }
@@ -403,8 +396,8 @@ export const DetailDocument = ({type}) => {
             //내 결재라인 구분 번호
             const partLineSeq=getPartLineSeq();
             const cleanPartLineSeq=String(partLineSeq).replace(/,/g,'');
-            console.log(`결재번호 ${partLineSeq}`)
-            console.log(`클린결재번호 ${cleanPartLineSeq}`)
+            // console.log(`결재번호 ${partLineSeq}`)
+            // console.log(`클린결재번호 ${cleanPartLineSeq}`)
             //나는 결재 상태로 내 뒤는 대기상태로 그 뒤는 예정상태로
             axios.put(`${BaseUrl()}/api/approval/line/${cleanPartLineSeq}/${id}/part`, {
                 cleanPartLineSeq:cleanPartLineSeq,
@@ -438,9 +431,9 @@ export const DetailDocument = ({type}) => {
         ...(totalLineInfo.some(item => item.type === 'document' && item.docStateCode === 4) ? [{ id: 'rejectInfo', label: '반려정보' }] : [])
     ];
     
-    useEffect(()=>{
-        console.log(totalLineInfo)
-    },[totalLineInfo])
+    // useEffect(()=>{
+    //     console.log(totalLineInfo)
+    // },[totalLineInfo])
 
     //detail 첨부파일  detail
     const [files, setFiles] = useState([]);
@@ -510,9 +503,11 @@ export const DetailDocument = ({type}) => {
             <div className={styles.menu}>
                 {isPartMenu && <ParticipantMenu setIsPartCheck={setIsPartCheck}/>}
                 {isDrafterMenu && <DraferMenu setIsCancle={setIsCancle}/>}
-                {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} setIsHoldoff={setIsHoldoff} setIsHoldoffClicked={setIsHoldoffClicked} isHoldoffClicked={isHoldoffClicked}
+                {isApprovalMenu && <ApprovalMenu setIsApproval={setIsApproval} isReject={isReject} setIsReject={setIsReject} 
+                 setIsHoldoff={setIsHoldoff} setIsHoldoffClicked={setIsHoldoffClicked} isHoldoffClicked={isHoldoffClicked}
                  setModalState={setModalState} openModal={openModal} modalState={modalState} setPage={setPage}/>}
-                {isTempMenu && <TempMenu isTempEmergency={isTempEmergency} setIsTempInsert={setIsTempInsert} setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
+                {isTempMenu && <TempMenu isTempEmergency={isTempEmergency} setIsTempInsert={setIsTempInsert} 
+                setIsTempEmergency={setIsTempEmergency}  setIsTempTemp={setIsTempTemp} setIsTempCancle={setIsTempCancle}/>}
             </div>
             <div className={styles.detail}>
                 {/* left와 side 섹션을 감싸는 래퍼 추가 */}

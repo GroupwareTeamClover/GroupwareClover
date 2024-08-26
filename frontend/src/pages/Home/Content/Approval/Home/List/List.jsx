@@ -174,7 +174,7 @@ export const List = ({ type }) => {
     //기안문서함 (백엔드 페이지네이션)
     useEffect(() => {
         if (type === '기안문서함') {
-            console.log(searchType, keyword);
+            // console.log(searchType, keyword);
             setLoading(true);  // 로딩 상태 설정
             axios.get(`${BaseUrl()}/api/approval/list/finish`, {
                 params: {

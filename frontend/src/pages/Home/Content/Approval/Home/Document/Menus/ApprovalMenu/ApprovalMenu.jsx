@@ -21,7 +21,7 @@ export const ApprovalMenu=({setIsApproval, isReject, setIsReject, setIsHoldoff, 
 
     //반려일 때 모달창 열기
     useEffect((e)=>{
-        console.log(modalState)
+        // console.log(modalState)
        if(isReject){
             openModal();
        }

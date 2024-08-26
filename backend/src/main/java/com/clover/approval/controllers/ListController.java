@@ -72,15 +72,15 @@ public class ListController {
         @RequestParam(value = "naviCountPerPage") int naviCountPerPage,//고정값: 페이지번호 자체
         @RequestParam(value = "searchType") String searchType,
         @RequestParam(value = "keyword") String keyword) { 
-    	
-    	System.out.println("searchType"+ searchType);
-    	System.out.println("keyword"+ keyword);
+//    	
+//    	System.out.println("searchType"+ searchType);
+//    	System.out.println("keyword"+ keyword);
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
-    	System.out.println("현재페이지" + cpage);
-    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
-    	System.out.println("네비 범위" + naviCountPerPage);
+//    	System.out.println("현재페이지" + cpage);
+//    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
+//    	System.out.println("네비 범위" + naviCountPerPage);
     	
     	type="기안문서함";
         // 전체게시글 수
@@ -109,11 +109,11 @@ public class ListController {
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
-    	System.out.println("현재페이지" + cpage);
-    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
-    	System.out.println("네비 범위" + naviCountPerPage);
-    	System.out.println("임시 저장의 타입" + searchType);
-    	System.out.println("임시 저장의 키워드" + keyword);
+//    	System.out.println("현재페이지" + cpage);
+//    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
+//    	System.out.println("네비 범위" + naviCountPerPage);
+//    	System.out.println("임시 저장의 타입" + searchType);
+//    	System.out.println("임시 저장의 키워드" + keyword);
     	if(keyword==null) {
     		System.out.println("null 확인");
     	}
@@ -150,9 +150,9 @@ public class ListController {
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
-    	System.out.println("현재페이지" + cpage);
-    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
-    	System.out.println("네비 범위" + naviCountPerPage);
+//    	System.out.println("현재페이지" + cpage);
+//    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
+//    	System.out.println("네비 범위" + naviCountPerPage);
 
     	
     	type="결재문서함";
@@ -182,9 +182,9 @@ public class ListController {
     	
     	int empSeq = (int) session.getAttribute("cloverSeq");
     	
-    	System.out.println("현재페이지" + cpage);
-    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
-    	System.out.println("네비 범위" + naviCountPerPage);
+//    	System.out.println("현재페이지" + cpage);
+//    	System.out.println("한페이지에 보여줄 글 수" + recordCountPerPage);
+//    	System.out.println("네비 범위" + naviCountPerPage);
     	
     	type="참조/열람문서함";
         // 전체게시글 수
