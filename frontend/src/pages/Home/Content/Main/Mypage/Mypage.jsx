@@ -175,7 +175,7 @@ export const Mypage = ({ empSeq, closeModal }) => {
     axios.get(`${BaseUrl()}/employee`).then(res => {
       setMypage(res.data);
       setUpdateData({empTel: res.data.EMP_TEL, empEmail: res.data.EMP_EMAIL});
-    }).catch(() => failAlert("", "정보 조회에 실패하였습니다."));
+    }).catch();
     setLoading(false);
   }, [dataState]);
 
