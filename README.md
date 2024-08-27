@@ -20,11 +20,9 @@ DB 관리자 : 박새미
 
 프론트엔드 
 
-![프론트엔드](https://github.com/user-attachments/assets/6acbc840-aa94-4bc5-875b-beaffdd53763)
 
 백엔드 
 
-![백엔드](https://github.com/user-attachments/assets/d32e114f-57bd-41de-8138-4072a2428edc)
 
 # 프로젝트 아키텍쳐
 
