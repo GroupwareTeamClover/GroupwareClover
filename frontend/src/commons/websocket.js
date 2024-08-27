@@ -14,7 +14,7 @@ export const connectWebSocket = (onMessageReceived) => {
   // PING과 PONG 메시지를 제외한 로그만 콘솔에 출력
   stompClient.debug = (str) => {
     if (str.indexOf('PING') === -1 && str.indexOf('PONG') === -1) {
-        console.log(str);
+        
         } 
     }
 
@@ -75,21 +75,21 @@ stompClient.connect(headers, () => {
 
       // 개인 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newChatRoom`, (payload) => {
-        console.log('1:1 개인 채팅방 생성');
+        
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
 
       // 타겟 새 채팅방 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/targetNewChatRoom`, (payload) => {
-        console.log('타겟 1:1 개인 채팅방 생성');
+        
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });      
 
       // 그룹 채팅방 생성 알림 구독
       stompClient.subscribe(`/user/${sessionUser.empSeq}/queue/newGroupChatRoom`, (payload) => {
-        console.log('그룹 채팅방 생성');
+        
         const message = JSON.parse(payload.body);
         onMessageReceived({ type: 'NEW_CHAT_ROOM', room: message });
       });
@@ -118,19 +118,19 @@ stompClient.connect(headers, () => {
       const message = JSON.parse(payload.body);
       switch (message.type) {
         case 'LEAVE':
-          console.log('채팅방 나가기:', message.content);
+          
           onMessageReceived({ type: 'LEAVE_ROOM', ...message });
           break;
         case 'CLEAR':
-          console.log('대화 내용 삭제:', message.content);
+          
           onMessageReceived({ type: 'CLEAR_CHAT', ...message });
           break;
         case 'NOTIFICATIONS':
-          console.log('알림 설정 변경:', message.content);
+          
           onMessageReceived({ type: 'TOGGLE_NOTIFICATIONS', ...message });
           break;
         default:
-          console.log('알 수 없는 채팅방 업데이트:', message);
+          
       }
     });
     }

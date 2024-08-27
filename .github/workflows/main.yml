@@ -19,6 +19,17 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: Create env.properties file in resources folder
+      run: |
+        mkdir -p src/main/resources/properties
+        echo "properties.file.dbUrl=${{ secrets.DB_URL }}" >> src/main/resources/properties/env.properties
+        echo "properties.file.dbUsername=${{ secrets.DB_USERNAME }}" >> src/main/resources/properties/env.properties
+        echo "properties.file.dbPassword=${{ secrets.DB_PASSWORD }}" >> src/main/resources/properties/env.properties
+        echo "properties.file.port=8080" >> src/main/resources/properties/env.properties
+        echo "properties.file.allowed.origins=https://cloveroffice.site, http://localhost:8080, http://192.168.1.5:3000, http://192.168.1.14:3000, http://192.168.1.6:3000, http://192.168.1.7:3000, http://192.168.1.13:3000, http://192.168.190.108:3000, http://192.168.45.23:3000, http://192.168.45.196:3000, http://15.164.2.16:3000, http://192.168.190.108:3000" >> src/main/resources/properties/env.properties
+        echo "properties.file.accessKeyID=${{ secrets.ACCESS_KEY_ID }}" >> src/main/resources/properties/env.properties
+        echo "properties.file.secretAccessKey=${{ secrets.SECRET_ACCESS_KEY }}" >> src/main/resources/properties/env.properties        
+
     - name: Build backend with Maven
       run: |
         cd backend
