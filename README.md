@@ -1,5 +1,3 @@
-![test_logo](https://github.com/user-attachments/assets/5b1fea57-810d-42f5-b765-cc0c7b019de1)
-
 # 프로젝트 소개
 그룹웨어 클로버는 업무 관리부터 기업 경영을 위한 전자결재, 근태관리, 메신저 등을 지원합니다! 
 
