@@ -28,7 +28,7 @@ public class ChatMessageController {
     /**
      * 특정 채팅방의 메시지 목록을 조회하는 API 엔드포인트
      * @param roomSeq 조회할 채팅방 번호
-     * @return 채팅 메시지 목록dddd11dddd
+     * @return 채팅 메시지 목록dddd11ddddsdds
      */
     @GetMapping("/{roomSeq}")
     public ResponseEntity<List<ChatMessageDTO>> getRoomMessages(@PathVariable int roomSeq) {
