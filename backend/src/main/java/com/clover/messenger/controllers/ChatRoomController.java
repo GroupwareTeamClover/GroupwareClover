@@ -29,7 +29,7 @@ public class ChatRoomController {
 
     /**
      * 채팅방 목록을 조회하는 API 엔드포인트
-     * @return 로그인한 사용자의 채팅방 목록
+     * @return 로그인한 사용자의 채팅방 목록dd
      */
     @GetMapping
     public ResponseEntity<List<ChatRoomDTO>> getChatRooms() {
